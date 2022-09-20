@@ -1,8 +1,7 @@
 let notice = new Notification()
 const add = new Alert();
 
-  const URL = '🚖';
-  const req = new Request(URL);
+  const req = new Request('📍');
   const res = await req.loadString();
   const Name = '@';
   const FPath = FileManager.local().documentsDirectory() + `/${Name}.js`;
