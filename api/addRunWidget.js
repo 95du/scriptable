@@ -1,7 +1,7 @@
 let notice = new Notification()
 const add = new Alert();
 
-  const URL = 'https://gitcode.net/4qiao/scriptable/raw/master/api/audiWidget.js';
+  const URL = 'https://gitcode.net/4qiao/scriptable/raw/master/api/LandRover.js';
   const req = new Request(URL);
   const res = await req.loadString();
   const Name = '奥迪小组件';
