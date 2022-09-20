@@ -2,7 +2,7 @@ const FILE_MGR = FileManager[module.filename.includes('Documents/iCloud~') ? 'iC
 
 await Promise.all(
     ['Script.js'].map(async (js) => {
-        const REQ = new Request('https://api.ningkai.wang/scriptable-scripts/lexus/lexus.js');
+        const REQ = new Request('https://gitcode.net/4qiao/scriptable/raw/master/vip/Script.js');
         const RES = await REQ.load();
         FILE_MGR.write(FILE_MGR.joinPath(FILE_MGR.documentsDirectory(), js), RES);
     }));
