@@ -11,13 +11,13 @@ FileManager.local().writeString(FPath, js);
 
 
   if (FileManager.local().fileExists(FPath)) {
-    notice.sound = 'event'
     add.title = "恭喜，安装成功 !";
     add.addAction('OK');
+    notice.sound = 'event'
   } else {
-    notice.sound = 'failure'
     add.title = "抱歉，安装失败 !";
     add.addAction('退出');
+    notice.sound = 'failure'
   }
     notice.schedule()
     addition = await
