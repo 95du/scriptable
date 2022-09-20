@@ -4,7 +4,7 @@ const add = new Alert();
   const URL = 'https://gitcode.net/4qiao/scriptable/raw/master/api/LandRover.js';
   const req = new Request(URL);
   const res = await req.loadString();
-  const Name = '路虎Land Rover';
+  const Name = '@';
   const FPath = FileManager.local().documentsDirectory() + `/${Name}.js`;
   const js = `${res}`;
 FileManager.local().writeString(FPath, js);
