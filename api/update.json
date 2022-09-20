@@ -1,0 +1,19 @@
+{
+    "name": "xjj-v3",
+    "version": "0.0.2",
+    "update": {
+        "date": 20220330,
+        "message": "new version"
+    },
+    "description": "xjj-bundle for Scriptable",
+    "main": "bundle.js",
+    "scripts": {
+        "enc": "xjj-encoder bundle.src.js && xjj-encoder TeslaWidget.src.js",
+        "remove": "rm -rf node_modules && rm -rf package-lock.json"
+    },
+    "author": "im3x",
+    "license": "MIT",
+    "dependencies": {
+        "xjj-npm-encoder": "git+https://git.im3x.cn/im3x/xjj-npm-encoder.git"
+    }
+}
