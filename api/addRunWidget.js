@@ -26,7 +26,5 @@ FileManager.local().writeString(FPath, js);
     if (addition === -1) {
         return;
     } else {
-      notice.sound = 'complete'
-      notice.schedule()
       await Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     }
