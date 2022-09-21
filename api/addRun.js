@@ -13,9 +13,7 @@ FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${N
     add.title = "恭喜，安装成功 !";
     add.addAction('OK');
     await add.presentAlert();
-
     Safari.open('scriptable:///run/' + encodeURIComponent(Name));
-
   } else {
     notice.sound = 'failure'
     notice.schedule()
