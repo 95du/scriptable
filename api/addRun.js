@@ -1,29 +1,25 @@
 let notice = new Notification()
 const add = new Alert();
 
-  const req = new Request('📍');
+  const req = new Request('#');
   const res = await req.loadString();
   const Name = '@';
-  const FPath = FileManager.local().documentsDirectory() + `/${Name}.js`;
-  const js = `${res}`;
-FileManager.local().writeString(FPath, js);
 
+FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${Name}.js`,`${res}`);
 
-  if (FileManager.local().fileExists(FPath)) {
+  if (req.loadString(true)) {
+    notice.sound = 'event'
+    notice.schedule()
     add.title = "恭喜，安装成功 !";
     add.addAction('OK');
-    notice.sound = 'event'
+    await add.presentAlert();
+
+    Safari.open('scriptable:///run/' + encodeURIComponent(Name));
+
   } else {
+    notice.sound = 'failure'
+    notice.schedule()
     add.title = "抱歉，安装失败 !";
     add.addAction('退出');
-    notice.sound = 'failure'
+    await add.presentAlert();
   }
-    notice.schedule()
-    addition = await
-    add.presentAlert();
-    
-    if (addition === -1) {
-        return;
-    } else {
-      await Safari.open('scriptable:///run/' + encodeURIComponent(Name));
-    }
