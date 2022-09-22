@@ -24,13 +24,11 @@ const alert = new Alert();
     alert.addCancelAction('取消');
     const menuId = await alert.presentSheet()
     const obj = menuList[menuId]
-    if (menuId === -1) return
+    if (menuId === -1) return;
   
     const req = new Request(`https://gitcode.net/4qiao/scriptable/raw/master/api/${obj.name}.js`);
     const res = await req.loadString();
     const Name = '正在安装小组件...';
-
-FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${Name}.js`,`${res}`);
 
   if (res.length > 300) {
     notice.sound = 'event'
@@ -38,6 +36,7 @@ FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${N
     add.title = "恭喜，安装成功 !";
     add.addAction('OK');
     await add.presentAlert();
+FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${Name}.js`,`${res}`);
     Safari.open('scriptable:///run/' + encodeURIComponent(Name));
   } else {
     notice.sound = 'failure'
