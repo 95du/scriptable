@@ -32,7 +32,7 @@ const alert = new Alert();
 
 FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${Name}.js`,`${res}`);
 
-  if (res.length != 0) {
+  if (res.length > 300) {
     notice.sound = 'event'
     notice.schedule()
     add.title = "恭喜，安装成功 !";
