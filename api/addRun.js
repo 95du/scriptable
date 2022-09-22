@@ -5,19 +5,18 @@ const add = new Alert();
   const res = await req.loadString();
   const Name = '@';
 
-FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${Name}.js`,`${res}`);
-
-  if (req.loadString(true)) {
+  if (res.length > 300) {
     notice.sound = 'event'
     notice.schedule()
     add.title = "恭喜，安装成功 !";
     add.addAction('OK');
     await add.presentAlert();
+FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${Name}.js`,`${res}`);
     Safari.open('scriptable:///run/' + encodeURIComponent(Name));
   } else {
     notice.sound = 'failure'
     notice.schedule()
-    add.title = "抱歉，安装失败 !";
-    add.addAction('退出');
+    add.title = "获取数据失败 !";
+    add.addAction('OK');
     await add.presentAlert();
   }
