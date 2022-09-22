@@ -1,5 +1,5 @@
 const alert = new Alert()
-alert.title = '大众集团 iOS 桌面小组件下载器'
+alert.title = '大众集团 iOS 桌面小组件'
 alert.message = '根据对应车企下载对应的脚本'
 
   const menuList = [
