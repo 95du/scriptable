@@ -95,14 +95,3 @@ const widget = await createWidget();
   Script.setWidget(widget);  
   Script.complete();
   
-  
-/**
-
-   //刷新widget（间隔5分钟）,官方服务有请求次数限制（50次/h）,根据个人喜好修改最后一位数字（改成几就是间隔几分钟刷新）
- const interval = 1000 * 60 * 5;
- widget.refreshAfterDate = new Date(Date.now() + interval);
-
- return widget;
-}
-
-*/
