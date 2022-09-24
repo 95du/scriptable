@@ -22,7 +22,7 @@ const widget = await createWidget();
   }
   
 
-// Honda Status
+    // Honda Status
     const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4')
     req.method = 'GET'
     req.headers = {"Cookie": "sessionid=ggylbvv5klxzm6ahibpfng4ldna2cxsy"}
@@ -34,7 +34,7 @@ const widget = await createWidget();
       const RES = await REQ.loadJSON();
       const address = RES.regeocode.formatted_address
 
-      // 时间戳
+      // Timestamp
       const date = new Date(data.updateTime);
       const Y = date.getFullYear() + '-';
       const M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
@@ -56,20 +56,8 @@ const widget = await createWidget();
             "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
           };
         }
-        
-      //Static Map
-/**      
-      const ReQ = new Request(`https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=15&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}`)  
-      const ReS = await ReQ.liadImage();
-      
-      //upload picture
-      const reQ = new Request('https://apis.folidaymall.com/online/cms-api/uploadCommentPics');  
-      reQ.method = 'POST'
-      reQ.body = `files=${ReS}`
-      const reS = await reQ.liadJSON();
-*/ 
 
-      
+
       //get token
       const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4')
       const Res = await Req.loadJSON();
@@ -77,7 +65,7 @@ const widget = await createWidget();
       //push message to WeChat
       const REq = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       REq.method = 'POST'
-      REq.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://gitcode.net/4qiao/shortcuts/raw/master/update/img/Maybach.png","description":"[ ${obj.Status} ]  更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      REq.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=15&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"[ ${obj.Status} ]  更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
       const REs = await REq.loadJSON();
       
       //Notification
@@ -92,6 +80,6 @@ const widget = await createWidget();
     if (!config.runsInWidget) {
       await widget.presentMedium();  
     }  
-  Script.setWidget(widget);  
+    Script.setWidget(widget);  
   Script.complete();
   
