@@ -39,7 +39,7 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     const res = await req.loadJSON();
 
     if (res.code != 1) {
-      return;
+      return;//Token expiration
     }
     
     const data = res.data
@@ -47,7 +47,7 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     const RES = await REQ.loadJSON();
     const address = RES.regeocode.formatted_address
   
-    //Current Time
+    //Current timestamp
     const timestamp = Date.parse(new Date());
 
     runObj = `{
@@ -113,7 +113,7 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     Script.complete();
 
 
-    //get token
+    //Get accessToken
     const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
     const Res = await Req.loadJSON();
       
@@ -162,33 +162,38 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     *驻车时长，行驶中，静止状态
     *推送到微信
     */
-    if (data.speed <= 5) {
-       //刷新widget（间隔5分钟）,官方服务有请求次数限制（50次/h）,根据个人喜好修改最后一位数字（改成几就是间隔几分钟刷新）
-       const interval = 1000 * 60 * 30;
-       widget.refreshAfterDate = new Date(Date.now() + interval);
+    const date1 = (timestamp);
+    const date2 = (File.time);
+    const date3 = (date2 - date1);
+    const leave = date3 % (24 * 3600 * 1000);
+    const hours = Math.floor(leave / (3600 * 1000));
+    if (hours <= 2) {
+     return;
     }
-      //push message to WeChat_2
-      const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
-      weChat_2.method = 'POST'
-      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}， 更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
-      const res_2 = await weChat_2.loadJSON();
       
-      //Notification_2
-      notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
-      notice.body = `${address}`
-      notice.openURL = `${obj.Position}`
-      notice.schedule()
+    //push message to WeChat_2
+    const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+    weChat_2.method = 'POST'
+    weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}， 更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+    const res_2 = await weChat_2.loadJSON();
+      
+    //Notification_2
+    notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
+    notice.body = `${address}`
+    notice.openURL = `${obj.Position}`
+    notice.schedule()
     
-      //edit file_2
-      const edit_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
-      edit_2.method = 'GET'
-      edit_2.headers = {"Cookie": `${cookie}`}
-      const Edit_2 = await edit_2.loadJSON();
+    //edit file_2
+    const edit_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
+    edit_2.method = 'GET'
+    edit_2.headers = {"Cookie": `${cookie}`}
+    const Edit_2 = await edit_2.loadJSON();
     
-      //upload JSON_2
-      const up_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
-      up_2.method = 'POST'
-      up_2.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
-      up_2.body = `newRef=&newPath=&message="upload"&content=${object}&lastCommitSha=${Edit_2.data.headCommit.commitId}`
-      const upload_2 = await up_2.loadJSON();
-      return;//pushEnd_2
+    //upload JSON_2
+    const up_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
+    up_2.method = 'POST'
+    up_2.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
+    up_2.body = `newRef=&newPath=&message="upload"&content=${object}&lastCommitSha=${Edit_2.data.headCommit.commitId}`
+    const upload_2 = await up_2.loadJSON();
+    return;//pushEnd_2
+  
