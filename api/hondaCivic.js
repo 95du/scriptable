@@ -164,10 +164,10 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     */
     const date1 = (timestamp);
     const date2 = (File.time);
-    const date3 = (date2 - date1);
+    const date3 = (date1 - date2);
     const leave = date3 % (24 * 3600 * 1000);
     const hours = Math.floor(leave / (3600 * 1000));
-    if (hours <= 2) {
+    if (hours <= 1) {
      return;
     }
       
