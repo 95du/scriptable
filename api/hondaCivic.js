@@ -61,7 +61,7 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     object = `{
     "updateTime": "${data.updateTime}",        
     "address": "${address}", 
-    "run": "runningStop", 
+    "run": "${data.speed}", 
     "coordinates": "${data.longitude},${data.latitude}",
     "time": "${timestamp}"
     }`
