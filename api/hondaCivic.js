@@ -84,7 +84,7 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
           };
         } else {
           obj = {
-            "Status": `[ 车速 ] ${data.speed} km/h`,
+            "Status": `[ 车速 ${data.speed} km/h ]`,
             "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
           };
         }
@@ -131,7 +131,7 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
       //push message to WeChat_1
       const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       weChat_1.method = 'POST'
-      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"[ ${obj.Status} ]  已离开📍${File.address}（ 相距 ${distance} 米 ）\n更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}  已离开📍${File.address}（ 相距 ${distance} 米 ）\n更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
       const res_1 = await weChat_1.loadJSON();
       
       //Notification_1
@@ -170,7 +170,7 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
       //push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       weChat_2.method = 'POST'
-      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"[ ${obj.Status} ]  更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}， 更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
       const res_2 = await weChat_2.loadJSON();
       
       //Notification_2
@@ -192,4 +192,3 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
       up_2.body = `newRef=&newPath=&message="upload"&content=${object}&lastCommitSha=${Edit_2.data.headCommit.commitId}`
       const upload_2 = await up_2.loadJSON();
       return;//pushEnd_2
-  
