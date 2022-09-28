@@ -18,10 +18,10 @@ const resUrl = await imgUrl.loadJSON();
   }
   
   async function shadowImage(img) {
-    const car = new DrawContext();
-    car.size = img.size;
-    car.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));  
-    const res = await car.getImage();
+    const ctx = new DrawContext();
+    ctx.size = img.size;
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));  
+    const res = await ctx.getImage();
     return res;  
   }
   
