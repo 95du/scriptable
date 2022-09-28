@@ -2,9 +2,13 @@ const notice = new Notification()
 const widget = await createWidget();
   
   async function createWidget() {
-    const widget = new ListWidget();
-    const bg = await getImage('https://gitcode.net/4qiao/shortcuts/raw/master/update/img/Maybach.png');
-    widget.backgroundImage = await shadowImage(bg);
+    const widget = new ListWidget();  
+    const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
+const resUrl = await imgUrl.loadJSON();
+    const item = resUrl.Mercedes[Math.floor(Math.random()*resUrl.Mercedes.length)];
+    const bg = await getImage(item);
+    widget.backgroundImage = await shadowImage(bg);  
+    widget.backgroundColor = new Color("#E1E3E5");
     return widget;
   }
 
@@ -14,26 +18,15 @@ const widget = await createWidget();
   }
   
   async function shadowImage(img) {
-    const ctx = new DrawContext();
-    ctx.size = img.size;
-    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));  
-    const res = await ctx.getImage();
+    const car = new DrawContext();
+    car.size = img.size;
+    car.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));  
+    const res = await car.getImage();
     return res;  
   }
-    
-    
-//coding cookie
-const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-wechat%3Dtrue%2Cci-qci%3Dfalse%2Cci-team-step%3Dfalse%2Cci-team-templates%3Dfalse%2Ccoding-flow%3Dfalse%2Ccoding-ocd-java%3Dfalse%2Ccoding-ocd-pages%3Dtrue%2Centerprise-permission-management%3Dtrue%2Cmobile-layout-test%3Dfalse%2Cproject-permission-management%3Dtrue%2Cservice-exception-tips%3Dfalse%2Ctencent-cloud-object-storage%3Dtrue%2C5b585a51; _ga=GA1.2.1553488068.1664098682; _gid=GA1.2.292291750.1664098682; enterprise_domain=diqiao; eid=8498be9b-b0b9-4575-be7b-609054e63564; c=auth-by-wechat%3Dtrue%2Cproject-permission-management%3Dtrue%2Centerprise-permission-management%3Dtrue%2C5c58505d; exp=89cd78c2; ac=9543735c-c43a-4a9a-8962-fdd4eaaadeba; login=4c0b000d-e6d1-4eee-b323-21ddaec6c513; XSRF-TOKEN=e6a5aade-0613-4c0f-8447-ed8415f80134')
-
-    //Get Files 🗂
-    const file = new Request('https://diqiao.coding.net/p/shortcuts/d/4qiao/git/raw/master/code/script.json')
-    file.method = 'GET'
-    file.headers = {"Cookie": `${cookie}`}
-    const File = await file.loadJSON();
-
   
     //Data Request
-    const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4')
+    const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
     req.method = 'GET'
     req.headers = {"Cookie": "sessionid=ggylbvv5klxzm6ahibpfng4ldna2cxsy"}
     const res = await req.loadJSON();
@@ -76,29 +69,29 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     const s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
     const GMT = (Y+M+D+h+m+s);
         
-        //speed
-        if (data.speed <= 5) {
-          obj = {
-            "Status": "[ 车辆静止中 ]",
-            "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
-          };
-        } else {
-          obj = {
-            "Status": `[ 车速 ${data.speed} km/h ]`,
-            "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
-          };
-        }
+      //speed
+      if (data.speed <= 5) {
+        obj = {
+          "Status": "[ 车辆静止中 ]",
+          "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
+        };
+      } else {
+        obj = {
+          "Status": `[ 车速 ${data.speed} km/h ]`,
+          "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
+        };
+      }
     
     
     //icon text
     const iconStack = widget.addStack();
     const iconSymbol = SFSymbol.named('paperplane.fill');
     const naviIcon = iconStack.addImage(iconSymbol.image);
- naviIcon.imageSize = new Size(18, 18);
- naviIcon.tintColor = Color.blue();  
+    naviIcon.imageSize = new Size(18, 18);
+    naviIcon.tintColor = Color.blue();
     iconStack.addSpacer(10);
     
-    const carText = iconStack.addText('Mercedes Maybach 680');
+    const carText = iconStack.addText(`Mercedes Maybach  ${obj.Status}`);
     carText.textColor = Color.black();
     carText.font = Font.boldSystemFont(15);  
     widget.addSpacer(113);
@@ -116,6 +109,16 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     //Get accessToken
     const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
     const Res = await Req.loadJSON();
+
+    //coding cookie
+    const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-wechat%3Dtrue%2Cci-qci%3Dfalse%2Cci-team-step%3Dfalse%2Cci-team-templates%3Dfalse%2Ccoding-flow%3Dfalse%2Ccoding-ocd-java%3Dfalse%2Ccoding-ocd-pages%3Dtrue%2Centerprise-permission-management%3Dtrue%2Cmobile-layout-test%3Dfalse%2Cproject-permission-management%3Dtrue%2Cservice-exception-tips%3Dfalse%2Ctencent-cloud-object-storage%3Dtrue%2C5b585a51; _ga=GA1.2.1553488068.1664098682; _gid=GA1.2.292291750.1664098682; enterprise_domain=diqiao; eid=8498be9b-b0b9-4575-be7b-609054e63564; c=auth-by-wechat%3Dtrue%2Cproject-permission-management%3Dtrue%2Centerprise-permission-management%3Dtrue%2C5c58505d; exp=89cd78c2; ac=9543735c-c43a-4a9a-8962-fdd4eaaadeba; login=4c0b000d-e6d1-4eee-b323-21ddaec6c513; XSRF-TOKEN=e6a5aade-0613-4c0f-8447-ed8415f80134');
+
+    //Get Files 🗂
+    const file = new Request('https://diqiao.coding.net/p/shortcuts/d/4qiao/git/raw/master/code/script.json')
+    file.method = 'GET'
+    file.headers = {"Cookie": `${cookie}`}
+    const File = await file.loadJSON();
+      
       
     /**
     *Electronic Fence
@@ -147,7 +150,7 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
       const Edit_1 = await edit_1.loadJSON();
     
       //upload JSON_1
-      const up_1 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
+      const up_1 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json');
       up_1.method = 'POST'
       up_1.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
       up_1.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit_1.data.headCommit.commitId}`
@@ -165,35 +168,107 @@ const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-
     const date1 = (timestamp);
     const date2 = (File.time);
     const date3 = (date1 - date2);
-    const leave = date3 % (24 * 3600 * 1000);
-    const hours = Math.floor(leave / (3600 * 1000));
-    if (hours <= 1) {
-     return;
+    const leave1 = date3 % (24 * 3600 * 1000);
+    const hours = Math.floor(leave1 / (3600 * 1000));
+    const leave2 = leave1 % (3600 * 1000);
+    const minutes = Math.floor(leave2 / (60 * 1000));
+    const leave3 = leave2 % (60 * 1000);
+    const seconds = Math.round(leave3 / 1000);
+    
+    if (data.speed <= 5) {
+      var run = (data.updateTime)
+      var stop = (File.updateTime)
+      
+        if (run == stop) {
+          time = {
+            "duration": "30"
+          }
+        } else {
+          time = {
+            "duration": "10"
+          }
+        }
+        
+      var moment = (hours * 60 + minutes)
+      if (moment >= time.duration) {
+      //push message to WeChat_2
+      const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+      weChat_2.method = 'POST'
+      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}，更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      const res_2 = await weChat_2.loadJSON();
+      
+      //Notification_2
+      notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
+      notice.body = `${address}`
+      notice.openURL = `${obj.Position}`
+      notice.schedule()
+    
+      //edit file_2
+      const edit_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
+      edit_2.method = 'GET'
+      edit_2.headers = {"Cookie": `${cookie}`}
+      const Edit_2 = await edit_2.loadJSON();
+    
+      //upload JSON_2
+      const up_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
+      up_2.method = 'POST'
+      up_2.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
+      up_2.body = `newRef=&newPath=&message="upload"&content=${object}&lastCommitSha=${Edit_2.data.headCommit.commitId}`
+      const upload_2 = await up_2.loadJSON();
+      } 
+        
+    } else if (File.run != 'HONDA'){
+      //push message to WeChat_3
+      const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+      weChat_3.method = 'POST'
+      weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}，更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      const res_3 = await weChat_3.loadJSON();
+      
+      //Notification_3
+      notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
+      notice.body = `${address}`
+      notice.openURL = `${obj.Position}`
+      notice.schedule()
+    
+      //edit file_3
+      const edit_3 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
+      edit_3.method = 'GET'
+      edit_3.headers = {"Cookie": `${cookie}`}
+      const Edit_3 = await edit_3.loadJSON();
+    
+      //upload JSON_3
+      const up_3 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
+      up_3.method = 'POST'
+      up_3.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
+      up_3.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit_3.data.headCommit.commitId}`
+      const upload_3 = await up_3.loadJSON();
+    } else {
+      //push message to WeChat_4
+      const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+      weChat_4.method = 'POST'
+      weChat_4.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}，更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      const res_4 = await weChat_4.loadJSON();
+      
+      //Notification_4
+      notice.title = `${obj.Status}  `+`启动时间 ${GMT}`
+      notice.body = `${address}`
+      notice.openURL = `${obj.Position}`
+      notice.schedule()
+    
+      //edit file_4
+      const edit_4 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
+      edit_4.method = 'GET'
+      edit_4.headers = {"Cookie": `${cookie}`}
+      const Edit_4 = await edit_4.loadJSON();
+    
+      //upload JSON_4
+      const up_4 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
+      up_4.method = 'POST'
+      up_4.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
+      up_4.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit_4.data.headCommit.commitId}`
+      const upload_4 = await up_4.loadJSON();
+
     }
-      
-    //push message to WeChat_2
-    const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
-    weChat_2.method = 'POST'
-    weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}， 更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
-    const res_2 = await weChat_2.loadJSON();
-      
-    //Notification_2
-    notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
-    notice.body = `${address}`
-    notice.openURL = `${obj.Position}`
-    notice.schedule()
-    
-    //edit file_2
-    const edit_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
-    edit_2.method = 'GET'
-    edit_2.headers = {"Cookie": `${cookie}`}
-    const Edit_2 = await edit_2.loadJSON();
-    
-    //upload JSON_2
-    const up_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
-    up_2.method = 'POST'
-    up_2.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
-    up_2.body = `newRef=&newPath=&message="upload"&content=${object}&lastCommitSha=${Edit_2.data.headCommit.commitId}`
-    const upload_2 = await up_2.loadJSON();
-    return;//pushEnd_2
+  
+console.log(moment)
   
