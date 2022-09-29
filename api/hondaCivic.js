@@ -1,10 +1,10 @@
 const notice = new Notification()
 const widget = await createWidget();
-  
+
   async function createWidget() {
     const widget = new ListWidget();  
     const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
-const resUrl = await imgUrl.loadJSON();
+    const resUrl = await imgUrl.loadJSON();
     const item = resUrl.Mercedes[Math.floor(Math.random()*resUrl.Mercedes.length)];
     const bg = await getImage(item);
     widget.backgroundImage = await shadowImage(bg);  
@@ -48,7 +48,7 @@ const resUrl = await imgUrl.loadJSON();
     "address": "${address}", 
     "run": "${data.owner}", 
     "coordinates": "${data.longitude},${data.latitude}",
-    "time": "${timestamp}"
+    "pushTime": "${timestamp}"
     }`
     
     object = `{
@@ -56,7 +56,7 @@ const resUrl = await imgUrl.loadJSON();
     "address": "${address}", 
     "run": "${data.speed}", 
     "coordinates": "${data.longitude},${data.latitude}",
-    "time": "${timestamp}"
+    "pushTime": "${timestamp}"
     }`
     
     // Timestamp
@@ -81,24 +81,50 @@ const resUrl = await imgUrl.loadJSON();
           "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
         };
       }
-    
+
     
     //icon text
     const iconStack = widget.addStack();
-    const iconSymbol = SFSymbol.named('paperplane.fill');
+
+    if (data.speed <= 5) {
+      const SFsymbol = ['paperplane.fill','exclamationmark.shield.fill','lock.shield.fill']
+      const SF = SFsymbol[Math.floor(Math.random()*SFsymbol.length)];
+      symbol = {"sf": `${SF}`};
+    } else {
+      symbol = {"sf": "checkmark.shield.fill"};
+    }
+    
+    const iconSymbol = SFSymbol.named(symbol.sf);
     const naviIcon = iconStack.addImage(iconSymbol.image);
     naviIcon.imageSize = new Size(18, 18);
-    naviIcon.tintColor = Color.blue();
+
+    if (data.speed <= 5) {
+      naviIcon.tintColor = Color.blue();
+    } else {
+      naviIcon.tintColor = Color.green();
+    }
     iconStack.addSpacer(10);
     
-    const carText = iconStack.addText(`Mercedes Maybach  ${obj.Status}`);
-    carText.textColor = Color.black();
-    carText.font = Font.boldSystemFont(15);  
+    const statusText = iconStack.addText('Mercedes Maybach  ');
+    statusText.textColor = new Color('#626567');
+    statusText.font = Font.boldSystemFont(15);
+    
+    const carText = iconStack.addText(`${obj.Status}`);
+    
+    if (data.speed <= 5) {
+      carText.textColor = Color.blue();
+    } else {
+      carText.textColor = Color.green();
+    }
+    
+    carText.font = Font.boldSystemFont(15);
     widget.addSpacer(113);
+    
     //Jump Map
-    naviIcon.url = `${obj.Position}`;
- iconStack.useDefaultPadding();
-
+    naviIcon.url = `${obj.Position}`;  
+    //widget jump  
+    widget.url = 'scriptable:///run/Honda%20Civic';
+    
     if (!config.runsInWidget) {
       await widget.presentMedium();  
     }  
@@ -113,7 +139,7 @@ const resUrl = await imgUrl.loadJSON();
     //coding cookie
     const cookie = ('code=artifact-reforge%3Dfalse%2Casync-blocked%3Dtrue%2Cauth-by-wechat%3Dtrue%2Cci-qci%3Dfalse%2Cci-team-step%3Dfalse%2Cci-team-templates%3Dfalse%2Ccoding-flow%3Dfalse%2Ccoding-ocd-java%3Dfalse%2Ccoding-ocd-pages%3Dtrue%2Centerprise-permission-management%3Dtrue%2Cmobile-layout-test%3Dfalse%2Cproject-permission-management%3Dtrue%2Cservice-exception-tips%3Dfalse%2Ctencent-cloud-object-storage%3Dtrue%2C5b585a51; _ga=GA1.2.1553488068.1664098682; _gid=GA1.2.292291750.1664098682; enterprise_domain=diqiao; eid=8498be9b-b0b9-4575-be7b-609054e63564; c=auth-by-wechat%3Dtrue%2Cproject-permission-management%3Dtrue%2Centerprise-permission-management%3Dtrue%2C5c58505d; exp=89cd78c2; ac=9543735c-c43a-4a9a-8962-fdd4eaaadeba; login=4c0b000d-e6d1-4eee-b323-21ddaec6c513; XSRF-TOKEN=e6a5aade-0613-4c0f-8447-ed8415f80134');
 
-    //Get Files 🗂
+    //Get Files
     const file = new Request('https://diqiao.coding.net/p/shortcuts/d/4qiao/git/raw/master/code/script.json')
     file.method = 'GET'
     file.headers = {"Cookie": `${cookie}`}
@@ -134,12 +160,12 @@ const resUrl = await imgUrl.loadJSON();
       //push message to WeChat_1
       const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       weChat_1.method = 'POST'
-      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}  已离开📍${File.address}（ 相距 ${distance} 米 ）\n更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}  已離開📍${File.address}（ 相距 ${distance} 米 ）\n更新時間 ${GMT}","url":"${obj.Position}"}]}}`;
       const res_1 = await weChat_1.loadJSON();
       
       //Notification_1
-      notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
-      notice.body = `已离开📍${File.address}（ 相距 ${distance} 米 ）\n更新时间 ${GMT}`
+      notice.title = `${obj.Status}  `+`更新時間 ${GMT}`
+      notice.body = `已離開📍${File.address}（ 相距 ${distance} 米 ）\n更新時間 ${GMT}`
       notice.openURL = `${obj.Position}`
       notice.schedule()
     
@@ -154,7 +180,7 @@ const resUrl = await imgUrl.loadJSON();
       up_1.method = 'POST'
       up_1.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
       up_1.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit_1.data.headCommit.commitId}`
-      const upload_1= await up_1.loadJSON();
+      const upload_1 = await up_1.loadJSON();
       return;//pushEnd_1
       }
     }
@@ -163,31 +189,27 @@ const resUrl = await imgUrl.loadJSON();
     /**
     *车辆状态触发条件
     *驻车时长，行驶中，静止状态
-    *推送到微信
+    *推送信息到微信
     */
     const date1 = (timestamp);
-    const date2 = (File.time);
+    const date2 = (File.pushTime);
     const date3 = (date1 - date2);
-    const leave1 = date3 % (24 * 3600 * 1000);
-    const hours = Math.floor(leave1 / (3600 * 1000));
-    const leave2 = leave1 % (3600 * 1000);
-    const minutes = Math.floor(leave2 / (60 * 1000));
-    const leave3 = leave2 % (60 * 1000);
-    const seconds = Math.round(leave3 / 1000);
+    const L1 = date3 % (24 * 3600 * 1000);
+    const hours = Math.floor(L1 / (3600 * 1000));
+    const L2 = L1 % (3600 * 1000);
+    const minutes = Math.floor(L2 / (60 * 1000));
+    const L3 = L2 % (60 * 1000);
+    const seconds = Math.round(L3 / 1000);
     
     if (data.speed <= 5) {
       var run = (data.updateTime)
       var stop = (File.updateTime)
       
-        if (run == stop) {
-          time = {
-            "duration": "30"
-          }
-        } else {
-          time = {
-            "duration": "10"
-          }
-        }
+      if (run == stop) {
+        time = {"duration": "30"}
+      } else {
+        time = {"duration": "10"}
+      }
         
       var moment = (hours * 60 + minutes)
       if (moment >= time.duration) {
@@ -270,5 +292,5 @@ const resUrl = await imgUrl.loadJSON();
 
     }
   
-console.log(moment)
+console.log(address)
   
