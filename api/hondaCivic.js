@@ -156,7 +156,7 @@ const widget = await createWidget();
     *判断run没有值触发电子围栏
     *推送信息到微信
     */
-    if(json.run != 'HONDA'){
+    if(json.run !== 'HONDA'){
       const fence = new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${data.longitude},${data.latitude}`);  
       resFence = await fence.loadJSON();
       const distance = resFence.route.paths[0].distance  
@@ -232,15 +232,15 @@ const widget = await createWidget();
       const upload_2 = await up_2.loadJSON();
       } 
         
-    } else if (File.run != 'HONDA'){
+    } else if (json.run != 'HONDA'){
       //push message to WeChat_3
       const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       weChat_3.method = 'POST'
-      weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}，更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}，启动时间 ${GMT}","url":"${obj.Position}"}]}}`;
       const res_3 = await weChat_3.loadJSON();
       
       //Notification_3
-      notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
+      notice.title = `${obj.Status}  `+`启动时间 ${GMT}`
       notice.body = `${address}`
       notice.openURL = `${obj.Position}`
       notice.schedule()
@@ -260,7 +260,7 @@ const widget = await createWidget();
       const res_4 = await weChat_4.loadJSON();
       
       //Notification_4
-      notice.title = `${obj.Status}  `+`启动时间 ${GMT}`
+      notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
       notice.body = `${address}`
       notice.openURL = `${obj.Position}`
       notice.schedule()
@@ -270,9 +270,9 @@ const widget = await createWidget();
       up_4.method = 'POST'
       up_4.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
       up_4.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit.data.headCommit.commitId}`
-      const upload_4 = await up_4.loadJSON();
-
+      const upload_4 = await up_4.loadJSON();  
+      return;
     }
-  
+
 console.log(json)
   
