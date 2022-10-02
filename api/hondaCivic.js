@@ -7,8 +7,7 @@ const widget = await createWidget();
     const resUrl = await imgUrl.loadJSON();
     const item = resUrl.mercedes[Math.floor(Math.random()*resUrl.mercedes.length)];
     const bg = await getImage(item);
-    widget.backgroundImage = await shadowImage(bg);  
-    widget.backgroundColor = new Color("#E1E3E5");
+    widget.backgroundImage = await shadowImage(bg);
     return widget;
   }
 
@@ -36,7 +35,7 @@ const widget = await createWidget();
     }
     
     const data = res.data
-    const REQ = new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&location=${data.longitude},${data.latitude}`);  
+    const REQ = new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=300&extensions=all&location=${data.longitude},${data.latitude}`);  
     const RES = await REQ.loadJSON();
     const address = RES.regeocode.formatted_address
   
@@ -59,7 +58,7 @@ const widget = await createWidget();
     "pushTime": "${timestamp}"
     }`
     
-    // Timestamp
+    // Timestamp Conversion
     const date = new Date(data.updateTime);
     const Y = date.getFullYear() + '-';
     const M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
@@ -69,68 +68,67 @@ const widget = await createWidget();
     const s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
     const GMT = (Y+M+D+h+m+s);
         
-      //speed
-      if (data.speed <= 5) {
-        obj = {
-          "Status": "[ 车辆静止中 ]",
-          "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
-        };
-      } else {
-        obj = {
-          "Status": `[ 车速 ${data.speed} km/h ]`,
-          "Position" : `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`
-        };
-      }
+    //speed
+    if (data.speed <= 5) {
+      status = "[ 车辆静止中 ]";
+      mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
+    } else {
+      status = `[ 车速 ${data.speed} km/h ]`;
+      mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
+    }
 
     
-    //icon text
+    //Display Icon Status Addr
     const iconStack = widget.addStack();
 
     if (data.speed <= 5) {
-      const SFsymbol = ['paperplane.fill','exclamationmark.shield.fill','lock.shield.fill']
+      const SFsymbol = ['paperplane.fill','exclamationmark.shield.fill']
       const SF = SFsymbol[Math.floor(Math.random()*SFsymbol.length)];
       symbol = {"sf": `${SF}`};
     } else {
       symbol = {"sf": "checkmark.shield.fill"};
     }
-    
     const iconSymbol = SFSymbol.named(symbol.sf);
     const naviIcon = iconStack.addImage(iconSymbol.image);
     naviIcon.imageSize = new Size(18, 18);
-
     if (data.speed <= 5) {
-      naviIcon.tintColor = Color.blue();
+      naviIcon.tintColor = Color.red();
     } else {
       naviIcon.tintColor = Color.green();
     }
-    iconStack.addSpacer(10);
+    iconStack.addSpacer(8);
     
-    const statusText = iconStack.addText('Mercedes Maybach  ');
-    statusText.textColor = new Color('#626567');
-    statusText.font = Font.boldSystemFont(15);
     
-    const carText = iconStack.addText(`${obj.Status}`);
-    
+    const statusText = iconStack.addText(`${status}`);
     if (data.speed <= 5) {
-      carText.textColor = Color.blue();
+      statusText.textColor = Color.blue();
     } else {
-      carText.textColor = Color.green();
+      statusText.textColor = Color.purple();
     }
+    statusText.font = Font.boldSystemFont(14);
     
-    carText.font = Font.boldSystemFont(15);
+    
+    const addressText = iconStack.addText(` ${RES.regeocode.pois[0].name}`);
+    if (data.speed <= 5) {
+      addressText.textColor = Color.purple();
+    } else {
+      addressText.textColor = Color.blue();
+    }
+    addressText.font = Font.boldSystemFont(14);
+    statusText.centerAlignText()
     widget.addSpacer(113);
-    
-    //Jump Map
-    naviIcon.url = `${obj.Position}`;  
-    //widget jump  
+      
+    //jump run widget
     widget.url = 'scriptable:///run/Honda%20Civic';
-    
+    //jump show map
+    naviIcon.url = `${mapUrl}`;
+
     if (!config.runsInWidget) {
       await widget.presentMedium();  
-    }  
-    Script.setWidget(widget);  
-    Script.complete();
-
+    } else {
+      Script.setWidget(widget);  
+      Script.complete();  
+    }
 
     //Get accessToken
     const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
@@ -146,10 +144,10 @@ const widget = await createWidget();
     const json = await file.loadJSON();  
     
     //edit file_1
-      const edit = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
-      edit.method = 'GET'
-      edit.headers = {"Cookie": `${cookie}`}
-      const Edit = await edit.loadJSON();
+    const edit = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
+    edit.method = 'GET'
+    edit.headers = {"Cookie": `${cookie}`}
+    const Edit = await edit.loadJSON();
     
     /**
     *Electronic Fence
@@ -165,13 +163,14 @@ const widget = await createWidget();
       //push message to WeChat_1
       const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       weChat_1.method = 'POST'
-      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}  已離開📍${json.address}（ 相距 ${distance} 米 ）\n更新時間 ${GMT}","url":"${obj.Position}"}]}}`;
+      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}  已離開📍${json.address}（ 相距 ${distance} 米 ）\n更新時間 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_1 = await weChat_1.loadJSON();
       
       //Notification_1
-      notice.title = `${obj.Status}  `+`更新時間 ${GMT}`
-      notice.body = `已離開📍${json.address}（ 相距 ${distance} 米 ）\n更新時間 ${GMT}`
-      notice.openURL = `${obj.Position}`
+      notice.title = `${status}  `+`更新時間 ${GMT}`
+      notice.body = `已離開📍${json.address}（ 相距 ${distance} 米 ）`
+      notice.sound = 'Alert'
+      notice.openURL = `${mapUrl}`
       notice.schedule()
     
       //upload JSON_1
@@ -203,25 +202,24 @@ const widget = await createWidget();
     if (data.speed <= 5) {
       var run = (data.updateTime)
       var stop = (json.updateTime)
-      
       if (run == stop) {
-        time = {"duration": "30"}
+        duration = "120"
       } else {
-        time = {"duration": "10"}
+        duration = "10"
       }
         
       var moment = (hours * 60 + minutes)
-      if (moment >= time.duration) {
+      if (moment >= duration) {
       //push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       weChat_2.method = 'POST'
-      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}，更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}，驻车时间 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_2 = await weChat_2.loadJSON();
       
       //Notification_2
-      notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
+      notice.title = `${status}  `+`驻车时间 ${GMT}`
       notice.body = `${address}`
-      notice.openURL = `${obj.Position}`
+      notice.openURL = `${mapUrl}`
       notice.schedule()
     
       //upload JSON_2
@@ -231,18 +229,18 @@ const widget = await createWidget();
       up_2.body = `newRef=&newPath=&message="upload"&content=${object}&lastCommitSha=${Edit.data.headCommit.commitId}`
       const upload_2 = await up_2.loadJSON();
       } 
-        
-    } else if (json.run != 'HONDA'){
+    } else {
+      if (json.run != 'HONDA'){
       //push message to WeChat_3
       const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       weChat_3.method = 'POST'
-      weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}，启动时间 ${GMT}","url":"${obj.Position}"}]}}`;
+      weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}，启动时间 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_3 = await weChat_3.loadJSON();
       
       //Notification_3
-      notice.title = `${obj.Status}  `+`启动时间 ${GMT}`
+      notice.title = `${status}  `+`启动时间 ${GMT}`
       notice.body = `${address}`
-      notice.openURL = `${obj.Position}`
+      notice.openURL = `${mapUrl}`
       notice.schedule()
     
       //upload JSON_3
@@ -252,27 +250,26 @@ const widget = await createWidget();
       up_3.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit.data.headCommit.commitId}`
       const upload_3 = await up_3.loadJSON();
 
-    } else {
-      //push message to WeChat_4
-      const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
-      weChat_4.method = 'POST'
-      weChat_4.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${obj.Status}，更新时间 ${GMT}","url":"${obj.Position}"}]}}`;
-      const res_4 = await weChat_4.loadJSON();
+      } else {
+        //push message to WeChat_4
+        const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+        weChat_4.method = 'POST'
+        weChat_4.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}，更新时间 ${GMT}","url":"${mapUrl}"}]}}`;
+        const res_4 = await weChat_4.loadJSON();
+        
+        //Notification_4
+        notice.title = `${status}  `+`更新时间 ${GMT}`
+        notice.body = `${address}`
+        notice.openURL = `${mapUrl}`
+        notice.schedule()
       
-      //Notification_4
-      notice.title = `${obj.Status}  `+`更新时间 ${GMT}`
-      notice.body = `${address}`
-      notice.openURL = `${obj.Position}`
-      notice.schedule()
-    
-      //upload JSON_4
-      const up_4 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
-      up_4.method = 'POST'
-      up_4.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
-      up_4.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit.data.headCommit.commitId}`
-      const upload_4 = await up_4.loadJSON();  
-      return;
+        //upload JSON_4
+        const up_4 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
+        up_4.method = 'POST'
+        up_4.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
+        up_4.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit.data.headCommit.commitId}`
+        const upload_4 = await up_4.loadJSON();  
+        return;
+      }
     }
-
 console.log(json)
-  
