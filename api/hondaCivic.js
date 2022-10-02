@@ -41,7 +41,7 @@ const widget = await createWidget();
   
     //Current timestamp
     const timestamp = Date.parse(new Date());
-
+    
     runObj = `{
     "updateTime": "${data.updateTime}", 
     "address": "${address}", 
@@ -76,13 +76,13 @@ const widget = await createWidget();
       status = `[ 车速 ${data.speed} km/h ]`;
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     }
-
     
-    //Display Icon Status Addr
-    const iconStack = widget.addStack();
-
+    //show message
+    //第一行
+    const iconStack = widget.addStack();  
+    iconStack.setPadding(2, 0, 2, 0);
     if (data.speed <= 5) {
-      const SFsymbol = ['paperplane.fill','exclamationmark.shield.fill']
+      const SFsymbol = ['paperplane.fill','exclamationmark.shield.fill','lock.circle']
       const SF = SFsymbol[Math.floor(Math.random()*SFsymbol.length)];
       symbol = {"sf": `${SF}`};
     } else {
@@ -98,7 +98,6 @@ const widget = await createWidget();
     }
     iconStack.addSpacer(8);
     
-    
     const statusText = iconStack.addText(`${status}`);
     if (data.speed <= 5) {
       statusText.textColor = Color.blue();
@@ -107,7 +106,6 @@ const widget = await createWidget();
     }
     statusText.font = Font.boldSystemFont(14);
     
-    
     const addressText = iconStack.addText(` ${RES.regeocode.pois[0].name}`);
     if (data.speed <= 5) {
       addressText.textColor = Color.purple();
@@ -115,9 +113,50 @@ const widget = await createWidget();
       addressText.textColor = Color.blue();
     }
     addressText.font = Font.boldSystemFont(14);
-    statusText.centerAlignText()
-    widget.addSpacer(113);
-      
+    addressText.leftAlignText();
+    
+    
+    //第二行
+    const iconStack2 = widget.addStack();
+    iconStack2.setPadding(2, 0, 2, 0);
+    if (data.speed <= 5) {
+      symbol2 = {"sf": "car.circle"};
+    } else {
+      symbol2 = {"sf": "car.circle"};
+    }
+    const iconSymbol2 = SFSymbol.named(symbol2.sf);
+    const carIcon = iconStack2.addImage(iconSymbol2.image);
+    carIcon.imageSize = new Size(18, 18);
+    if (data.speed <= 5) {
+      carIcon.tintColor = Color.orange();
+    } else {
+      carIcon.tintColor = Color.green();
+    }
+    iconStack2.addSpacer(8);
+    
+    //计算时长
+    const parkingTime = (timestamp - data.updateTime);
+    const days = Math.floor(parkingTime/(24*3600*1000));
+    const P1 = parkingTime % (24 * 3600 * 1000);
+    const hours1 = Math.floor(P1 / (3600 * 1000));
+    const P2 = P1 % (3600 * 1000);
+    const minutes1 = Math.floor(P2 / (60 * 1000));
+
+    if (days === 0) {
+      var durationText = iconStack2.addText(`[ ${hours1}小时` + `${minutes1}分 ]`);
+    } else {
+      var durationText = iconStack2.addText(`[ ${days}天` + `${hours1}小时` + `${minutes1}分 ]`);
+    }
+    
+    if (data.speed <= 5) {
+      durationText.textColor = Color.blue();
+    } else {
+      durationText.textColor = Color.purple();
+    }
+    durationText.font = Font.boldSystemFont(14);
+    durationText.leftAlignText();
+    widget.addSpacer(100);
+    
     //jump run widget
     widget.url = 'scriptable:///run/Honda%20Civic';
     //jump show map
@@ -129,6 +168,7 @@ const widget = await createWidget();
       Script.setWidget(widget);  
       Script.complete();  
     }
+
 
     //Get accessToken
     const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
@@ -189,15 +229,14 @@ const widget = await createWidget();
     *驻车时长，行驶中，静止状态
     *推送信息到微信
     */
-    const date1 = (timestamp);
-    const date2 = (json.pushTime);
-    const date3 = (date1 - date2);
-    const L1 = date3 % (24 * 3600 * 1000);
+    const date1 = (timestamp - json.pushTime);
+    const L1 = date1 % (24 * 3600 * 1000);
     const hours = Math.floor(L1 / (3600 * 1000));
     const L2 = L1 % (3600 * 1000);
     const minutes = Math.floor(L2 / (60 * 1000));
     const L3 = L2 % (60 * 1000);
     const seconds = Math.round(L3 / 1000);
+    var moment = (hours * 60 + minutes)
     
     if (data.speed <= 5) {
       var run = (data.updateTime)
@@ -208,7 +247,6 @@ const widget = await createWidget();
         duration = "10"
       }
         
-      var moment = (hours * 60 + minutes)
       if (moment >= duration) {
       //push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
@@ -272,4 +310,4 @@ const widget = await createWidget();
         return;
       }
     }
-console.log(json)
+console.log(moment)
