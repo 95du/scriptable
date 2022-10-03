@@ -1,5 +1,3 @@
-const notice = new Notification()
-const widget = await createWidget();
 
   async function createWidget() {
     const widget = new ListWidget();
