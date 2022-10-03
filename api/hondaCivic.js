@@ -70,10 +70,10 @@ const widget = await createWidget();
         
     //speed
     if (data.speed <= 5) {
-      status = "[ 车辆静止中 ]";
+      status = "车辆静止 ";
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     } else {
-      status = `[ 车速 ${data.speed} km/h ]`;
+      status = `车速 ${data.speed} km/h `;
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     }
     
@@ -82,7 +82,7 @@ const widget = await createWidget();
     const iconStack = widget.addStack();  
     iconStack.setPadding(2, 0, 2, 0);
     if (data.speed <= 5) {
-      const SFsymbol = ['paperplane.fill','exclamationmark.shield.fill','lock.circle']
+      const SFsymbol = ['paperplane.circle','location.circle','lock.circle']
       const SF = SFsymbol[Math.floor(Math.random()*SFsymbol.length)];
       symbol = {"sf": `${SF}`};
     } else {
@@ -98,15 +98,7 @@ const widget = await createWidget();
     }
     iconStack.addSpacer(8);
     
-    const statusText = iconStack.addText(`${status}`);
-    if (data.speed <= 5) {
-      statusText.textColor = Color.blue();
-    } else {
-      statusText.textColor = Color.purple();
-    }
-    statusText.font = Font.boldSystemFont(14);
-    
-    const addressText = iconStack.addText(` ${RES.regeocode.pois[0].name}`);
+    const addressText = iconStack.addText(`${RES.regeocode.pois[0].address}` + `${RES.regeocode.pois[0].name}`);
     if (data.speed <= 5) {
       addressText.textColor = Color.purple();
     } else {
@@ -119,12 +111,7 @@ const widget = await createWidget();
     //第二行
     const iconStack2 = widget.addStack();
     iconStack2.setPadding(2, 0, 2, 0);
-    if (data.speed <= 5) {
-      symbol2 = {"sf": "car.circle"};
-    } else {
-      symbol2 = {"sf": "car.circle"};
-    }
-    const iconSymbol2 = SFSymbol.named(symbol2.sf);
+    const iconSymbol2 = SFSymbol.named('car.circle');
     const carIcon = iconStack2.addImage(iconSymbol2.image);
     carIcon.imageSize = new Size(18, 18);
     if (data.speed <= 5) {
@@ -133,6 +120,14 @@ const widget = await createWidget();
       carIcon.tintColor = Color.green();
     }
     iconStack2.addSpacer(8);
+    
+    const statusText = iconStack2.addText(`${status}`);
+    if (data.speed <= 5) {
+      statusText.textColor = Color.blue();
+    } else {
+      statusText.textColor = Color.green();
+    }
+    statusText.font = Font.boldSystemFont(14);
     
     //计算时长
     const parkingTime = (timestamp - data.updateTime);
@@ -143,24 +138,19 @@ const widget = await createWidget();
     const minutes1 = Math.floor(P2 / (60 * 1000));
 
     if (days === 0) {
-      var durationText = iconStack2.addText(`[ ${hours1}小时` + `${minutes1}分 ]`);
+      var durationText = iconStack2.addText(` ${hours1}小时` + `${minutes1}分`);
     } else {
-      var durationText = iconStack2.addText(`[ ${days}天` + `${hours1}小时` + `${minutes1}分 ]`);
+      var durationText = iconStack2.addText(` ${days}天` + `${hours1}小时` + `${minutes1}分`);
     }
-    
-    if (data.speed <= 5) {
-      durationText.textColor = Color.blue();
-    } else {
-      durationText.textColor = Color.purple();
-    }
+    durationText.textColor = Color.blue();
     durationText.font = Font.boldSystemFont(14);
     durationText.leftAlignText();
-    widget.addSpacer(100);
+    widget.addSpacer(103);
     
     //jump run widget
     widget.url = 'scriptable:///run/Honda%20Civic';
     //jump show map
-    naviIcon.url = `${mapUrl}`;
+    addressText.url = `${mapUrl}`;
 
     if (!config.runsInWidget) {
       await widget.presentMedium();  
