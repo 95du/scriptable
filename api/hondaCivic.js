@@ -1,3 +1,6 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: orange; icon-glyph: car;
 const notice = new Notification()
 const widget = await createWidget();
 
@@ -150,7 +153,7 @@ const widget = await createWidget();
     //jump run widget
     widget.url = 'scriptable:///run/Honda%20Civic';
     //jump show map
-    addressText.url = `${mapUrl}`;
+    naviIcon.url = `${mapUrl}`;
 
     if (!config.runsInWidget) {
       await widget.presentMedium();  
