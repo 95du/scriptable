@@ -24,12 +24,6 @@ const widget = await createWidget()
     ctx.size = img.size;
     ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));  
     const res = await ctx.getImage();  
-    /**
-    * 图片遮罩颜色、透明度设置
-    * ctx.setFillColor(new Color("#000000", 0.7))
-    * ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-    * let res = await ctx.getImage();
-    */
     return res;  
   }
   
