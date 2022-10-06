@@ -1,6 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: orange; icon-glyph: car;
 const notice = new Notification()
 const widget = await createWidget();
     
@@ -23,7 +20,13 @@ const widget = await createWidget();
     const ctx = new DrawContext();
     ctx.size = img.size;
     ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));  
-    const res = await ctx.getImage();
+    const res = await ctx.getImage();  
+    /**
+    * 图片遮罩颜色、透明度设置
+    * ctx.setFillColor(new Color("#000000", 0.7))
+    * ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+    * let res = await ctx.getImage();
+    */
     return res;  
   }
   
@@ -159,7 +162,7 @@ const widget = await createWidget();
     if (!config.runsInWidget) {  
       let title
       let message = "Honda Civic 小组件"
-      let options = ["查看小组件","更新数据","退出菜单"]
+      let options = ["预览组件","更新数据","退出"]
       let response = await generateAlert(message,options)
         
       if (response === 0) {
