@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: car;
 const notice = new Notification()
-const widget = await createWidget();
+const widget = await createWidget()
     
   async function createWidget() {
     const widget = new ListWidget();
@@ -165,22 +165,14 @@ const widget = await createWidget();
     if (!config.runsInWidget) {  
       let title
       let message = "Honda Civic 小组件"
-      let options = ["预览组件","更新数据","退出"]
+      let options = ["更新代码","预览组件","退出"]
       let response = await generateAlert(message,options)
         
-      if (response === 0) {
-        await widget.presentMedium();
-        return;
-      }
-      
-      if (response === 2) return;
-        
       // Update the code.
-      if (response === 1) {
+      if (response === 0) {
         const FILE_MGR = FileManager.local()
-        const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename)
-        
-        // download the file.
+        const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
+
         try {
           const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/hondaCivic.js');
           const codeString = await reqUpdate.loadString()
@@ -207,12 +199,22 @@ const widget = await createWidget();
           let response = await alert.presentAlert()
           return response
         }
+      if (response === 1) {
+        await widget.presentMedium();
+        return;
+        }
+      if (response === 2) return;
       } else {
         Script.setWidget(widget);
         Script.complete();
       }
     
 
+    /**
+    * 上传获取GitCode文件
+    * 获取企业微信token
+    * 推送信息及通知
+    */
     // Get accessToken
     const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
     const Res = await Req.loadJSON();
@@ -371,4 +373,4 @@ const widget = await createWidget();
         return;
       }
     }
-console.log(GMT)
+console.log(address)
