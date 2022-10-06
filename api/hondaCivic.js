@@ -171,14 +171,14 @@ const widget = await createWidget();
         
       // Update the code.
       if (response === 1) {
-        const FILES = FileManager.local()
-        const iCloudInUse = FILES.isFileStoredIniCloud(module.filename)
+        const FILE_MGR = FileManager.local()
+        const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename)
         
         // download the file.
         try {
           const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/hondaCivic.js');
           const codeString = await reqUpdate.loadString()
-         FILES.writeString(module.filename, codeString)
+         FILE_MGR.writeString(module.filename, codeString)
           title = "代码已更新‼️"
           message = "如果当前脚本已打开\n请将其关闭以使更改生效。"
         } catch {
