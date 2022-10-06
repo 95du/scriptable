@@ -176,7 +176,7 @@ const widget = await createWidget();
         
         // download the file.
         try {
-          const reqUpdate = new Request("https://gitcode.net/4qiao/scriptable/raw/master/code/update.js")
+          const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/hondaCivic.js');
           const codeString = await reqUpdate.loadString()
          FILES.writeString(module.filename, codeString)
           title = "代码已更新‼️"
