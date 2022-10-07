@@ -74,9 +74,16 @@ const widget = await createWidget()
     const widget = new ListWidget()
     widget.backgroundColor = Color.white();
     const gradient = new LinearGradient()
+    color = [
+    "#82B1FF", 
+    "#757575", 
+    "#4FC3F7",
+    "#66CCFF"
+    ]
+    const items = color[Math.floor(Math.random()*color.length)];
     gradient.locations = [0, 1]
     gradient.colors = [
-      new Color('#82B1FF', 0.5),
+      new Color(`${items}`, 0.5),
       new Color('#00000000')
     ]
     widget.backgroundGradient = gradient
@@ -84,9 +91,9 @@ const widget = await createWidget()
 
     // 界面显示布局(左到右)
     // Car Logo ？？？
-    const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png')
-    const image = widget.addImage(carLogo)  
-    image.imageSize = new Size(25,25)
+    const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
+    const image = widget.addImage(carLogo);
+    image.imageSize = new Size(25,25);
     image.rightAlignImage()
 
 
@@ -123,7 +130,7 @@ const widget = await createWidget()
     const textMileage = mileageStack.addText('总里程 805241 km')
     textMileage.font = Font.mediumSystemFont(11)
     textMileage.textColor = new Color('#424242');
-    column1.addSpacer(8)
+    column1.addSpacer(3)
     
     
     const barRow = column1.addStack()
@@ -147,7 +154,7 @@ const widget = await createWidget()
       const totalMonthBar = barStack.addText(state);
       totalMonthBar.font = Font.mediumSystemFont(14);
       totalMonthBar.textColor = new Color('#AA00FF');
-      column1.addSpacer(8)
+      column1.addSpacer(10)
     } else {
       // 条形图 speed 大于 5
       barStack.backgroundColor = new Color('#EEEEEE', 0.1);
@@ -165,7 +172,7 @@ const widget = await createWidget()
       const totalMonthBar = barStack.addText(state);
       totalMonthBar.font = Font.mediumSystemFont(14);
       totalMonthBar.textColor = new Color('#D50000');
-      column1.addSpacer(8)
+      column1.addSpacer(10)
     }
     
     
@@ -181,7 +188,7 @@ const widget = await createWidget()
     const textUpdateTime = updateTime.addText(GMT2);
     textUpdateTime.font = Font.mediumSystemFont(14);
     textUpdateTime.textColor = new Color('#424242');
-    column1.addSpacer(8)
+    column1.addSpacer(3)
 
 
     // 条形图 2
@@ -199,12 +206,12 @@ const widget = await createWidget()
     const barIconElement2 = barStack2.addImage(barIcon2.image);
     barIconElement2.imageSize = new Size(15, 15);
     barIconElement2.tintColor = Color.green();
-    barStack2.addSpacer(8);
+    barStack2.addSpacer(6);
     const totalMonthBar2 = barStack2.addText('已锁车');
     // bar text
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#616161');
-    column1.addSpacer(8)
+    column1.addSpacer(6)
     
     
     // Second column
@@ -217,7 +224,7 @@ const widget = await createWidget()
     const item = resUrl.Mercedes[Math.floor(Math.random()*resUrl.Mercedes.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(230,100);
+    imageCar.imageSize = new Size(230,98);
     column2.addSpacer(3)
 
     // show address
@@ -230,7 +237,7 @@ const widget = await createWidget()
     // jump show map
     textAddress.url = `${mapUrl}`;
     // jump run widget
-    widget.url = 'scriptable:///run/Honda%20Civic';
+    widget.url = 'scriptable:///run/Maybach';
     
     
     // update and check
