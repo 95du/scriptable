@@ -246,7 +246,7 @@ const widget = await createWidget()
         const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
 
         try {
-          const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/hondaCivic.js');
+          const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js');
           const codeString = await reqUpdate.loadString()
          FILE_MGR.writeString(module.filename, codeString)
           title = "代码已更新‼️"
