@@ -117,7 +117,7 @@ const widget = await createWidget()
     const plateStack = column1.addStack();
     
     if (minutes1 <= 5) {
-      var textPlate = plateStack.addText('琼A 849A8🚦');
+      var textPlate = plateStack.addText('Maybach🚦');
     } else {
       var textPlate = plateStack.addText('琼A 849A8')
     }
