@@ -89,24 +89,17 @@ const widget = await createWidget()
     widget.backgroundGradient = gradient
 
 
-    // 界面显示布局(左到右)
-    // Car Logo ？？？
-    const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
-    const image = widget.addImage(carLogo);
-    image.imageSize = new Size(25,25);
-    image.rightAlignImage()
-
-
     /**
+    界面显示布局(左到右)
     Layout left and right
     @ image
     @ text
     Cylindrical Bar Chart
     */
-    widget.setPadding(5, 10, 5, 5)
+    widget.setPadding(5, 5, 5, 5)
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
-    mainStack.setPadding(0, 24, 0, 20);
+    mainStack.setPadding(10, 24, 0, 20);
     const dataStack = mainStack.addStack();
     dataStack.layoutHorizontally();
 
@@ -124,13 +117,36 @@ const widget = await createWidget()
     
     textPlate.font = Font.mediumSystemFont(19);
     textPlate.textColor = new Color('#424242');
-    column1.addSpacer(2)
-    // mileageStack
-    const mileageStack = column1.addStack()
-    const textMileage = mileageStack.addText('总里程 805241 km')
-    textMileage.font = Font.mediumSystemFont(11)
-    textMileage.textColor = new Color('#424242');
     column1.addSpacer(3)
+    
+    // Mercedes Logo
+    const benzLogoStack = column1.addStack();
+    const benz = new Request ('https://gitcode.net/4qiao/scriptable/raw/master/img/car/mercedesLogo.png');
+    const iconSymbol = await benz.loadImage();
+    const benzIcon = benzLogoStack.addImage(iconSymbol);
+    benzIcon.imageSize = new Size(15, 15);
+    benzIcon.tintColor = Color.black();
+    benzLogoStack.addSpacer(5);
+    // update time
+    const vehicleModel = benzLogoStack.addStack();
+    const vehicleModelText = vehicleModel.addText('Mercedes');
+    vehicleModelText.font = Font.mediumSystemFont(14);
+    vehicleModelText.textColor = new Color('#424242');
+    column1.addSpacer(3)
+    
+    // update icon
+    const updateTimeStack = column1.addStack();
+    const iconSymbol2 = SFSymbol.named('car');
+    const carIcon = updateTimeStack.addImage(iconSymbol2.image);
+    carIcon.imageSize = new Size(17, 17);
+    carIcon.tintColor = Color.black();
+    updateTimeStack.addSpacer(5);
+    // update time
+    const updateTime = updateTimeStack.addStack();
+    const textUpdateTime = updateTime.addText(GMT2);
+    textUpdateTime.font = Font.mediumSystemFont(14);
+    textUpdateTime.textColor = new Color('#424242');
+    column1.addSpacer(22)
     
     
     const barRow = column1.addStack()
@@ -175,21 +191,6 @@ const widget = await createWidget()
       column1.addSpacer(10)
     }
     
-    
-    // update icon
-    const updateTimeStack = column1.addStack();
-    const iconSymbol2 = SFSymbol.named('car');
-    const carIcon = updateTimeStack.addImage(iconSymbol2.image);
-    carIcon.imageSize = new Size(17, 17);
-    carIcon.tintColor = Color.black();
-    updateTimeStack.addSpacer(5);
-    // update time
-    const updateTime = updateTimeStack.addStack();
-    const textUpdateTime = updateTime.addText(GMT2);
-    textUpdateTime.font = Font.mediumSystemFont(14);
-    textUpdateTime.textColor = new Color('#424242');
-    column1.addSpacer(3)
-
 
     // 条形图 2
     const barRow2 = column1.addStack();
@@ -211,29 +212,44 @@ const widget = await createWidget()
     // bar text
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#616161');
-    column1.addSpacer(6)
+    column1.addSpacer()
     
     
-    // Second column
+    /**
+    Second column
+    @ Car Logo
+    @ Car image
+    @ Address
+    */
     const column2 = dataStack.addStack();
     column2.layoutVertically();
+    // Car Logo ？？？
+    const carLogoStack = column2.addStack();
+    const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
+    const image = carLogoStack.addImage(carLogo);
+    image.imageSize = new Size(27,27);
+    carLogoStack.setPadding(0, 205, 0, 0);
+    column2.addSpacer(2)
+    
     // Car image
     const carImageStack = column2.addStack();
+    carImageStack.setPadding(-18, 5, 0, 0);
     const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
     const resUrl = await imgUrl.loadJSON();
     const item = resUrl.Mercedes[Math.floor(Math.random()*resUrl.Mercedes.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(230,98);
+    imageCar.imageSize = new Size(230,100);
     column2.addSpacer(3)
 
     // show address
     const addressStack = column2.addStack();
-    const textAddress = addressStack.addText(`${RES.regeocode.formatted_address}                               `);
+    const textAddress = addressStack.addText(`${RES.regeocode.formatted_address}`);
     textAddress.font = Font.mediumSystemFont(12);
     textAddress.textColor = new Color('#424242');
     textAddress.centerAlignText();
-    column2.addSpacer(3)
+    column2.addSpacer(2)
+    
     // jump show map
     textAddress.url = `${mapUrl}`;
     // jump run widget
