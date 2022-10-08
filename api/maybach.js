@@ -109,7 +109,7 @@ const widget = await createWidget()
     // plateStack
     const plateStack = column1.addStack();
     
-    if (minutes1 <= 5) {
+    if (minutes1 <= 3) {
       var textPlate = plateStack.addText('Maybach🚦');
     } else {
       var textPlate = plateStack.addText('琼A 849A8')
@@ -127,7 +127,7 @@ const widget = await createWidget()
     benzIcon.imageSize = new Size(15, 15);
     benzIcon.tintColor = Color.black();
     benzLogoStack.addSpacer(5);
-    // update time
+    // vehicleModel
     const vehicleModel = benzLogoStack.addStack();
     const vehicleModelText = vehicleModel.addText('Mercedes');
     vehicleModelText.font = Font.mediumSystemFont(14);
@@ -153,10 +153,10 @@ const widget = await createWidget()
     const barStack = barRow.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
+    barStack.setPadding(3, 10, 3, 10);
     if (data.speed <= 5) {
       // 条形图 speed 小于 5
       barStack.backgroundColor = new Color('#EEEEEE', 0.1);
-      barStack.setPadding(3, 10, 3, 10);
       barStack.cornerRadius = 10
       barStack.borderColor = new Color('#AB47BC', 0.7);
       barStack.borderWidth = 2
@@ -174,7 +174,6 @@ const widget = await createWidget()
     } else {
       // 条形图 speed 大于 5
       barStack.backgroundColor = new Color('#EEEEEE', 0.1);
-      barStack.setPadding(3, 10, 3, 10);
       barStack.cornerRadius = 10
       barStack.borderColor = new Color('#FF1744', 0.7);
       barStack.borderWidth = 2
@@ -225,10 +224,10 @@ const widget = await createWidget()
     column2.layoutVertically();
     // Car Logo ？？？
     const carLogoStack = column2.addStack();
+    carLogoStack.setPadding(0, 205, 0, 0);
     const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
     const image = carLogoStack.addImage(carLogo);
     image.imageSize = new Size(27,27);
-    carLogoStack.setPadding(0, 205, 0, 0);
     column2.addSpacer(2)
     
     // Car image
@@ -236,7 +235,7 @@ const widget = await createWidget()
     carImageStack.setPadding(-18, 5, 0, 0);
     const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
     const resUrl = await imgUrl.loadJSON();
-    const item = resUrl.Mercedes[Math.floor(Math.random()*resUrl.Mercedes.length)];
+    const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
     imageCar.imageSize = new Size(230,100);
@@ -255,56 +254,47 @@ const widget = await createWidget()
     // jump run widget
     widget.url = 'scriptable:///run/Maybach';
     
-    
     // update and check
     if (!config.runsInWidget) {  
-      let title
-      let message = "Honda Civic 小组件"
-      let options = ["更新代码","预览组件","退出"]
-      let response = await generateAlert(message,options)
-        
-      // Update the code.
-      if (response === 0) {
-        const FILE_MGR = FileManager.local()
-        const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-
-        try {
-          const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js');
-          const codeString = await reqUpdate.loadString()
-         FILE_MGR.writeString(module.filename, codeString)
-          title = "代码已更新‼️"
-          message = "如果当前脚本已打开\n请将其关闭以使更改生效。"
-        } catch {
-          title = "更新失败⚠️"
-          message = "检查网络请稍后再试。"
-        }
-          options = ["OK"]
-          await generateAlert(message,options)
-          return
-        }
-        
-        // Generate an alert with the provided array of options.
-        async function generateAlert(message,options) {
-          let alert = new Alert()
-          alert.title = title
-          alert.message = message
-          for (const option of options) {
-            alert.addAction(option)
-          }
-          let response = await alert.presentAlert()
-          return response
-        }
+      const alert = new Alert();
+      alert.title = "Honda Civic 小组件"
+      alert.addAction('更新代码')
+      alert.addAction('预览组件')
+      alert.addAction('退出')
+      response = await alert.presentAlert();
+      // menu action 1
       if (response === 1) {
         await widget.presentMedium();
         return;//预览后退出
       }
+      // menu action 2
       if (response === 2) return;
-      } else {
-        Script.setWidget(widget);
-        Script.complete();
+      // Update the code.
+      if (response === 0) {
+        const FILE_MGR = FileManager.local()
+        const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
+        const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js');
+        const codeString = await reqUpdate.loadString()  
+        const finish = new Alert();
+        if (codeString.indexOf("Maybach" || "HONDA") == -1) {
+          finish.title = "更新失败"
+          finish.addAction('OK')
+          await finish.presentAlert();
+        } else {
+          FILE_MGR.writeString(module.filename, codeString)
+          finish.title = "更新成功"
+          finish.addAction('OK')
+          await finish.presentAlert();
+          const Name = 'Maybach';
+Safari.open('scriptable:///run/' + encodeURIComponent(Name));
+        }
       }
+    } else {
+      Script.setWidget(widget);
+      Script.complete();
+    }
     
-
+    
     /**
     * 上传获取GitCode文件
     * 获取企业微信token
@@ -469,7 +459,6 @@ const widget = await createWidget()
         return;
       }
     }
-    console.log(moment)
   return widget;
   }
   
