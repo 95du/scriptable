@@ -99,7 +99,7 @@ const widget = await createWidget()
     widget.setPadding(5, 5, 5, 5)
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
-    mainStack.setPadding(10, 24, 0, 20);
+    mainStack.setPadding(10, 24, 0, 22);
     const dataStack = mainStack.addStack();
     dataStack.layoutHorizontally();
 
@@ -112,7 +112,7 @@ const widget = await createWidget()
     if (minutes1 <= 3) {
       var textPlate = plateStack.addText('Maybach🚦');
     } else {
-      var textPlate = plateStack.addText('琼A 849A8')
+      var textPlate = plateStack.addText('琼A·849A8')
     }
     
     textPlate.font = Font.mediumSystemFont(19);
@@ -238,7 +238,7 @@ const widget = await createWidget()
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(230,100);
+    imageCar.imageSize = new Size(228,100);
     column2.addSpacer(3)
 
     // show address
@@ -249,6 +249,8 @@ const widget = await createWidget()
     textAddress.centerAlignText();
     column2.addSpacer(2)
     
+    // jump show map
+    barRow2.url = `${mapUrl}`;
     // jump show map
     textAddress.url = `${mapUrl}`;
     // jump run widget
