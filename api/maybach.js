@@ -393,7 +393,7 @@ Safari.open('scriptable:///run/' + encodeURIComponent(Name));
       var stop = (json.updateTime)
       
       if (run == stop) {
-        duration = "120"
+        duration = "60"
       } else {
         duration = "10"
       }
@@ -402,11 +402,11 @@ Safari.open('scriptable:///run/' + encodeURIComponent(Name));
         // push message to WeChat_2
         const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
         weChat_2.method = 'POST'
-        weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 驻车时间 ${GMT}","url":"${mapUrl}"}]}}`;
+        weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 停车时间 ${GMT}","url":"${mapUrl}"}]}}`;
         const res_2 = await weChat_2.loadJSON();
         
         // Notification_2
-        notice.title = `${status}  `+`驻车时间 ${GMT}`
+        notice.title = `${status}  `+`停车时间 ${GMT}`
         notice.body = `${address}`
         notice.openURL = `${mapUrl}`
         notice.schedule()
