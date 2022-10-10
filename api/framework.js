@@ -10,6 +10,6 @@ await Promise.all(
 FILE_MGR.write(FILE_MGR.joinPath(FILE_MGR.documentsDirectory(), js), RES);
   }));
 
-FILE_MGR.remove(module.filename);
+// FILE_MGR.remove(module.filename);
 
 Safari.open('scriptable:///run?scriptName=' + encodeURIComponent('framework.js'));
