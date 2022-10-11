@@ -243,7 +243,7 @@ const widget = await createWidget()
 
     // show address
     const addressStack = column2.addStack();
-    const textAddress = addressStack.addText(`${RES.regeocode.formatted_address}`);
+    const textAddress = addressStack.addText(`${RES.regeocode.formatted_address}                `);
     textAddress.font = Font.mediumSystemFont(12);
     textAddress.textColor = new Color('#424242');
     textAddress.centerAlignText();
@@ -258,7 +258,7 @@ const widget = await createWidget()
     
     // update and check
     if (!config.runsInWidget) {  
-      const alert = new Alert();
+      let alert = new Alert();
       alert.title = "Honda Civic 小组件"
       alert.addAction('更新代码')
       alert.addAction('预览组件')
