@@ -5,7 +5,7 @@ const add = new Alert();
   const res = await req.loadString();
   const Name = '@';
 
-FileManager.local().writeString(FileManager.local().documentsDirectory() + `/${Name}.js`,`${res}`);
+FileManager.iCloud().writeString(FileManager.iCloud().documentsDirectory() + `/${Name}.js`,`${res}`);
 
   if (res.length > 300) {
     notice.sound = 'event'
