@@ -17,7 +17,7 @@ if (response === 1) {
 
   // Try to download the file.
   try {
-    const req = new Request("https://gitcode.net/4qiao/scriptable/raw/master/code/update.js")
+    const req = new Request("https://gitcode.net/4qiao/scriptable/raw/master/api/update.js")
     const codeString = await req.loadString()
     files.writeString(module.filename, codeString)
     title = "代码已更新‼️"
