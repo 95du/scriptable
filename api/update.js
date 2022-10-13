@@ -10,7 +10,7 @@ if (response === 0) return;
 if (response === 2) return;
 // Update the code.
 if (response === 1) {
-  let files = FileManager.local()
+  let files = FileManager.iCloud()
   const iCloudInUse = files.isFileStoredIniCloud(module.filename)
 
   files = iCloudInUse ? FileManager.iCloud() : files
