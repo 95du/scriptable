@@ -232,19 +232,19 @@ const widget = await createWidget()
     
     // Car image
     const carImageStack = column2.addStack();
-    carImageStack.setPadding(-18, 5, 0, 0);
+    carImageStack.setPadding(-21, 5, 0, 0);
     const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
     const resUrl = await imgUrl.loadJSON();
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(228,100);
+    imageCar.imageSize = new Size(228,102);
     column2.addSpacer(3)
 
     // show address
     const addressStack = column2.addStack();
     const textAddress = addressStack.addText(`${RES.regeocode.formatted_address}                `);
-    textAddress.font = Font.mediumSystemFont(12);
+    textAddress.font = Font.mediumSystemFont(12.5);
     textAddress.textColor = new Color('#424242');
     textAddress.centerAlignText();
     column2.addSpacer(2)
@@ -302,7 +302,7 @@ Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     * 获取企业微信token
     * 推送信息及通知
     */
-    // Get accessToken
+    // Get weChat accessToken
     const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
     const Res = await Req.loadJSON();
 
