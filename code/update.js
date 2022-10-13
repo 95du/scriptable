@@ -2,14 +2,14 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-purple; icon-glyph: cloud-upload-alt;
 let message = "Before you start, go to your home screen and enter wiggle mode. Scroll to the empty page on the far right and take a screenshot."
-let options = ["查看小组件","更新数据","退出菜单"]
+let options = ["查看小组件","更新数据","退出"]
 let response = await generateAlert(message,options)
 
 if (response === 0) return;
 if (response === 2) return;
 // Update the code.
 if (response === 1) {
-  let files = FileManager.local()
+  let files = FileManager.iCloud()
   const iCloudInUse = files.isFileStoredIniCloud(module.filename)
 
   files = iCloudInUse ? FileManager.iCloud() : files
