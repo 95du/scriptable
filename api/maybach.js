@@ -18,8 +18,8 @@ const widget = await createWidget()
     // Get address (aMap)
     const data = res.data
     const REQ = new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=300&extensions=all&location=${data.longitude},${data.latitude}`);  
-    const RES = await REQ.loadJSON();
-    const address = RES.regeocode.formatted_address
+    const adr = await REQ.loadJSON();
+    const address = adr.regeocode.formatted_address
 
     // Current timestamp
     const timestamp = Date.parse(new Date());
@@ -109,7 +109,7 @@ const widget = await createWidget()
     // plateStack
     const plateStack = column1.addStack();
     
-    if (minutes1 <= 3) {
+    if (minutes1 <= 2) {
       var textPlate = plateStack.addText('Maybach🚦');
     } else {
       var textPlate = plateStack.addText('琼A·849A8')
@@ -243,7 +243,18 @@ const widget = await createWidget()
 
     // show address
     const addressStack = column2.addStack();
-    const textAddress = addressStack.addText(`${RES.regeocode.formatted_address}                `);
+    addressStack.setPadding(0, 0, 0, 0);
+    const jmz = {};
+    jmz.GetLength = function(str) {
+    return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
+    };  
+    str = (jmz.GetLength(address));
+    
+    if (str < 48) {
+      var textAddress = addressStack.addText(address + `${adr.regeocode.pois[0].type}`)
+    } else {
+      var textAddress = addressStack.addText(address)
+    }
     textAddress.font = Font.mediumSystemFont(12.5);
     textAddress.textColor = new Color('#424242');
     textAddress.centerAlignText();
