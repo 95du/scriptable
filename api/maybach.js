@@ -66,7 +66,7 @@ const widget = await createWidget()
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     } else {
       status = `[ 车速 ${data.speed} km/h ]`;
-      state = `${data.speed} km/h `;
+      state = `${data.speed} km/h`;
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     }
     
@@ -206,7 +206,7 @@ const widget = await createWidget()
     const barIconElement2 = barStack2.addImage(barIcon2.image);
     barIconElement2.imageSize = new Size(15, 15);
     barIconElement2.tintColor = Color.green();
-    barStack2.addSpacer(6);
+    barStack2.addSpacer(8);
     // bar text
     const totalMonthBar2 = barStack2.addText('已锁车');
     totalMonthBar2.font = Font.mediumSystemFont(14);
