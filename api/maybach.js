@@ -207,8 +207,8 @@ const widget = await createWidget()
     barIconElement2.imageSize = new Size(15, 15);
     barIconElement2.tintColor = Color.green();
     barStack2.addSpacer(6);
-    const totalMonthBar2 = barStack2.addText('已锁车');
     // bar text
+    const totalMonthBar2 = barStack2.addText('已锁车');
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#616161');
     column1.addSpacer()
@@ -232,13 +232,13 @@ const widget = await createWidget()
     
     // Car image
     const carImageStack = column2.addStack();
-    carImageStack.setPadding(-21, 5, 0, 0);
+    carImageStack.setPadding(-19, 5, 0, 0);
     const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
     const resUrl = await imgUrl.loadJSON();
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(228,102);
+    imageCar.imageSize = new Size(228,100);
     column2.addSpacer(3)
 
     // show address
@@ -302,7 +302,7 @@ Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     * 获取企业微信token
     * 推送信息及通知
     */
-    // Get weChat accessToken
+    // Get accessToken
     const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
     const Res = await Req.loadJSON();
 
