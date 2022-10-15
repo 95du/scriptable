@@ -108,12 +108,11 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     notice.schedule()
     
     // writeString 写入
-    if (!fileManager.fileExists(folder)) {
-  fileManager.createDirectory(folder)
-    }
+    if (fileManager.fileExists(folder)) {
       data = {"oil":`${forecast}`}
       data = JSON.stringify(data);
       fileManager.writeString(cacheFile, data);
+    }
   }
 
 
