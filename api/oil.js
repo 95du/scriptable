@@ -82,7 +82,7 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     barStack.backgroundColor = new Color('#000000', 0.8);
     barStack.setPadding(5, 45, 5, 45);
     barStack.cornerRadius = 15
-    barStack.borderColor = new Color('#616161', 0.5);
+    barStack.borderColor = new Color('#000000', 0.7);
     barStack.borderWidth = 3
     //Text Color
     const titleText = barStack.addText('海南油价');
