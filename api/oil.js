@@ -134,14 +134,13 @@ dataStack2.layoutHorizontally();
     barStack0.borderColor = new Color('#FB8C00');
     barStack0.borderWidth = 3
     // bar text
-    let str0 = `${oil.Oil0}`
-    let oil0 = str0.substring(str0.lastIndexOf(".")+1);
+    let oil0 = `${oil.Oil0}`
     const a = {};
     a.GetLength = function(str) {
       return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
     };  
-    strA = (a.GetLength(oil0));
-    if (strA === 1) {
+    str0 = (a.GetLength(oil0));
+    if (str0 <= 3) {
       var totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}0`);
     } else {
       var totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}`);
@@ -166,14 +165,13 @@ dataStack2.layoutHorizontally();
     barStack2.borderColor = Color.blue();
     barStack2.borderWidth = 3
     // bar text
-    let str92 = `${oil.Oil92}`
-    let oil92 = str92.substring(str92.lastIndexOf(".")+1);
+    let oil92 = `${oil.Oil92}`
     const b = {};
     b.GetLength = function(str) {
       return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
     };  
-    strB = (b.GetLength(oil92));
-    if (strB === 1) {
+    str92 = (b.GetLength(oil92));
+    if (str92 <= 3) {
       var totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}0`);
     } else {
       var totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}`);
@@ -198,14 +196,13 @@ dataStack2.layoutHorizontally();
     barStack5.borderColor = new Color('#00C853');
     barStack5.borderWidth = 3
     // bar text
-    let str95 = `${oil.Oil95}`
-    let oil95 = str95.substring(str95.lastIndexOf(".")+1);
+    let oil95 = `${oil.Oil95}`
     const c = {};
     c.GetLength = function(str) {
       return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
     };  
-    strC = (c.GetLength(oil95));
-    if (strC === 1) {
+    str95 = (c.GetLength(oil95));
+    if (str95 <= 3) {
       var totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}0`);
     } else {
       var totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}`);
@@ -229,14 +226,13 @@ dataStack2.layoutHorizontally();
     barStack8.borderColor = Color.purple();
     barStack8.borderWidth = 3
     // bar text
-    let str98 = `${oil.Oil98}`
-    let oil98 = str98.substring(str98.lastIndexOf(".")+1);
+    let oil98 = `${oil.Oil98}`
     const d = {};
     d.GetLength = function(str) {
       return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
     };  
-    strD = (d.GetLength(oil95));
-    if (strD === 1) {
+    str98 = (d.GetLength(oil98));
+    if (str98 <= 3) {
       var totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}0`);
     } else {
       var totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}`);  
