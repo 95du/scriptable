@@ -19,8 +19,8 @@ const widget = await createWidget()
     const data = res.data
     const REQ = new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=300&extensions=all&location=${data.longitude},${data.latitude}`);  
     const adr = await REQ.loadJSON();
-    const address = adr.regeocode.formatted_address
-
+    const address = adr.regeocode.formatted_address  
+    
     // Current timestamp
     const timestamp = Date.parse(new Date());
     // 计算时长
@@ -246,15 +246,18 @@ const widget = await createWidget()
     addressStack.setPadding(0, 0, 0, 0);
     const jmz = {};
     jmz.GetLength = function(str) {
-    return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
+      return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
     };  
     str = (jmz.GetLength(address));
     
-    if (str < 48) {
-      var textAddress = addressStack.addText(address + `${adr.regeocode.pois[0].type}`)
+    if (str < 35) {
+      var textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[0].type} )`)
+    } else if (str < 48) {
+      var textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[0].address} )`)
     } else {
       var textAddress = addressStack.addText(address)
     }
+    
     textAddress.font = Font.mediumSystemFont(12.5);
     textAddress.textColor = new Color('#424242');
     textAddress.centerAlignText();
