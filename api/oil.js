@@ -67,15 +67,15 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     const columnN = Stack.addStack();
     columnN.layoutVertically();
 
-    const updateTimeStack = columnN.addStack();
+    const noticeStack = columnN.addStack();
     const iconSymbol2 = SFSymbol.named('bell.circle');
-    const carIcon = updateTimeStack.addImage(iconSymbol2.image);
+    const carIcon = noticeStack.addImage(iconSymbol2.image);
     carIcon.imageSize = new Size(28, 28);
     carIcon.tintColor = Color.black();
-    updateTimeStack.addSpacer(5);
+    noticeStack.addSpacer(5);
     
     // Dynamic Island bar
-    const barRow = updateTimeStack.addStack();
+    const barRow = noticeStack.addStack();
     const barStack = barRow.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
@@ -89,7 +89,7 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     titleText.textColor = Color.white();
     titleText.font = Font.boldSystemFont(15)
     titleText.centerAlignText();
-    columnN.addSpacer(9)
+    columnN.addSpacer(15)
     
     
     // oilPrice _alert ‼️
@@ -98,13 +98,13 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
 dataStack2.layoutHorizontally();
     const column1 = dataStack2.addStack();
     column1.layoutVertically();
-    
+    // bar
     const barRow1 = column1.addStack();
     barRow1.setPadding(0, 0, 10, 0);
     const barStack1 = barRow1.addStack();
     barStack1.layoutHorizontally();
     barStack1.centerAlignContent();
-    barStack1.setPadding(4, 8, 4, 8);
+    barStack1.setPadding(8, 8, 8, 8);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
     barStack1.borderColor = new Color('#D50000', 0.7);
@@ -112,7 +112,7 @@ dataStack2.layoutHorizontally();
     // bar text
     const oilTipsText = barStack1.addText(`${forecast}`);
     oilTipsText.textColor = new Color('#616161');
-    oilTipsText.font = Font.boldSystemFont(15);
+    oilTipsText.font = Font.boldSystemFont(12.5)
     oilTipsText.centerAlignText();
     barStack1.addSpacer(10)
     
@@ -141,9 +141,9 @@ dataStack2.layoutHorizontally();
     };  
     str0 = (a.GetLength(oil0));
     if (str0 <= 3) {
-      var totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}0`);
+      totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}0`);
     } else {
-      var totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}`);
+      totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}`);
     }
     totalMonthBar0.font = Font.mediumSystemFont(14);
     totalMonthBar0.textColor = Color.white();
@@ -172,9 +172,9 @@ dataStack2.layoutHorizontally();
     };  
     str92 = (b.GetLength(oil92));
     if (str92 <= 3) {
-      var totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}0`);
+      totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}0`);
     } else {
-      var totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}`);
+      totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}`);
     }
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#FFFFFF');
@@ -203,9 +203,9 @@ dataStack2.layoutHorizontally();
     };  
     str95 = (c.GetLength(oil95));
     if (str95 <= 3) {
-      var totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}0`);
+      totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}0`);
     } else {
-      var totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}`);
+      totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}`);
     }
     totalMonthBar5.font = Font.mediumSystemFont(14);
     totalMonthBar5.textColor = new Color('#FFFFFF');
@@ -233,9 +233,9 @@ dataStack2.layoutHorizontally();
     };  
     str98 = (d.GetLength(oil98));
     if (str98 <= 3) {
-      var totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}0`);
+      totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}0`);
     } else {
-      var totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}`);  
+      totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}`);  
     }
     totalMonthBar8.font = Font.mediumSystemFont(14);
     totalMonthBar8.textColor = new Color('#FFFFFF');
