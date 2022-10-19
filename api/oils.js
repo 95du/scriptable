@@ -112,7 +112,7 @@ dataStack2.layoutHorizontally();
     const barStack1 = barRow1.addStack();
     barStack1.layoutHorizontally();
     barStack1.centerAlignContent();
-    barStack1.setPadding(4, 8, 4, 8);
+    barStack1.setPadding(8, 8, 8, 8);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
     barStack1.borderColor = new Color('#D50000', 0.7);
@@ -120,7 +120,7 @@ dataStack2.layoutHorizontally();
     // bar text
     const oilTipsText = barStack1.addText(`${forecast}`);
     oilTipsText.textColor = new Color('#616161');
-    oilTipsText.font = Font.boldSystemFont(15);
+    oilTipsText.font = Font.boldSystemFont(12.5)
     oilTipsText.centerAlignText();
     barStack1.addSpacer(10)
     
