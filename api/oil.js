@@ -79,17 +79,17 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     const barStack = barRow.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
-    barStack.backgroundColor = new Color('#000000', 0.8);
+    barStack.backgroundColor = Color.black();
     barStack.setPadding(5, 45, 5, 45);
     barStack.cornerRadius = 15
-    barStack.borderColor = new Color('#000000', 0.7);
+    barStack.borderColor = Color.black();
     barStack.borderWidth = 3
     //Text Color
     const titleText = barStack.addText('海南油价');
-    titleText.textColor = Color.white();
+    titleText.textColor = Color.green();
     titleText.font = Font.boldSystemFont(15)
     titleText.centerAlignText();
-    columnN.addSpacer(15)
+    columnN.addSpacer(10)
     
     
     // oilPrice _alert ‼️
@@ -104,14 +104,14 @@ dataStack2.layoutHorizontally();
     const barStack1 = barRow1.addStack();
     barStack1.layoutHorizontally();
     barStack1.centerAlignContent();
-    barStack1.setPadding(8, 8, 8, 8);
+    barStack1.setPadding(8, 8, 8, 4);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
     barStack1.borderColor = new Color('#D50000', 0.7);
     barStack1.borderWidth = 3
     // bar text
     const oilTipsText = barStack1.addText(`${forecast}`);
-    oilTipsText.textColor = new Color('#616161');
+    oilTipsText.textColor = new Color('#484848');
     oilTipsText.font = Font.boldSystemFont(12.5)
     oilTipsText.centerAlignText();
     barStack1.addSpacer(10)
@@ -140,8 +140,12 @@ dataStack2.layoutHorizontally();
       return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
     };  
     str0 = (a.GetLength(oil0));
+    console.log(str0)
     if (str0 <= 3) {
       totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}0`);
+    } else if (str0 > 4) {
+      oil0 = oil0.replace(/\S{1}$/, '');
+      totalMonthBar0 = barStack0.addText(`0# - ${oil0}`);
     } else {
       totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}`);
     }
@@ -173,6 +177,9 @@ dataStack2.layoutHorizontally();
     str92 = (b.GetLength(oil92));
     if (str92 <= 3) {
       totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}0`);
+    } else if (str92 > 4) {
+      oil92 = oil92.replace(/\S{1}$/, '');
+      totalMonthBar2 = barStack2.addText(`0# - ${oil92}`);
     } else {
       totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}`);
     }
@@ -204,6 +211,9 @@ dataStack2.layoutHorizontally();
     str95 = (c.GetLength(oil95));
     if (str95 <= 3) {
       totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}0`);
+    } else if (str95 > 4) {
+      oil95 = oil95.replace(/\S{1}$/, '');
+      totalMonthBar5 = barStack5.addText(`0# - ${oil95}`);
     } else {
       totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}`);
     }
@@ -234,6 +244,9 @@ dataStack2.layoutHorizontally();
     str98 = (d.GetLength(oil98));
     if (str98 <= 3) {
       totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}0`);
+    } else if (str98 > 4) {
+      oil98 = oil98.replace(/\S{1}$/, '');
+      totalMonthBar8 = barStack8.addText(`0# - ${oil98}`);
     } else {
       totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}`);  
     }
