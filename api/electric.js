@@ -16,7 +16,7 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     // 使用方法
     const loginAlert = new Alert();
     loginAlert.title = '南网在线登录';
-    loginAlert.message = `\r\n首次登录需用户自行在App中登录时抓包获取token，登录成功将储存在iCloud，token在抓包历史中找到https://95598.csg.cn/ucs/ma/zt/center/login，在响应头部拷贝x-auth-token的值\n\r\n小组件玩家: 95度茅台`;
+    loginAlert.message = `\r\n注 : 南方电网只包括海南、广东、广西、云南、贵州。\n\n首次登录需用户自行在App中登录时抓包获取token，登录成功将储存在iCloud，token在抓包历史中找到https://95598.csg.cn/ucs/ma/zt/center/login，在响应头部拷贝x-auth-token的值\n\r\n小组件玩家: 95度茅台`;
     loginAlert.addAction('继续');
     loginAlert.addCancelAction('取消');
     login = await loginAlert.presentAlert();
@@ -41,8 +41,8 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
         notice.title = '登录成功'
         notice.body = '重新运行即可预览或前往桌面添加小组件'
         notice.schedule()
-        return;
       }
+      return;
     }
   }
 
@@ -146,10 +146,10 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     widget.backgroundColor = Color.white();
     const gradient = new LinearGradient()
     color = [
-    "#82B1FF", 
+    "#CCCC99", 
     "#757575", 
     "#4FC3F7",
-    "#66CCFF"
+    "#99CCCC"
     ]
     const items = color[Math.floor(Math.random()*color.length)];
     gradient.locations = [0, 1]
@@ -187,12 +187,12 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     const nameIcon = SFSymbol.named('person.crop.circle');
     const nameIconElement = nameStack.addImage(nameIcon.image);
     nameIconElement.imageSize = new Size(15, 15);
-    nameIconElement.tintColor = Color.orange();
+    nameIconElement.tintColor = Color.black();
     nameStack.addSpacer(8);
     // name text
     const nameText = nameStack.addText(name);
     nameText.font = Font.mediumSystemFont(14);
-    nameText.textColor = Color.blue();
+    nameText.textColor = Color.orange();
     column0.addSpacer(3)
 
     // column payRow
