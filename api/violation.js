@@ -8,7 +8,8 @@ Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
 const notice = new Notification()
-const timestamp = Date.parse(new Date());
+const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/violation.json')
+const get = await apiData.loadJSON();
 
 const fileManager = FileManager.iCloud();
 const folder = fileManager.joinPath(fileManager.documentsDirectory(), "violation");
@@ -22,13 +23,13 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     // 使用方法
     const loginAlert = new Alert();
     loginAlert.title = '交管 12123';
-    loginAlert.message = `\r\n注 : 自动获取verifyToken需要Quantumult-X App辅助运行\n\n首次登录需用户\n\r\n自动获取verifyToken作者: @FoKit\n小组件作者: 95度茅台`;
+    loginAlert.message = `\r\n注 : 自动获取verifyToken需要Quantumult-X App辅助运行\n\n首次登录需用户💙💙💙\n\r\n自动获取verifyToken作者: @FoKit\n小组件作者: 95度茅台`;
     loginAlert.addAction('填入车牌');
     loginAlert.addCancelAction('verifyToken');
     login = await loginAlert.presentAlert();
     
     if (login === -1) {
-      Safari.open('alipays://platformapi/startapp?appId=2019050964403523');
+      Safari.open(`${get.alipay}`);
       return;
     } else {
       const alert = new Alert();
@@ -38,7 +39,7 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
       alert.addAction('确定');
       alert.addCancelAction('取消');
       const input = await alert.presentAlert();
-      const value = alert.textFieldValue(0)
+      const value = alert.textFieldValue(0);
       if (input === 0) {
         fileManager.createDirectory(folder)
         data = {"version":"1.0","plate":`${value}`}
@@ -47,7 +48,7 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
         Safari.open('scriptable:///run/%E4%BA%A4%E7%AE%A112123')
         notice.title = '登录成功'
         notice.body = '请前往桌面添加小组件'
-        notice.schedule()
+        notice.schedule();
       }
       return;
     }
@@ -55,12 +56,12 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
 
 
 // violation main
-const violation = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz');
+const violation = new Request(`${get.infoURL}`);
   violation.method = 'POST'
   violation.body = `params={
-    "productId": "p10000000000000000001", 
-    "api": "biz.vio.unhandledVioCount.query", 
-    "verifyToken": "f59bcfc81ce04a1e4ed9c1af5e7ac76c"
+    "productId": "${get.productId}", 
+    "api": "${get.api1}", 
+    "verifyToken": "${💙}"
 }`
   const main = await violation.loadJSON();
   const success = main.success
@@ -73,12 +74,12 @@ const violation = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invok
     } else {
       // issueOrganization
       const plate = list.plateNumber
-      const issueOrganization = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz');
+      const issueOrganization = new Request(`${get.infoURL}`);
       issueOrganization.method = 'POST'
       issueOrganization.body = `params={
-    "productId": "p10000000000000000001", 
-    "api": "biz.vio.peccancyChannelList.query", 
-    "verifyToken": "f59bcfc81ce04a1e4ed9c1af5e7ac76c", 
+    "productId": "${get.productId}", 
+    "api": "${get.api2}", 
+    "verifyToken": "${💙}", 
     "params": {
         "plateNumber": "${plate}", 
         "plateType": "02"
@@ -89,12 +90,12 @@ const violation = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invok
       
       
       // get surveils
-      const area = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz');
+      const area = new Request(`${get.infoURL}`);
       area.method = 'POST'
       area.body = `params={
-    "productId": "p10000000000000000001", 
-    "api": "biz.vio.peccancyUnhandleInfoList.query", 
-    "verifyToken": "f59bcfc81ce04a1e4ed9c1af5e7ac76c", 
+    "productId": "${get.productId}", 
+    "api": "${get.api3}", 
+    "verifyToken": "${💙}", 
     "params": {
         "plateNumber": "${plate}", 
         "plateType": "02", 
@@ -107,12 +108,12 @@ const violation = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invok
       
     // violation Message
     if (detail !== undefined) {
-      const violationMsg = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz');
+      const violationMsg = new Request(`${get.infoURL}`);
       violationMsg.method = 'POST'
       violationMsg.body = `{
-    "productId": "p10000000000000000001", 
-    "api": "biz.vio.detail.query", 
-    "verifyToken": "f59bcfc81ce04a1e4ed9c1af5e7ac76c", 
+    "productId": "${get.productId}", 
+    "api": "${get.api4}", 
+    "verifyToken": "${💙}", 
     "params": {
         "violationSerialNumber": "${detail.violationSerialNumber}", 
         "issueOrganization": "${detail.issueOrganization}"
@@ -125,7 +126,9 @@ const violation = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invok
       }
     }
   } else {
-    console.log(res.resultMsg)
+    notice.title = 'verifyToken已过期'
+    notice.body = '请前往💙💙💙'
+    notice.schedule();
   }
 
   
@@ -157,13 +160,6 @@ const violation = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invok
     
    
     // Frame Layout
-    /**
-    界面显示布局(左到右)
-    Layout left and right
-    @ image
-    @ text
-    Cylindrical Bar Chart
-    */
     widget.setPadding(5, 5, 5, 5);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
@@ -329,13 +325,13 @@ const violation = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invok
     
     
     // jump show status
-    barRow2.url = 'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Flicense%2Flicense';
+    barRow2.url = `${get.status}`;
     // jump show image
     if (list !== undefined) {
       textAddress.url = `${img}`;
     }
     // jump to alipay
-    widget.url = 'alipays://platformapi/startapp?appId=2019050964403523';
+    widget.url = `${get.alipay}`;
 
     
     // update and check
@@ -357,7 +353,7 @@ const violation = new Request('https://miniappcsfw.122.gov.cn:8443/openapi/invok
       if (response === 0) {
         const FILE_MGR = FileManager.local()
         const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-        const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/violation.js');
+        const reqUpdate = new Request(`${get.update}`);
         const codeString = await reqUpdate.loadString()  
         const finish = new Alert();
         if (codeString.indexOf("交管12123") == -1) {
