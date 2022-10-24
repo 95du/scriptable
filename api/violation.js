@@ -96,7 +96,7 @@ violation.body = `params={
   if (success === true) {
     var list = main.data.list[0]
     if (list === undefined) {
-      console.log(JSON.stringify(main, null, 4))
+      log(JSON.stringify(main, null, 4))
     } else {
       // issueOrganization
       const plate = list.plateNumber
@@ -146,9 +146,8 @@ violation.body = `params={
   }
 } `
       const details = await violationMsg.loadJSON();
-      var vio = details.data.detail
-      var img = details.data.photo
-      // Violation Information
+      vio = details.data.detail
+      img = details.data.photo
       }
     }
   } else {
@@ -320,7 +319,7 @@ violation.body = `params={
     column2.layoutVertically();
     // Logo
     const carLogoStack = column2.addStack();
-    carLogoStack.setPadding(0, 150, 0, 0);
+    carLogoStack.setPadding(0, 155, 0, 0);
     textPlate2 = carLogoStack.addText('交管12123')
     textPlate2.font = Font.mediumSystemFont(14);
     textPlate2.rightAlignText();
