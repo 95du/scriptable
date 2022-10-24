@@ -1,10 +1,31 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: car;
-/**
-交管12123
-自动获取verifyToken作者: @FoKit
+/*
+支付宝小程序 交管12123
+小组件作者：95度茅台
+获取Token作者: @FoKit
 Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+
+获取Token重写：https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
+使用方法：配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
+使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
+
+Boxjs订阅（可选）：http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubusercontent.com%2FFoKit%2FScripts%2Fmain%2Fboxjs%2Ffokit.boxjs.json
+
+手动配置重写规则：
+=========Quantumult-X=========
+[rewrite_local]
+^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js
+
+[MITM]
+hostname = miniappcsfw.122.gov.cn
+============Surge=============
+[Script]
+12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
+
+[MITM]
+hostname = %APPEND% miniappcsfw.122.gov.cn
 */
 
 const notice = new Notification()
@@ -15,138 +36,145 @@ const fileManager = FileManager.iCloud();
 const folder = fileManager.joinPath(fileManager.documentsDirectory(), "violation");
 const cacheFile = fileManager.joinPath(folder, 'data.json');
 
-// readString JSON
-  if (fileManager.fileExists(cacheFile)) {
-    data = fileManager.readString(cacheFile)
-    data = JSON.parse(data)
-  } else {
-    // 使用方法
+// boxjs_data
+let boxjs_request = new Request('http://boxjs.com/query/data/token_12123');
+let boxjs_data = await boxjs_request.loadJSON();
+let verifyToken = boxjs_data.val || "";  // 手动配置verifyToken
+
+if (fileManager.fileExists(cacheFile)) {
+  // readString JSON
+  data = fileManager.readString(cacheFile)
+  data = JSON.parse(data)
+} else {
+  if (!verifyToken) {
     const loginAlert = new Alert();
     loginAlert.title = '交管 12123';
-    loginAlert.message = `\r\n注 : 自动获取verifyToken需要Quantumult-X App辅助运行\n\n首次登录需用户💙💙💙\n\r\n自动获取verifyToken作者: @FoKit\n小组件作者: 95度茅台`;
-    loginAlert.addAction('填入车牌');
-    loginAlert.addCancelAction('verifyToken');
+    loginAlert.message = `\r\n注 : 自动获取Token需要Quantumult-X / Surge 辅助运行\n\n具体方法请查看小组件代码开头注释\n\r\n小组件作者: 95度茅台\n获取Token作者: @FoKit`;
+    loginAlert.addAction('获取Token');
+    loginAlert.addCancelAction('取消');
     login = await loginAlert.presentAlert();
-    
     if (login === -1) {
-      Safari.open(`${get.alipay}`);
       return;
     } else {
-      const alert = new Alert();
-      alert.title = '输入车牌号';
-      alert.message = '将显示在小组件左上角'
-      alert.addTextField('输入车牌号');
-      alert.addAction('确定');
-      alert.addCancelAction('取消');
-      const input = await alert.presentAlert();
-      const value = alert.textFieldValue(0);
-      if (input === 0) {
-        fileManager.createDirectory(folder)
-        data = {"version":"1.0","plate":`${value}`}
-        data = JSON.stringify(data);
-        fileManager.writeString(cacheFile, data);
-        Safari.open('scriptable:///run/%E4%BA%A4%E7%AE%A112123')
-        notice.title = '登录成功'
-        notice.body = '请前往桌面添加小组件'
-        notice.schedule();
-      }
+      Safari.open(`${get.alipay}`);
       return;
     }
+  } else {
+    console.log(`boxjs_token 获取成功: ${boxjs_data.val}`);
+    const alert = new Alert();
+    alert.title = '输入车牌号';
+    alert.message = '将显示在小组件左上角'
+    alert.addTextField('输入车牌号');
+    alert.addAction('确定');
+    alert.addCancelAction('取消');
+    const input = await alert.presentAlert();
+    const value = alert.textFieldValue(0);
+    if (input === 0) {
+      fileManager.createDirectory(folder)
+      data = { "version": "1.0", "plate": `${value}` }
+      data = JSON.stringify(data);
+      fileManager.writeString(cacheFile, data);
+      notice.title = '登录成功'
+      notice.body = '请前往桌面添加小组件'
+      notice.schedule();
+    }
   }
-
+}
 
 // violation main
 const violation = new Request(`${get.infoURL}`);
-  violation.method = 'POST'
-  violation.body = `params={
-    "productId": "${get.productId}", 
-    "api": "${get.api1}", 
-    "verifyToken": "${💙}"
+violation.method = 'POST'
+violation.body = `params={
+    "productId": "${get.productId}",
+    "api": "${get.api1}",
+    "verifyToken": "${verifyToken}"
 }`
   const main = await violation.loadJSON();
   const success = main.success
-  const list = main.data.list[0]
-  
-  
+
+
   if (success === true) {
+    var list = main.data.list[0]
     if (list === undefined) {
-      log(JSON.stringify(main, null, 4))
+      console.log(JSON.stringify(main, null, 4))
     } else {
       // issueOrganization
       const plate = list.plateNumber
       const issueOrganization = new Request(`${get.infoURL}`);
       issueOrganization.method = 'POST'
       issueOrganization.body = `params={
-    "productId": "${get.productId}", 
-    "api": "${get.api2}", 
-    "verifyToken": "${💙}", 
-    "params": {
-        "plateNumber": "${plate}", 
-        "plateType": "02"
-    }
+  "productId": "${get.productId}",
+  "api": "${get.api2}",
+  "verifyToken": "${verifyToken}",
+  "params": {
+    "plateNumber": "${plate}",
+    "plateType": "02"
+  }
 }`
       const issue = await issueOrganization.loadJSON();
       const issueData = issue.data.vioCity[0]
-      
-      
+
+
       // get surveils
       const area = new Request(`${get.infoURL}`);
       area.method = 'POST'
       area.body = `params={
-    "productId": "${get.productId}", 
-    "api": "${get.api3}", 
-    "verifyToken": "${💙}", 
-    "params": {
-        "plateNumber": "${plate}", 
-        "plateType": "02", 
-        "issueOrganization": "${issueData.issueOrganization}"
-    }
+  "productId": "${get.productId}",
+  "api": "${get.api3}",
+  "verifyToken": "${verifyToken}",
+  "params": {
+    "plateNumber": "${plate}",
+    "plateType": "02",
+    "issueOrganization": "${issueData.issueOrganization}"
+  }
 }`
       const surveils = await area.loadJSON();
       const detail = surveils.data.surveils[0]
-      
-      
+
+
     // violation Message
     if (detail !== undefined) {
       const violationMsg = new Request(`${get.infoURL}`);
       violationMsg.method = 'POST'
-      violationMsg.body = `{
-    "productId": "${get.productId}", 
-    "api": "${get.api4}", 
-    "verifyToken": "${💙}", 
-    "params": {
-        "violationSerialNumber": "${detail.violationSerialNumber}", 
-        "issueOrganization": "${detail.issueOrganization}"
-    }
-}`
+      violationMsg.body = `params={
+  "productId": "${get.productId}",
+    "api": "${get.api4}",
+      "verifyToken": "${verifyToken}",
+        "params": {
+    "violationSerialNumber": "${detail.violationSerialNumber}",
+      "issueOrganization": "${detail.issueOrganization}"
+  }
+} `
       const details = await violationMsg.loadJSON();
-      const vio = details.data.detail      
-      const img = details.data.photo
+      var vio = details.data.detail
+      var img = details.data.photo
       // Violation Information
       }
     }
   } else {
-    notice.title = 'verifyToken已过期'
-    notice.body = '请前往💙💙💙'
+    notice.title = 'verifyToken已过期 ⚠️'
+    notice.body = '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )'
+    notice.openURL = `${get.alipay}`
     notice.schedule();
+    return;
   }
 
-  
+
   // createWidget
   const widget = await createWidget(main);
 
   if (config.widgetFamily === "small") {
     return;
   }
-    
-  
+
+
   async function createWidget() {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
     const gradient = new LinearGradient()
     color = [
-    "#CCCC99", 
-    "#757575", 
+    "#CCCC99",
+    "#757575",
     "#4FC3F7",
     "#99CCCC"
     ]
@@ -157,8 +185,8 @@ const violation = new Request(`${get.infoURL}`);
       new Color('#00000000')
     ]
     widget.backgroundGradient = gradient
-    
-   
+
+
     // Frame Layout
     widget.setPadding(5, 5, 5, 5);
     const mainStack = widget.addStack();
@@ -175,9 +203,9 @@ const violation = new Request(`${get.infoURL}`);
     const plateStack = column1.addStack();
       textPlate = plateStack.addText(`${data.plate}`)
     textPlate.font = Font.mediumSystemFont(19);
-    textPlate.textColor = new Color('#424242');
+    textPlate.textColor = Color.black();
     column1.addSpacer(6)
-    
+
     // Mercedes Logo
     const benzLogoStack = column1.addStack();
     const man = SFSymbol.named('car');
@@ -197,9 +225,9 @@ const violation = new Request(`${get.infoURL}`);
       vehicleModelText = vehicleModel.addText(`未处理违章 ${list.count} 条`);
     }
     vehicleModelText.font = Font.mediumSystemFont(12);
-    vehicleModelText.textColor = new Color('#424242');
+    vehicleModelText.textColor = new Color('#494949');
     column1.addSpacer(3)
-    
+
     // update icon
     const updateTimeStack = column1.addStack();
     if (list === undefined) {
@@ -212,16 +240,16 @@ const violation = new Request(`${get.infoURL}`);
     // update time
     const updateTime = updateTimeStack.addStack();
     if (list === undefined) {
-      textUpdateTime = updateTime.addText('驾驶证习惯良好');
+      textUpdateTime = updateTime.addText('驾驶习惯良好');
       textUpdateTime.font = Font.mediumSystemFont(12);
     } else {
       textUpdateTime = updateTime.addText(`${vio.violationTime}`);
       textUpdateTime.font = Font.mediumSystemFont(13);
     }
-    textUpdateTime.textColor = new Color('#424242');
+    textUpdateTime.textColor = new Color('#494949');
     column1.addSpacer(22)
-    
-    
+
+
     const barRow = column1.addStack()
     const barStack = barRow.addStack();
     barStack.layoutHorizontally();
@@ -237,7 +265,7 @@ const violation = new Request(`${get.infoURL}`);
       const barIcon = SFSymbol.named('checkmark.shield.fill');
       const barIconElement = barStack.addImage(barIcon.image);
       barIconElement.imageSize = new Size(16, 16);
-      barIconElement.tintColor = new Color('#009201');
+      barIconElement.tintColor = Color.green();
       barStack.addSpacer(8);
       // bar text
       const totalMonthBar = barStack.addText('无违章');
@@ -262,7 +290,7 @@ const violation = new Request(`${get.infoURL}`);
       totalMonthBar.textColor = new Color('#D50000');
       column1.addSpacer(10)
     }
-    
+
 
     // Driver's license bar
     const barRow2 = column1.addStack();
@@ -277,7 +305,7 @@ const violation = new Request(`${get.infoURL}`);
     // bsr icon
     const barIcon2 = SFSymbol.named('mail.fill');
     const barIconElement2 = barStack2.addImage(barIcon2.image);
-    barIconElement2.imageSize = new Size(16, 16);
+    barIconElement2.imageSize = new Size(15, 15);
     barIconElement2.tintColor = Color.purple();
     barStack2.addSpacer(8);
     // bar text
@@ -285,24 +313,20 @@ const violation = new Request(`${get.infoURL}`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = Color.purple();
     column1.addSpacer()
-    
-    
+
+
     // Second column
     const column2 = dataStack.addStack();
     column2.layoutVertically();
     // Logo
     const carLogoStack = column2.addStack();
-    carLogoStack.setPadding(0, 200, 0, 0);
-    const carLogo = await getImage('https://sweixinfile.hisense.com/media/M00/71/03/Ch4FyGNWSISAB4b-AAAg-9GNdG0527.png');
-    const image = carLogoStack.addImage(carLogo);
-    image.imageSize = new Size(25,25);
-    if (list === undefined) {
-      image.tintColor = Color.blue();
-    } else {
-      image.tintColor = Color.red();
-    }
-    column2.addSpacer(2)
-    
+    carLogoStack.setPadding(0, 150, 0, 0);
+    textPlate2 = carLogoStack.addText('交管12123')
+    textPlate2.font = Font.mediumSystemFont(14);
+    textPlate2.rightAlignText();
+    textPlate2.textColor = Color.blue();
+    column2.addSpacer(10)
+
     // Car image
     const carImageStack = column2.addStack();
     carImageStack.setPadding(-19, 5, 0, 0);
@@ -320,26 +344,26 @@ const violation = new Request(`${get.infoURL}`);
     if (list === undefined) {
       textAddress = addressStack.addText('交管12123提醒您 : 请保持良好的驾驶习惯，务必遵守交通规则');
     } else {
-      textAddress = addressStack.addText(`${vio.violation}，` + `${vio.violationAddress}，` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
+      textAddress = addressStack.addText(`${vio.plateNumber}` + `${vio.violation}, ` + `${vio.violationAddress}, ` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
     }
     textAddress.font = Font.mediumSystemFont(12.5);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     column2.addSpacer(2)
-    
-    
+
+
     // jump show status
     barRow2.url = `${get.status}`;
+    // jump to alipay
+    widget.url = `${get.alipay}`;
     // jump show image
     if (list !== undefined) {
       textAddress.url = `${img}`;
     }
-    // jump to alipay
-    widget.url = `${get.alipay}`;
 
-    
+
     // update and check
-    if (!config.runsInWidget) {  
+    if (!config.runsInWidget) {
       let alert = new Alert();
       alert.title = "交管 12123 小组件"
       alert.addAction('更新代码')
@@ -357,8 +381,8 @@ const violation = new Request(`${get.infoURL}`);
       if (response === 0) {
         const FILE_MGR = FileManager.local()
         const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-        const reqUpdate = new Request(`${get.update}`);
-        const codeString = await reqUpdate.loadString()  
+        const reqUpdate = new Request(`${ get.update } `);
+        const codeString = await reqUpdate.loadString()
         const finish = new Alert();
         if (codeString.indexOf("交管12123") == -1) {
           finish.title = "更新失败"
@@ -370,7 +394,7 @@ const violation = new Request(`${get.infoURL}`);
           finish.addAction('OK')
           await finish.presentAlert();
           const Name = 'violation';
-Safari.open('scriptable:///run/' + encodeURIComponent(Name));
+          Safari.open('scriptable:///run/' + encodeURIComponent(Name));
         }
       }
     } else {
@@ -379,14 +403,14 @@ Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     }
     return widget;
   }
-  
+
 
   async function getImage(url) {
     const r = await new Request(url);
     return await r.loadImage();
   }
-    
-  
+
+
   async function shadowImage(img) {
     let ctx = new DrawContext()
     ctx.size = img.size
