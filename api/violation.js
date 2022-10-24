@@ -296,7 +296,11 @@ const violation = new Request(`${get.infoURL}`);
     const carLogo = await getImage('https://sweixinfile.hisense.com/media/M00/71/03/Ch4FyGNWSISAB4b-AAAg-9GNdG0527.png');
     const image = carLogoStack.addImage(carLogo);
     image.imageSize = new Size(25,25);
-    image.tintColor = Color.blue();
+    if (list === undefined) {
+      image.tintColor = Color.blue();
+    } else {
+      image.tintColor = Color.red();
+    }
     column2.addSpacer(2)
     
     // Car image
