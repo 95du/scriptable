@@ -200,7 +200,7 @@ violation.body = `params={
     column1.setPadding(0, 5, 0, 0);
     // plateStack
     const plateStack = column1.addStack();
-      textPlate = plateStack.addText(`${data.plate}`)
+    textPlate = plateStack.addText(`${data.plate}`)
     textPlate.font = Font.mediumSystemFont(19);
     textPlate.textColor = Color.black();
     column1.addSpacer(6)
@@ -365,6 +365,7 @@ violation.body = `params={
     if (!config.runsInWidget) {
       let alert = new Alert();
       alert.title = "交管 12123 小组件"
+      alert.message = `${get.Ver}`
       alert.addAction('更新代码')
       alert.addAction('预览组件')
       alert.addAction('退出')
@@ -378,10 +379,10 @@ violation.body = `params={
       if (response === 2) return;
       // Update the code
       if (response === 0) {
-        const FILE_MGR = FileManager.local()
+        const FILE_MGR = FileManager.local();
         const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-        const reqUpdate = new Request(`${ get.update } `);
-        const codeString = await reqUpdate.loadString()
+        const reqUpdate = new Request(`${get.update}`);
+        const codeString = await reqUpdate.loadString();
         const finish = new Alert();
         if (codeString.indexOf("交管12123") == -1) {
           finish.title = "更新失败"
