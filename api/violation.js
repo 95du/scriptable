@@ -42,7 +42,6 @@ let boxjs_data = await boxjs_request.loadJSON();
 let verifyToken = boxjs_data.val || "";  // 手动配置verifyToken
 
 if (fileManager.fileExists(cacheFile)) {
-  // readString JSON
   data = fileManager.readString(cacheFile)
   data = JSON.parse(data)
 } else {
@@ -71,7 +70,7 @@ if (fileManager.fileExists(cacheFile)) {
     const value = alert.textFieldValue(0);
     if (input === 0) {
       fileManager.createDirectory(folder)
-      data = { "version": "1.0", "plate": `${value}` }
+      data = {"version": "1.0", "plate": `${value}`}
       data = JSON.stringify(data);
       fileManager.writeString(cacheFile, data);
       notice.title = '登录成功'
@@ -144,7 +143,7 @@ violation.body = `params={
     "violationSerialNumber": "${detail.violationSerialNumber}",
       "issueOrganization": "${detail.issueOrganization}"
   }
-} `
+}`
       const details = await violationMsg.loadJSON();
       vio = details.data.detail
       img = details.data.photo
@@ -263,7 +262,7 @@ violation.body = `params={
       // bar icon
       const barIcon = SFSymbol.named('checkmark.shield.fill');
       const barIconElement = barStack.addImage(barIcon.image);
-      barIconElement.imageSize = new Size(16, 16);
+      barIconElement.imageSize = new Size(15, 15);
       barIconElement.tintColor = Color.green();
       barStack.addSpacer(8);
       // bar text
@@ -310,7 +309,7 @@ violation.body = `params={
     // bar text
     const totalMonthBar2 = barStack2.addText('驾驶证');
     totalMonthBar2.font = Font.mediumSystemFont(14);
-    totalMonthBar2.textColor = Color.purple();
+    totalMonthBar2.textColor = new Color('#757575');
     column1.addSpacer()
 
 
@@ -341,7 +340,7 @@ violation.body = `params={
     const addressStack = column2.addStack();
     addressStack.setPadding(0, 10, 0, 0);
     if (list === undefined) {
-      textAddress = addressStack.addText('交管12123提醒您 : 请保持良好的驾驶习惯，务必遵守交通规则');
+      textAddress = addressStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则                ');
     } else {
       textAddress = addressStack.addText(`${vio.plateNumber}` + `${vio.violation}, ` + `${vio.violationAddress}, ` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
     }
@@ -354,7 +353,9 @@ violation.body = `params={
     // jump show status
     barRow2.url = `${get.status}`;
     // jump to alipay
-    widget.url = `${get.alipay}`;
+    textPlate2.url = 'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Fvehicle-illegal-query%2Findex';
+    // jump quantumult
+    widget.url = `${get.alipay}`
     // jump show image
     if (list !== undefined) {
       textAddress.url = `${img}`;
