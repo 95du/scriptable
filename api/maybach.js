@@ -78,7 +78,8 @@ const widget = await createWidget()
     "#82B1FF", 
     "#757575", 
     "#4FC3F7",
-    "#66CCFF"
+    "#66CCFF",
+    "#99CCCC"
     ]
     const items = color[Math.floor(Math.random()*color.length)];
     gradient.locations = [0, 1]
@@ -96,7 +97,7 @@ const widget = await createWidget()
     @ text
     Cylindrical Bar Chart
     */
-    widget.setPadding(5, 5, 5, 5)
+    widget.setPadding(5, 5, 5, 5);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     mainStack.setPadding(10, 24, 0, 22);
@@ -105,18 +106,19 @@ const widget = await createWidget()
 
     // First column
     const column1 = dataStack.addStack();
+    column1.setPadding(0, 3, 0, 0);
     column1.layoutVertically();
     // plateStack
     const plateStack = column1.addStack();
     
     if (minutes1 <= 2) {
-      var textPlate = plateStack.addText('Maybach🚦');
+      textPlate = plateStack.addText('Maybach🚦');
     } else {
-      var textPlate = plateStack.addText('琼A·849A8')
+      textPlate = plateStack.addText('琼A·849A8')
     }
     
     textPlate.font = Font.mediumSystemFont(19);
-    textPlate.textColor = new Color('#424242');
+    textPlate.textColor =Color.black();
     column1.addSpacer(3)
     
     // Mercedes Logo
@@ -224,10 +226,11 @@ const widget = await createWidget()
     column2.layoutVertically();
     // Car Logo ？？？
     const carLogoStack = column2.addStack();
-    carLogoStack.setPadding(0, 205, 0, 0);
+    carLogoStack.setPadding(0, 203, 0, 0);
     const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
     const image = carLogoStack.addImage(carLogo);
     image.imageSize = new Size(27,27);
+    image.tintColor = Color.black();
     column2.addSpacer(2)
     
     // Car image
@@ -251,15 +254,15 @@ const widget = await createWidget()
     str = (jmz.GetLength(address));
     
     if (str < 35) {
-      var textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[0].type} )`)
+      textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[1].address} )`)
     } else if (str < 48) {
-      var textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[0].address} )`)
+      textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[0].address} )`)
     } else {
-      var textAddress = addressStack.addText(address)
+      textAddress = addressStack.addText(address);
     }
     
     textAddress.font = Font.mediumSystemFont(12.5);
-    textAddress.textColor = new Color('#424242');
+    textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     column2.addSpacer(2)
     
@@ -403,11 +406,11 @@ Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     var moment = (hours * 60 + minutes)
     
     if (data.speed <= 5) {
-      var run = (data.updateTime)
-      var stop = (json.updateTime)
+      run = (data.updateTime)
+      stop = (json.updateTime)
       
       if (run == stop) {
-        duration = "60"
+        duration = "120"
       } else {
         duration = "10"
       }
@@ -416,7 +419,7 @@ Safari.open('scriptable:///run/' + encodeURIComponent(Name));
         // push message to WeChat_2
         const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
         weChat_2.method = 'POST'
-        weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 停车时间 ${GMT}","url":"${mapUrl}"}]}}`;
+        weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 位置更新 ${GMT}","url":"${mapUrl}"}]}}`;
         const res_2 = await weChat_2.loadJSON();
         
         // Notification_2
