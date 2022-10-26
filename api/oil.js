@@ -45,7 +45,8 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     "#82B1FF", 
     "#757575", 
     "#4FC3F7",
-    "#66CCFF"
+    "#66CCFF",
+    "#99CCCC"
     ]
     const items = color[Math.floor(Math.random()*color.length)];
     gradient.locations = [0, 1]
@@ -104,7 +105,7 @@ dataStack2.layoutHorizontally();
     const barStack1 = barRow1.addStack();
     barStack1.layoutHorizontally();
     barStack1.centerAlignContent();
-    barStack1.setPadding(8, 8, 8, 4);
+    barStack1.setPadding(8, 8, 8, 8);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
     barStack1.borderColor = new Color('#D50000', 0.7);
@@ -124,7 +125,7 @@ dataStack2.layoutHorizontally();
     column0.layoutVertically();
     // Oil_0 bar
     const barRow0 = column0.addStack();
-    barRow0.setPadding(0, 0, 0, 6);
+    barRow0.setPadding(0, 0, 0, 7.2);
     const barStack0 = barRow0.addStack();
     barStack0.layoutHorizontally();
     barStack0.centerAlignContent();
@@ -140,7 +141,7 @@ dataStack2.layoutHorizontally();
       return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
     };  
     str0 = (a.GetLength(oil0));
-    console.log(str0)
+    
     if (str0 <= 3) {
       totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}0`);
     } else if (str0 > 4) {
@@ -159,7 +160,7 @@ dataStack2.layoutHorizontally();
     column2.layoutVertically();
     // Oil_92 bar
     const barRow2 = column2.addStack();
-    barRow2.setPadding(0, 0, 0, 6);
+    barRow2.setPadding(0, 0, 0, 7.2);
     const barStack2 = barRow2.addStack();
     barStack2.layoutHorizontally();
     barStack2.centerAlignContent();
@@ -193,7 +194,7 @@ dataStack2.layoutHorizontally();
     column5.layoutVertically();
     // Oil_95 bar
     const barRow5 = column5.addStack();
-    barRow5.setPadding(0, 0, 0, 6);
+    barRow5.setPadding(0, 0, 0, 7.2);
     const barStack5 = barRow5.addStack();
     barStack5.layoutHorizontally();
     barStack5.centerAlignContent();
@@ -213,7 +214,7 @@ dataStack2.layoutHorizontally();
       totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}0`);
     } else if (str95 > 4) {
       oil95 = oil95.replace(/\S{1}$/, '');
-      totalMonthBar5 = barStack5.addText(`0# - ${oil95}`);
+      totalMonthBar5 = barStack5.addText(`95 - ${oil95}`);
     } else {
       totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}`);
     }
@@ -246,7 +247,7 @@ dataStack2.layoutHorizontally();
       totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}0`);
     } else if (str98 > 4) {
       oil98 = oil98.replace(/\S{1}$/, '');
-      totalMonthBar8 = barStack8.addText(`0# - ${oil98}`);
+      totalMonthBar8 = barStack8.addText(`98 - ${oil98}`);
     } else {
       totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}`);  
     }
