@@ -1,6 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: bolt;
+// Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 const notice = new Notification()
 const timestamp = Date.parse(new Date());
 
@@ -63,6 +64,7 @@ const req = new Request('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindE
   const id = ele.bindingId
   const number = ele.eleCustNumber
 
+
 // Yesterday
 const yesterday = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPointYesterday');
   yesterday.method = 'POST'
@@ -111,6 +113,7 @@ const balance = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAcco
   const resB = await balance.loadJSON();
   const B = resB.data[0]
   const bal = B.balance
+
 
 // selectElecBill
 const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
@@ -175,6 +178,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     const iconSymbol = await ironMan.loadImage();
     const ironManIcon = logoStack.addImage(iconSymbol);
     ironManIcon.imageSize = new Size(80, 80);
+    logoStack.url = 'alipays://platformapi/startapp?appId=2021001164644764'
     column0.addSpacer(5);
     
     // column nameRow
@@ -192,7 +196,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     // name text
     const nameText = nameStack.addText(name);
     nameText.font = Font.mediumSystemFont(14);
-    nameText.textColor = Color.orange();
+    nameText.textColor = Color.black();
     column0.addSpacer(3)
 
     // column payRow
@@ -204,9 +208,9 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
       payStack.backgroundColor = new Color('#EEEEEE', 0.1);
       payStack.setPadding(3, 10, 3, 10);
       payStack.cornerRadius = 10
-      payStack.borderColor = new Color('#616161', 0.7);
+      payStack.borderColor = Color.green();
       payStack.borderWidth = 2
-      // pay bsr icon
+      // pay bar icon
       const payIcon = SFSymbol.named('leaf.fill');
       const payIconElement = payStack.addImage(payIcon.image);
       payIconElement.imageSize = new Size(15, 15);
@@ -215,7 +219,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
       // pay bar text
       const payText = payStack.addText('已缴费');
       payText.font = Font.mediumSystemFont(14);
-      payText.textColor = new Color('#616161');
+      payText.textColor = Color.green();
       column0.addSpacer(6)
     } else {
       const payRow = column0.addStack();
@@ -262,8 +266,8 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     yesterdayText.font = Font.mediumSystemFont(14)
     yesterdayText.textColor = new Color('#616161');
     column2.addSpacer(3)
-    //text
-    const yesterdayUseText = column2.addText(`${Y.power} 度`)
+    // Yesterday Use text
+    const yesterdayUseText = column2.addText(`${Y.power}度`)
     yesterdayUseText.textColor = Color.blue();
     yesterdayUseText.font = Font.boldSystemFont(14)
     yesterdayUseText.leftAlignText()
@@ -288,7 +292,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     monthText.textColor = new Color('#616161');
     column2.addSpacer(3)
     // month Use Text
-    const monthUseText = column2.addText(`${M.totalPower} 度`)
+    const monthUseText = column2.addText(`${M.totalPower}度`)
     monthUseText.textColor = Color.blue();
     monthUseText.font = Font.boldSystemFont(14)
     monthUseText.leftAlignText()
@@ -302,10 +306,10 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     balStack.centerAlignContent();
     balStack.setPadding(0, 0, 0, 0);
     // balance Icon
-    const balanceIcon = SFSymbol.named('questionmark');
+    const balanceIcon = SFSymbol.named('star.fill');
     const balanceIconElement = balStack.addImage(balanceIcon.image);
     balanceIconElement.imageSize = new Size(15, 15);
-    balanceIconElement.tintColor = Color.orange();
+    balanceIconElement.tintColor = Color.green();
     balStack.addSpacer(6);
     // balance text
     const balanceText = balStack.addText('余额');
@@ -440,7 +444,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     ctx.size = img.size
     ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
     // 图片遮罩颜色、透明度设置
-    ctx.setFillColor(new Color("#000000", 0.3))
+    ctx.setFillColor(new Color("#000000", 0.2))
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     let res = await ctx.getImage()
     return res
