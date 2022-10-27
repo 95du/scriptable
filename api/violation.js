@@ -298,7 +298,7 @@ violation.body = `params={
     barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
     barStack2.setPadding(3, 10, 3, 10);
     barStack2.cornerRadius = 10
-    barStack2.borderColor = Color.purple();
+    barStack2.borderColor = new Color('#AB47BC', 0.7);
     barStack2.borderWidth = 2
     // bsr icon
     const barIcon2 = SFSymbol.named('mail.fill');
@@ -320,9 +320,9 @@ violation.body = `params={
     const carLogoStack = column2.addStack();
     carLogoStack.setPadding(0, 155, 0, 0);
     textPlate2 = carLogoStack.addText('交管12123')
-    textPlate2.font = Font.mediumSystemFont(14);
+    textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
-    textPlate2.textColor = Color.blue();
+    textPlate2.textColor = new Color('#0061FF');
     column2.addSpacer(10)
 
     // Car image
