@@ -61,25 +61,21 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     const Stack = mainStack.addStack();
-    Stack.setPadding(0, 65, 0, 0);
+    Stack.setPadding(0, 68, 0, 0);
     Stack.layoutHorizontally();
-    
     // Notification icon
     const columnN = Stack.addStack();
     columnN.layoutVertically();
-
     const noticeStack = columnN.addStack();
     const iconSymbol2 = SFSymbol.named('bell.circle');
     const carIcon = noticeStack.addImage(iconSymbol2.image);
-    carIcon.imageSize = new Size(28, 28);
+    carIcon.imageSize = new Size(30, 30);
     carIcon.tintColor = Color.black();
     noticeStack.addSpacer(5);
     
     // Dynamic Island bar
     const barRow = noticeStack.addStack();
     const barStack = barRow.addStack();
-    barStack.layoutHorizontally();
-    barStack.centerAlignContent();
     barStack.backgroundColor = Color.black();
     barStack.setPadding(5, 45, 5, 45);
     barStack.cornerRadius = 15
@@ -88,34 +84,29 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     //Text Color
     const titleText = barStack.addText('海南油价');
     titleText.textColor = Color.green();
-    titleText.font = Font.boldSystemFont(15)
+    titleText.font = Font.boldSystemFont(16)
     titleText.centerAlignText();
-    columnN.addSpacer(10)
+    columnN.addSpacer(12)
     
     
     // oilPrice _alert ‼️
     const dataStack2 = mainStack.addStack();
-    dataStack2.setPadding(0, 0, 0, 0);
 dataStack2.layoutHorizontally();
-    const column1 = dataStack2.addStack();
-    column1.layoutVertically();
     // bar
-    const barRow1 = column1.addStack();
+    const barRow1 = dataStack2.addStack();
     barRow1.setPadding(0, 0, 10, 0);
     const barStack1 = barRow1.addStack();
-    barStack1.layoutHorizontally();
-    barStack1.centerAlignContent();
-    barStack1.setPadding(8, 8, 8, 8);
+    barStack1.setPadding(8, 8, 8, 2);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
-    barStack1.borderColor = new Color('#D50000', 0.7);
-    barStack1.borderWidth = 3
+    barStack1.borderColor = new Color('#D50000', 0.8);
+    barStack1.borderWidth = 2.5
     // bar text
     const oilTipsText = barStack1.addText(`${forecast}`);
     oilTipsText.textColor = new Color('#484848');
-    oilTipsText.font = Font.boldSystemFont(12.5)
+    oilTipsText.font = Font.boldSystemFont(13);
     oilTipsText.centerAlignText();
-    barStack1.addSpacer(10)
+    barStack1.addSpacer(15)
     
     
     // First column ❤️
@@ -125,10 +116,8 @@ dataStack2.layoutHorizontally();
     column0.layoutVertically();
     // Oil_0 bar
     const barRow0 = column0.addStack();
-    barRow0.setPadding(0, 0, 0, 7.2);
+    barRow0.setPadding(0, 0, 0, 8);
     const barStack0 = barRow0.addStack();
-    barStack0.layoutHorizontally();
-    barStack0.centerAlignContent();
     barStack0.setPadding(3, 8, 3, 8);
     barStack0.backgroundColor = new Color('#FB8C00');
     barStack0.cornerRadius = 10
@@ -152,7 +141,7 @@ dataStack2.layoutHorizontally();
     }
     totalMonthBar0.font = Font.mediumSystemFont(14);
     totalMonthBar0.textColor = Color.white();
-    column0.addSpacer(6)
+    
     
     
     // Second column ❤️
@@ -160,10 +149,8 @@ dataStack2.layoutHorizontally();
     column2.layoutVertically();
     // Oil_92 bar
     const barRow2 = column2.addStack();
-    barRow2.setPadding(0, 0, 0, 7.2);
+    barRow2.setPadding(0, 0, 0, 8);
     const barStack2 = barRow2.addStack();
-    barStack2.layoutHorizontally();
-    barStack2.centerAlignContent();
     barStack2.setPadding(3, 8, 3, 8);
     barStack2.backgroundColor = Color.blue();
     barStack2.cornerRadius = 10
@@ -186,7 +173,7 @@ dataStack2.layoutHorizontally();
     }
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#FFFFFF');
-    column2.addSpacer(6)
+    
     
     
     // Third column ❤️
@@ -194,10 +181,8 @@ dataStack2.layoutHorizontally();
     column5.layoutVertically();
     // Oil_95 bar
     const barRow5 = column5.addStack();
-    barRow5.setPadding(0, 0, 0, 7.2);
+    barRow5.setPadding(0, 0, 0, 8);
     const barStack5 = barRow5.addStack();
-    barStack5.layoutHorizontally();
-    barStack5.centerAlignContent();
     barStack5.setPadding(3, 8, 3, 8);
     barStack5.backgroundColor = new Color('#00C853');
     barStack5.cornerRadius = 10
@@ -220,7 +205,7 @@ dataStack2.layoutHorizontally();
     }
     totalMonthBar5.font = Font.mediumSystemFont(14);
     totalMonthBar5.textColor = new Color('#FFFFFF');
-    column5.addSpacer(6)
+    
     
     
     // Fourth column ❤️
@@ -229,8 +214,7 @@ dataStack2.layoutHorizontally();
     // Oil_98 bar
     const barRow8 = column8.addStack();
     const barStack8 = barRow8.addStack();
-    barStack8.layoutHorizontally();
-    barStack8.centerAlignContent();
+    
     barStack8.setPadding(3, 8, 3, 8);
     barStack8.backgroundColor = Color.purple();
     barStack8.cornerRadius = 10
