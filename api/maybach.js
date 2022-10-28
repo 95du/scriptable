@@ -79,7 +79,8 @@ const widget = await createWidget()
     "#757575", 
     "#4FC3F7",
     "#66CCFF",
-    "#99CCCC"
+    "#99CCCC",
+    "#BCBBBB"
     ]
     const items = color[Math.floor(Math.random()*color.length)];
     gradient.locations = [0, 1]
@@ -97,16 +98,15 @@ const widget = await createWidget()
     @ text
     Cylindrical Bar Chart
     */
-    widget.setPadding(5, 5, 5, 5);
+    widget.setPadding(10, 15, 10, 10);
     const mainStack = widget.addStack();
-    mainStack.layoutVertically();
-    mainStack.setPadding(10, 24, 0, 22);
+    //mainStack.layoutVertically();
+    mainStack.layoutHorizontally();
     const dataStack = mainStack.addStack();
-    dataStack.layoutHorizontally();
+    
 
     // First column
     const column1 = dataStack.addStack();
-    column1.setPadding(0, 3, 0, 0);
     column1.layoutVertically();
     // plateStack
     const plateStack = column1.addStack();
@@ -148,16 +148,14 @@ const widget = await createWidget()
     const textUpdateTime = updateTime.addText(GMT2);
     textUpdateTime.font = Font.mediumSystemFont(14);
     textUpdateTime.textColor = new Color('#424242');
-    column1.addSpacer(22)
+    column1.addSpacer(20)
     
     
     const barRow = column1.addStack()
     const barStack = barRow.addStack();
-    barStack.layoutHorizontally();
-    barStack.centerAlignContent();
     barStack.setPadding(3, 10, 3, 10);
     if (data.speed <= 5) {
-      // 条形图 speed 小于 5
+      // 按钮 speed 小于 5
       barStack.backgroundColor = new Color('#EEEEEE', 0.1);
       barStack.cornerRadius = 10
       barStack.borderColor = new Color('#AB47BC', 0.7);
@@ -172,9 +170,9 @@ const widget = await createWidget()
       const totalMonthBar = barStack.addText(state);
       totalMonthBar.font = Font.mediumSystemFont(14);
       totalMonthBar.textColor = new Color('#AA00FF');
-      column1.addSpacer(10)
+      column1.addSpacer(8)
     } else {
-      // 条形图 speed 大于 5
+      // 按钮 speed 大于 5
       barStack.backgroundColor = new Color('#EEEEEE', 0.1);
       barStack.cornerRadius = 10
       barStack.borderColor = new Color('#FF1744', 0.7);
@@ -189,15 +187,13 @@ const widget = await createWidget()
       const totalMonthBar = barStack.addText(state);
       totalMonthBar.font = Font.mediumSystemFont(14);
       totalMonthBar.textColor = new Color('#D50000');
-      column1.addSpacer(10)
+      column1.addSpacer(8)
     }
     
 
-    // 条形图 2
+    // 按钮 2
     const barRow2 = column1.addStack();
     const barStack2 = barRow2.addStack();
-    barStack2.layoutHorizontally();
-    barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
     barStack2.setPadding(3, 10, 3, 10);
     barStack2.cornerRadius = 10
@@ -213,7 +209,7 @@ const widget = await createWidget()
     const totalMonthBar2 = barStack2.addText('已锁车');
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#616161');
-    column1.addSpacer()
+    column1.addSpacer(2)
     
     
     /**
@@ -224,9 +220,9 @@ const widget = await createWidget()
     */
     const column2 = dataStack.addStack();
     column2.layoutVertically();
-    // Car Logo ？？？
+    // Car Logo
     const carLogoStack = column2.addStack();
-    carLogoStack.setPadding(0, 203, 0, 0);
+    carLogoStack.setPadding(0, 200, 0, 0);
     const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
     const image = carLogoStack.addImage(carLogo);
     image.imageSize = new Size(27,27);
@@ -235,39 +231,39 @@ const widget = await createWidget()
     
     // Car image
     const carImageStack = column2.addStack();
-    carImageStack.setPadding(-19, 5, 0, 0);
+    carImageStack.setPadding(-20, 5, 0, 0);
     const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
     const resUrl = await imgUrl.loadJSON();
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(228,100);
-    column2.addSpacer(3)
+    imageCar.imageSize = new Size(226,100);
+    column2.addSpacer(2)
 
     // show address
     const addressStack = column2.addStack();
-    addressStack.setPadding(0, 0, 0, 0);
+    addressStack.size = new Size(230, 30)
     const jmz = {};
     jmz.GetLength = function(str) {
       return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
     };  
     str = (jmz.GetLength(address));
     
-    if (str < 35) {
-      textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[1].address} )`)
-    } else if (str < 48) {
-      textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[0].address} )`)
+    if (str <= 35) {
+      textAddress = addressStack.addText(address + `，距离${adr.regeocode.pois[0].name}` + `${adr.regeocode.pois[0].distance} 米`)
+    } else if (str < 47) {
+      textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[0].address} )`);
     } else {
       textAddress = addressStack.addText(address);
     }
     
-    textAddress.font = Font.mediumSystemFont(12.5);
+    textAddress.font = Font.mediumSystemFont(11.5);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
-    column2.addSpacer(2)
+    
     
     // jump show map
-    barRow2.url = `${mapUrl}`;
+    barRow2.url = 'quantumult-x:///';
     // jump show map
     textAddress.url = `${mapUrl}`;
     // jump run widget
@@ -370,12 +366,12 @@ Safari.open('scriptable:///run/' + encodeURIComponent(Name));
       // push message to WeChat_1
       const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
       weChat_1.method = 'POST'
-      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}  启动时间 ${GMT}\n已离开📍${json.address}（ 相距 ${distance} 米 ）","url":"${mapUrl}"}]}}`;
+      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米","url":"${mapUrl}"}]}}`;
       const res_1 = await weChat_1.loadJSON();
       
       // Notification_1
       notice.title = `${status}  `+`更新时间 ${GMT}`
-      notice.body = `已离开📍${json.address}（ 相距 ${distance} 米 ）`
+      notice.body = `已离开📍${json.address}，相距 ${distance} 米`
       notice.sound = 'Alert'
       notice.openURL = `${mapUrl}`
       notice.schedule()
