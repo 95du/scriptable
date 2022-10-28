@@ -190,7 +190,7 @@ violation.body = `params={
 
 
     // Frame Layout
-    widget.setPadding(10, 15, 10, 10);
+    widget.setPadding(12, 15, 12, 10);
     const mainStack = widget.addStack();
     //mainStack.layoutVertically();
     mainStack.layoutHorizontally();
@@ -199,7 +199,6 @@ violation.body = `params={
     // First column
     const column1 = dataStack.addStack();
     column1.layoutVertically();
-    
     // plateStack
     const plateStack = column1.addStack();
     textPlate = plateStack.addText(`${data.plate}`)
@@ -253,6 +252,8 @@ violation.body = `params={
 
     const barRow = column1.addStack()
     const barStack = barRow.addStack();
+    barStack.layoutHorizontally();
+    barStack.centerAlignContent();
     barStack.setPadding(3, 10, 3, 10);
     if (list === undefined) {
       // Violation Early Warning
@@ -294,6 +295,8 @@ violation.body = `params={
     // Driver's license bar
     const barRow2 = column1.addStack();
     const barStack2 = barRow2.addStack();
+    barStack2.layoutHorizontally();
+    barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
     barStack2.setPadding(3, 10, 3, 10);
     barStack2.cornerRadius = 10
