@@ -32,14 +32,17 @@ const notice = new Notification()
 const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/violation.json')
 const get = await apiData.loadJSON();
 
+
 const fileManager = FileManager.iCloud();
 const folder = fileManager.joinPath(fileManager.documentsDirectory(), "violation");
 const cacheFile = fileManager.joinPath(folder, 'data.json');
+
 
 // boxjs_data
 let boxjs_request = new Request('http://boxjs.com/query/data/token_12123');
 let boxjs_data = await boxjs_request.loadJSON();
 let verifyToken = boxjs_data.val || "";  // 手动配置verifyToken
+
 
 if (fileManager.fileExists(cacheFile)) {
   data = fileManager.readString(cacheFile)
@@ -79,6 +82,7 @@ if (fileManager.fileExists(cacheFile)) {
     }
   }
 }
+
 
 // violation main
 const violation = new Request(`${get.infoURL}`);
@@ -186,17 +190,16 @@ violation.body = `params={
 
 
     // Frame Layout
-    widget.setPadding(5, 5, 5, 5);
+    widget.setPadding(10, 15, 10, 10);
     const mainStack = widget.addStack();
-    mainStack.layoutVertically();
-    mainStack.setPadding(10, 24, 0, 22);
+    //mainStack.layoutVertically();
+    mainStack.layoutHorizontally();
     const dataStack = mainStack.addStack();
-    dataStack.layoutHorizontally();
 
     // First column
     const column1 = dataStack.addStack();
     column1.layoutVertically();
-    column1.setPadding(0, 5, 0, 0);
+    
     // plateStack
     const plateStack = column1.addStack();
     textPlate = plateStack.addText(`${data.plate}`)
@@ -245,13 +248,11 @@ violation.body = `params={
       textUpdateTime.font = Font.mediumSystemFont(13);
     }
     textUpdateTime.textColor = new Color('#494949');
-    column1.addSpacer(22)
+    column1.addSpacer(25)
 
 
     const barRow = column1.addStack()
     const barStack = barRow.addStack();
-    barStack.layoutHorizontally();
-    barStack.centerAlignContent();
     barStack.setPadding(3, 10, 3, 10);
     if (list === undefined) {
       // Violation Early Warning
@@ -269,7 +270,7 @@ violation.body = `params={
       const totalMonthBar = barStack.addText('无违章');
       totalMonthBar.font = Font.mediumSystemFont(14);
       totalMonthBar.textColor = new Color('#009201');
-      column1.addSpacer(10)
+      column1.addSpacer(8)
     } else {
       // Driver's license
       barStack.backgroundColor = new Color('#EEEEEE', 0.1);
@@ -286,15 +287,13 @@ violation.body = `params={
       const totalMonthBar = barStack.addText('有违章');
       totalMonthBar.font = Font.mediumSystemFont(14);
       totalMonthBar.textColor = new Color('#D50000');
-      column1.addSpacer(10)
+      column1.addSpacer(8)
     }
 
 
     // Driver's license bar
     const barRow2 = column1.addStack();
     const barStack2 = barRow2.addStack();
-    barStack2.layoutHorizontally();
-    barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
     barStack2.setPadding(3, 10, 3, 10);
     barStack2.cornerRadius = 10
@@ -310,41 +309,41 @@ violation.body = `params={
     const totalMonthBar2 = barStack2.addText('驾驶证');
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#757575');
-    column1.addSpacer()
+    column1.addSpacer(2)
 
 
     // Second column
     const column2 = dataStack.addStack();
     column2.layoutVertically();
-    // Logo
+    // Car Logo
     const carLogoStack = column2.addStack();
     carLogoStack.setPadding(0, 155, 0, 0);
     textPlate2 = carLogoStack.addText('交管12123')
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    column2.addSpacer(10)
+    column2.addSpacer(12)
 
     // Car image
     const carImageStack = column2.addStack();
-    carImageStack.setPadding(-19, 5, 0, 0);
+    carImageStack.setPadding(-20, 5, 0, 0);
     const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
     const resUrl = await imgUrl.loadJSON();
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(228,100);
+    imageCar.imageSize = new Size(226,100);
     column2.addSpacer(3)
 
     // show address
     const addressStack = column2.addStack();
-    addressStack.setPadding(0, 10, 0, 0);
+    addressStack.setPadding(0, 8, 0, 0);
     if (list === undefined) {
-      textAddress = addressStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则                ');
+      textAddress = addressStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则');
     } else {
       textAddress = addressStack.addText(`${vio.plateNumber}` + `${vio.violation}, ` + `${vio.violationAddress}, ` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
     }
-    textAddress.font = Font.mediumSystemFont(12.5);
+    textAddress.font = Font.mediumSystemFont(12);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     column2.addSpacer(2)
