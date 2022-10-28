@@ -153,6 +153,8 @@ const widget = await createWidget()
     
     const barRow = column1.addStack()
     const barStack = barRow.addStack();
+    barStack.layoutHorizontally();
+    barStack.centerAlignContent();
     barStack.setPadding(3, 10, 3, 10);
     if (data.speed <= 5) {
       // 按钮 speed 小于 5
@@ -194,6 +196,8 @@ const widget = await createWidget()
     // 按钮 2
     const barRow2 = column1.addStack();
     const barStack2 = barRow2.addStack();
+    barStack2.layoutHorizontally();
+    barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
     barStack2.setPadding(3, 10, 3, 10);
     barStack2.cornerRadius = 10
@@ -267,7 +271,7 @@ const widget = await createWidget()
     // jump show map
     textAddress.url = `${mapUrl}`;
     // jump run widget
-    widget.url = 'scriptable:///run/Maybach';
+    imageCar.url = 'scriptable:///run/Maybach';
     
     // update and check
     if (!config.runsInWidget) {  
