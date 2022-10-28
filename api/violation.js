@@ -31,7 +31,7 @@ hostname = %APPEND% miniappcsfw.122.gov.cn
 const notice = new Notification()
 const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/violation.json')
 const get = await apiData.loadJSON();
-
+const url = get.infoURL
 
 const fileManager = FileManager.iCloud();
 const folder = fileManager.joinPath(fileManager.documentsDirectory(), "violation");
@@ -85,7 +85,7 @@ if (fileManager.fileExists(cacheFile)) {
 
 
 // violation main
-const violation = new Request(`${get.infoURL}`);
+const violation = new Request(url);
 violation.method = 'POST'
 violation.body = `params={
     "productId": "${get.productId}",
@@ -103,7 +103,7 @@ violation.body = `params={
     } else {
       // issueOrganization
       const plate = list.plateNumber
-      const issueOrganization = new Request(`${get.infoURL}`);
+      const issueOrganization = new Request(url);
       issueOrganization.method = 'POST'
       issueOrganization.body = `params={
   "productId": "${get.productId}",
@@ -119,7 +119,7 @@ violation.body = `params={
 
 
       // get surveils
-      const area = new Request(`${get.infoURL}`);
+      const area = new Request(url);
       area.method = 'POST'
       area.body = `params={
   "productId": "${get.productId}",
@@ -137,7 +137,7 @@ violation.body = `params={
 
     // violation Message
     if (detail !== undefined) {
-      const violationMsg = new Request(`${get.infoURL}`);
+      const violationMsg = new Request(url);
       violationMsg.method = 'POST'
       violationMsg.body = `params={
   "productId": "${get.productId}",
