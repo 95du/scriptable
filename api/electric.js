@@ -111,9 +111,14 @@ const balance = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAcco
   balance.headers = {"x-auth-token": `${data.token}`,"Content-Type":"application/json;charset=utf-8"}
   balance.body = `{"areaCode": "${code}","eleCustId": "${id}"}`
   const resB = await balance.loadJSON();
-  const B = resB.data[0]
-  const bal = B.balance
-
+  const Bdata = resB.data
+  if (Bdata === null) {
+    bal = '0'
+  } else {
+    B = resB.data[0]
+    bal = B.balance
+  }
+  
 
 // selectElecBill
 const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
@@ -169,6 +174,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     const dataStack = mainStack.addStack();
     dataStack.layoutHorizontally();
 
+
     // First column
     const column0 = dataStack.addStack();
     column0.layoutVertically();
@@ -203,8 +209,6 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     if (pay < 1) {
       const payRow = column0.addStack();
       const payStack = payRow.addStack();
-      payStack.layoutHorizontally();
-      payStack.centerAlignContent();
       payStack.backgroundColor = new Color('#EEEEEE', 0.1);
       payStack.setPadding(3, 10, 3, 10);
       payStack.cornerRadius = 10
@@ -224,8 +228,6 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     } else {
       const payRow = column0.addStack();
       const payStack = payRow.addStack();
-      payStack.layoutHorizontally();
-      payStack.centerAlignContent();
       payStack.backgroundColor = new Color('#EEEEEE', 0.1);
       payStack.setPadding(3, 10, 3, 10);
       payStack.cornerRadius = 10
@@ -248,12 +250,10 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     // Second column
     const column2 = dataStack.addStack();
     column2.layoutVertically();
-    column2.setPadding(5, 50, 0, 0)
+    column2.setPadding(5, 30, 0, 0)
     // yesterday
     const yesterdayRow = column2.addStack()
     const yesTDStack = yesterdayRow.addStack();
-    yesTDStack.layoutHorizontally();
-    yesTDStack.centerAlignContent();
     yesTDStack.setPadding(0, 0, 0, 0);
     // yesterday icon
     const yesterdayIcon = SFSymbol.named('bolt.fill');
@@ -267,7 +267,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     yesterdayText.textColor = new Color('#616161');
     column2.addSpacer(3)
     // Yesterday Use text
-    const yesterdayUseText = column2.addText(`${Y.power}度`)
+    const yesterdayUseText = column2.addText(`${Y.power} kw·h`)
     yesterdayUseText.textColor = Color.blue();
     yesterdayUseText.font = Font.boldSystemFont(14)
     yesterdayUseText.leftAlignText()
@@ -277,8 +277,6 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     // Electricity used this month
     const monthRow = column2.addStack()
     const monthStack = monthRow.addStack();
-    monthStack.layoutHorizontally();
-    monthStack.centerAlignContent();
     monthStack.setPadding(0, 0, 0, 0);
     // month icon
     const monthIcon = SFSymbol.named('bolt.fill');
@@ -292,52 +290,16 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     monthText.textColor = new Color('#616161');
     column2.addSpacer(3)
     // month Use Text
-    const monthUseText = column2.addText(`${M.totalPower}度`)
+    const monthUseText = column2.addText(`${M.totalPower} kw·h`)
     monthUseText.textColor = Color.blue();
     monthUseText.font = Font.boldSystemFont(14)
     monthUseText.leftAlignText()
     column2.addSpacer(10)
     
     
-    // User balance
-    const balanceRow = column2.addStack()
-    const balStack = balanceRow.addStack();
-    balStack.layoutHorizontally();
-    balStack.centerAlignContent();
-    balStack.setPadding(0, 0, 0, 0);
-    // balance Icon
-    const balanceIcon = SFSymbol.named('star.fill');
-    const balanceIconElement = balStack.addImage(balanceIcon.image);
-    balanceIconElement.imageSize = new Size(15, 15);
-    balanceIconElement.tintColor = Color.green();
-    balStack.addSpacer(6);
-    // balance text
-    const balanceText = balStack.addText('余额');
-    balanceText.font = Font.mediumSystemFont(14)
-    balanceText.textColor = new Color('#616161');
-    column2.addSpacer(3)
-    //balance Use Text
-    const contain = bal.indexOf(".") != -1
-    if (contain === false) {
-      balanceUseText = column2.addText(`${B.balance}.00 元`)
-    } else {
-      balanceUseText = column2.addText(`${B.balance} 元`)
-    }
-    balanceUseText.textColor = Color.blue();
-    balanceUseText.font = Font.boldSystemFont(14)
-    balanceUseText.leftAlignText()
-    column2.addSpacer(5)
-    
-    
-    //Third column
-    const column3 = dataStack.addStack();
-    column3.layoutVertically();
-    column3.setPadding(5, 30, 0, 0)
     // Use ele
-    const useEleRow = column3.addStack()
+    const useEleRow = column2.addStack()
     const useEleStack = useEleRow.addStack();
-    useEleStack.layoutHorizontally();
-    useEleStack.centerAlignContent();
     useEleStack.setPadding(0, 0, 0, 0);
     // Use ele icon
     const useEleIcon = SFSymbol.named('lightbulb.fill');
@@ -349,20 +311,50 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     const useEleText = useEleStack.addText('上月');
     useEleText.font = Font.mediumSystemFont(14);
     useEleText.textColor = new Color('#616161');
-    column3.addSpacer(3)
+    column2.addSpacer(3)
     // Use ele total text
-    const useEleTotalText = column3.addText(`${total}`)
+    const useEleTotalText = column2.addText(`${total} kw·h`)
     useEleTotalText.textColor = Color.blue();
     useEleTotalText.font = Font.boldSystemFont(14)
     useEleTotalText.leftAlignText()
+    column2.addSpacer(5)
+    
+    
+    //Third column
+    const column3 = dataStack.addStack();
+    column3.layoutVertically();
+    column3.setPadding(5, 20, 0, 0)
+    // User balance
+    const balanceRow = column3.addStack()
+    const balStack = balanceRow.addStack();
+    balStack.setPadding(0, 0, 0, 0);
+    // balance Icon
+    const balanceIcon = SFSymbol.named('star.fill');
+    const balanceIconElement = balStack.addImage(balanceIcon.image);
+    balanceIconElement.imageSize = new Size(15, 15);
+    balanceIconElement.tintColor = Color.green();
+    balStack.addSpacer(6);
+    // balance text
+    const balanceText = balStack.addText('余额');
+    balanceText.font = Font.mediumSystemFont(14)
+    balanceText.textColor = new Color('#616161');
+    column3.addSpacer(3)
+    //balance Use Text
+    const contain = bal.indexOf(".") != -1
+    if (contain === false) {
+      balanceUseText = column3.addText(bal + '.00 rmb')
+    } else {
+      balanceUseText = column3.addText(bal + ' rmb')
+    }
+    balanceUseText.textColor = Color.blue();
+    balanceUseText.font = Font.boldSystemFont(14)
+    balanceUseText.leftAlignText()
     column3.addSpacer(10)
     
 
     // Electricity Charge
     const eleBillRow = column3.addStack()
     const eleBiStack = eleBillRow.addStack();
-    eleBiStack.layoutHorizontally();
-    eleBiStack.centerAlignContent();
     eleBiStack.setPadding(0, 0, 0, 0);
     // eleBill icon
     const eleBillIcon = SFSymbol.named('yensign.circle');
@@ -376,7 +368,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     eleBillText.textColor = new Color('#616161');
     column3.addSpacer(3)
     // ele Bill Total Text
-    const eleBillTotalText = column3.addText(`${arrears} 元`)
+    const eleBillTotalText = column3.addText(`${arrears} rmb`)
     eleBillTotalText.textColor = Color.blue();
     eleBillTotalText.font = Font.boldSystemFont(14)
     eleBillTotalText.leftAlignText()
@@ -386,8 +378,6 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     // Waiting for payment
     const arrearsRow = column3.addStack()
     const arrearsStack = arrearsRow.addStack();
-    arrearsStack.layoutHorizontally();
-    arrearsStack.centerAlignContent();
     arrearsStack.setPadding(0, 0, 0, 0);
     // arrears icon
     const arrearsIcon = SFSymbol.named('exclamationmark.shield');
@@ -401,7 +391,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     arrearsText.textColor = new Color('#616161');
     column3.addSpacer(3)
     // arrears total text
-    const arrearsTotalText = column3.addText(`${pay} 元`);
+    const arrearsTotalText = column3.addText(`${pay} rmb`);
     arrearsTotalText.textColor = Color.blue();
     arrearsTotalText.font = Font.boldSystemFont(14)
     arrearsTotalText.leftAlignText()
