@@ -320,7 +320,7 @@ violation.body = `params={
     column2.layoutVertically();
     // Car Logo
     const carLogoStack = column2.addStack();
-    carLogoStack.setPadding(0, 155, 0, 0);
+    carLogoStack.setPadding(0, 153, 0, 0);
     textPlate2 = carLogoStack.addText('交管12123')
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
