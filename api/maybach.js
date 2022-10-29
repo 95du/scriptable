@@ -65,7 +65,7 @@ const widget = await createWidget()
       state = "已静止";
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     } else {
-      status = `[ 车速 ${data.speed} km/h ]`;
+      status = `[ 车速 ${data.speed} km·h ]`;
       state = `${data.speed} km·h`;
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     }
@@ -138,9 +138,11 @@ const widget = await createWidget()
     
     // update icon
     const updateTimeStack = column1.addStack();
+    updateTimeStack.layoutHorizontally();
+    updateTimeStack.centerAlignContent();
     const iconSymbol2 = SFSymbol.named('car');
     const carIcon = updateTimeStack.addImage(iconSymbol2.image);
-    carIcon.imageSize = new Size(17, 17);
+    carIcon.imageSize = new Size(15, 15);
     carIcon.tintColor = Color.black();
     updateTimeStack.addSpacer(5);
     // update time
