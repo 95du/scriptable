@@ -17,7 +17,7 @@ const widget = await createWidget()
     
     // Get address (aMap)
     const data = res.data
-    const REQ = new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=300&extensions=all&location=${data.longitude},${data.latitude}`);  
+    const REQ = new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${data.longitude},${data.latitude}`);  
     const adr = await REQ.loadJSON();
     const address = adr.regeocode.formatted_address  
     
@@ -254,9 +254,9 @@ const widget = await createWidget()
     str = (jmz.GetLength(address));
     
     if (str <= 35) {
-      textAddress = addressStack.addText(address + `，距离${adr.regeocode.pois[0].name}` + `${adr.regeocode.pois[0].distance} 米`)
+      textAddress = addressStack.addText(address + ` - 距离${adr.regeocode.pois[0].name}` + `${adr.regeocode.pois[0].distance}米`)
     } else if (str < 47) {
-      textAddress = addressStack.addText(address + `( ${adr.regeocode.pois[0].address} )`);
+      textAddress = addressStack.addText(address + ` - ${adr.regeocode.pois[0].name}`);
     } else {
       textAddress = addressStack.addText(address);
     }
