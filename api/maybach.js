@@ -66,7 +66,7 @@ const widget = await createWidget()
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     } else {
       status = `[ 车速 ${data.speed} km/h ]`;
-      state = `${data.speed} km/h`;
+      state = `${data.speed} km·h`;
       mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
     }
     
@@ -254,9 +254,9 @@ const widget = await createWidget()
     str = (jmz.GetLength(address));
     
     if (str <= 35) {
-      textAddress = addressStack.addText(address + ` - 距离${adr.regeocode.pois[0].name}` + `${adr.regeocode.pois[0].distance}米`)
+      textAddress = addressStack.addText(address + ` - 距离${adr.regeocode.pois[0].address}` + `${adr.regeocode.pois[0].distance}米`)
     } else if (str < 47) {
-      textAddress = addressStack.addText(address + ` - ${adr.regeocode.pois[0].name}`);
+      textAddress = addressStack.addText(address + ` - ${adr.regeocode.pois[0].address}`);
     } else {
       textAddress = addressStack.addText(address);
     }
@@ -281,14 +281,12 @@ const widget = await createWidget()
       alert.addAction('预览组件')
       alert.addAction('退出')
       response = await alert.presentAlert();
-      // menu action 1
       if (response === 1) {
         await widget.presentMedium();
-        return;//预览后退出
+        return;
       }
-      // menu action 2
       if (response === 2) return;
-      // Update the code.
+      // Update the code
       if (response === 0) {
         const FILE_MGR = FileManager.local()
         const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
