@@ -208,6 +208,8 @@ violation.body = `params={
 
     // Mercedes Logo
     const benzLogoStack = column1.addStack();
+    benzLogoStack.layoutHorizontally();
+    benzLogoStack.centerAlignContent();
     const man = SFSymbol.named('car');
     const carIcon = benzLogoStack.addImage(man.image);
     carIcon.imageSize = new Size(14, 14);
