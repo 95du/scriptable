@@ -344,7 +344,7 @@ violation.body = `params={
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    column2.addSpacer(13)
+    column2.addSpacer(14)
 
     // Car image
     const carImageStack = column2.addStack();
