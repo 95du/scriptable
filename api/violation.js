@@ -37,17 +37,28 @@ const fileManager = FileManager.iCloud();
 const folder = fileManager.joinPath(fileManager.documentsDirectory(), "violation");
 const cacheFile = fileManager.joinPath(folder, 'data.json');
 
-
-// boxjs_data
-let boxjs_request = new Request('http://boxjs.com/query/data/token_12123');
-let boxjs_data = await boxjs_request.loadJSON();
-let verifyToken = boxjs_data.val || "";  // 手动配置verifyToken
-
-
 if (fileManager.fileExists(cacheFile)) {
   data = fileManager.readString(cacheFile)
-  data = JSON.parse(data)
-} else {
+  data = JSON.parse(data);
+  verifyToken = data.verifyToken
+  myPlate = data.myPlate
+}
+
+
+if (!fileManager.fileExists(folder) || verifyToken === undefined) {
+  // boxjs_data
+  boxjs_request = new Request('http://boxjs.com/query/data/token_12123');
+  boxjs_data = await boxjs_request.loadJSON();
+  verifyToken = boxjs_data.val
+  if (fileManager.fileExists(cacheFile)) {
+    data = {"verifyToken": `${verifyToken}`, "myPlate": `${myPlate}`}
+    data = JSON.stringify(data);
+    fileManager.writeString(cacheFile, data);
+  }
+}
+
+
+if (!fileManager.fileExists(cacheFile)) {
   if (!verifyToken) {
     const loginAlert = new Alert();
     loginAlert.title = '交管 12123';
@@ -71,14 +82,17 @@ if (fileManager.fileExists(cacheFile)) {
     alert.addCancelAction('取消');
     const input = await alert.presentAlert();
     const value = alert.textFieldValue(0);
+    myPlate = value
     if (input === 0) {
       fileManager.createDirectory(folder)
-      data = {"version": "1.0", "plate": `${value}`}
+      data = {"verifyToken": `${boxjs_data.val}`, "myPlate": `${myPlate}`}
       data = JSON.stringify(data);
       fileManager.writeString(cacheFile, data);
       notice.title = '登录成功'
       notice.body = '请前往桌面添加小组件'
       notice.schedule();
+    } else {
+      return;
     }
   }
 }
@@ -101,7 +115,7 @@ violation.body = `params={
     if (list === undefined) {
       log(JSON.stringify(main, null, 4))
     } else {
-      // issueOrganization
+      // issueOrganization plate
       const plate = list.plateNumber
       const issueOrganization = new Request(url);
       issueOrganization.method = 'POST'
@@ -154,6 +168,10 @@ violation.body = `params={
       }
     }
   } else {
+    data = {"myPlate": `${myPlate}`}
+    data = JSON.stringify(data);
+    fileManager.writeString(cacheFile, data);
+    // notice
     notice.title = 'verifyToken已过期 ⚠️'
     notice.body = '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )'
     notice.openURL = `${get.alipay}`
@@ -168,7 +186,6 @@ violation.body = `params={
   if (config.widgetFamily === "small") {
     return;
   }
-
 
   async function createWidget() {
     const widget = new ListWidget();
@@ -201,7 +218,7 @@ violation.body = `params={
     column1.layoutVertically();
     // plateStack
     const plateStack = column1.addStack();
-    textPlate = plateStack.addText(`${data.plate}`)
+    textPlate = plateStack.addText(myPlate)
     textPlate.font = Font.mediumSystemFont(19);
     textPlate.textColor = Color.black();
     column1.addSpacer(6)
@@ -327,7 +344,7 @@ violation.body = `params={
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    column2.addSpacer(12)
+    column2.addSpacer(13)
 
     // Car image
     const carImageStack = column2.addStack();
@@ -338,20 +355,20 @@ violation.body = `params={
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
     imageCar.imageSize = new Size(226,100);
-    column2.addSpacer(3)
+    column2.addSpacer(2)
 
     // show address
     const addressStack = column2.addStack();
-    addressStack.setPadding(0, 8, 0, 0);
+    addressStack.setPadding(0, 6, 0, 0);
     if (list === undefined) {
-      textAddress = addressStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则');
+      textAddress = addressStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则     ');
     } else {
       textAddress = addressStack.addText(`${vio.plateNumber}` + `${vio.violation}, ` + `${vio.violationAddress}, ` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
     }
-    textAddress.font = Font.mediumSystemFont(12);
+    textAddress.font = Font.mediumSystemFont(11.5);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
-    column2.addSpacer(2)
+    column2.addSpacer(1)
 
 
     // jump show status
