@@ -117,7 +117,7 @@ const widget = await createWidget()
       textPlate = plateStack.addText('琼A·849A8')
     }
     
-    textPlate.font = Font.mediumSystemFont(19);
+    textPlate.font = Font.mediumSystemFont(18.5);
     textPlate.textColor =Color.black();
     column1.addSpacer(3)
     
@@ -150,7 +150,7 @@ const widget = await createWidget()
     const textUpdateTime = updateTime.addText(GMT2);
     textUpdateTime.font = Font.mediumSystemFont(14);
     textUpdateTime.textColor = new Color('#424242');
-    column1.addSpacer(20)
+    column1.addSpacer(22)
     
     
     const barRow = column1.addStack()
