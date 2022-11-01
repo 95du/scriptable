@@ -35,7 +35,7 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
       const input = await alert.presentAlert();
       const value = alert.textFieldValue(0)
       if (input === 0) {
-        fileManager.createDirectory(folder)
+        if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
         data = {"token":`${value}`,"updateTime":`${timestamp}`}
         data = JSON.stringify(data);
         fileManager.writeString(cacheFile, data);
@@ -72,7 +72,11 @@ const yesterday = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayEle
   yesterday.body = `{"areaCode": "${code}","eleCustId": "${id}"}`
   const resY = await yesterday.loadJSON();
   const Y = resY.data
-  
+  if (Y === null) {
+    ystdayPower = '0.00 '
+  } else {
+    ystdayPower = Y.power
+  }
   
 // queryMeteringPoint
 const point = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryMeteringPoint');
@@ -103,8 +107,13 @@ const month = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectri
 }`
   const resM = await month.loadJSON();
   const M = resM.data
-
-
+  if (M === null) {
+    totalPower = '0.00 '
+  } else {
+    totalPower = M.totalPower
+  }
+  
+  
 // UserAccountNumberSurplus
 const balance = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus');
   balance.method = 'POST'
@@ -121,20 +130,27 @@ const balance = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAcco
   
 
 // selectElecBill
-const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
+const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryCharges');
   elecBill.method = 'POST'
   elecBill.headers = {"x-auth-token": `${data.token}`,"Content-Type":"application/json;charset=utf-8"}
   elecBill.body = `{
-  "electricityBillYear" : "${Year}",
-  "eleCustId" : "${id}",
-  "areaCode" : "${code}"
+    "type": "0", 
+    "areaCode": "${code}", 
+    "eleModels": [
+    {
+      "areaCode" : "${code}",
+      "eleCustId" : "${id}"
+    }
+  ]
 }`
   const resBill = await elecBill.loadJSON();
-  const pay = resBill.data.electricBillPay
-  const bill = resBill.data.billUserAndYear[0]
-  const total = bill.totalPower
-  const arrears = bill.arrears
+  const bill = resBill.data[0].points[0]
+  const total = bill.billingElectricity
+  const pay = bill.arrears
+  const arrears = bill.receieElectricity
 
+
+  // create Widget
   const widget = await createWidget(ele, balance, pay);
 
   if (config.widgetFamily === "small") {
@@ -145,7 +161,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     Script.setWidget(widget)
     Script.complete()
   } else {
-    widget.presentMedium();
+    await widget.presentMedium();
   }
     
   
@@ -267,7 +283,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     yesterdayText.textColor = new Color('#616161');
     column2.addSpacer(3)
     // Yesterday Use text
-    const yesterdayUseText = column2.addText(`${Y.power} kw·h`)
+    const yesterdayUseText = column2.addText(ystdayPower + 'kw·h')
     yesterdayUseText.textColor = Color.blue();
     yesterdayUseText.font = Font.boldSystemFont(14)
     yesterdayUseText.leftAlignText()
@@ -290,7 +306,7 @@ const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBi
     monthText.textColor = new Color('#616161');
     column2.addSpacer(3)
     // month Use Text
-    const monthUseText = column2.addText(`${M.totalPower} kw·h`)
+    const monthUseText = column2.addText(totalPower + 'kw·h')
     monthUseText.textColor = Color.blue();
     monthUseText.font = Font.boldSystemFont(14)
     monthUseText.leftAlignText()
