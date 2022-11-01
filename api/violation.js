@@ -84,7 +84,7 @@ if (!fileManager.fileExists(cacheFile)) {
     const value = alert.textFieldValue(0);
     myPlate = value
     if (input === 0) {
-      fileManager.createDirectory(folder)
+      if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
       data = {"verifyToken": `${boxjs_data.val}`, "myPlate": `${myPlate}`}
       data = JSON.stringify(data);
       fileManager.writeString(cacheFile, data);
@@ -239,9 +239,9 @@ violation.body = `params={
     // vehicleModel
     const vehicleModel = benzLogoStack.addStack();
     if (list === undefined) {
-      vehicleModelText = vehicleModel.addText('未处理违章 0 条');
+      vehicleModelText = vehicleModel.addText('未处理违章 0');
     } else {
-      vehicleModelText = vehicleModel.addText(`未处理违章 ${list.count} 条`);
+      vehicleModelText = vehicleModel.addText(`未处理违章 ${list.count}`);
     }
     vehicleModelText.font = Font.mediumSystemFont(12);
     vehicleModelText.textColor = new Color('#494949');
