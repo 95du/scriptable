@@ -5,6 +5,11 @@ const notice = new Notification()
 const widget = await createWidget()
 
   async function createWidget() {
+    const oilUrl = new Request('https://mys4s.cn/v3/oil/price');
+    oilUrl.method = 'POST'
+    oilUrl.body = 'region=海南'
+    const oil = await oilUrl.loadJSON();
+    const hainan = oil.data.Oil92
     // Data Request
     const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
     req.method = 'GET'
@@ -119,22 +124,25 @@ const widget = await createWidget()
     textPlate.textColor =Color.black();
     column1.addSpacer(3)
     
-    // Mercedes Logo
-    const benzLogoStack = column1.addStack();
-    const benz = new Request ('https://gitcode.net/4qiao/scriptable/raw/master/img/car/mercedesLogo.png');
-    const iconSymbol = await benz.loadImage();
-    const benzIcon = benzLogoStack.addImage(iconSymbol);
-    benzIcon.imageSize = new Size(15, 15);
-    benzIcon.tintColor = Color.black();
-    benzLogoStack.addSpacer(5);
-    // vehicleModel
-    const vehicleModel = benzLogoStack.addStack();
-    const vehicleModelText = vehicleModel.addText('Mercedes');
+    // fuelpumpStack
+    const fuelpumpStack = column1.addStack();
+    fuelpumpStack.layoutHorizontally();
+    fuelpumpStack.centerAlignContent();
+    const gas = new Request ('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/fuelpump.png');
+    const iconSymbol = await gas.loadImage();
+    const fuelpumpIcon = fuelpumpStack.addImage(iconSymbol);
+    fuelpumpIcon.imageSize = new Size(15, 15);
+    fuelpumpIcon.tintColor = Color.black();
+    fuelpumpStack.addSpacer(5);
+    // Oil 92 Price
+    const vehicleModel = fuelpumpStack.addStack();
+    const vehicleModelText = vehicleModel.addText(`92 - ¥ ${hainan}`);
     vehicleModelText.font = Font.mediumSystemFont(14);
     vehicleModelText.textColor = new Color('#424242');
     column1.addSpacer(3)
     
-    // update icon
+    
+    // update time icon
     const updateTimeStack = column1.addStack();
     updateTimeStack.layoutHorizontally();
     updateTimeStack.centerAlignContent();
@@ -143,7 +151,7 @@ const widget = await createWidget()
     carIcon.imageSize = new Size(15, 15);
     carIcon.tintColor = Color.black();
     updateTimeStack.addSpacer(5);
-    // update time
+    // update time text
     const updateTime = updateTimeStack.addStack();
     const textUpdateTime = updateTime.addText(GMT2);
     textUpdateTime.font = Font.mediumSystemFont(14);
