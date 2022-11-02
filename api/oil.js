@@ -32,7 +32,7 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     Script.setWidget(widget)
     Script.complete()
   } else {
-    widget.presentMedium();
+    await widget.presentMedium();
   }
     
   
@@ -61,23 +61,15 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     const Stack = mainStack.addStack();
-    Stack.setPadding(0, 68, 0, 0);
+    Stack.setPadding(0, 72, 0, 0);
     Stack.layoutHorizontally();
-    // Notification icon
+    // Dynamic Island bar
     const columnN = Stack.addStack();
     columnN.layoutVertically();
-    const noticeStack = columnN.addStack();
-    const iconSymbol2 = SFSymbol.named('bell.circle');
-    const carIcon = noticeStack.addImage(iconSymbol2.image);
-    carIcon.imageSize = new Size(30, 30);
-    carIcon.tintColor = Color.black();
-    noticeStack.addSpacer(5);
-    
-    // Dynamic Island bar
-    const barRow = noticeStack.addStack();
+    const barRow = columnN.addStack();
     const barStack = barRow.addStack();
     barStack.backgroundColor = Color.black();
-    barStack.setPadding(5, 45, 5, 45);
+    barStack.setPadding(5, 42, 5, 42);
     barStack.cornerRadius = 15
     barStack.borderColor = Color.black();
     barStack.borderWidth = 3
@@ -86,6 +78,14 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     titleText.textColor = Color.green();
     titleText.font = Font.boldSystemFont(16)
     titleText.centerAlignText();
+    barRow.addSpacer(5);
+    
+    // Notification icon
+    const noticeStack = barRow.addStack();
+    const iconSymbol2 = SFSymbol.named('bell.circle');
+    const carIcon = noticeStack.addImage(iconSymbol2.image);
+    carIcon.imageSize = new Size(29, 29);
+    carIcon.tintColor = Color.black();
     columnN.addSpacer(12)
     
     
@@ -96,7 +96,7 @@ dataStack2.layoutHorizontally();
     const barRow1 = dataStack2.addStack();
     barRow1.setPadding(0, 0, 10, 0);
     const barStack1 = barRow1.addStack();
-    barStack1.setPadding(8, 8, 8, 2);
+    barStack1.setPadding(8, 8, 8, 12);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
     barStack1.borderColor = new Color('#D50000', 0.8);
@@ -237,7 +237,6 @@ dataStack2.layoutHorizontally();
     }
     totalMonthBar8.font = Font.mediumSystemFont(14);
     totalMonthBar8.textColor = new Color('#FFFFFF');
-    
     return widget;
   }
 
@@ -247,9 +246,9 @@ dataStack2.layoutHorizontally();
     data = fileManager.readString(cacheFile)
     data = JSON.parse(data)
   } else {
-      fileManager.createDirectory(folder)
-      data = {"oil":`${forecast}`}
-      data = JSON.stringify(data);
+    fileManager.createDirectory(folder)
+    data = {"oil":`${forecast}`}
+    data = JSON.stringify(data);
       fileManager.writeString(cacheFile, data);
     return;
   }
