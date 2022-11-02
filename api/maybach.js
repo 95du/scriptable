@@ -110,14 +110,12 @@ const widget = await createWidget()
     column1.layoutVertically();
     // plateStack
     const plateStack = column1.addStack();
-    
     if (minutes1 <= 2) {
       textPlate = plateStack.addText('Maybach🚦');
     } else {
       textPlate = plateStack.addText('琼A·849A8')
     }
-    
-    textPlate.font = Font.mediumSystemFont(18.5);
+    textPlate.font = Font.mediumSystemFont(19);
     textPlate.textColor =Color.black();
     column1.addSpacer(3)
     
@@ -150,7 +148,7 @@ const widget = await createWidget()
     const textUpdateTime = updateTime.addText(GMT2);
     textUpdateTime.font = Font.mediumSystemFont(14);
     textUpdateTime.textColor = new Color('#424242');
-    column1.addSpacer(22)
+    column1.addSpacer(21)
     
     
     const barRow = column1.addStack()
@@ -247,8 +245,10 @@ const widget = await createWidget()
     column2.addSpacer(2)
 
     // show address
-    const addressStack = column2.addStack();
-    addressStack.size = new Size(230, 30)
+    const adrStack = column2.addStack();
+    adrStack.layoutHorizontally();
+    adrStack.centerAlignContent();
+    adrStack.size = new Size(230, 30)
     const jmz = {};
     jmz.GetLength = function(str) {
       return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
@@ -256,11 +256,11 @@ const widget = await createWidget()
     str = (jmz.GetLength(address));
     
     if (str <= 35) {
-      textAddress = addressStack.addText(address + ` - 距离${adr.regeocode.pois[0].address}` + `${adr.regeocode.pois[0].distance}米`)
+      textAddress = adrStack.addText(address + ` - 距离${adr.regeocode.pois[0].address}` + `${adr.regeocode.pois[0].distance}米`)
     } else if (str < 47) {
-      textAddress = addressStack.addText(address + ` - ${adr.regeocode.pois[0].address}`);
+      textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}`);
     } else {
-      textAddress = addressStack.addText(address);
+      textAddress = adrStack.addText(address);
     }
     
     textAddress.font = Font.mediumSystemFont(11.5);
