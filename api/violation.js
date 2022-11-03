@@ -180,13 +180,57 @@ violation.body = `params={
   }
 
 
-  // createWidget
-  const widget = await createWidget(main);
-
+  // config widget
   if (config.widgetFamily === "small") {
     return;
+  } else {
+    if (!config.runsInWidget) {  
+      await presentMenu()
+    } else {
+      Script.setWidget(widget);
+      Script.complete();
+    }
   }
+  
 
+  // Presents the main menu
+  async function presentMenu() {
+    let alert = new Alert();
+    alert.title = "交管 12123 小组件"
+    alert.message = `${get.Ver}`
+    alert.addDestructiveAction('更新代码')
+    alert.addAction('预览组件')
+    alert.addAction('退出')
+    response = await alert.presentAlert();
+    // menu action 1
+    if (response === 1) {
+      const widget = await createWidget(main);
+      await widget.presentMedium();
+    }
+    if (response === 2) return;
+    if (response === 0) {
+      const FILE_MGR = FileManager.local();
+      const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
+      const reqUpdate = new Request(`${get.update}`);
+      const codeString = await reqUpdate.loadString();
+      const finish = new Alert();
+      if (codeString.indexOf("交管12123") == -1) {
+        finish.title = "更新失败"
+        finish.addAction('OK')
+        await finish.presentAlert();
+      } else {
+        FILE_MGR.writeString(module.filename, codeString)
+        finish.title = "更新成功"
+        finish.addAction('OK')
+        await finish.presentAlert();
+        const Name = 'violation';
+        Safari.open('scriptable:///run/' + encodeURIComponent(Name));
+      }
+    }
+  }
+  
+  
+  // createWidget
   async function createWidget() {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
@@ -259,13 +303,13 @@ violation.body = `params={
     // update time
     const updateTime = updateTimeStack.addStack();
     if (list === undefined) {
-      textUpdateTime = updateTime.addText('驾驶习惯良好');
+      textUpdateTime = updateTime.addText('Good Driving');
       textUpdateTime.font = Font.mediumSystemFont(12);
     } else {
       textUpdateTime = updateTime.addText(`${vio.violationTime}`);
       textUpdateTime.font = Font.mediumSystemFont(13);
     }
-    textUpdateTime.textColor = new Color('#494949');
+    textUpdateTime.textColor = new Color('#484848');
     column1.addSpacer(25)
 
 
@@ -368,7 +412,6 @@ violation.body = `params={
     textAddress.font = Font.mediumSystemFont(11.5);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
-    column2.addSpacer(1)
 
 
     // jump show status
@@ -380,48 +423,6 @@ violation.body = `params={
     // jump show image
     if (list !== undefined) {
       textAddress.url = `${img}`;
-    }
-
-
-    // update and check
-    if (!config.runsInWidget) {
-      let alert = new Alert();
-      alert.title = "交管 12123 小组件"
-      alert.message = `${get.Ver}`
-      alert.addAction('更新代码')
-      alert.addAction('预览组件')
-      alert.addAction('退出')
-      response = await alert.presentAlert();
-      // menu action 1
-      if (response === 1) {
-        await widget.presentMedium();
-        return;//预览后退出
-      }
-      // menu action 2
-      if (response === 2) return;
-      // Update the code
-      if (response === 0) {
-        const FILE_MGR = FileManager.local();
-        const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-        const reqUpdate = new Request(`${get.update}`);
-        const codeString = await reqUpdate.loadString();
-        const finish = new Alert();
-        if (codeString.indexOf("交管12123") == -1) {
-          finish.title = "更新失败"
-          finish.addAction('OK')
-          await finish.presentAlert();
-        } else {
-          FILE_MGR.writeString(module.filename, codeString)
-          finish.title = "更新成功"
-          finish.addAction('OK')
-          await finish.presentAlert();
-          const Name = 'violation';
-          Safari.open('scriptable:///run/' + encodeURIComponent(Name));
-        }
-      }
-    } else {
-      Script.setWidget(widget);
-      Script.complete();
     }
     return widget;
   }
