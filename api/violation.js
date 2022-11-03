@@ -178,19 +178,6 @@ violation.body = `params={
     notice.schedule();
     return;
   }
-
-
-  // config widget
-  if (config.widgetFamily === "small") {
-    return;
-  } else {
-    if (!config.runsInWidget) {  
-      await presentMenu()
-    } else {
-      Script.setWidget(widget);
-      Script.complete();
-    }
-  }
   
 
   // Presents the main menu
@@ -226,6 +213,20 @@ violation.body = `params={
         const Name = 'violation';
         Safari.open('scriptable:///run/' + encodeURIComponent(Name));
       }
+    }
+  }
+  
+  
+  // config widget
+  if (config.widgetFamily === "small") {
+    return;
+  } else {
+    if (!config.runsInWidget) {  
+      await presentMenu()
+    } else {
+      const widget = await createWidget(main);
+      Script.setWidget(widget);
+      Script.complete();
     }
   }
   
