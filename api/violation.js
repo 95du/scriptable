@@ -183,18 +183,23 @@ violation.body = `params={
   // Presents the main menu
   async function presentMenu() {
     let alert = new Alert();
-    alert.title = "交管 12123 小组件"
+    alert.title = "交管 12123"
     alert.message = `${get.Ver}`
     alert.addDestructiveAction('更新代码')
+    alert.addAction('GetToken')
     alert.addAction('预览组件')
     alert.addAction('退出')
     response = await alert.presentAlert();
     // menu action 1
     if (response === 1) {
+      Safari.open(`${get.alipay}`);
+      return;
+    }
+    if (response === 2) {
       const widget = await createWidget(main);
       await widget.presentMedium();
     }
-    if (response === 2) return;
+    if (response === 3) return;
     if (response === 0) {
       const FILE_MGR = FileManager.local();
       const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
