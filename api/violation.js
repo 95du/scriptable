@@ -89,7 +89,7 @@ if (!fileManager.fileExists(cacheFile)) {
       data = JSON.stringify(data);
       fileManager.writeString(cacheFile, data);
       notice.title = '登录成功'
-      notice.body = '请前往桌面添加小组件'
+      notice.body = '请前往桌面添加中号小组件'
       notice.schedule();
     } else {
       return;
@@ -149,22 +149,22 @@ violation.body = `params={
       const detail = surveils.data.surveils[0]
 
 
-    // violation Message
-    if (detail !== undefined) {
-      const violationMsg = new Request(url);
-      violationMsg.method = 'POST'
-      violationMsg.body = `params={
-  "productId": "${get.productId}",
-    "api": "${get.api4}",
-      "verifyToken": "${verifyToken}",
-        "params": {
-    "violationSerialNumber": "${detail.violationSerialNumber}",
-      "issueOrganization": "${detail.issueOrganization}"
-  }
+      // violation Message
+      if (detail !== undefined) {
+        const violationMsg = new Request(url);
+        violationMsg.method = 'POST'
+        violationMsg.body = `params={
+    "productId": "${get.productId}", 
+    "api": "${get.api4}", 
+    "verifyToken": "${verifyToken}", 
+    "params": {
+        "violationSerialNumber": "${detail.violationSerialNumber}", 
+        "issueOrganization": "${detail.issueOrganization}"
+    }
 }`
-      const details = await violationMsg.loadJSON();
-      vio = details.data.detail
-      img = details.data.photo
+        const details = await violationMsg.loadJSON();
+        vio = details.data.detail
+        img = details.data.photos
       }
     }
   } else {
@@ -172,7 +172,7 @@ violation.body = `params={
     data = JSON.stringify(data);
     fileManager.writeString(cacheFile, data);
     // notice
-    notice.title = 'verifyToken已过期 ⚠️'
+    notice.title = 'Token已过期 ⚠️'
     notice.body = '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )'
     notice.openURL = `${get.alipay}`
     notice.schedule();
