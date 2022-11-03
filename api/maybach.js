@@ -3,15 +3,6 @@
 // icon-color: purple; icon-glyph: car;
 const notice = new Notification()
 
-  // config widget
-  if (!config.runsInWidget) {  
-    await presentMenu()
-  } else {
-    Script.setWidget(widget);
-    Script.complete();
-  }
-
-
   // Presents the main menu
   async function presentMenu() {
     let alert = new Alert();
@@ -21,7 +12,7 @@ const notice = new Notification()
     alert.addAction('退出')
     response = await alert.presentAlert();
     if (response === 1) {
-      const widget = await createWidget()
+      widget = await createWidget()
       await widget.presentMedium();
     }
     if (response === 2) return;
@@ -45,6 +36,15 @@ const notice = new Notification()
         Safari.open('scriptable:///run/' + encodeURIComponent(Name));
       }
     }
+  }
+  
+  // config widget
+  if (!config.runsInWidget) {  
+    await presentMenu()
+  } else {
+    const widget = await createWidget()
+    Script.setWidget(widget);
+    Script.complete();
   }
   
   
