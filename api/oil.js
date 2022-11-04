@@ -91,12 +91,14 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
     
     // oilPrice _alert ‼️
     const dataStack2 = mainStack.addStack();
+    dataStack2.addSpacer(5)
 dataStack2.layoutHorizontally();
     // bar
     const barRow1 = dataStack2.addStack();
     barRow1.setPadding(0, 0, 10, 0);
     const barStack1 = barRow1.addStack();
-    barStack1.setPadding(8, 8, 8, 12);
+    barStack1.addSpacer(10)
+    barStack1.setPadding(8, 4, 8, 4);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
     barStack1.borderColor = new Color('#D50000', 0.8);
@@ -246,7 +248,7 @@ dataStack2.layoutHorizontally();
     data = fileManager.readString(cacheFile)
     data = JSON.parse(data)
   } else {
-    fileManager.createDirectory(folder)
+    if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
     data = {"oil":`${forecast}`}
     data = JSON.stringify(data);
       fileManager.writeString(cacheFile, data);
