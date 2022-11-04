@@ -6,7 +6,7 @@ const notice = new Notification()
   // Presents the main menu
   async function presentMenu() {
     let alert = new Alert();
-    alert.title = "Honda Civic 小组件"
+    alert.title = "Mercedes Maybach"
     alert.addDestructiveAction('更新代码')
     alert.addAction('预览组件')
     alert.addAction('退出')
@@ -14,6 +14,7 @@ const notice = new Notification()
     if (response === 1) {
       widget = await createWidget()
       await widget.presentMedium();
+      return;
     }
     if (response === 2) return;
     // Update the code
@@ -38,14 +39,22 @@ const notice = new Notification()
     }
   }
   
-  // config widget
-  if (!config.runsInWidget) {  
-    await presentMenu()
-  } else {
-    const widget = await createWidget()
-    Script.setWidget(widget);
-    Script.complete();
+  
+  try {
+    //config widget
+    if (!config.runsInWidget) {  
+      await presentMenu()
+    } else {
+      const widget = await createWidget()
+      Script.setWidget(widget);
+      Script.complete();
+    }
+  } catch (error) {
+    const cover = await getData()
+    const widget = createErrorWidget(cover)
+    await widget.presentMedium();
   }
+
   
   
   // Create Widget Data
@@ -146,7 +155,6 @@ const notice = new Notification()
     */
     widget.setPadding(10, 15, 10, 10);
     const mainStack = widget.addStack();
-    //mainStack.layoutVertically();
     mainStack.layoutHorizontally();
     const dataStack = mainStack.addStack();
     
@@ -200,8 +208,8 @@ const notice = new Notification()
     column1.addSpacer(21)
     
     
-    const barRow = column1.addStack()
-    const barStack = barRow.addStack();
+    //column1 barRow
+    const barStack = column1.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
     barStack.setPadding(3, 10, 3, 10);
@@ -242,9 +250,8 @@ const notice = new Notification()
     }
     
 
-    // 按钮 2
-    const barRow2 = column1.addStack();
-    const barStack2 = barRow2.addStack();
+    // column1 barRow2
+    const barStack2 = column1.addStack();
     barStack2.layoutHorizontally();
     barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
@@ -318,7 +325,7 @@ const notice = new Notification()
     
     
     // jump show map
-    barRow2.url = 'quantumult-x:///';
+    barStack2.url = 'quantumult-x:///';
     // jump show map
     textAddress.url = `${mapUrl}`;
     // jump run widget
@@ -493,8 +500,30 @@ const notice = new Notification()
   }
   
   
-  // getImageUrl
-  async function getImage(url) {
-    const r = await new Request(url);
-    return await r.loadImage();
-  }
+// getImageUrl
+async function getImage(url) {
+  const r = await new Request(url);
+  return await r.loadImage();
+}
+
+// Error widget
+async function getData() {
+  const fm = FileManager.iCloud();
+  const path = fm.documentsDirectory() + "/" + 'IMG_9347.png'
+  return fm.readImage(path)
+}
+
+function createErrorWidget(cover) {
+  const widget = new ListWidget()
+  const widgetImage = widget.addImage(cover)
+  widgetImage.imageSize = new Size(280, 150);
+  widgetImage.centerAlignImage()
+  const gradient = new LinearGradient()
+  gradient.locations = [0, 1]
+  gradient.colors = [
+    new Color('#BCBBBB', 0.7),
+    new Color('#00000000')
+  ]
+  widget.backgroundGradient = gradient
+  return widget
+}
