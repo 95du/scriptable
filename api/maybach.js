@@ -329,7 +329,8 @@ const notice = new Notification()
     // jump show map
     textAddress.url = `${mapUrl}`;
     // jump run widget
-    imageCar.url = 'scriptable:///run/Maybach';
+    const uri = Script.name()
+    imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
     
     
     /**
