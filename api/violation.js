@@ -319,8 +319,8 @@ violation.body = `params={
     column1.addSpacer(25)
 
 
-    const barRow = column1.addStack()
-    const barStack = barRow.addStack();
+    // column1 barRow
+    const barStack = column1.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
     barStack.setPadding(3, 10, 3, 10);
@@ -362,8 +362,7 @@ violation.body = `params={
 
 
     // Driver's license bar
-    const barRow2 = column1.addStack();
-    const barStack2 = barRow2.addStack();
+    const barStack2 = column1.addStack();
     barStack2.layoutHorizontally();
     barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
@@ -421,7 +420,7 @@ violation.body = `params={
 
 
     // jump show status
-    barRow2.url = `${get.status}`;
+    barStack2.url = `${get.status}`;
     // jump to alipay
     textPlate2.url = 'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Fvehicle-illegal-query%2Findex';
     // jump quantumult
