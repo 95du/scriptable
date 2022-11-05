@@ -257,7 +257,7 @@ violation.body = `params={
 
 
     // Frame Layout
-    widget.setPadding(15, 15, 15, 15);
+    widget.setPadding(15, 18, 15, 15);
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     const dataStack = mainStack.addStack();
@@ -402,7 +402,7 @@ violation.body = `params={
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(228,100);
+    imageCar.imageSize = new Size(225,100);
     column2.addSpacer(2)
 
     // show address
