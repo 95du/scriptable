@@ -257,9 +257,8 @@ violation.body = `params={
 
 
     // Frame Layout
-    widget.setPadding(12, 15, 12, 10);
+    widget.setPadding(15, 15, 15, 15);
     const mainStack = widget.addStack();
-    //mainStack.layoutVertically();
     mainStack.layoutHorizontally();
     const dataStack = mainStack.addStack();
 
@@ -388,7 +387,7 @@ violation.body = `params={
     column2.layoutVertically();
     // Car Logo
     const carLogoStack = column2.addStack();
-    carLogoStack.setPadding(0, 153, 0, 0);
+    carLogoStack.addSpacer()
     textPlate2 = carLogoStack.addText('交管12123')
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
@@ -403,16 +402,18 @@ violation.body = `params={
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(226,100);
+    imageCar.imageSize = new Size(228,100);
     column2.addSpacer(2)
 
     // show address
-    const addressStack = column2.addStack();
-    addressStack.setPadding(0, 6, 0, 0);
+    const tipsStack = column2.addStack();
+    tipsStack.layoutHorizontally();
+    tipsStack.centerAlignContent();
+    tipsStack.size = new Size(230, 30)
     if (list === undefined) {
-      textAddress = addressStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则     ');
+      textAddress = tipsStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则');
     } else {
-      textAddress = addressStack.addText(`${vio.plateNumber}` + `${vio.violation}, ` + `${vio.violationAddress}, ` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
+      textAddress = tipsStack.addText(`${vio.plateNumber}` + `${vio.violation}, ` + `${vio.violationAddress}, ` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
     }
     textAddress.font = Font.mediumSystemFont(11.5);
     textAddress.textColor = new Color('#484848');
