@@ -149,7 +149,7 @@ const notice = new Notification()
     @ text
     Cylindrical Bar Chart
     */
-    widget.setPadding(10, 15, 10, 10);
+    widget.setPadding(10, 18, 10, 15);
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     const dataStack = mainStack.addStack();
@@ -278,7 +278,7 @@ const notice = new Notification()
     column2.layoutVertically();
     // Car Logo
     const carLogoStack = column2.addStack();
-    carLogoStack.setPadding(0, 200, 0, 0);
+    carLogoStack.addSpacer()
     const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
     const image = carLogoStack.addImage(carLogo);
     image.imageSize = new Size(27,27);
@@ -293,7 +293,7 @@ const notice = new Notification()
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(228,100);
+    imageCar.imageSize = new Size(225,100);
     column2.addSpacer(2)
 
     // show address
