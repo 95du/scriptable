@@ -12,12 +12,11 @@ const notice = new Notification()
     alert.addAction('预览组件')
     alert.addAction('退出')
     response = await alert.presentAlert();
-    if (response === 1) {
+    if (response === 1) return;
+    if (response === 2) {
       widget = await createWidget()
-      await widget.presentMedium();
-      return;
     }
-    if (response === 2) return;
+    if (response === 3) return;
     // Update the code
     if (response === 0) {
       const FILE_MGR = FileManager.local()
@@ -42,13 +41,10 @@ const notice = new Notification()
   
   
   try {
-    //config widget
-    if (!config.runsInWidget) {  
-      await presentMenu()
+    if (config.runsInWidget) {
+      widget = await createWidget()
     } else {
-      const widget = await createWidget()
-      Script.setWidget(widget);
-      Script.complete();
+      await presentMenu()
     }
   } catch (error) {
     const cover = await getData()
@@ -56,7 +52,6 @@ const notice = new Notification()
     await widget.presentMedium();
   }
 
-  
   
   // Create Widget Data
   async function createWidget() {
@@ -323,6 +318,15 @@ const notice = new Notification()
     textAddress.font = Font.mediumSystemFont(11.5);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
+    
+    //config widget
+    if (!config.runsInWidget) {  
+      await widget.presentMedium();
+      return;
+    } else {
+      Script.setWidget(widget);
+      Script.complete();
+    }
     
     
     // jump show map
