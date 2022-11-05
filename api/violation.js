@@ -415,7 +415,7 @@ violation.body = `params={
     } else {
       textAddress = tipsStack.addText(`${vio.plateNumber}` + `${vio.violation}, ` + `${vio.violationAddress}, ` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
     }
-    textAddress.font = Font.mediumSystemFont(11.5);
+    textAddress.font = Font.mediumSystemFont(11.3);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
 
