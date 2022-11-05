@@ -396,7 +396,7 @@ violation.body = `params={
 
     // Car image
     const carImageStack = column2.addStack();
-    carImageStack.setPadding(-20, 5, 0, 0);
+    carImageStack.setPadding(-20, 6, 0, 0);
     const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
     const resUrl = await imgUrl.loadJSON();
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
