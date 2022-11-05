@@ -8,6 +8,7 @@ const notice = new Notification()
     let alert = new Alert();
     alert.title = "Mercedes Maybach"
     alert.addDestructiveAction('更新代码')
+    alert.addAction('GetToken')
     alert.addAction('预览组件')
     alert.addAction('退出')
     response = await alert.presentAlert();
@@ -297,7 +298,7 @@ const notice = new Notification()
     const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(226,100);
+    imageCar.imageSize = new Size(228,100);
     column2.addSpacer(2)
 
     // show address
