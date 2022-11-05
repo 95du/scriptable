@@ -319,15 +319,6 @@ const notice = new Notification()
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     
-    //config widget
-    if (!config.runsInWidget) {  
-      await widget.presentMedium();
-      return;
-    } else {
-      Script.setWidget(widget);
-      Script.complete();
-    }
-    
     
     // jump show map
     barStack2.url = 'quantumult-x:///';
@@ -336,6 +327,16 @@ const notice = new Notification()
     // jump run widget
     const uri = Script.name()
     imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
+    
+    
+    //config widget
+    if (!config.runsInWidget) {  
+      await widget.presentMedium();
+      return;
+    } else {
+      Script.setWidget(widget);
+      Script.complete();
+    }
     
     
     /**
