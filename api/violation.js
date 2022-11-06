@@ -245,7 +245,8 @@ violation.body = `params={
     "#CCCC99",
     "#757575",
     "#4FC3F7",
-    "#99CCCC"
+    "#99CCCC",
+    "#BCBBBB"
     ]
     const items = color[Math.floor(Math.random()*color.length)];
     gradient.locations = [0, 1]
