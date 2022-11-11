@@ -83,6 +83,7 @@ if (!fileManager.fileExists(cacheFile)) {
     const input = await alert.presentAlert();
     const value = alert.textFieldValue(0);
     myPlate = value
+    
     if (input === 0) {
       if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
       data = {"verifyToken": `${boxjs_data.val}`,"myPlate": `${myPlate}`}
@@ -109,9 +110,8 @@ violation.body = `params={
   const main = await violation.loadJSON();
   const success = main.success
 
-
   if (success === true) {
-    var list = main.data.list[0]
+    list = main.data.list[0]
     if (list === undefined) {
       log(JSON.stringify(main, null, 4))
     } else {
@@ -266,60 +266,74 @@ violation.body = `params={
     // First column
     const column1 = dataStack.addStack();
     column1.layoutVertically();
-    // plateStack
+    // plateStack 1
     const plateStack = column1.addStack();
     textPlate = plateStack.addText(myPlate)
     textPlate.font = Font.mediumSystemFont(19);
     textPlate.textColor = Color.black();
     column1.addSpacer(6)
 
-    // Mercedes Logo
-    const benzLogoStack = column1.addStack();
-    benzLogoStack.layoutHorizontally();
-    benzLogoStack.centerAlignContent();
+    // Car icon 2
+    const carIconStack = column1.addStack();
+    carIconStack.layoutHorizontally();
+    carIconStack.centerAlignContent();
     const man = SFSymbol.named('car');
-    const carIcon = benzLogoStack.addImage(man.image);
+    const carIcon = carIconStack.addImage(man.image);
     carIcon.imageSize = new Size(14, 14);
     if (list === undefined) {
       carIcon.tintColor = Color.black();
     } else {
       carIcon.tintColor = Color.red();
     }
-    benzLogoStack.addSpacer(5);
+    carIconStack.addSpacer(5);
     // vehicleModel
-    const vehicleModel = benzLogoStack.addStack();
+    const vehicleModel = carIconStack.addStack();
     if (list === undefined) {
       vehicleModelText = vehicleModel.addText('未处理违章 0');
     } else {
-      vehicleModelText = vehicleModel.addText(`未处理违章 ${list.count}`);
+      vehicleModelText = vehicleModel.addText(`未处理违章 ${list.count} 条`);
     }
     vehicleModelText.font = Font.mediumSystemFont(12);
     vehicleModelText.textColor = new Color('#494949');
     column1.addSpacer(3)
 
-    // update icon
+
+    // violationPoint 3
+    const vioPointStack = column1.addStack();
+    const vioPoint = vioPointStack.addStack();
+    if (list !== undefined) {
+      vioPointText = vioPoint.addText(`罚款${vio.fine}元 ` + `扣${vio.violationPoint}分`);
+      vioPointText.font = Font.mediumSystemFont(12);
+      vioPointText.textColor = new Color('#484848');
+    column1.addSpacer(3)
+    }
+    
+    // update icon 4
     const updateTimeStack = column1.addStack();
     if (list === undefined) {
-    const iconSymbol2 = SFSymbol.named('person.crop.circle');
-    const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
-    carIcon2.imageSize = new Size(14, 14);
-    carIcon2.tintColor = Color.black();
-    updateTimeStack.addSpacer(5);
+      const iconSymbol2 = SFSymbol.named('person.crop.circle');
+      const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
+      carIcon2.imageSize = new Size(14, 14);
+      carIcon2.tintColor = Color.black();
+      updateTimeStack.addSpacer(5);
     }
+    
     // update time
     const updateTime = updateTimeStack.addStack();
     if (list === undefined) {
       textUpdateTime = updateTime.addText('Good Driving');
-      textUpdateTime.font = Font.mediumSystemFont(12);
+      textUpdateTime.font = Font.mediumSystemFont(12);  
+      textUpdateTime.textColor = new Color('#484848');
+    column1.addSpacer(25)
     } else {
       textUpdateTime = updateTime.addText(`${vio.violationTime}`);
-      textUpdateTime.font = Font.mediumSystemFont(12);
+      textUpdateTime.font = Font.mediumSystemFont(12);  
+      textUpdateTime.textColor = new Color('#484848');
+    column1.addSpacer(8)
     }
-    textUpdateTime.textColor = new Color('#484848');
-    column1.addSpacer(25)
+    
 
-
-    // column1 barRow
+    // column1 barRow 5
     const barStack = column1.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
@@ -330,6 +344,7 @@ violation.body = `params={
       barStack.cornerRadius = 10
       barStack.borderColor = Color.green();
       barStack.borderWidth = 2
+      
       // bar icon
       const barIcon = SFSymbol.named('checkmark.shield.fill');
       const barIconElement = barStack.addImage(barIcon.image);
@@ -347,21 +362,15 @@ violation.body = `params={
       barStack.cornerRadius = 10
       barStack.borderColor = new Color('#FF1744', 0.7);
       barStack.borderWidth = 2
-      // bar icon
-      const barIcon = SFSymbol.named('checkmark.shield.fill');
-      const barIconElement = barStack.addImage(barIcon.image);
-      barIconElement.imageSize = new Size(15, 15);
-      barIconElement.tintColor = Color.red();
-      barStack.addSpacer(8);
       // bar text
-      const totalMonthBar = barStack.addText('有违章');
+      const totalMonthBar = barStack.addText(`${vio.plateNumber}`);
       totalMonthBar.font = Font.mediumSystemFont(14);
       totalMonthBar.textColor = new Color('#D50000');
       column1.addSpacer(8)
     }
 
 
-    // Driver's license bar
+    // Driver's license bar 6
     const barStack2 = column1.addStack();
     barStack2.layoutHorizontally();
     barStack2.centerAlignContent();
@@ -414,7 +423,7 @@ violation.body = `params={
     if (list === undefined) {
       textAddress = tipsStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则');
     } else {
-      textAddress = tipsStack.addText(`${vio.plateNumber}` + `${vio.violation}, ` + `${vio.violationAddress}, ` + `罚款 ${vio.fine} 元 ` + `扣 ${vio.violationPoint} 分`)
+      textAddress = tipsStack.addText(`${vio.violationAddress}。` + `${vio.violation}` )
     }
     textAddress.font = Font.mediumSystemFont(11.3);
     textAddress.textColor = new Color('#484848');
