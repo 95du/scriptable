@@ -51,7 +51,7 @@ if (!fileManager.fileExists(folder) || verifyToken === undefined) {
   boxjs_data = await boxjs_request.loadJSON();
   verifyToken = boxjs_data.val
   if (fileManager.fileExists(cacheFile)) {
-    data = {"verifyToken": `${verifyToken}`, "myPlate": `${myPlate}`}
+    data = {"verifyToken": `${verifyToken}`,"myPlate": `${myPlate}`}
     data = JSON.stringify(data);
     fileManager.writeString(cacheFile, data);
   }
@@ -85,7 +85,7 @@ if (!fileManager.fileExists(cacheFile)) {
     myPlate = value
     if (input === 0) {
       if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
-      data = {"verifyToken": `${boxjs_data.val}`, "myPlate": `${myPlate}`}
+      data = {"verifyToken": `${boxjs_data.val}`,"myPlate": `${myPlate}`}
       data = JSON.stringify(data);
       fileManager.writeString(cacheFile, data);
       notice.title = '登录成功'
@@ -313,7 +313,7 @@ violation.body = `params={
       textUpdateTime.font = Font.mediumSystemFont(12);
     } else {
       textUpdateTime = updateTime.addText(`${vio.violationTime}`);
-      textUpdateTime.font = Font.mediumSystemFont(13);
+      textUpdateTime.font = Font.mediumSystemFont(12);
     }
     textUpdateTime.textColor = new Color('#484848');
     column1.addSpacer(25)
