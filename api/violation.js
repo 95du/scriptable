@@ -5,7 +5,7 @@
 支付宝小程序 交管12123
 小组件作者：95度茅台
 获取Token作者: @FoKit
-版本Version 1.3
+版本: Version 1.3
 Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 
 获取Token重写：https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
