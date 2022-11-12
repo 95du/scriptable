@@ -143,7 +143,7 @@ async function presentMenu() {
     const reqUpdate = new Request(`${get.update}`);
     const codeString = await reqUpdate.loadString();
     const finish = new Alert();
-    if (codeString.indexOf("交管12123") == -1) {
+    if (codeString.indexOf("中国电信") == -1) {
       finish.title = "更新失败"
       finish.addAction('OK')
       await finish.presentAlert();
