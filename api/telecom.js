@@ -21,7 +21,6 @@ BoxJs 主页 http://boxjs.com/
 BoxJs 订阅：https://raw.githubusercontent.com/FoKit/Scripts/main/boxjs/fokit.boxjs.json
 */
 
-
 const notice = new Notification()
 const widget = new ListWidget()
 widget.setPadding(0, 18, -6, 10)
@@ -51,18 +50,6 @@ const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/
 const get = await apiData.loadJSON();
 
 
-// Telecom Logo
-const logo = new Request(get.telecomLogo);
-const image = await logo.loadImage();
-const widgetImage = 
-widget.addImage(image)
-widgetImage.imageSize = new Size(130,40)
-widgetImage.centerAlignImage()
-if (Device.isUsingDarkAppearance()) {
-  widgetImage.tintColor = new Color('#1da0f2')
-}
-
-
 const fileManager = FileManager.iCloud();
 const folder = fileManager.joinPath(fileManager.documentsDirectory(), "telecom");
 const cacheFile = fileManager.joinPath(folder, 'data.json');
@@ -72,7 +59,6 @@ if (fileManager.fileExists(cacheFile)) {
   data = JSON.parse(data);
   cookie = data.cookie
   loginUrl = data.loginUrl
-  await presentMenu()
 }
 
 
@@ -114,65 +100,74 @@ if (!fileManager.fileExists(cacheFile)) {
 }
 
 
-// Presents the main menu
-  async function presentMenu() {
-    let alert = new Alert();
-    alert.title = "中国电信余量"
-    alert.message = get.Ver
-    alert.addDestructiveAction('更新代码')
-    alert.addAction('GetCookie')
-    alert.addAction('预览组件')
-    alert.addAction('退出')
-    response = await alert.presentAlert();
-    // menu action 1
-    
-    if (response === 2) {
-      
-    }
-    if (response === 3) return;
-    if (response === 0) {
-      const FILE_MGR = FileManager.local();
-      const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-      const reqUpdate = new Request(`${get.update}`);
-      const codeString = await reqUpdate.loadString();
-      const finish = new Alert();
-      if (codeString.indexOf("交管12123") == -1) {
-        finish.title = "更新失败"
-        finish.addAction('OK')
-        await finish.presentAlert();
-      } else {
-        FILE_MGR.writeString(module.filename, codeString)
-        finish.title = "更新成功"
-        finish.addAction('OK')
-        await finish.presentAlert();
-        const Name = 'telecr';
-        Safari.open('scriptable:///run/' + encodeURIComponent(Name));
-      }
-    }
-  }
-
-
+// Automatic Logon
 const login = new Request(loginUrl);
-    login.method = 'GET'
-    login.headers = {"Cookie": `${cookie}`,"Referer": `${get.referer}`}
+login.method = 'GET'
+login.headers = {"Cookie": `${cookie}`,"Referer": `${get.referer}`}
 const sign = await login.loadString()
-console.log(sign)
 const strLogin = sign.replaceAll('callbackMsg(','');
 const json = JSON.parse(strLogin.replace(/\S{1}$/, ''));
 
-if (sign.indexOf('成功') == -1) {
-  notice.title = '登录失败 ⚠️'
-  notice.body = json.msg
-  notice.sound = 'alert'
-  notice.schedule()
-  return;
+
+// Presents the main menu
+async function presentMenu() {
+  let alert = new Alert();
+  alert.title = "中国电信余量"
+  alert.message = get.Ver
+  alert.addDestructiveAction('更新代码')
+  alert.addAction('GetCookie')
+  alert.addAction('预览组件')
+  alert.addAction('退出')
+  response = await alert.presentAlert();
+  // menu action 1
+  if (response === 1) {
+    if (sign.indexOf('成功') == -1) {
+      notice.title = '登录失败 ⚠️'
+      notice.body = json.msg
+      notice.sound = 'alert'
+      notice.schedule()
+      return;
+    } else {
+      const webView = new WebView();
+      await webView.loadURL(json.toUrl);
+      await webView.present(true);
+    }
+  }
+  if (response === 2) {
+    await widget.presentSmall()
+  }
+  if (response === 3) return;
+  if (response === 0) {
+    const FILE_MGR = FileManager.local();
+    const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
+    const reqUpdate = new Request(`${get.update}`);
+    const codeString = await reqUpdate.loadString();
+    const finish = new Alert();
+    if (codeString.indexOf("交管12123") == -1) {
+      finish.title = "更新失败"
+      finish.addAction('OK')
+      await finish.presentAlert();
+    } else {
+      FILE_MGR.writeString(module.filename, codeString)
+      finish.title = "更新成功"
+      finish.addAction('OK')
+      await finish.presentAlert();
+      const Name = 'telecr';
+      Safari.open('scriptable:///run/' + encodeURIComponent(Name));
+    }
+  }
 }
 
-if (response === 1) {
-  const webView = new WebView();
-  await webView.loadURL(json.toUrl);
-  await webView.present(true);
-  return;
+
+// Telecom Logo
+const logo = new Request(get.telecomLogo);
+const image = await logo.loadImage();
+const widgetImage = 
+widget.addImage(image)
+widgetImage.imageSize = new Size(130,40)
+widgetImage.centerAlignImage()
+if (Device.isUsingDarkAppearance()) {
+  widgetImage.tintColor = new Color('#1da0f2')
 }
 
 
@@ -181,7 +176,6 @@ const balances = new Request(get.balance);
     balances.headers = {"Cookie": `${cookie}`}
 const money = await balances.loadJSON()
 const balanceAvailable = money.totalBalanceAvailable / 100
-
 const balText = widget.addText('￥' + balanceAvailable)
     balText.textColor = Color.orange()
     balText.font = Font.boldSystemFont(22)
@@ -249,5 +243,5 @@ if (config.runsInWidget) {
   Script.setWidget(widget)
   Script.complete()
 } else {
-  await widget.presentSmall()
+  await presentMenu()
 }
