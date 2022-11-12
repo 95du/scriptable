@@ -121,16 +121,16 @@ async function presentMenu() {
   response = await alert.presentAlert();
   // menu action 1
   if (response === 1) {
-    if (sign.indexOf('成功') == -1) {
+    if (json.result === 0) {
+      const webView = new WebView();
+      await webView.loadURL(json.toUrl);
+      await webView.present(true);
+    } else {
       notice.title = '登录失败 ⚠️'
       notice.body = json.msg
       notice.sound = 'alert'
       notice.schedule()
       return;
-    } else {
-      const webView = new WebView();
-      await webView.loadURL(json.toUrl);
-      await webView.present(true);
     }
   }
   if (response === 2) {
