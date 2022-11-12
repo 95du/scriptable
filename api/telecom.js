@@ -49,7 +49,7 @@ const gradient = new LinearGradient()
 
 const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/telecom.json')
 const get = await apiData.loadJSON();
-console.log(get)
+
 
 // Telecom Logo
 const logo = new Request(get.telecomLogo);
@@ -82,7 +82,7 @@ if (!fileManager.fileExists(folder) || cookie === undefined) {
   boxjs_data = await boxjs_request.loadJSON();
   cookie = boxjs_data.val
   
-  loginUrl_request = new Request('http://boxjs.com/query/data/china_telecom_login_url');
+  loginUrl_request = new Request(get.getLoginUrl);
   login_data = await loginUrl_request.loadJSON();
   loginUrl = login_data.val  
   if (cookie) {
@@ -106,7 +106,7 @@ if (!fileManager.fileExists(cacheFile)) {
       return;
     } else {
       const webView = new WebView();
-      await webView.loadURL('http://u3v.cn/5uwtIP');
+      await webView.loadURL(get.loginPortal);
       await webView.present(true);
       return;
     }
@@ -118,20 +118,16 @@ if (!fileManager.fileExists(cacheFile)) {
   async function presentMenu() {
     let alert = new Alert();
     alert.title = "中国电信余量"
-    alert.message = 'hhhhhh'
+    alert.message = get.Ver
     alert.addDestructiveAction('更新代码')
     alert.addAction('GetCookie')
     alert.addAction('预览组件')
     alert.addAction('退出')
     response = await alert.presentAlert();
     // menu action 1
-    if (response === 1) {
-      Safari.open(`${get.alipay}`);
-      return;
-    }
+    
     if (response === 2) {
-      const widget = await createWidget(main);
-      await widget.presentSmall();
+      
     }
     if (response === 3) return;
     if (response === 0) {
@@ -149,17 +145,16 @@ if (!fileManager.fileExists(cacheFile)) {
         finish.title = "更新成功"
         finish.addAction('OK')
         await finish.presentAlert();
-        const Name = 'violation';
+        const Name = 'telecr';
         Safari.open('scriptable:///run/' + encodeURIComponent(Name));
       }
     }
   }
 
 
-
 const login = new Request(loginUrl);
     login.method = 'GET'
-    login.headers = {"Cookie": `${cookie}`,"Referer": "https://open.e.189.cn/api/logbox/oauth2/wap/autoLogin.do?clientType=2&appId=8134110131&format=redirect"}
+    login.headers = {"Cookie": `${cookie}`,"Referer": `${get.referer}`}
 const sign = await login.loadString()
 console.log(sign)
 const strLogin = sign.replaceAll('callbackMsg(','');
@@ -173,8 +168,15 @@ if (sign.indexOf('成功') == -1) {
   return;
 }
 
+if (response === 1) {
+  const webView = new WebView();
+  await webView.loadURL(json.toUrl);
+  await webView.present(true);
+  return;
+}
 
-const balances = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill')
+
+const balances = new Request(get.balance);
     balances.method = 'GET'
     balances.headers = {"Cookie": `${cookie}`}
 const money = await balances.loadJSON()
@@ -187,7 +189,7 @@ const balText = widget.addText('￥' + balanceAvailable)
     widget.addSpacer(3)
 
 
-const req = new Request('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+const req = new Request(get.surplus);
     req.method = 'POST'
     req.headers = {"Cookie": `${cookie}`}
 const res = await req.loadJSON()
