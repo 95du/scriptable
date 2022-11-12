@@ -100,7 +100,7 @@ if (!fileManager.fileExists(cacheFile)) {
 }
 
 
-// Automatic Logon
+// Automatic Login
 const login = new Request(loginUrl);
 login.method = 'GET'
 login.headers = {"Cookie": `${cookie}`,"Referer": `${get.referer}`}
