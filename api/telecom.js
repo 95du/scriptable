@@ -202,7 +202,7 @@ const bal = string.slice(0, string.length-1)
 const width = 140
 const h = 10
 
-getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance}分钟`)
+getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance} 分钟`)
 getwidget(total, balance, `剩余流量 ${bal} GB`)
 
 function getwidget(total, haveGone, str) {
