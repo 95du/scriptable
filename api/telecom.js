@@ -8,7 +8,7 @@
 获取Token作者: @FoKit
 Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 
-使用方法：配置重写规则，手动运行小组件，按提示跳转到天翼账号中心网页版，登录即可自动抓取/更新Token。
+使用方法：配置重写规则，手动运行小组件，按提示跳转到天翼账号中心网页版，登录即可自动抓取/更新 Cookie
 使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs
 
 登录入口：http://u3v.cn/5uwtIP
