@@ -172,20 +172,20 @@ if (Device.isUsingDarkAppearance()) {
 
 
 const balances = new Request(get.balance);
-    balances.method = 'GET'
-    balances.headers = {"Cookie": `${cookie}`}
+balances.method = 'GET'
+balances.headers = {"Cookie": `${cookie}`}
 const money = await balances.loadJSON()
 const balanceAvailable = money.totalBalanceAvailable / 100
 const balText = widget.addText('￥' + balanceAvailable)
-    balText.textColor = Color.orange()
-    balText.font = Font.boldSystemFont(22)
-    balText.centerAlignText()
-    widget.addSpacer(3)
+balText.textColor = Color.orange()
+balText.font = Font.boldSystemFont(22)
+balText.centerAlignText()
+widget.addSpacer(3)
 
 
 const req = new Request(get.surplus);
-    req.method = 'POST'
-    req.headers = {"Cookie": `${cookie}`}
+req.method = 'POST'
+req.headers = {"Cookie": `${cookie}`}
 const res = await req.loadJSON()
 const voiceAmount = res.voiceAmount
 const voiceUsage = res.voiceUsage
