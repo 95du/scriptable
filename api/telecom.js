@@ -17,7 +17,7 @@ Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 =========== Surge ===========
 重写订阅（Surge）：https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_10000_cookie.sgmodule
 ==============================
-BoxJs 主页 http://boxjs.com/
+BoxJs 主页: http://boxjs.com/
 BoxJs 订阅：https://raw.githubusercontent.com/FoKit/Scripts/main/boxjs/fokit.boxjs.json
 */
 
@@ -40,7 +40,7 @@ if (Device.isUsingDarkAppearance()) {
 const gradient = new LinearGradient()
   gradient.locations = [0, 1]
   gradient.colors = [
-    new Color(bgColor1),
+    new Color(bgColor1, 0.5),
     new Color(bgColor2)
   ]
   widget.backgroundGradient = gradient
@@ -70,7 +70,7 @@ if (!fileManager.fileExists(folder) || cookie === undefined) {
   
   loginUrl_request = new Request(get.getLoginUrl);
   login_data = await loginUrl_request.loadJSON();
-  loginUrl = login_data.val  
+  loginUrl = login_data.val
   if (cookie) {
     if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
       data = {"cookie": `${cookie}`,"loginUrl": `${loginUrl}`}
@@ -152,7 +152,7 @@ async function presentMenu() {
       finish.title = "更新成功"
       finish.addAction('OK')
       await finish.presentAlert();
-      const Name = 'telecr';
+      const Name = 'telecom';
       Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     }
   }
