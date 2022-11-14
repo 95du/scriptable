@@ -179,7 +179,7 @@ if (success === true) {
   // notice
   notice.title = 'Token已过期 ⚠️'
   notice.body = '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )'
-  notice.openURL = `${get.alipay}`
+  notice.openURL = get.alipay
   notice.schedule();
   return;
 }
