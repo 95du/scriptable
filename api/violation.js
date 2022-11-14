@@ -197,7 +197,7 @@ async function presentMenu() {
   response = await alert.presentAlert();
   // menu action 1
   if (response === 1) {
-    Safari.open(`${get.alipay}`);
+    Safari.open(get.alipay);
     return;
   }
   if (response === 2) {
@@ -208,7 +208,7 @@ async function presentMenu() {
   if (response === 0) {
     const FILE_MGR = FileManager.local();
     const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-    const reqUpdate = new Request(`${get.update}`);
+    const reqUpdate = new Request(get.update);
     const codeString = await reqUpdate.loadString();
     const finish = new Alert();
     if (codeString.indexOf("交管12123") == -1) {
