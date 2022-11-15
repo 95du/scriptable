@@ -108,6 +108,7 @@ violation.method = 'POST'
 violation.body = `params={
     "productId": "${get.productId}",
     "api": "${get.api1}",
+    "version": "${get.version}",
     "verifyToken": "${verifyToken}"
 }`
 const main = await violation.loadJSON();
@@ -126,7 +127,8 @@ if (success === true) {
     issueOrganization.method = 'POST'
     issueOrganization.body = `params={
   "productId": "${get.productId}",
-  "api": "${get.api2}",
+  "api": "${get.api2}", 
+  "version": "${get.version}",
   "verifyToken": "${verifyToken}",
   "params": {
     "plateNumber": "${plate}",
@@ -142,7 +144,8 @@ if (success === true) {
     area.method = 'POST'
     area.body = `params={
     "productId": "${get.productId}", 
-    "api": "${get.api3}", 
+    "api": "${get.api3}",
+    "version": "${get.version}",
     "verifyToken": "${verifyToken}", 
     "params": {
         "plateNumber": "${plate}", 
@@ -160,7 +163,8 @@ if (success === true) {
       violationMsg.method = 'POST'
       violationMsg.body = `params={
     "productId": "${get.productId}", 
-    "api": "${get.api4}", 
+    "api": "${get.api4}",
+    "version": "${get.version}",
     "verifyToken": "${verifyToken}", 
     "params": {
         "violationSerialNumber": "${detail.violationSerialNumber}", 
