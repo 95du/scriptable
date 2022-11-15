@@ -173,14 +173,19 @@ if (success === true) {
     }
   }
 } else {
-  data = {"myPlate": `${myPlate}`}
-  data = JSON.stringify(data);
-  fileManager.writeString(cacheFile, data);
-  // notice
-  notice.title = 'Token已过期 ⚠️'
-  notice.body = '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )'
-  notice.openURL = get.alipay
-  notice.schedule();
+  if (main.resultCode === 'SYSTEM_ERROR') {
+  notice.title = main.resultMsg + ' ⚠️'
+    notice.schedule();
+  } else {
+    data = {"myPlate": `${myPlate}`}
+    data = JSON.stringify(data);
+    fileManager.writeString(cacheFile, data);
+    // notice
+    notice.title = 'Token已过期 ⚠️'
+    notice.body = '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )'
+    notice.openURL = get.alipay
+    notice.schedule();
+  }
   return;
 }
   
