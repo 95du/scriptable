@@ -21,6 +21,8 @@ BoxJs 主页: http://boxjs.com/
 BoxJs 订阅：https://raw.githubusercontent.com/FoKit/Scripts/main/boxjs/fokit.boxjs.json
 */
 
+// 网页登录后免Cookie 11-14 ‼️
+
 const notice = new Notification()
 const widget = new ListWidget()
 widget.setPadding(0, 18, -6, 10)
@@ -106,7 +108,9 @@ login.method = 'GET'
 login.headers = {"Cookie": `${cookie}`,"Referer": `${get.referer}`}
 const sign = await login.loadString()
 const strLogin = sign.replaceAll('callbackMsg(','');
-const json = JSON.parse(strLogin.replace(/\S{1}$/, ''));
+const json = JSON.parse(
+  strLogin.replace(/\S{1}$/, '')
+);
 
 
 // Presents the main menu
@@ -140,7 +144,7 @@ async function presentMenu() {
   if (response === 0) {
     const FILE_MGR = FileManager.local();
     const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-    const reqUpdate = new Request(`${get.update}`);
+    const reqUpdate = new Request(get.update);
     const codeString = await reqUpdate.loadString();
     const finish = new Alert();
     if (codeString.indexOf("中国电信") == -1) {
@@ -173,7 +177,7 @@ if (Device.isUsingDarkAppearance()) {
 
 const balances = new Request(get.balance);
 balances.method = 'GET'
-balances.headers = {"Cookie": `${cookie}`}
+//balances.headers = {"Cookie": `${cookie}`}
 const money = await balances.loadJSON()
 const balanceAvailable = money.totalBalanceAvailable / 100
 const balText = widget.addText('￥' + balanceAvailable)
@@ -185,7 +189,7 @@ widget.addSpacer(3)
 
 const req = new Request(get.surplus);
 req.method = 'POST'
-req.headers = {"Cookie": `${cookie}`}
+//req.headers = {"Cookie": `${cookie}`}
 const res = await req.loadJSON()
 const voiceAmount = res.voiceAmount
 const voiceUsage = res.voiceUsage
