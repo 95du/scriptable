@@ -178,7 +178,7 @@ if (success === true) {
   }
 } else {
   if (main.resultCode === 'SYSTEM_ERROR') {
-  notice.title = main.resultMsg + ' ⚠️'
+  notice.title = main.resultMsg
     notice.schedule();
   } else {
     data = {"myPlate": `${myPlate}`}
