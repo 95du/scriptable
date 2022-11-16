@@ -114,8 +114,9 @@ violation.body = `params={
 const main = await violation.loadJSON();
 const success = main.success
 
+
 if (success === true) {
-  list = main.data.list[0]
+  var list = main.data.list[0]
   if (list === undefined) {
     console.log(
       JSON.stringify(main, null, 2)
