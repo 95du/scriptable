@@ -422,9 +422,7 @@ async function createWidget() {
   // Car image
   const carImageStack = column2.addStack();
   carImageStack.setPadding(-20, 6, 0, 0);
-  const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
-  const resUrl = await imgUrl.loadJSON();
-  const item = resUrl.maybach[Math.floor(Math.random()*resUrl.maybach.length)];
+  const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
   imageCar.imageSize = new Size(225,100);
@@ -446,11 +444,11 @@ async function createWidget() {
 
 
   // jump show status
-  barStack2.url = `${get.status}`;
-  // jump to alipay
-  textPlate2.url = 'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Fvehicle-illegal-query%2Findex';
-  // jump quantumult
-  widget.url = `${get.alipay}`
+  barStack2.url = get.status;
+  // jump to details
+  textPlate2.url = get.details;
+  // jump 12123
+  widget.url = get.alipay;
   // jump show image
   if (list !== undefined) {
     textAddress.url = `${img}`;
