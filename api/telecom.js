@@ -59,7 +59,7 @@ const cacheFile = fileManager.joinPath(folder, 'data.json');
 if (fileManager.fileExists(cacheFile)) {
   data = fileManager.readString(cacheFile)
   data = JSON.parse(data);
-  cookie = data.cookie
+  cookie = data.cookie.split(';')[0]
   loginUrl = data.loginUrl
 }
 
@@ -237,7 +237,7 @@ function creatProgress(total,havegone){
   context.setFillColor(new Color("#64DD17"))
   
   const path1 = new Path()
-  path1.addRoundedRect(new Rect(0, 0, width*havegone/total, h), 3, 0)
+  path1.addRoundedRect(new Rect(0, 0, width*havegone/total, h), 3, 2)
   context.addPath(path1)
   context.fillPath()
   return context.getImage()
