@@ -199,7 +199,7 @@ const total = res.total / 1024000
 const used = res.used / 1024000
 const balance = res.balance / 1024000
 const string = String(balance)
-const bal = string.slice(0, string.length-1)
+const bal = string.substring(0, 5);
 
 
 // Progress bar
