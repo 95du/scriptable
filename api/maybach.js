@@ -8,18 +8,22 @@
 * 2022-11-14 00:30
 * 模拟电子围栏
 * 显示车速，位置
+* Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
 // Presents the main menu
 async function presentMenu() {
   let alert = new Alert();
   alert.title = "Mercedes Maybach"
+  alert.message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息'
   alert.addDestructiveAction('更新代码')
-  alert.addAction('GetToken')
+  alert.addAction('家人地图')
   alert.addAction('预览组件')
   alert.addAction('退出')
   response = await alert.presentAlert();
-  if (response === 1) return;
+  if (response === 1) {
+ Safari.open('amapuri://WatchFamily/myFamily')
+  }
   if (response === 2) {
     widget = await createWidget()
   }
@@ -168,23 +172,21 @@ async function createWidget() {
     
 
   /**
-  界面显示布局(左到右)
-  Layout left and right
+  * 界面显示布局(左到右)
+  * Layout left and right
   @ image
   @ text
-  Cylindrical Bar Chart
+  * Cylindrical Bar Chart
   */
   widget.setPadding(10, 18, 10, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
-  const dataStack = mainStack.addStack();
     
-
-  // First column
-  const column1 = dataStack.addStack();
-  column1.layoutVertically();
+  // Left Main Stack
+  const leftStack = mainStack.addStack();
+  leftStack.layoutVertically();
   // plateStack
-  const plateStack = column1.addStack();
+  const plateStack = leftStack.addStack();
   if (minutes1 <= 3) {
     textPlate = plateStack.addText('Maybach🚦');
   } else {
@@ -192,10 +194,10 @@ async function createWidget() {
   }
   textPlate.font = Font.mediumSystemFont(19);
   textPlate.textColor =Color.black();
-  column1.addSpacer(3)
+  leftStack.addSpacer(3)
     
   // Mercedes Logo
-  const benzStack = column1.addStack();
+  const benzStack = leftStack.addStack();
   benzStack.layoutHorizontally();
   benzStack.centerAlignContent();
   const benz = new Request ('https://gitcode.net/4qiao/scriptable/raw/master/img/car/mercedesLogo.png');
@@ -209,11 +211,11 @@ async function createWidget() {
   const vehicleModelText = vehicleModel.addText('Mercedes');
   vehicleModelText.font = Font.mediumSystemFont(14);
   vehicleModelText.textColor = new Color('#424242');
-  column1.addSpacer(3)
+  leftStack.addSpacer(3)
     
     
   // update time icon
-  const updateTimeStack = column1.addStack();
+  const updateTimeStack = leftStack.addStack();
   updateTimeStack.layoutHorizontally();
   updateTimeStack.centerAlignContent();
   const iconSymbol2 = SFSymbol.named('car');
@@ -226,11 +228,11 @@ async function createWidget() {
   const textUpdateTime = updateTime.addText(GMT2);
   textUpdateTime.font = Font.mediumSystemFont(14);
   textUpdateTime.textColor = new Color('#424242');
-  column1.addSpacer(21)
+  leftStack.addSpacer(21)
     
     
-  //column1 barRow
-  const barStack = column1.addStack();
+  // Left Stack barRow
+  const barStack = leftStack.addStack();
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
   barStack.setPadding(3, 10, 3, 10);
@@ -250,7 +252,7 @@ async function createWidget() {
     const totalMonthBar = barStack.addText(state);
     totalMonthBar.font = Font.mediumSystemFont(14);
     totalMonthBar.textColor = new Color('#AA00FF');
-    column1.addSpacer(8)
+    leftStack.addSpacer(8)
   } else {
     // 按钮 speed 大于 5
     barStack.backgroundColor = new Color('#EEEEEE', 0.1);
@@ -267,12 +269,12 @@ async function createWidget() {
     const totalMonthBar = barStack.addText(state);
     totalMonthBar.font = Font.mediumSystemFont(14);
     totalMonthBar.textColor = new Color('#D50000');
-    column1.addSpacer(8)
+    leftStack.addSpacer(8)
   }
     
 
-  // column1 barRow2
-  const barStack2 = column1.addStack();
+  // Left Stack barRow2
+  const barStack2 = leftStack.addStack();
   barStack2.layoutHorizontally();
   barStack2.centerAlignContent();
   barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
@@ -290,28 +292,28 @@ async function createWidget() {
   const totalMonthBar2 = barStack2.addText('已锁车');
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#616161');
-  column1.addSpacer(2)
+  leftStack.addSpacer(2)
     
     
   /**
-  Second column
+  * Right Main Stack
   @ Car Logo
   @ Car image
   @ Address
   */
-  const column2 = dataStack.addStack();
-  column2.layoutVertically();
+  const rightStack = mainStack.addStack();
+  rightStack.layoutVertically();
   // Car Logo
-  const carLogoStack = column2.addStack();
+  const carLogoStack = rightStack.addStack();
   carLogoStack.addSpacer()
   const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
   const image = carLogoStack.addImage(carLogo);
   image.imageSize = new Size(27,27);
   image.tintColor = Color.black();
-  column2.addSpacer(2)
+  rightStack.addSpacer(2)
     
   // Car image
-  const carImageStack = column2.addStack();
+  const carImageStack = rightStack.addStack();
   carImageStack.setPadding(-20, 5, 0, 0);
   const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
   const resUrl = await imgUrl.loadJSON();
@@ -319,10 +321,10 @@ async function createWidget() {
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
   imageCar.imageSize = new Size(225,100);
-  column2.addSpacer(2)
+  rightStack.addSpacer(2)
 
   // show address
-  const adrStack = column2.addStack();
+  const adrStack = rightStack.addStack();
   adrStack.layoutHorizontally();
   adrStack.centerAlignContent();
   adrStack.size = new Size(230, 30)
@@ -333,7 +335,7 @@ async function createWidget() {
   str = (jmz.GetLength(address));
     
   if (str <= 35) {
-    textAddress = adrStack.addText(address + ` - 离${adr.regeocode.pois[0].address}` + `${adr.regeocode.pois[0].distance}米`)
+    textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}` + `${adr.regeocode.pois[0].distance}米`)
   } else if (str < 46) {
     textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}`);
   } else {
