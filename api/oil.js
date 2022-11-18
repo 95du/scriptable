@@ -1,6 +1,14 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-brown; icon-glyph: gas-pump;
+/**
+* 小组件作者: 95度茅台
+* Oil price
+* Version 1.3
+* 2022-10-14 10:30
+* Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+*/
+
 const notice = new Notification()
 
 const Req = new Request('https://mys4s.cn/v3/oil/price');
@@ -61,12 +69,8 @@ async function createWidget(oil, data) {
   mainStack.layoutVertically();
   const Stack = mainStack.addStack();
   Stack.setPadding(0, 72, 0, 0);
-  Stack.layoutHorizontally();
   // Dynamic Island bar
-  const columnN = Stack.addStack();
-  columnN.layoutVertically();
-  const barRow = columnN.addStack();
-  const barStack = barRow.addStack();
+  const barStack = Stack.addStack();
   barStack.backgroundColor = Color.black();
   barStack.setPadding(5, 42, 5, 42);
   barStack.cornerRadius = 15
@@ -77,27 +81,24 @@ async function createWidget(oil, data) {
   titleText.textColor = Color.green();
   titleText.font = Font.boldSystemFont(16)
   titleText.centerAlignText();
-  barRow.addSpacer(5);
+  Stack.addSpacer(5);
   
   // Notification icon
-  const noticeStack = barRow.addStack();
+  const noticeStack = Stack.addStack();
   const iconSymbol2 = SFSymbol.named('bell.circle');
   const carIcon = noticeStack.addImage(iconSymbol2.image);
   carIcon.imageSize = new Size(29, 29);
   carIcon.tintColor = Color.black();
-  columnN.addSpacer(12)
+  mainStack.addSpacer(12)
     
     
   // oilPrice alert ‼️
   const dataStack2 = mainStack.addStack();
-  dataStack2.addSpacer(1)
-dataStack2.layoutHorizontally();
+  dataStack2.layoutHorizontally();
   // bar
-  const barRow1 = dataStack2.addStack();
-  barRow1.setPadding(0, 0, 10, 0);
-  const barStack1 = barRow1.addStack();
-  barStack1.addSpacer(10)
-  barStack1.setPadding(8, 0, 8, 0);
+  dataStack2.setPadding(0, 0, 10, 0);
+  const barStack1 = dataStack2.addStack();
+  barStack1.setPadding(8, 10, 8, -5);
   barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack1.cornerRadius = 10
   barStack1.borderColor = new Color('#D50000', 0.8);
@@ -108,18 +109,14 @@ dataStack2.layoutHorizontally();
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
   barStack1.addSpacer(15)
-    
-    
+  
+  
   // First column ❤️
   const dataStack = mainStack.addStack();
-  dataStack.layoutHorizontally();
-  const column0 = dataStack.addStack();
-  column0.layoutVertically();
   // Oil_0 bar
-  const barRow0 = column0.addStack();
-  barRow0.setPadding(0, 0, 0, 8);
-  const barStack0 = barRow0.addStack();
-  barStack0.setPadding(3, 8, 3, 8);
+  const barStack0 = dataStack.addStack();
+  dataStack.addSpacer(7)
+  barStack0.setPadding(3, 9, 3, 9);
   barStack0.backgroundColor = new Color('#FB8C00');
   barStack0.cornerRadius = 10
   barStack0.borderColor = new Color('#FB8C00');
@@ -145,13 +142,10 @@ dataStack2.layoutHorizontally();
   
   
   // Second column ❤️
-  const column2 = dataStack.addStack();
-  column2.layoutVertically();
   // Oil_92 bar
-  const barRow2 = column2.addStack();
-  barRow2.setPadding(0, 0, 0, 8);
-  const barStack2 = barRow2.addStack();
-  barStack2.setPadding(3, 8, 3, 8);
+  const barStack2 = dataStack.addStack();
+  dataStack.addSpacer(7)
+  barStack2.setPadding(3, 9, 3, 9);
   barStack2.backgroundColor = Color.blue();
   barStack2.cornerRadius = 10
   barStack2.borderColor = Color.blue();
@@ -176,13 +170,10 @@ dataStack2.layoutHorizontally();
     
     
   // Third column ❤️
-  const column5 = dataStack.addStack();
-  column5.layoutVertically();
   // Oil_95 bar
-  const barRow5 = column5.addStack();
-  barRow5.setPadding(0, 0, 0, 8);
-  const barStack5 = barRow5.addStack();
-  barStack5.setPadding(3, 8, 3, 8);
+  const barStack5 = dataStack.addStack();
+  dataStack.addSpacer(7)
+  barStack5.setPadding(3, 9, 3, 9);
   barStack5.backgroundColor = new Color('#00C853');
   barStack5.cornerRadius = 10
   barStack5.borderColor = new Color('#00C853');
@@ -207,13 +198,9 @@ dataStack2.layoutHorizontally();
     
     
   // Fourth column ❤️
-  const column8 = dataStack.addStack();
-  column8.layoutVertically();
   // Oil_98 bar
-  const barRow8 = column8.addStack();
-  const barStack8 = barRow8.addStack();
-    
-  barStack8.setPadding(3, 8, 3, 8);
+  const barStack8 = dataStack.addStack();
+  barStack8.setPadding(3, 9, 3, 9);
   barStack8.backgroundColor = Color.purple();
   barStack8.cornerRadius = 10
   barStack8.borderColor = Color.purple();
