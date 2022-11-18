@@ -250,7 +250,7 @@ if (config.widgetFamily === "small") {
   }
 }
   
-  
+
 // createWidget
 async function createWidget() {
   const widget = new ListWidget();
@@ -276,20 +276,23 @@ async function createWidget() {
   widget.setPadding(15, 18, 15, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
-  const dataStack = mainStack.addStack();
-
-  // First column
-  const column1 = dataStack.addStack();
-  column1.layoutVertically();
+  
+  /* 
+  * Left Main Stack
+  * Violation content
+  * Status
+  */
+  const leftStack = mainStack.addStack();
+  leftStack.layoutVertically();
   // plateStack 1
-  const plateStack = column1.addStack();
+  const plateStack = leftStack.addStack();
   textPlate = plateStack.addText(myPlate)
   textPlate.font = Font.mediumSystemFont(19);
   textPlate.textColor = Color.black();
-  column1.addSpacer(6)
+  leftStack.addSpacer(6)
 
   // Car icon 2
-  const carIconStack = column1.addStack();
+  const carIconStack = leftStack.addStack();
   carIconStack.layoutHorizontally();
   carIconStack.centerAlignContent();
   const man = SFSymbol.named('car');
@@ -310,21 +313,21 @@ async function createWidget() {
   }
   vehicleModelText.font = Font.mediumSystemFont(12);
   vehicleModelText.textColor = new Color('#494949');
-  column1.addSpacer(3)
+  leftStack.addSpacer(3)
 
 
   // violationPoint 3
-  const vioPointStack = column1.addStack();
+  const vioPointStack = leftStack.addStack();
   const vioPoint = vioPointStack.addStack();
   if (list !== undefined) {
     vioPointText = vioPoint.addText(`罚款${vio.fine}元 ` + `扣${vio.violationPoint}分`);
     vioPointText.font = Font.mediumSystemFont(12);
     vioPointText.textColor = new Color('#484848');
-    column1.addSpacer(3)
+    leftStack.addSpacer(3)
   }
     
   // update icon 4
-  const updateTimeStack = column1.addStack();
+  const updateTimeStack = leftStack.addStack();
   if (list === undefined) {
     const iconSymbol2 = SFSymbol.named('person.crop.circle');
     const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
@@ -339,17 +342,17 @@ async function createWidget() {
     textUpdateTime = updateTime.addText('Good Driving');
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
-    column1.addSpacer(25)
+    leftStack.addSpacer(25)
   } else {
     textUpdateTime = updateTime.addText(`${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
-    column1.addSpacer(8)
+    leftStack.addSpacer(8)
   }
     
 
   // column1 barRow 5
-  const barStack = column1.addStack();
+  const barStack = leftStack.addStack();
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
   barStack.setPadding(3, 10, 3, 10);
@@ -370,7 +373,7 @@ async function createWidget() {
     const totalMonthBar = barStack.addText('无违章');
     totalMonthBar.font = Font.mediumSystemFont(14);
     totalMonthBar.textColor = new Color('#009201');
-    column1.addSpacer(8)
+    leftStack.addSpacer(8)
   } else {
     // Driver's license
     barStack.backgroundColor = new Color('#EEEEEE', 0.1);
@@ -381,12 +384,12 @@ async function createWidget() {
     const totalMonthBar = barStack.addText(`${vio.plateNumber}`);
     totalMonthBar.font = Font.mediumSystemFont(14);
     totalMonthBar.textColor = new Color('#D50000');
-    column1.addSpacer(8)
+    leftStack.addSpacer(8)
   }
 
 
   // Driver's license bar 6
-  const barStack2 = column1.addStack();
+  const barStack2 = leftStack.addStack();
   barStack2.layoutHorizontally();
   barStack2.centerAlignContent();
   barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
@@ -404,32 +407,37 @@ async function createWidget() {
   const totalMonthBar2 = barStack2.addText('驾驶证');
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#757575');
-  column1.addSpacer(2)
+  leftStack.addSpacer(2)
 
 
-  // Second column
-  const column2 = dataStack.addStack();
-  column2.layoutVertically();
+  /*
+  * Right Main Stack
+  * Car image
+  * App Logo
+  * Violation Address
+  */
+  const rightStack = mainStack.addStack();
+  rightStack.layoutVertically();
   // Car Logo
-  const carLogoStack = column2.addStack();
+  const carLogoStack = rightStack.addStack();
   carLogoStack.addSpacer()
   textPlate2 = carLogoStack.addText('交管12123')
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  column2.addSpacer(14)
+  rightStack.addSpacer(14)
 
   // Car image
-  const carImageStack = column2.addStack();
+  const carImageStack = rightStack.addStack();
   carImageStack.setPadding(-20, 6, 0, 0);
   const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
   imageCar.imageSize = new Size(225,100);
-  column2.addSpacer(2)
+  rightStack.addSpacer(2)
 
   // show address
-  const tipsStack = column2.addStack();
+  const tipsStack = rightStack.addStack();
   tipsStack.layoutHorizontally();
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(230, 30)
