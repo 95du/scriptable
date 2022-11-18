@@ -213,7 +213,7 @@ function getwidget(total, haveGone, str) {
   const titlew = widget.addText(str)
   titlew.centerAlignText()
   titlew.textColor = new Color(textColor)
-  titlew.font = Font.boldSystemFont(13)
+  titlew.font = Font.boldSystemFont(12)
   widget.addSpacer(3)
   
   const imgw = widget.addImage(creatProgress(total,haveGone))
