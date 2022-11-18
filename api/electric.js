@@ -1,7 +1,15 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: bolt;
-// Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+/**
+* 小组件作者: 95度茅台
+* 南网在线 App
+* 查看电费
+* Version 1.0
+* 2022-10-15 10:00
+* Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+*/
+
 const notice = new Notification()
 const timestamp = Date.parse(new Date());
 
@@ -193,26 +201,25 @@ async function createWidget() {
    
   // Frame Layout
   const mainStack = widget.addStack();
-  mainStack.layoutVertically();
-  const dataStack = mainStack.addStack();
-  dataStack.layoutHorizontally();
+  mainStack.layoutHorizontally();
 
-
-  // First column
-  const column0 = dataStack.addStack();
-  column0.layoutVertically();
-  const logoStack = column0.addStack();
+  /* 
+  * Left Main Stack
+  */
+  const leftStack = mainStack.addStack();
+  leftStack.layoutVertically();
+  // logo stack
+  const logoStack = leftStack.addStack();
   logoStack.setPadding(0, 4, 0, 0);
   const ironMan = new Request ('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/lightningMan.png');
   const iconSymbol = await ironMan.loadImage();
   const ironManIcon = logoStack.addImage(iconSymbol);
   ironManIcon.imageSize = new Size(80, 80);
   logoStack.url = 'alipays://platformapi/startapp?appId=2021001164644764'
-  column0.addSpacer(5);
+  leftStack.addSpacer(5);
     
-  // column nameRow
-  const nameRow = column0.addStack();
-  const nameStack = nameRow.addStack();
+  // name stack
+  const nameStack = leftStack.addStack();
   nameStack.layoutHorizontally();
   nameStack.centerAlignContent();
   nameStack.setPadding(3, 10, 3, 10);
@@ -226,12 +233,11 @@ async function createWidget() {
   const nameText = nameStack.addText(name);
   nameText.font = Font.mediumSystemFont(14);
   nameText.textColor = Color.black();
-  column0.addSpacer(3)
+  leftStack.addSpacer(3)
 
-  // column payRow
+  // pay stack
   if (pay < 1) {
-    const payRow = column0.addStack();
-    const payStack = payRow.addStack();
+    const payStack = leftStack.addStack();
     payStack.backgroundColor = new Color('#EEEEEE', 0.1);
     payStack.setPadding(3, 10, 3, 10);
     payStack.cornerRadius = 10
@@ -247,10 +253,9 @@ async function createWidget() {
     const payText = payStack.addText('已缴费');
     payText.font = Font.mediumSystemFont(14);
     payText.textColor = Color.green();
-    column0.addSpacer(6)
+    leftStack.addSpacer(6)
   } else {
-    const payRow = column0.addStack();
-    const payStack = payRow.addStack();
+    const payStack = leftStack.addStack();
     payStack.backgroundColor = new Color('#EEEEEE', 0.1);
     payStack.setPadding(3, 10, 3, 10);
     payStack.cornerRadius = 10
@@ -266,16 +271,18 @@ async function createWidget() {
     const payText = payStack.addText(pay);
     payText.font = Font.mediumSystemFont(14);
     payText.textColor = new Color('#D50000');
-    column0.addSpacer(6)
+    leftStack.addSpacer(6)
   }
     
     
-  // Second column
-  const column2 = dataStack.addStack();
-  column2.layoutVertically();
-  column2.setPadding(5, 30, 0, 0)
+  /* 
+  * Center Stack
+  */
+  const centerStack = mainStack.addStack();
+  centerStack.layoutVertically();
+  centerStack.setPadding(5, 30, 0, 0)
   // yesterday
-  const yesterdayRow = column2.addStack()
+  const yesterdayRow = centerStack.addStack()
   const yesTDStack = yesterdayRow.addStack();
   yesTDStack.setPadding(0, 0, 0, 0);
   // yesterday icon
@@ -288,18 +295,17 @@ async function createWidget() {
   const yesterdayText = yesTDStack.addText('昨日');
   yesterdayText.font = Font.mediumSystemFont(14)
   yesterdayText.textColor = new Color('#616161');
-  column2.addSpacer(3)
+  centerStack.addSpacer(3)
   // Yesterday Use text
-  const yesterdayUseText = column2.addText(ystdayPower + 'kw·h')
+  const yesterdayUseText = centerStack.addText(ystdayPower + 'kw·h')
   yesterdayUseText.textColor = Color.blue();
   yesterdayUseText.font = Font.boldSystemFont(14)
   yesterdayUseText.leftAlignText()
-  column2.addSpacer(10)
+  centerStack.addSpacer(10)
     
     
-  // Electricity used this month
-  const monthRow = column2.addStack()
-  const monthStack = monthRow.addStack();
+  // month stack
+  const monthStack = centerStack.addStack();
   monthStack.setPadding(0, 0, 0, 0);
   // month icon
   const monthIcon = SFSymbol.named('bolt.fill');
@@ -311,18 +317,17 @@ async function createWidget() {
   const monthText = monthStack.addText('本月');
   monthText.font = Font.mediumSystemFont(14)
   monthText.textColor = new Color('#616161');
-  column2.addSpacer(3)
+  centerStack.addSpacer(3)
   // month Use Text
-  const monthUseText = column2.addText(totalPower + 'kw·h')
+  const monthUseText = centerStack.addText(totalPower + 'kw·h')
   monthUseText.textColor = Color.blue();
   monthUseText.font = Font.boldSystemFont(14)
   monthUseText.leftAlignText()
-  column2.addSpacer(10)
+  centerStack.addSpacer(10)
     
     
-  // Use ele
-  const useEleRow = column2.addStack()
-  const useEleStack = useEleRow.addStack();
+  // Use Ele Stack
+  const useEleStack = centerStack.addStack();
   useEleStack.setPadding(0, 0, 0, 0);
   // Use ele icon
   const useEleIcon = SFSymbol.named('lightbulb.fill');
@@ -334,22 +339,23 @@ async function createWidget() {
   const useEleText = useEleStack.addText('上月');
   useEleText.font = Font.mediumSystemFont(14);
   useEleText.textColor = new Color('#616161');
-  column2.addSpacer(3)
+  centerStack.addSpacer(3)
   // Use ele total text
-  const useEleTotalText = column2.addText(`${total} kw·h`)
+  const useEleTotalText = centerStack.addText(`${total} kw·h`)
   useEleTotalText.textColor = Color.blue();
   useEleTotalText.font = Font.boldSystemFont(14)
   useEleTotalText.leftAlignText()
-  column2.addSpacer(5)
+  centerStack.addSpacer(5)
     
     
-  //Third column
-  const column3 = dataStack.addStack();
-  column3.layoutVertically();
-  column3.setPadding(5, 20, 0, 0)
-  // User balance
-  const balanceRow = column3.addStack()
-  const balStack = balanceRow.addStack();
+  /*
+  * Right Main Stack
+  */
+  const rightStack = mainStack.addStack();
+  rightStack.layoutVertically();
+  rightStack.setPadding(5, 20, 0, 0)
+  // bal Stack
+  const balStack = rightStack.addStack();
   balStack.setPadding(0, 0, 0, 0);
   // balance Icon
   const balanceIcon = SFSymbol.named('star.fill');
@@ -361,46 +367,44 @@ async function createWidget() {
   const balanceText = balStack.addText('余额');
   balanceText.font = Font.mediumSystemFont(14)
   balanceText.textColor = new Color('#616161');
-  column3.addSpacer(3)
+  rightStack.addSpacer(3)
   //balance Use Text
   const contain = bal.indexOf(".") != -1
   if (contain === false) {
-    balanceUseText = column3.addText(bal + '.00 rmb')
+    balanceUseText = rightStack.addText(bal + '.00 rmb')
   } else {
-    balanceUseText = column3.addText(bal + ' rmb')
+    balanceUseText = rightStack.addText(bal + ' rmb')
   }
   balanceUseText.textColor = Color.blue();
   balanceUseText.font = Font.boldSystemFont(14)
   balanceUseText.leftAlignText()
-  column3.addSpacer(10)
+  rightStack.addSpacer(10)
     
 
-  // Electricity Charge
-  const eleBillRow = column3.addStack()
-  const eleBiStack = eleBillRow.addStack();
+  // ele Bill Stack
+  const eleBiStack = rightStack.addStack();
   eleBiStack.setPadding(0, 0, 0, 0);
-  // eleBill icon
+  // ele Bill icon
   const eleBillIcon = SFSymbol.named('yensign.circle');
   const eleBillIconElement = eleBiStack.addImage(eleBillIcon.image);
   eleBillIconElement.imageSize = new Size(15, 15);
   eleBillIconElement.tintColor = Color.purple();
   eleBiStack.addSpacer(6);
-  // eleBill text
+  // ele Bill text
   const eleBillText = eleBiStack.addText('电费');
   eleBillText.font = Font.mediumSystemFont(14);
   eleBillText.textColor = new Color('#616161');
-  column3.addSpacer(3)
+  rightStack.addSpacer(3)
   // ele Bill Total Text
-  const eleBillTotalText = column3.addText(`${arrears} rmb`)
+  const eleBillTotalText = rightStack.addText(`${arrears} rmb`)
   eleBillTotalText.textColor = Color.blue();
   eleBillTotalText.font = Font.boldSystemFont(14)
   eleBillTotalText.leftAlignText()
-  column3.addSpacer(10)
+  rightStack.addSpacer(10)
     
     
-  // Waiting for payment
-  const arrearsRow = column3.addStack()
-  const arrearsStack = arrearsRow.addStack();
+  // arrears Stack
+  const arrearsStack = rightStack.addStack();
   arrearsStack.setPadding(0, 0, 0, 0);
   // arrears icon
   const arrearsIcon = SFSymbol.named('exclamationmark.shield');
@@ -412,13 +416,13 @@ async function createWidget() {
   const arrearsText = arrearsStack.addText('待缴');
   arrearsText.font = Font.mediumSystemFont(14);
   arrearsText.textColor = new Color('#616161');
-  column3.addSpacer(3)
+  rightStack.addSpacer(3)
   // arrears total text
-  const arrearsTotalText = column3.addText(`${pay} rmb`);
+  const arrearsTotalText = rightStack.addText(`${pay} rmb`);
   arrearsTotalText.textColor = Color.blue();
   arrearsTotalText.font = Font.boldSystemFont(14)
   arrearsTotalText.leftAlignText()
-  column3.addSpacer(5)
+  rightStack.addSpacer(5)
     
   return widget;
 }
