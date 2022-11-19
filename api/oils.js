@@ -4,12 +4,13 @@
 /**
 * 小组件作者: 95度茅台
 * Oil price
-* Version 1.3
-* 2022-10-14 10:30
+* Version 1.2
+* 2022-11-19 11:30
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
-const notice = new Notification()
+// ⚠️适配机型: 手动第10行的数字
+const value = 8 //小机型改小
 
 const location = await Location.current();
     const locationText = await Location.reverseGeocode(
@@ -70,9 +71,10 @@ async function createWidget(oil, data) {
     new Color('#00000000')
   ]
   widget.backgroundGradient = gradient
-   
+
     
   // 灵动岛
+  widget.setPadding(6, 6, 6, 6);
   const mainStack = widget.addStack();
   mainStack.layoutVertically();
   const Stack = mainStack.addStack();
@@ -100,13 +102,13 @@ async function createWidget(oil, data) {
   Stack.addSpacer()
   mainStack.addSpacer(10)
     
-    
   // oilPrice alert ‼️
   const dataStack2 = mainStack.addStack();
   dataStack2.layoutHorizontally();
+  dataStack2.addSpacer()
   // bar
   const barStack1 = dataStack2.addStack();
-  barStack1.setPadding(8, 10, 8, -5);
+  barStack1.setPadding(8, 10, 8, 10);
   barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack1.cornerRadius = 10
   barStack1.borderColor = new Color('#D50000', 0.8);
@@ -116,15 +118,17 @@ async function createWidget(oil, data) {
   oilTipsText.textColor = new Color('#484848');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
-  barStack1.addSpacer(16)
+  //barStack1.addSpacer(16)
+  dataStack2.addSpacer()
   mainStack.addSpacer(10)
   
   
   // First column ❤️
   const dataStack = mainStack.addStack();
+  dataStack.addSpacer()
   // Oil_0 bar
   const barStack0 = dataStack.addStack();
-  barStack0.setPadding(3, 9, 3, 9);
+  barStack0.setPadding(3, 8, 3, 8);
   barStack0.backgroundColor = new Color('#FB8C00');
   barStack0.cornerRadius = 10
   barStack0.borderColor = new Color('#FB8C00');
@@ -147,13 +151,13 @@ async function createWidget(oil, data) {
   }
   totalMonthBar0.font = Font.mediumSystemFont(14);
   totalMonthBar0.textColor = Color.white();
-  dataStack.addSpacer(7)
+  dataStack.addSpacer(value)
   
   
   // Second column ❤️
   // Oil_92 bar
   const barStack2 = dataStack.addStack();
-  barStack2.setPadding(3, 9, 3, 9);
+  barStack2.setPadding(3, 8, 3, 8);
   barStack2.backgroundColor = Color.blue();
   barStack2.cornerRadius = 10
   barStack2.borderColor = Color.blue();
@@ -175,12 +179,13 @@ async function createWidget(oil, data) {
   }
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#FFFFFF');
-  dataStack.addSpacer(7)
-    
+  dataStack.addSpacer(value)
+  
+  
   // Third column ❤️
   // Oil_95 bar
   const barStack5 = dataStack.addStack();
-  barStack5.setPadding(3, 9, 3, 9);
+  barStack5.setPadding(3, 8, 3, 8);
   barStack5.backgroundColor = new Color('#00C853');
   barStack5.cornerRadius = 10
   barStack5.borderColor = new Color('#00C853');
@@ -202,13 +207,13 @@ async function createWidget(oil, data) {
   }
   totalMonthBar5.font = Font.mediumSystemFont(14);
   totalMonthBar5.textColor = new Color('#FFFFFF');
-  dataStack.addSpacer(7)
+  dataStack.addSpacer(value)
   
     
   // Fourth column ❤️
   // Oil_98 bar
   const barStack8 = dataStack.addStack();
-  barStack8.setPadding(3, 9, 3, 9);
+  barStack8.setPadding(3, 8, 3, 8);
   barStack8.backgroundColor = Color.purple();
   barStack8.cornerRadius = 10
   barStack8.borderColor = Color.purple();
@@ -230,6 +235,7 @@ async function createWidget(oil, data) {
   }
   totalMonthBar8.font = Font.mediumSystemFont(14);
   totalMonthBar8.textColor = new Color('#FFFFFF');
+  dataStack.addSpacer()
   return widget;
 }
 
@@ -248,7 +254,7 @@ if (fileManager.fileExists(cacheFile)) {
   
 var adjustment = `${forecast}`
 if (adjustment !== data.oil) {
-  //Notification_1
+  const notice = new Notification()
   notice.sound = 'alert'
   notice.title = `${province}油价涨跌调整‼️`
   notice.body = adjustment
