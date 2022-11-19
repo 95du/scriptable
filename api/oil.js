@@ -89,14 +89,13 @@ async function createWidget(oil, data) {
   const carIcon = noticeStack.addImage(iconSymbol2.image);
   carIcon.imageSize = new Size(29, 29);
   carIcon.tintColor = Color.black();
-  mainStack.addSpacer(12)
+  mainStack.addSpacer(10)
     
     
   // oilPrice alert ‼️
   const dataStack2 = mainStack.addStack();
   dataStack2.layoutHorizontally();
   // bar
-  dataStack2.setPadding(0, 0, 10, 0);
   const barStack1 = dataStack2.addStack();
   barStack1.setPadding(8, 10, 8, -5);
   barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
@@ -108,14 +107,14 @@ async function createWidget(oil, data) {
   oilTipsText.textColor = new Color('#484848');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
-  barStack1.addSpacer(15)
+  barStack1.addSpacer(16)
+  mainStack.addSpacer(10)
   
   
   // First column ❤️
   const dataStack = mainStack.addStack();
   // Oil_0 bar
   const barStack0 = dataStack.addStack();
-  dataStack.addSpacer(7)
   barStack0.setPadding(3, 9, 3, 9);
   barStack0.backgroundColor = new Color('#FB8C00');
   barStack0.cornerRadius = 10
@@ -139,12 +138,12 @@ async function createWidget(oil, data) {
   }
   totalMonthBar0.font = Font.mediumSystemFont(14);
   totalMonthBar0.textColor = Color.white();
+  dataStack.addSpacer(7)
   
   
   // Second column ❤️
   // Oil_92 bar
   const barStack2 = dataStack.addStack();
-  dataStack.addSpacer(7)
   barStack2.setPadding(3, 9, 3, 9);
   barStack2.backgroundColor = Color.blue();
   barStack2.cornerRadius = 10
@@ -167,12 +166,11 @@ async function createWidget(oil, data) {
   }
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#FFFFFF');
-    
+  dataStack.addSpacer(7)
     
   // Third column ❤️
   // Oil_95 bar
   const barStack5 = dataStack.addStack();
-  dataStack.addSpacer(7)
   barStack5.setPadding(3, 9, 3, 9);
   barStack5.backgroundColor = new Color('#00C853');
   barStack5.cornerRadius = 10
@@ -195,7 +193,8 @@ async function createWidget(oil, data) {
   }
   totalMonthBar5.font = Font.mediumSystemFont(14);
   totalMonthBar5.textColor = new Color('#FFFFFF');
-    
+  dataStack.addSpacer(7)
+  
     
   // Fourth column ❤️
   // Oil_98 bar
