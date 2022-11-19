@@ -76,7 +76,7 @@ async function createWidget(oil, data) {
   const mainStack = widget.addStack();
   mainStack.layoutVertically();
   const Stack = mainStack.addStack();
-  Stack.setPadding(0, 72, 0, 0);
+  Stack.addSpacer()
   // Dynamic Island bar
   const barStack = Stack.addStack();
   barStack.backgroundColor = Color.black();
@@ -97,6 +97,7 @@ async function createWidget(oil, data) {
   const carIcon = noticeStack.addImage(iconSymbol2.image);
   carIcon.imageSize = new Size(29, 29);
   carIcon.tintColor = Color.black();
+  Stack.addSpacer()
   mainStack.addSpacer(10)
     
     
