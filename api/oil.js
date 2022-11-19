@@ -4,8 +4,8 @@
 /**
 * 小组件作者: 95度茅台
 * Oil price
-* Version 1.3
-* 2022-10-14 10:30
+* Version 1.4
+* 2022-11-19 11:30
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
@@ -65,10 +65,11 @@ async function createWidget(oil, data) {
    
     
   // 灵动岛
+  widget.setPadding(6, 6, 6, 6);
   const mainStack = widget.addStack();
   mainStack.layoutVertically();
   const Stack = mainStack.addStack();
-  Stack.setPadding(0, 72, 0, 0);
+  Stack.addSpacer()
   // Dynamic Island bar
   const barStack = Stack.addStack();
   barStack.backgroundColor = Color.black();
@@ -89,15 +90,16 @@ async function createWidget(oil, data) {
   const carIcon = noticeStack.addImage(iconSymbol2.image);
   carIcon.imageSize = new Size(29, 29);
   carIcon.tintColor = Color.black();
+  Stack.addSpacer()
   mainStack.addSpacer(10)
-    
     
   // oilPrice alert ‼️
   const dataStack2 = mainStack.addStack();
   dataStack2.layoutHorizontally();
+  dataStack2.addSpacer()
   // bar
   const barStack1 = dataStack2.addStack();
-  barStack1.setPadding(8, 10, 8, -5);
+  barStack1.setPadding(8, 10, 8, 10);
   barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack1.cornerRadius = 10
   barStack1.borderColor = new Color('#D50000', 0.8);
@@ -107,12 +109,14 @@ async function createWidget(oil, data) {
   oilTipsText.textColor = new Color('#484848');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
-  barStack1.addSpacer(16)
+  //barStack1.addSpacer(16)
+  dataStack2.addSpacer()
   mainStack.addSpacer(10)
   
   
   // First column ❤️
   const dataStack = mainStack.addStack();
+  dataStack.addSpacer()
   // Oil_0 bar
   const barStack0 = dataStack.addStack();
   barStack0.setPadding(3, 9, 3, 9);
@@ -138,7 +142,7 @@ async function createWidget(oil, data) {
   }
   totalMonthBar0.font = Font.mediumSystemFont(14);
   totalMonthBar0.textColor = Color.white();
-  dataStack.addSpacer(7)
+  dataStack.addSpacer()
   
   
   // Second column ❤️
@@ -166,7 +170,7 @@ async function createWidget(oil, data) {
   }
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#FFFFFF');
-  dataStack.addSpacer(7)
+  dataStack.addSpacer()
     
   // Third column ❤️
   // Oil_95 bar
@@ -193,7 +197,7 @@ async function createWidget(oil, data) {
   }
   totalMonthBar5.font = Font.mediumSystemFont(14);
   totalMonthBar5.textColor = new Color('#FFFFFF');
-  dataStack.addSpacer(7)
+  dataStack.addSpacer()
   
     
   // Fourth column ❤️
@@ -221,6 +225,7 @@ async function createWidget(oil, data) {
   }
   totalMonthBar8.font = Font.mediumSystemFont(14);
   totalMonthBar8.textColor = new Color('#FFFFFF');
+  dataStack.addSpacer()
   return widget;
 }
 
