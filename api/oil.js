@@ -4,12 +4,10 @@
 /**
 * 小组件作者: 95度茅台
 * Oil price
-* Version 1.4
+* Version 1.2
 * 2022-11-19 11:30
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
-
-const notice = new Notification()
 
 const Req = new Request('https://mys4s.cn/v3/oil/price');
 Req.method = 'POST'
@@ -20,7 +18,7 @@ const oil = Res.data
 const req = new Request('http://m.qiyoujiage.com');
 const html = await req.loadString();
 const rule = 'var tishiContent="(.*?)";';
-const forecast = html.match(new RegExp(rule,"g")).map(str=>{
+const forecast = html.match(new RegExp(rule,"g")).map(str => {
   const forecast = str.match(new RegExp(rule));  
   const regex = /<br\/>/g;
   const value = forecast[1].split(regex)
@@ -28,6 +26,7 @@ const forecast = html.match(new RegExp(rule,"g")).map(str=>{
 });
     
 const widget = await createWidget(oil);
+
 const fileManager = FileManager.iCloud();
 const folder = fileManager.joinPath(fileManager.documentsDirectory(), "oil");
 const cacheFile = fileManager.joinPath(folder, 'data.json');
@@ -40,8 +39,8 @@ if (config.runsInWidget) {
 } else {
   await widget.presentMedium();
 }
-    
-  
+
+
 async function createWidget(oil, data) {
   // 组件背景渐变
   const widget = new ListWidget()
@@ -65,12 +64,13 @@ async function createWidget(oil, data) {
    
     
   // 灵动岛
-  widget.setPadding(6, 6, 6, 6);
+  widget.setPadding(7, 7, 7, 7);
   const mainStack = widget.addStack();
   mainStack.layoutVertically();
+  
+  // Dynamic Island bar
   const Stack = mainStack.addStack();
   Stack.addSpacer()
-  // Dynamic Island bar
   const barStack = Stack.addStack();
   barStack.backgroundColor = Color.black();
   barStack.setPadding(5, 42, 5, 42);
@@ -92,7 +92,8 @@ async function createWidget(oil, data) {
   carIcon.tintColor = Color.black();
   Stack.addSpacer()
   mainStack.addSpacer(10)
-    
+  
+  
   // oilPrice alert ‼️
   const dataStack2 = mainStack.addStack();
   dataStack2.layoutHorizontally();
@@ -109,7 +110,6 @@ async function createWidget(oil, data) {
   oilTipsText.textColor = new Color('#484848');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
-  //barStack1.addSpacer(16)
   dataStack2.addSpacer()
   mainStack.addSpacer(10)
   
@@ -142,7 +142,7 @@ async function createWidget(oil, data) {
   }
   totalMonthBar0.font = Font.mediumSystemFont(14);
   totalMonthBar0.textColor = Color.white();
-  dataStack.addSpacer()
+  dataStack.addSpacer(6)
   
   
   // Second column ❤️
@@ -170,8 +170,9 @@ async function createWidget(oil, data) {
   }
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#FFFFFF');
-  dataStack.addSpacer()
-    
+  dataStack.addSpacer(6)
+  
+  
   // Third column ❤️
   // Oil_95 bar
   const barStack5 = dataStack.addStack();
@@ -197,7 +198,7 @@ async function createWidget(oil, data) {
   }
   totalMonthBar5.font = Font.mediumSystemFont(14);
   totalMonthBar5.textColor = new Color('#FFFFFF');
-  dataStack.addSpacer()
+  dataStack.addSpacer(6)
   
     
   // Fourth column ❤️
@@ -244,7 +245,7 @@ if (fileManager.fileExists(cacheFile)) {
   
 var adjustment = `${forecast}`
 if (adjustment !== data.oil) {
-  //Notification_1
+  const notice = new Notification()
   notice.sound = 'alert'
   notice.title = '海南油价涨跌调整‼️'
   notice.body = adjustment
@@ -258,7 +259,6 @@ if (adjustment !== data.oil) {
     fileManager.writeString(cacheFile, data);
   }
 }
-  
   
 async function shadowImage(img) {
   let ctx = new DrawContext()
