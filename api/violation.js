@@ -256,13 +256,14 @@ async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient()
-    color = [
-    "#CCCC99",
-    "#757575",
-    "#4FC3F7",
-    "#99CCCC",
-    "#BCBBBB"
-    ]
+  color = [
+  "#82B1FF", 
+  "#757575", 
+  "#4FC3F7",
+  "#66CCFF",
+  "#99CCCC",
+  "#BCBBBB"
+  ]
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
   gradient.colors = [
@@ -351,13 +352,13 @@ async function createWidget() {
   }
     
 
-  // column1 barRow 5
+  // Status barRow
   const barStack = leftStack.addStack();
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
   barStack.setPadding(3, 10, 3, 10);
   if (list === undefined) {
-    // Violation Early Warning
+    // violation Early Warning
     barStack.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack.cornerRadius = 10
     barStack.borderColor = Color.green();
