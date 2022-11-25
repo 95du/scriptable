@@ -285,14 +285,14 @@ async function createWidget() {
   */
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
-  // plateStack 1
+  // plateStack
   const plateStack = leftStack.addStack();
   textPlate = plateStack.addText(myPlate)
   textPlate.font = Font.mediumSystemFont(19);
   textPlate.textColor = Color.black();
   leftStack.addSpacer(6)
 
-  // Car icon 2
+  // Car icon
   const carIconStack = leftStack.addStack();
   carIconStack.layoutHorizontally();
   carIconStack.centerAlignContent();
@@ -317,17 +317,17 @@ async function createWidget() {
   leftStack.addSpacer(3)
 
 
-  // violationPoint 3
+  // violationPoint
   const vioPointStack = leftStack.addStack();
   const vioPoint = vioPointStack.addStack();
   if (list !== undefined) {
-    vioPointText = vioPoint.addText(`罚款${vio.fine}元 ` + `扣${vio.violationPoint}分`);
+    vioPointText = vioPoint.addText(`罚款${vio.fine}元、` + `扣${vio.violationPoint}分`);
     vioPointText.font = Font.mediumSystemFont(12);
     vioPointText.textColor = new Color('#484848');
     leftStack.addSpacer(3)
   }
     
-  // update icon 4
+  // update icon
   const updateTimeStack = leftStack.addStack();
   if (list === undefined) {
     const iconSymbol2 = SFSymbol.named('person.crop.circle');
@@ -365,11 +365,11 @@ async function createWidget() {
     barStack.borderWidth = 2
       
     // bar icon
-    const barIcon = SFSymbol.named('checkmark.shield.fill');
+    const barIcon = SFSymbol.named('leaf.fill');
     const barIconElement = barStack.addImage(barIcon.image);
-    barIconElement.imageSize = new Size(15, 15);
+    barIconElement.imageSize = new Size(16, 16);
     barIconElement.tintColor = Color.green();
-    barStack.addSpacer(8);
+    barStack.addSpacer(4);
     // bar text
     const totalMonthBar = barStack.addText('无违章');
     totalMonthBar.font = Font.mediumSystemFont(14);
@@ -389,7 +389,7 @@ async function createWidget() {
   }
 
 
-  // Driver's license bar 6
+  // Driver's license bar
   const barStack2 = leftStack.addStack();
   barStack2.layoutHorizontally();
   barStack2.centerAlignContent();
@@ -401,9 +401,9 @@ async function createWidget() {
   // bsr icon
   const barIcon2 = SFSymbol.named('mail.fill');
   const barIconElement2 = barStack2.addImage(barIcon2.image);
-  barIconElement2.imageSize = new Size(15, 15);
+  barIconElement2.imageSize = new Size(16, 16);
   barIconElement2.tintColor = Color.purple();
-  barStack2.addSpacer(8);
+  barStack2.addSpacer(4);
   // bar text
   const totalMonthBar2 = barStack2.addText('驾驶证');
   totalMonthBar2.font = Font.mediumSystemFont(14);
@@ -450,7 +450,6 @@ async function createWidget() {
   textAddress.font = Font.mediumSystemFont(11.3);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
-
 
   // jump show status
   barStack2.url = get.status;
