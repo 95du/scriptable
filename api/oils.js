@@ -10,7 +10,8 @@
 */
 
 // ⚠️适配机型: 手动第10行的数字
-const value = 8 //小机型改小
+const value = 8 //小机型改成 4
+const wide = 8 //小机型改成 6
 
 const location = await Location.current();
     const locationText = await Location.reverseGeocode(
@@ -128,7 +129,7 @@ async function createWidget(oil, data) {
   dataStack.addSpacer()
   // Oil_0 bar
   const barStack0 = dataStack.addStack();
-  barStack0.setPadding(3, 8, 3, 8);
+  barStack0.setPadding(3, wide, 3, wide);
   barStack0.backgroundColor = new Color('#FB8C00');
   barStack0.cornerRadius = 10
   barStack0.borderColor = new Color('#FB8C00');
@@ -157,7 +158,7 @@ async function createWidget(oil, data) {
   // Second column ❤️
   // Oil_92 bar
   const barStack2 = dataStack.addStack();
-  barStack2.setPadding(3, 8, 3, 8);
+  barStack2.setPadding(3, wide, 3, wide);
   barStack2.backgroundColor = Color.blue();
   barStack2.cornerRadius = 10
   barStack2.borderColor = Color.blue();
@@ -185,7 +186,7 @@ async function createWidget(oil, data) {
   // Third column ❤️
   // Oil_95 bar
   const barStack5 = dataStack.addStack();
-  barStack5.setPadding(3, 8, 3, 8);
+  barStack5.setPadding(3, wide, 3, wide);
   barStack5.backgroundColor = new Color('#00C853');
   barStack5.cornerRadius = 10
   barStack5.borderColor = new Color('#00C853');
@@ -213,7 +214,7 @@ async function createWidget(oil, data) {
   // Fourth column ❤️
   // Oil_98 bar
   const barStack8 = dataStack.addStack();
-  barStack8.setPadding(3, 8, 3, 8);
+  barStack8.setPadding(3, wide, 3, wide);
   barStack8.backgroundColor = Color.purple();
   barStack8.cornerRadius = 10
   barStack8.borderColor = Color.purple();
