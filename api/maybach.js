@@ -243,11 +243,11 @@ async function createWidget() {
     barStack.borderColor = new Color('#AB47BC', 0.7);
     barStack.borderWidth = 2
     // bar icon
-    const barIcon = SFSymbol.named('checkmark.shield.fill');
+    const barIcon = SFSymbol.named('location');
     const barIconElement = barStack.addImage(barIcon.image);
-    barIconElement.imageSize = new Size(15, 15);
+    barIconElement.imageSize = new Size(16, 16);
     barIconElement.tintColor = Color.purple();
-    barStack.addSpacer(8);
+    barStack.addSpacer(4);
     // bar text
     const totalMonthBar = barStack.addText(state);
     totalMonthBar.font = Font.mediumSystemFont(14);
@@ -260,11 +260,11 @@ async function createWidget() {
     barStack.borderColor = new Color('#FF1744', 0.7);
     barStack.borderWidth = 2
     // bar icon
-    const barIcon = SFSymbol.named('checkmark.shield.fill');
+    const barIcon = SFSymbol.named('location');
     const barIconElement = barStack.addImage(barIcon.image);
-    barIconElement.imageSize = new Size(15, 15);
+    barIconElement.imageSize = new Size(16, 16);
     barIconElement.tintColor = Color.red();
-    barStack.addSpacer(8);
+    barStack.addSpacer(4);
     // bar text
     const totalMonthBar = barStack.addText(state);
     totalMonthBar.font = Font.mediumSystemFont(14);
@@ -285,9 +285,9 @@ async function createWidget() {
   // bsr icon
   const barIcon2 = SFSymbol.named('lock.shield.fill');
   const barIconElement2 = barStack2.addImage(barIcon2.image);
-  barIconElement2.imageSize = new Size(15, 15);
+  barIconElement2.imageSize = new Size(16, 16);
   barIconElement2.tintColor = Color.green();
-  barStack2.addSpacer(8);
+  barStack2.addSpacer(4);
   // bar text
   const totalMonthBar2 = barStack2.addText('已锁车');
   totalMonthBar2.font = Font.mediumSystemFont(14);
