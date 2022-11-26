@@ -26,24 +26,29 @@ BoxJs 订阅：https://raw.githubusercontent.com/FoKit/Scripts/main/boxjs/fokit.
 const notice = new Notification()
 const widget = new ListWidget()
 widget.setPadding(0, 18, -6, 10)
-  
-if (Device.isUsingDarkAppearance()) {
-  bgColor1 = '#151515'
-  bgColor2 = '#13233F'
-  textColor = '#E0E0E0'
-  barColor = '#7A7A7A'
-} else {
-  bgColor1 = '#EEEEEE'
-  bgColor2 = '#FFFFFF'
-  textColor = '#484848'
-  barColor = '#CFCFCF'
-}
+
+const bgColor1 = Color.dynamic(
+  new Color('#EEEEEE'), 
+  new Color('#151515')
+);
+const bgColor2 = Color.dynamic(
+  new Color('#FFFFFF'), 
+  new Color('#13233F')
+);
+const textColor = Color.dynamic(
+  new Color('#484848'), 
+  new Color('#E0E0E0')
+);
+const barColor = Color.dynamic(
+  new Color('#CFCFCF'), 
+  new Color('#7A7A7A')
+);
 
 const gradient = new LinearGradient()
   gradient.locations = [0, 1]
   gradient.colors = [
-    new Color(bgColor1, 0.5),
-    new Color(bgColor2)
+    bgColor1,
+    bgColor2
   ]
   widget.backgroundGradient = gradient
 
@@ -212,8 +217,8 @@ getwidget(total, balance, `剩余流量 ${bal} GB`)
 function getwidget(total, haveGone, str) {
   const titlew = widget.addText(str)
   titlew.centerAlignText()
-  titlew.textColor = new Color(textColor)
-  titlew.font = Font.boldSystemFont(12)
+  titlew.textColor = textColor
+  titlew.font = Font.boldSystemFont(13)
   widget.addSpacer(3)
   
   const imgw = widget.addImage(creatProgress(total,haveGone))
@@ -226,9 +231,9 @@ function getwidget(total, haveGone, str) {
 function creatProgress(total,havegone){
   const context = new DrawContext()
   context.size = new Size(width, h)
-  context.opaque=false
-  context.respectScreenScale=true
-  context.setFillColor(new Color(barColor))
+  context.opaque = false
+  context.respectScreenScale = true
+  context.setFillColor(barColor)
   
   const path = new Path()
   path.addRoundedRect(new Rect(0, 0, width, h), 3, 2)
