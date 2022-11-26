@@ -67,7 +67,7 @@ req.method = 'POST'
 req.headers = {"x-auth-token": `${data.token}`}
 const res = await req.loadJSON();
 console.log(res.sta)
-const ele = res.data[0]
+const ele = res.data[0] //User
 const name = ele.userName
 const code = ele.areaCode
 const id = ele.bindingId
@@ -227,7 +227,7 @@ async function createWidget() {
   const nameIconElement = nameStack.addImage(nameIcon.image);
   nameIconElement.imageSize = new Size(15, 15);
   nameIconElement.tintColor = Color.black();
-  nameStack.addSpacer(8);
+  nameStack.addSpacer(4);
   // name text
   const nameText = nameStack.addText(name);
   nameText.font = Font.mediumSystemFont(14);
@@ -247,7 +247,7 @@ async function createWidget() {
     const payIconElement = payStack.addImage(payIcon.image);
     payIconElement.imageSize = new Size(15, 15);
     payIconElement.tintColor = Color.green();
-    payStack.addSpacer(8);
+    payStack.addSpacer(4);
     // pay bar text
     const payText = payStack.addText('已缴费');
     payText.font = Font.mediumSystemFont(14);
@@ -265,7 +265,7 @@ async function createWidget() {
     const payIconElement = payStack.addImage(payIcon.image);
     payIconElement.imageSize = new Size(15, 15);
     payIconElement.tintColor = Color.red();
-    payStack.addSpacer(8);
+    payStack.addSpacer(4);
     // pay bar text
     const payText = payStack.addText(pay);
     payText.font = Font.mediumSystemFont(14);
