@@ -260,7 +260,7 @@ async function createWidget() {
     barStack.borderColor = new Color('#FF1744', 0.7);
     barStack.borderWidth = 2
     // bar icon
-    const barIcon = SFSymbol.named('location');
+    const barIcon = SFSymbol.named('location.fill');
     const barIconElement = barStack.addImage(barIcon.image);
     barIconElement.imageSize = new Size(16, 16);
     barIconElement.tintColor = Color.red();
