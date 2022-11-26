@@ -35,6 +35,10 @@ const bgColor2 = Color.dynamic(
   new Color('#FFFFFF'), 
   new Color('#13233F')
 );
+const logoColor = Color.dynamic(
+  new Color('#004A8B'), 
+  new Color('#1da0f2')
+);
 const textColor = Color.dynamic(
   new Color('#484848'), 
   new Color('#E0E0E0')
@@ -175,9 +179,7 @@ const widgetImage =
 widget.addImage(image)
 widgetImage.imageSize = new Size(130,40)
 widgetImage.centerAlignImage()
-if (Device.isUsingDarkAppearance()) {
-  widgetImage.tintColor = new Color('#1da0f2')
-}
+widgetImage.tintColor = logoColor
 
 
 const balances = new Request(get.balance);
