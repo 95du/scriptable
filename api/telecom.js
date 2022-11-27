@@ -25,7 +25,7 @@ BoxJs 订阅：https://raw.githubusercontent.com/FoKit/Scripts/main/boxjs/fokit.
 
 const notice = new Notification()
 const widget = new ListWidget()
-widget.setPadding(0, 18, -6, 10)
+widget.setPadding(0, 0, -6, 0)
 
 const bgColor1 = Color.dynamic(
   new Color('#EEEEEE'), 
@@ -173,11 +173,11 @@ async function presentMenu() {
 
 
 // Telecom Logo
-const logo = new Request(get.telecomLogo);
+const logo = new Request(get.TelecomLogo);
 const image = await logo.loadImage();
 const widgetImage = 
 widget.addImage(image)
-widgetImage.imageSize = new Size(130,40)
+widgetImage.imageSize = new Size(130,35)
 widgetImage.centerAlignImage()
 widgetImage.tintColor = logoColor
 
@@ -201,20 +201,21 @@ const res = await req.loadJSON()
 const voiceAmount = res.voiceAmount
 const voiceUsage = res.voiceUsage
 const voiceBalance = res.voiceBalance
+const voice = String(voiceBalance / voiceAmount * 100).substring(0, 2)
 
 const total = res.total / 1024000
 const used = res.used / 1024000
-const balance = res.balance / 1024000
-const string = String(balance)
-const bal = string.substring(0, 5);
+const bal = res.balance / 1024000
+const balance = String(bal).substring(0, 5);
+const flow = String(bal / total * 100).substring(0, 2);
 
 
 // Progress bar
-const width = 140
+const width = 135
 const h = 10
 
 getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance} 分钟`)
-getwidget(total, balance, `剩余流量 ${bal} GB`)
+getwidget(total, bal, `剩余流量 ${balance} GB`)
 
 function getwidget(total, haveGone, str) {
   const titlew = widget.addText(str)
@@ -224,9 +225,10 @@ function getwidget(total, haveGone, str) {
   widget.addSpacer(3)
   
   const imgw = widget.addImage(creatProgress(total,haveGone))
+  imgw.centerAlignImage()
   imgw.cornerRadius = 5.2
   imgw.imageSize = new Size(width, h)
-  widget.addSpacer(8)
+  widget.addSpacer(5)
 }
 
 
@@ -241,7 +243,7 @@ function creatProgress(total,havegone){
   path.addRoundedRect(new Rect(0, 0, width, h), 3, 2)
   context.addPath(path)
   context.fillPath()
-  context.setFillColor(new Color("#64DD17"))
+  context.setFillColor(new Color('#64DD17'))
   
   const path1 = new Path()
   path1.addRoundedRect(new Rect(0, 0, width*havegone/total, h), 3, 2)
