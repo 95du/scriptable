@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: car;
-/*
+/**
 支付宝小程序 交管12123
 小组件作者：95度茅台
 获取Token作者: @FoKit
@@ -32,7 +32,8 @@ hostname = %APPEND% miniappcsfw.122.gov.cn
 */
 
 const notice = new Notification()
-const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/violation.json')
+const apiData = new Request(atob(
+'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u'));
 const get = await apiData.loadJSON();
 const url = get.infoURL
 
@@ -445,7 +446,7 @@ async function createWidget() {
   if (list === undefined) {
     textAddress = tipsStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则');
   } else {
-    textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}` )
+    textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`)
   }
   textAddress.font = Font.mediumSystemFont(11.3);
   textAddress.textColor = new Color('#484848');
