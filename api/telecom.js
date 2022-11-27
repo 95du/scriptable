@@ -70,7 +70,7 @@ const folder = fileManager.joinPath(fileManager.documentsDirectory(), "telecom")
 const cacheFile = fileManager.joinPath(folder, 'data.json');
 
 if (fileManager.fileExists(cacheFile)) {
-  data = fileManager.readString(cacheFile)
+  data = fileManager.readString(cacheFile);
   data = JSON.parse(data);
   cookie = data.cookie.split(';')[0]
   loginUrl = data.loginUrl
@@ -131,10 +131,10 @@ async function presentMenu() {
   let alert = new Alert();
   alert.title = "中国电信余量"
   alert.message = get.Ver
-  alert.addDestructiveAction('更新代码')
-  alert.addAction('GetCookie')
-  alert.addAction('预览组件')
-  alert.addAction('退出')
+  alert.addDestructiveAction('更新代码');
+  alert.addAction('GetCookie');
+  alert.addAction('预览组件');
+  alert.addAction('退出');
   response = await alert.presentAlert();
   // menu action 1
   if (response === 1) {
@@ -146,12 +146,12 @@ async function presentMenu() {
       notice.title = '登录失败 ⚠️'
       notice.body = json.msg
       notice.sound = 'alert'
-      notice.schedule()
+      notice.schedule();
       return;
     }
   }
   if (response === 2) {
-    await widget.presentSmall()
+    await widget.presentSmall();
   }
   if (response === 3) return;
   if (response === 0) {
@@ -162,14 +162,14 @@ async function presentMenu() {
     const finish = new Alert();
     if (codeString.indexOf("中国电信") == -1) {
       finish.title = "更新失败"
-      finish.addAction('OK')
+      finish.addAction('OK');
       await finish.presentAlert();
     } else {
-      FILE_MGR.writeString(module.filename, codeString)
+      FILE_MGR.writeString(module.filename, codeString);
       finish.title = "更新成功"
-      finish.addAction('OK')
+      finish.addAction('OK');
       await finish.presentAlert();
-      const Name = 'telecom';
+      const Name = 'telecom'
       Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     }
   }
@@ -180,32 +180,32 @@ async function presentMenu() {
 const logo = new Request(get.TelecomLogo);
 const image = await logo.loadImage();
 const widgetImage = 
-widget.addImage(image)
-widgetImage.imageSize = new Size(130,35)
-widgetImage.centerAlignImage()
+widget.addImage(image);
+widgetImage.imageSize = new Size(130,35);
+widgetImage.centerAlignImage();
 widgetImage.tintColor = logoColor
 
 
 const balances = new Request(get.balance);
 balances.method = 'GET'
 //balances.headers = {"Cookie": `${cookie}`}
-const money = await balances.loadJSON()
+const money = await balances.loadJSON();
 const balanceAvailable = money.totalBalanceAvailable / 100
-const balText = widget.addText('￥' + balanceAvailable)
-balText.textColor = Color.orange()
-balText.font = Font.boldSystemFont(22)
-balText.centerAlignText()
+const balText = widget.addText('￥' + balanceAvailable);
+balText.textColor = Color.orange();
+balText.font = Font.boldSystemFont(22);
+balText.centerAlignText();
 widget.addSpacer(3)
 
 
 const req = new Request(get.surplus);
 req.method = 'POST'
 //req.headers = {"Cookie": `${cookie}`}
-const res = await req.loadJSON()
+const res = await req.loadJSON();
 const voiceAmount = res.voiceAmount
 const voiceUsage = res.voiceUsage
 const voiceBalance = res.voiceBalance
-const voice = String(voiceBalance / voiceAmount * 100).substring(0, 2)
+const voice = String(voiceBalance / voiceAmount * 100).substring(0, 2);
 
 const total = res.total / 1024000
 const used = res.used / 1024000
@@ -218,18 +218,18 @@ const flow = String(bal / total * 100).substring(0, 2);
 const width = 135
 const h = 10
 
-getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance} 分钟`)
-getwidget(total, bal, `剩余流量 ${balance} GB`)
+getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance} 分钟`);
+getwidget(total, bal, `剩余流量 ${balance} GB`);
 
 function getwidget(total, haveGone, str) {
-  const titlew = widget.addText(str)
-  titlew.centerAlignText()
+  const titlew = widget.addText(str);
+  titlew.centerAlignText();
   titlew.textColor = textColor
-  titlew.font = Font.boldSystemFont(13)
+  titlew.font = Font.boldSystemFont(13);
   widget.addSpacer(3)
   
-  const imgw = widget.addImage(creatProgress(total,haveGone))
-  imgw.centerAlignImage()
+  const imgw = widget.addImage(creatProgress(total,haveGone));
+  imgw.centerAlignImage();
   imgw.cornerRadius = 5.2
   imgw.imageSize = new Size(width, h)
   widget.addSpacer(5)
@@ -237,28 +237,28 @@ function getwidget(total, haveGone, str) {
 
 
 function creatProgress(total,havegone){
-  const context = new DrawContext()
-  context.size = new Size(width, h)
+  const context = new DrawContext();
+  context.size = new Size(width, h);
   context.opaque = false
   context.respectScreenScale = true
-  context.setFillColor(barColor)
+  context.setFillColor(barColor);
   
-  const path = new Path()
-  path.addRoundedRect(new Rect(0, 0, width, h), 3, 2)
-  context.addPath(path)
-  context.fillPath()
+  const path = new Path();
+  path.addRoundedRect(new Rect(0, 0, width, h), 3, 2);
+  context.addPath(path);
+  context.fillPath();
   context.setFillColor(progressColor)
   
-  const path1 = new Path()
-  path1.addRoundedRect(new Rect(0, 0, width*havegone/total, h), 3, 2)
-  context.addPath(path1)
-  context.fillPath()
-  return context.getImage()
+  const path1 = new Path();
+  path1.addRoundedRect(new Rect(0, 0, width*havegone/total, h), 3, 0);
+  context.addPath(path1);
+  context.fillPath();
+  return context.getImage();
 }
 
 if (config.runsInWidget) {
-  Script.setWidget(widget)
-  Script.complete()
+  Script.setWidget(widget);
+  Script.complete();
 } else {
-  await presentMenu()
+  await presentMenu();
 }
