@@ -4,7 +4,7 @@
 /**
 脚本名称：中国电信 Cookie
 更新时间：2022-11-11
-小组件作者：阿祖
+小组件作者：95度茅台
 获取Token作者: @FoKit
 Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 
@@ -46,6 +46,10 @@ const textColor = Color.dynamic(
 const barColor = Color.dynamic(
   new Color('#CFCFCF'), 
   new Color('#7A7A7A')
+);
+const progressColor = Color.dynamic(
+  new Color('#34C759'),
+  new Color('#00b100')
 );
 
 const gradient = new LinearGradient()
@@ -95,7 +99,7 @@ if (!fileManager.fileExists(cacheFile)) {
   if (!cookie) {
     let loginAlert = new Alert();
     loginAlert.title = '中国电信';
-    loginAlert.message = `\r\n注 : 自动获取天翼账号中心Cookie需要Quantumult-X / Surge 辅助运行\n\n具体方法请查看小组件代码开头注释\n\r\n小组件作者: 阿祖\n获取Cookie作者: @FoKit`;
+    loginAlert.message = `\r\n注 : 自动获取天翼账号中心Cookie需要Quantumult-X / Surge 辅助运行\n\n具体方法请查看小组件代码开头注释\n\r\n小组件作者: 95度茅台\n获取Cookie作者: @FoKit`;
     loginAlert.addAction('获取Cookie');
     loginAlert.addCancelAction('取消');
     loginAction = await loginAlert.presentAlert();
@@ -243,7 +247,7 @@ function creatProgress(total,havegone){
   path.addRoundedRect(new Rect(0, 0, width, h), 3, 2)
   context.addPath(path)
   context.fillPath()
-  context.setFillColor(new Color('#64DD17'))
+  context.setFillColor(progressColor)
   
   const path1 = new Path()
   path1.addRoundedRect(new Rect(0, 0, width*havegone/total, h), 3, 2)
