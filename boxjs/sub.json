@@ -1,29 +1,30 @@
 {
-    "id": "95du.app.sub",
-    "name": "95度茅台应用订阅",
-    "author": "@95度茅台",
-    "icon": "https://gitcode.net/4qiao/shortcuts/raw/master/icon/4qiao.png",
+    "id": "95du.app.sub", 
+    "name": "95度茅台应用订阅", 
+    "author": "@95度茅台", 
+    "icon": "https://gitcode.net/4qiao/shortcuts/raw/master/icon/4qiao.png", 
+    "repo": "https://gitcode.net/4qiao/scriptable", 
     "apps": [
         {
-            "id": "token_12123",
-            "name": "交管12123_Token",
-            "author": "@95茅台",
+            "id": "token_12123", 
+            "name": "交管12123_Token", 
+            "author": "@95茅台", 
             "descs_html": [
                 "交管12123_Token"
-            ],
+            ], 
             "icons": [
-                "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png",
+                "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png", 
                 "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png"
-            ],
+            ], 
             "keys": [
                 "token_12123"
-            ],
+            ], 
             "settings": [
                 {
-                    "id": "token_12123",
-                    "name": "交管12123_Token",
-                    "val": "",
-                    "type": "text",
+                    "id": "token_12123", 
+                    "name": "交管12123_Token", 
+                    "val": "", 
+                    "type": "text", 
                     "desc": ""
                 }
             ]
