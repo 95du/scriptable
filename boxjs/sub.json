@@ -1,30 +1,86 @@
 {
-    "id": "95du.app.sub", 
-    "name": "95度茅台应用订阅", 
-    "author": "@95度茅台", 
-    "icon": "https://gitcode.net/4qiao/shortcuts/raw/master/icon/4qiao.png", 
-    "repo": "https://gitcode.net/4qiao/scriptable", 
+    "id": "fokit.app.sub",
+    "name": "95度茅台应用订阅",
+    "author": "@FoKit",
+    "icon": "https://gitcode.net/4qiao/shortcuts/raw/master/icon/4qiao.png",
+    "repo": "https://gitcode.net/4qiao/scriptable",
     "apps": [
         {
-            "id": "token_12123", 
-            "name": "交管12123_Token", 
-            "author": "@95茅台", 
+            "id": "token_12123",
+            "name": "交管12123_Token",
+            "author": "@FoKit",
             "descs_html": [
                 "交管12123_Token"
-            ], 
+            ],
             "icons": [
-                "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png", 
+                "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png",
                 "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png"
-            ], 
+            ],
             "keys": [
                 "token_12123"
-            ], 
+            ],
             "settings": [
                 {
-                    "id": "token_12123", 
-                    "name": "交管12123_Token", 
-                    "val": "", 
-                    "type": "text", 
+                    "id": "token_12123",
+                    "name": "交管12123_Token",
+                    "val": "",
+                    "type": "text",
+                    "desc": ""
+                }
+            ]
+        },
+        {
+            "id": "china_telecom",
+            "name": "中国电信",
+            "author": "@FoKit",
+            "descs_html": [
+                "中国电信 Cookie"
+            ],
+            "icons": [
+                "https://raw.githubusercontent.com/FoKit/Scripts/main/images/china_telecom.png",
+                "https://raw.githubusercontent.com/FoKit/Scripts/main/images/china_telecom.png"
+            ],
+            "keys": [
+                "china_telecom_cookie",
+                "china_telecom_login_url"
+            ],
+            "settings": [
+                {
+                    "id": "china_telecom_cookie",
+                    "name": "Cookie",
+                    "val": "",
+                    "type": "text",
+                    "desc": ""
+                },
+                {
+                    "id": "china_telecom_login_url",
+                    "name": "Login_url",
+                    "val": "",
+                    "type": "text",
+                    "desc": ""
+                }
+            ]
+        },
+        {
+            "id": "token_95598",
+            "name": "南网在线Token",
+            "author": "@FoKit",
+            "descs_html": [
+                "南网在线Token"
+            ],
+            "icons": [
+                "https://raw.githubusercontent.com/FoKit/Scripts/main/images/95598.png",
+                "https://raw.githubusercontent.com/FoKit/Scripts/main/images/95598.png"
+            ],
+            "keys": [
+                "token_95598"
+            ],
+            "settings": [
+                {
+                    "id": "token_95598",
+                    "name": "南网在线Token",
+                    "val": "",
+                    "type": "text",
                     "desc": ""
                 }
             ]
