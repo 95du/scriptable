@@ -6,7 +6,7 @@
     "repo": "https://gitcode.net/4qiao/scriptable", 
     "apps": [
         {
-            "id": "12123_token", 
+            "id": "token_12123", 
             "name": "交管12123_Token", 
             "author": "@95茅台", 
             "descs_html": [
@@ -17,11 +17,11 @@
                 "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png"
             ], 
             "keys": [
-                "12123_token"
+                "token_12123"
             ], 
             "settings": [
                 {
-                    "id": "12123_token", 
+                    "id": "token_12123", 
                     "name": "交管12123_Token", 
                     "val": "", 
                     "type": "text", 
