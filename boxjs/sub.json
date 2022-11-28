@@ -21,7 +21,7 @@
             ], 
             "settings": [
                 {
-                    "id": "token_12123", 
+                    "id": "12123_token", 
                     "name": "交管12123_Token", 
                     "val": "", 
                     "type": "text", 
