@@ -76,7 +76,7 @@ async function main() {
             url: item.scriptURL,
           });
           if (isWrite) {
-            notify("下载提示", `插件:${item.title}下载/更新成功`);
+            notify("下载提示", `小组件:${item.title}下载/更新成功`);
           }
         };
         r.addCell(downloadCell);
@@ -91,8 +91,8 @@ async function main() {
   const Run = async () => {
     try {
       const mainAlert = new Alert();
-      mainAlert.title = "组件下载";
-      mainAlert.message = "可以自行添加订阅地址";
+      mainAlert.title = "小组件下载";
+      mainAlert.message = "可自行添加订阅地址";
       const cacheKey = "subscriptionList";
       const render = async () => {
         let subscriptionList = [];
@@ -159,14 +159,14 @@ async function main() {
   };
   (async () => {
     try {
-      console.log("自更新开始");
+      console.log("自动更新开始");
       const modules = {
         moduleName: "widget.Install",
         url:
           "https://gitcode.net/4qiao/scriptable/raw/master/api/installScript.js",
       };
       const result = await saveFile(modules);
-      if (result) console.log("🤖自更新成功");
+      if (result) console.log("自动更新成功");
     } catch (e) {
       console.log(e);
     }
