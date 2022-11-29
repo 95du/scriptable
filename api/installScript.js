@@ -166,7 +166,7 @@ const Run = async () => {
     const modules = {
       moduleName: "widget.Install",
       url:
-        "https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js",
+        "https://gitcode.net/4qiao/scriptable/raw/master/api/installScript.js",
     };
     const result = await saveFile(modules);
     if (result) console.log("🤖自更新成功");
