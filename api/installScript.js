@@ -1,10 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: pink; icon-glyph: cloud-download-alt;
-/**
-* DmYY 小组件订阅地址 : https://raw.githubusercontent.com/dompling/Scriptable/master/install.json
-*/
-
 const Files = FileManager.iCloud();
 const RootPath = Files.documentsDirectory();
 
@@ -162,14 +158,14 @@ const Run = async () => {
 };
 (async () => {
   try {
-    console.log("自更新开始");
+    console.log("自动更新开始");
     const modules = {
       moduleName: "widget.Install",
       url:
         "https://gitcode.net/4qiao/scriptable/raw/master/api/installScript.js",
     };
     const result = await saveFile(modules);
-    if (result) console.log("🤖自更新成功");
+    if (result) console.log("自动更新成功");
   } catch (e) {
     console.log(e);
   }
