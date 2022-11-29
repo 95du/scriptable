@@ -75,7 +75,7 @@ const renderTableList = async (data) => {
           url: item.scriptURL,
         });
         if (isWrite) {
-          notify("下载提示", `插件:${item.title}下载/更新成功`);
+          notify("下载提示", `小组件:${item.title}下载/更新成功`);
         }
       };
       r.addCell(downloadCell);
@@ -91,7 +91,7 @@ const Run = async () => {
   try {
     const mainAlert = new Alert();
     mainAlert.title = "组件下载";
-    mainAlert.message = "可以自行添加订阅地址";
+    mainAlert.message = "可自行添加订阅地址";
     const cacheKey = "subscriptionList";
     const render = async () => {
       let subscriptionList = [];
