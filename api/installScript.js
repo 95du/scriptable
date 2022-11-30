@@ -1,6 +1,10 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: pink; icon-glyph: cloud-download-alt;
+const bgColor = Color.dynamic(
+  new Color('#F5F5F5'), 
+  new Color('#000000')
+);
 const Files = FileManager.iCloud();
 const RootPath = Files.documentsDirectory();
 
@@ -35,13 +39,52 @@ const notify = async (title, body, url, opts = {}) => {
 const renderTableList = async (data) => {
   try {
     const table = new UITable();
+    table.showSeparators = true;
+    
+    const authorRow = new UITableRow();
+    authorRow.height = 90;
+    const authorImage = authorRow.addImageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/4qiao.png');
+    authorImage.widthWeight = 0.4;
+    authorImage.centerAligned();
+    authorRow.backgroundColor = bgColor
+    table.addRow(authorRow);
+    
+    // topRow
+    const topRow = new UITableRow();
+    topRow.height = 60;
+    const leftText = topRow.addButton('示例图');
+    leftText.widthWeight = 0.3;
+    leftText.onTap = async () => {
+      await Safari.openInApp(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci9pbWcvcGljdHVyZS9FeGFtcGxlLnBuZw=='), false);
+    };
+    
+    const centerRow = topRow.addText(data.author)
+    centerRow.widthWeight = 0.3;
+    centerRow.centerAligned();
+    centerRow.titleFont = Font.boldSystemFont(18);
+    centerRow.titleColor = Color.orange();
+    
+    const rightText = topRow.addButton('电报群');
+    rightText.widthWeight = 0.3;
+    rightText.rightAligned();
+    rightText.onTap = async () => {
+      await Safari.openInApp('https://t.me/+ViT7uEUrIUV0B_iy', false);
+    };
+    table.addRow(topRow);
+    
+    // interval
+    const gapRow = new UITableRow();
+    gapRow.height = 30;
+    gapRow.backgroundColor = bgColor
+    table.addRow(gapRow);
+    
     // 如果是节点，则先远程获取
     const req = new Request(data.subscription);
     const subscription = await req.loadJSON();
     const apps = subscription.apps;
     apps.forEach((item) => {
       const r = new UITableRow();
-      r.height = 75;
+      r.height = 60;
       const imgCell = UITableCell.imageAtURL(item.thumb);
       imgCell.centerAligned();
       r.addCell(imgCell);
@@ -81,16 +124,28 @@ const renderTableList = async (data) => {
       r.addCell(downloadCell);
       table.addRow(r);
     });
+    
+    // bottom interval
+    const bottom = new UITableRow();
+    bottom.height = 300;
+    bottom.backgroundColor = bgColor
+    const bottomText = bottom.addText('Copyright © 2022 界面修改自·@DmYY');
+    bottomText.widthWeight = 0.3;
+    bottomText.centerAligned();
+    bottomText.titleFont = Font.boldMonospacedSystemFont(12);
+    bottomText.titleColor = Color.gray();
+    table.addRow(bottom);
     table.present(false);
   } catch (e) {
     console.log(e);
     notify("错误提示", "订阅获取失败");
   }
 };
+
 const Run = async () => {
   try {
     const mainAlert = new Alert();
-    mainAlert.title = "组件下载";
+    mainAlert.title = "小组件下载";
     mainAlert.message = "可自行添加订阅地址";
     const cacheKey = "subscriptionList";
     const render = async () => {
@@ -102,7 +157,7 @@ const Run = async () => {
       console.log(subscriptionList);
       subscriptionList.forEach((item) => {
         const { author } = item;
-        mainAlert.addAction("作者：" + author);
+        mainAlert.addAction(author);
         _actions.push(async () => {
           await renderTableList(item);
         });
@@ -142,8 +197,8 @@ const Run = async () => {
           notify("错误提示", "订阅地址错误，不是一个 JSON 格式");
         }
       });
-
-      mainAlert.addAction("添加订阅");
+      // Main Menu
+      mainAlert.addDestructiveAction("添加订阅");
       mainAlert.addCancelAction("取消操作");
       const _actionsIndex = await mainAlert.presentSheet();
       if (_actions[_actionsIndex]) {
@@ -156,6 +211,7 @@ const Run = async () => {
     console.log("缓存读取错误" + e);
   }
 };
+
 (async () => {
   try {
     console.log("自动更新开始");
@@ -170,4 +226,5 @@ const Run = async () => {
     console.log(e);
   }
 })();
+
 await Run();
