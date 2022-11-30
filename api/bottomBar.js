@@ -10,6 +10,8 @@
 * 小组件作者：95度茅台
 */
 
+// 小机型修改第11行中的[70]⚠️
+const stackSize = new Size(0, 70);
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
@@ -18,7 +20,6 @@ const eventTextColor = Color.dynamic(
   new Color('#1e1e1e'), 
   new Color('#fefefe')
 );
-const stackSize = new Size(0, 70);
 
 
 try {
