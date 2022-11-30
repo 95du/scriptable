@@ -24,7 +24,7 @@ const stackSize = new Size(0, 70);
 try {
   // Conversion GPS  
   const location = await Location.current();
-  convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${location.longitude},${location.latitude}`);
+  convert = await getJson(`https://restapi.amap.com/v3/assistant/coordinate/convert?coordsys=gps&output=json&key=a35a9538433a183718ce973382012f55&locations=${location.longitude},${location.latitude}`);
   widget = await createWidget();
 } catch(e) {
   console.error(e);
@@ -63,6 +63,7 @@ async function createWidget() {
   // WeChat icon
   const imageElement = eventStack.addImage(weChat);
   imageElement.imageSize = new Size(42, 42);
+  imageElement.url = 'https://html5.moji.com/tpd/mojiweatheraggr/index.html#/home'
   eventStack.addSpacer(10);
   
   // Two Hours Weather
@@ -71,8 +72,6 @@ async function createWidget() {
   twoHoursStack.centerAlignContent();
   const weatherText = twoHoursStack.addText(result.radarData.title);
   weatherText.font = Font.boldSystemFont(14);
-  weatherText.textColor = eventTextColor
-  weatherText.textOpacity = 0.9
   
   // Two Hours Weather
   twoHoursStack.addSpacer(2);
