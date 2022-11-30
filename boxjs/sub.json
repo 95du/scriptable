@@ -2,7 +2,7 @@
     "id": "fokit.app.sub",
     "name": "95度茅台应用订阅",
     "author": "@FoKit",
-    "icon": "https://gitcode.net/4qiao/shortcuts/raw/master/icon/4qiao.png",
+    "icon": "https://gitcode.net/4qiao/framework/raw/master/img/icon/4qiao.png",
     "repo": "https://gitcode.net/4qiao/scriptable",
     "apps": [
         {
