@@ -1,8 +1,4 @@
 async function main() {
-  // Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: cloud-download-alt;
-async function main() {
   const bgColor = Color.dynamic(
     new Color('#F5F5F5'), 
     new Color('#000000')
@@ -232,11 +228,6 @@ async function main() {
   await Run();
 }
   
-module.exports = {
-  main
-}
-}
-
 module.exports = {
   main
 }
