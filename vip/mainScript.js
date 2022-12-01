@@ -42,30 +42,34 @@ async function main() {
       const table = new UITable();
       table.showSeparators = true;
       
-      const authorRow = new UITableRow();
-      authorRow.height = 90;
-      const authorImage = authorRow.addImageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/4qiao.png');
-      authorImage.widthWeight = 0.4;
-      authorImage.centerAligned();
-      authorRow.backgroundColor = bgColor
-      table.addRow(authorRow);
+      const gifRow = new UITableRow();
+      gifRow.height = 240;
+      const gifImage = gifRow.addImageAtURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzEvQzgvQ2g0RnlXT0k2b0NBZjRQMUFFZ0trSzZxVVVrNTQyLmdpZg=='));
+      gifImage.widthWeight = 0.4;
+      gifImage.centerAligned();
+  
+      table.addRow(gifRow);
+      
+      // interval
+      const gapRow1 = new UITableRow();
+      gapRow1.height = 30;
+      gapRow1.backgroundColor = bgColor
+      table.addRow(gapRow1);
       
       // topRow
       const topRow = new UITableRow();
-      topRow.height = 60;
+      topRow.height = 70;
       const leftText = topRow.addButton('示例图');
       leftText.widthWeight = 0.3;
       leftText.onTap = async () => {
-        let webView = new WebView();
+        const webView = new WebView();
         await webView.loadURL(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci9pbWcvcGljdHVyZS9FeGFtcGxlLnBuZw=='));
         await webView.present(false);
       };
       
-      const centerRow = topRow.addText(data.author)
-      centerRow.widthWeight = 0.3;
-      centerRow.centerAligned();
-      centerRow.titleFont = Font.boldSystemFont(18);
-      //centerRow.titleColor = Color.blue();
+      const authorImage = topRow.addImageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/4qiao.png');
+      authorImage.widthWeight = 0.4;
+      authorImage.centerAligned();
       
       const rightText = topRow.addButton('电报群');
       rightText.widthWeight = 0.3;
@@ -76,10 +80,10 @@ async function main() {
       table.addRow(topRow);
       
       // interval
-      const gapRow = new UITableRow();
-      gapRow.height = 30;
-      gapRow.backgroundColor = bgColor
-      table.addRow(gapRow);
+      const gapRow2 = new UITableRow();
+      gapRow2.height = 30;
+      gapRow2.backgroundColor = bgColor
+      table.addRow(gapRow2);
       
       // 如果是节点，则先远程获取
       const req = new Request(data.subscription);
@@ -130,7 +134,7 @@ async function main() {
       
       // bottom interval
       const bottom = new UITableRow();
-      bottom.height = 300;
+      bottom.height = 225;
       bottom.backgroundColor = bgColor
       const bottomText = bottom.addText('Copyright © 2022 界面修改自·@DmYY');
       bottomText.widthWeight = 0.3;
@@ -232,7 +236,7 @@ async function main() {
   
   await Run();
 }
-  
+    
 module.exports = {
   main
 }
