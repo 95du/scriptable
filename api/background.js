@@ -121,6 +121,28 @@ function cropImage(img, rect) {
 // Pixel sizes and positions for widgets on all supported phones.
 function phoneSizes() {
   let phones = {
+    // 14 Pro Max
+    2796: { 
+      小号: 510, 
+      中号: 1092, 
+      大号: 1146, 
+      左边: 99, 
+      右边: 681, 
+      顶部: 282, 
+      中间: 918, 
+      底部: 1554
+    },
+    // 14 Pro
+    2556: { 
+      小号: 474, 
+      中号: 1014, 
+      大号: 1062, 
+      左边: 82, 
+      右边: 622, 
+      顶部: 270, 
+      中间: 858, 
+      底部: 1446
+    },
     // 11 Pro Max,Xs Max
     2688: {
       小号: 507,
