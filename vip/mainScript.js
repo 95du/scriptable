@@ -1,3 +1,6 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: teal; icon-glyph: cloud-download-alt;
 async function main() {
   const bgColor = Color.dynamic(
     new Color('#F5F5F5'), 
@@ -53,7 +56,9 @@ async function main() {
       const leftText = topRow.addButton('示例图');
       leftText.widthWeight = 0.3;
       leftText.onTap = async () => {
-        await Safari.openInApp(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci9pbWcvcGljdHVyZS9FeGFtcGxlLnBuZw=='), false);
+        let webView = new WebView();
+        await webView.loadURL(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci9pbWcvcGljdHVyZS9FeGFtcGxlLnBuZw=='));
+        await webView.present(false);
       };
       
       const centerRow = topRow.addText(data.author)
