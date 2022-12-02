@@ -64,9 +64,10 @@ const Month = new Date().getMonth() + 1;
 // UserInfo
 const req = new Request('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers');
 req.method = 'POST'
-req.headers = {"x-auth-token": `${data.token}`}
+req.headers = {
+  "x-auth-token": `${data.token}`
+}
 const res = await req.loadJSON();
-console.log(res.sta)
 const ele = res.data[0] //User
 const name = ele.userName
 const code = ele.areaCode
@@ -77,10 +78,12 @@ const number = ele.eleCustNumber
 // Yesterday
 const yesterday = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPointYesterday');
 yesterday.method = 'POST'
-yesterday.headers = {"x-auth-token": `${data.token}`,"Content-Type":"application/json;charset=utf-8"}
+yesterday.headers = {
+  "x-auth-token": `${data.token}`,
+  "Content-Type":"application/json;charset=utf-8"}
 yesterday.body = `{
-    "areaCode": "${code}", 
-    "eleCustId": "${id}"
+  "areaCode": "${code}",
+  "eleCustId": "${id}"
 }`
 const resY = await yesterday.loadJSON();
 const Y = resY.data
@@ -94,7 +97,9 @@ if (Y === null) {
 // queryMeteringPoint
 const point = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryMeteringPoint');
 point.method = 'POST'
-point.headers = {"x-auth-token": `${data.token}`,"Content-Type":"application/json;charset=utf-8"}
+point.headers = {
+  "x-auth-token": `${data.token}`,
+  "Content-Type":"application/json;charset=utf-8"}
 point.body = `{
   "areaCode" : "${code}",
   "eleCustNumberList" : [
@@ -111,7 +116,9 @@ const P = resP.data[0]
 // Month
 const month = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint');
 month.method = 'POST'
-month.headers = {"x-auth-token": `${data.token}`,"Content-Type":"application/json;charset=utf-8"}
+month.headers = {
+  "x-auth-token": `${data.token}`,
+  "Content-Type":"application/json;charset=utf-8"}
 month.body = `{
   "eleCustId" : "${id}",
   "areaCode" : "${code}",
@@ -125,15 +132,17 @@ if (M === null) {
 } else {
   totalPower = M.totalPower
 }
-  
+
   
 // UserAccountNumberSurplus
 const balance = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus');
 balance.method = 'POST'
-balance.headers = {"x-auth-token": `${data.token}`,"Content-Type":"application/json;charset=utf-8"}
-  balance.body = `{
-    "areaCode": "${code}", 
-    "eleCustId": "${id}"
+balance.headers = {
+  "x-auth-token": `${data.token}`,
+  "Content-Type":"application/json;charset=utf-8"}
+balance.body = `{
+  "areaCode": "${code}",
+  "eleCustId": "${id}"
 }`
 const resB = await balance.loadJSON();
 const Bdata = resB.data
@@ -143,27 +152,24 @@ if (Bdata === null) {
   B = resB.data[0]
   bal = B.balance
 }
-  
+
 
 // selectElecBill
-const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryCharges');
+const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
 elecBill.method = 'POST'
-elecBill.headers = {"x-auth-token": `${data.token}`,"Content-Type":"application/json;charset=utf-8"}
+elecBill.headers = {
+  "x-auth-token": `${data.token}`,
+  "Content-Type":"application/json;charset=utf-8"}
 elecBill.body = `{
-    "type": "0", 
-    "areaCode": "${code}", 
-    "eleModels": [
-    {
-      "areaCode" : "${code}",
-      "eleCustId" : "${id}"
-    }
-  ]
+  "electricityBillYear" : "${Year}",
+  "areaCode" : "${code}",
+  "eleCustId" : "${id}"
 }`
 const resBill = await elecBill.loadJSON();
-const bill = resBill.data[0].points[0]
-const total = bill.billingElectricity
+const bill = resBill.data.billUserAndYear[0]
+const total = bill.totalPower
 const pay = bill.arrears
-const arrears = bill.receieElectricity
+const arrears = bill.totalElectricity
 
 
 // create Widget
