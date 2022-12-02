@@ -51,7 +51,7 @@ async function presentMenu() {
     tutorial.title = '使用教程';
     tutorial.message = get.msg
     tutorial.addDestructiveAction('多功能捷径');
-    tutorial.addAction('一键上传代码');
+    tutorial.addAction('上传代码捷径');
     tutorial.addAction('取消');
     index = await tutorial.presentAlert();
     if (index === 0) {
