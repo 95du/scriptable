@@ -14,7 +14,7 @@ const apiData = new Request(atob(
 const get = await apiData.loadJSON();
 
 const F_MGR = FileManager.iCloud();
-const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), 'userScript');
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duScript');
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
 if (F_MGR.fileExists(cacheFile)) {
@@ -30,9 +30,25 @@ const scriptName = 'Random';
 const scriptUrl = mainScript
 const modulePath = await downloadModule(scriptName, scriptUrl);
 if (modulePath != null) {
-  await presentMenu()
+  if (config.runsInWidget) {
+    const importedModule = importModule(modulePath);
+    await importedModule.main();
+  } else {
+    await presentMenu();
+  }
 } else {
   console.log('下载新模块失败');
+}
+
+
+async function notify (title, body, url, opts = {}) {
+  let n = new Notification()
+  n = Object.assign(n, opts);
+  n.title = title
+  n.body = body
+  n.sound = 'alert'
+  if (url) n.openURL = url
+  return await n.schedule();
 }
 
 
@@ -47,24 +63,10 @@ async function presentMenu() {
   alert.addAction('退出');
   response = await alert.presentAlert();
   if (response === 1) {
-    const tutorial = new Alert();  
-    tutorial.title = '使用教程';
-    tutorial.message = get.msg
-    tutorial.addDestructiveAction('多功能捷径');
-    tutorial.addAction('上传代码捷径');
-    tutorial.addAction('取消');
-    index = await tutorial.presentAlert();
-    if (index === 0) {
-      await Safari.open(get.shortcuts1);
-    }
-    if (index === 1) {
-      await Safari.open(get.shortcuts2);
-    }
-    return;
-  } // End of tutorial
-  
+    await shortcutsTutorial();
+  }
   if (response === 2) {
- await addScriptURL();
+    await addScriptURL();
   }
   if (response === 3) {
     const importedModule = importModule(modulePath);
@@ -73,29 +75,45 @@ async function presentMenu() {
   if (response === 4) return;
   // Update the code
   if (response === 0) {
-    const FILE_MGR = FileManager.local()
+    const FILE_MGR = FileManager.local();
     const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(get.update);
-    const codeString = await reqUpdate.loadString()  
-    const finish = new Alert();
+    const codeString = await reqUpdate.loadString();
     if (codeString.indexOf('95度茅台') == -1) {
-      finish.title = "更新失败"
-      finish.addAction('OK')
-      await finish.presentAlert();
+      notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
       FILE_MGR.writeString(module.filename, codeString)
-      finish.title = "更新成功"
-      finish.addAction('OK')
-      await finish.presentAlert();
+      notify('小组件更新成功', '');
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
 }
 
 
+async function shortcutsTutorial() {
+  const tutorial = new Alert();  
+  tutorial.title = '使用教程';
+  tutorial.message = get.msg
+  tutorial.addDestructiveAction('重置所有数据');
+  tutorial.addAction('多功能捷径');
+  tutorial.addAction('取消');
+  index = await tutorial.presentAlert();
+  if (index === 0) {
+    F_MGR.remove(folder);
+    notify('已重置数据', '请重新添加小组件URL');
+  }
+  if (index === 1) {
+    Safari.open(get.shortcuts1);
+  }
+  if (index === 2) {
+    Safari.open(get.shortcuts2);
+  }
+}
+
+
 async function addScriptURL() {
   const input = new Alert();
-  const URL = Pasteboard.paste()
+  const URL = Pasteboard.paste();
   input.title = '添加小组件URL';
   input.addTextField('输入URL', URL);
   input.addAction('确定');
@@ -104,12 +122,16 @@ async function addScriptURL() {
   const url = input.textFieldValue(0)
   if (install === 0) {
     if (!F_MGR.fileExists(folder)) {
-      F_MGR.createDirectory(folder) 
+      F_MGR.createDirectory(folder);
     };
-    (F_MGR.fileExists(cacheFile)) ? arr = script : arr = new Array()
-    arr.push(url)
-    mainScript = JSON.stringify(arr);
-    F_MGR.writeString(cacheFile, mainScript);  
+    (F_MGR.fileExists(cacheFile)) ? arr = script : arr = new Array();
+    const javaScript = url.substring(url.lastIndexOf(".") + 1);
+    if (javaScript === 'js') {
+      arr.push(url);
+      const mainScript = JSON.stringify(arr);
+      F_MGR.writeString(cacheFile, mainScript);  
+      notify('添加成功', '点击预览测试新组件');
+    }
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
 }
