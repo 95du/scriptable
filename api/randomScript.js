@@ -5,24 +5,113 @@
 * 小组件作者: 95度茅台
 * 随机自动切换多个小组件
 * Version 1.0
-* 2022-12-01 15:30
+* 2022-12-02 15:30
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
 const apiData = new Request(atob(
 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3JhbmRvbS5qc29u'));
 const get = await apiData.loadJSON();
-const items = get.script[Math.floor(Math.random()*get.script.length)];
 
+const F_MGR = FileManager.iCloud();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), 'userScript');
+const cacheFile = F_MGR.joinPath(folder, 'data.json');
+
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile)
+  script = JSON.parse(data);
+  mainScript = script[Math.floor(Math.random()*script.length)];
+} else {
+  mainScript = get.script[Math.floor(Math.random()*get.script.length)];
+}
+
+const uri = Script.name()
 const scriptName = 'Random';
-const scriptUrl = items
-
+const scriptUrl = mainScript
 const modulePath = await downloadModule(scriptName, scriptUrl);
 if (modulePath != null) {
-  const importedModule = importModule(modulePath);
-  await importedModule.main();
+  await presentMenu()
 } else {
-  console.log('下载新模块失败，找不到任何本地版本。');
+  console.log('下载新模块失败');
+}
+
+
+async function presentMenu() {
+  let alert = new Alert();
+  alert.title = "随机切换小组件"
+  alert.message = get.version
+  alert.addDestructiveAction('更新代码');
+  alert.addAction('使用教程');
+  alert.addAction('添加组件');
+  alert.addAction('预览组件');
+  alert.addAction('退出');
+  response = await alert.presentAlert();
+  if (response === 1) {
+    const tutorial = new Alert();  
+    tutorial.title = '使用教程';
+    tutorial.message = get.msg
+    tutorial.addDestructiveAction('多功能捷径');
+    tutorial.addAction('一键上传代码');
+    tutorial.addAction('取消');
+    index = await tutorial.presentAlert();
+    if (index === 0) {
+      await Safari.open(get.shortcuts1);
+    }
+    if (index === 1) {
+      await Safari.open(get.shortcuts2);
+    }
+    return;
+  } // End of tutorial
+  
+  if (response === 2) {
+ await addScriptURL();
+  }
+  if (response === 3) {
+    const importedModule = importModule(modulePath);
+    await importedModule.main();
+  }
+  if (response === 4) return;
+  // Update the code
+  if (response === 0) {
+    const FILE_MGR = FileManager.local()
+    const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
+    const reqUpdate = new Request(get.update);
+    const codeString = await reqUpdate.loadString()  
+    const finish = new Alert();
+    if (codeString.indexOf("Maybach" || "HONDA") == -1) {
+      finish.title = "更新失败"
+      finish.addAction('OK')
+      await finish.presentAlert();
+    } else {
+      FILE_MGR.writeString(module.filename, codeString)
+      finish.title = "更新成功"
+      finish.addAction('OK')
+      await finish.presentAlert();
+      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+    }
+  }
+}
+
+
+async function addScriptURL() {
+  const input = new Alert();
+  const URL = Pasteboard.paste()
+  input.title = '添加小组件URL';
+  input.addTextField('输入URL', URL);
+  input.addAction('确定');
+  input.addCancelAction('取消');
+  const install = await input.presentAlert();
+  const url = input.textFieldValue(0)
+  if (install === 0) {
+    if (!F_MGR.fileExists(folder)) {
+      F_MGR.createDirectory(folder) 
+    };
+    (F_MGR.fileExists(cacheFile)) ? arr = script : arr = new Array()
+    arr.push(url)
+    mainScript = JSON.stringify(arr);
+    F_MGR.writeString(cacheFile, mainScript);  
+    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+  }
 }
 
 
