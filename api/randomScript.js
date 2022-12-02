@@ -100,7 +100,7 @@ async function shortcutsTutorial() {
   tutorial.addAction('返回上页');
   index = await tutorial.presentAlert();
   if (index === 0) {
-    F_MGR.remove(folder);
+    await F_MGR.remove(folder);
     notify('已重置数据', '请重新添加小组件URL');
   }
   if (index === 1) {
@@ -131,7 +131,7 @@ async function addScriptURL() {
     (F_MGR.fileExists(cacheFile)) ? arr = script : arr = new Array();
     const javaScript = url.substring(url.lastIndexOf(".") + 1);
     if (javaScript === 'js') {
-      arr.push(url);
+      await arr.push(url);
       const mainScript = JSON.stringify(arr);
       F_MGR.writeString(cacheFile, mainScript);  
       notify('添加成功', '点击预览测试新组件');
