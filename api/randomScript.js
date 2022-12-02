@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: pink; icon-glyph: cloud-download-alt;
+// icon-color: pink; icon-glyph: th-large;
 /**
 * 小组件作者: 95度茅台
 * 随机自动切换多个小组件
