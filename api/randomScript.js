@@ -96,7 +96,8 @@ async function shortcutsTutorial() {
   tutorial.message = get.msg
   tutorial.addDestructiveAction('重置所有数据');
   tutorial.addAction('多功能捷径');
-  tutorial.addAction('取消');
+  tutorial.addAction('上传代码捷径');
+  tutorial.addAction('返回上页');
   index = await tutorial.presentAlert();
   if (index === 0) {
     F_MGR.remove(folder);
@@ -107,6 +108,9 @@ async function shortcutsTutorial() {
   }
   if (index === 2) {
     Safari.open(get.shortcuts2);
+  }
+  if (index === 3) {
+    await presentMenu();
   }
 }
 
