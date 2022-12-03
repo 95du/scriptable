@@ -70,11 +70,11 @@ async function main() {
       authorImage.widthWeight = 0.4;
       authorImage.centerAligned();
   
-      const rightText = topRow.addButton('电报群');
+      const rightText = topRow.addButton('快捷指令');
       rightText.widthWeight = 0.3;
       rightText.rightAligned();
       rightText.onTap = async () => {
-        await Safari.openInApp('https://t.me/+ViT7uEUrIUV0B_iy', false);
+        Safari.openInApp('https://sharecuts.cn/user/KVlQooAqzA',false);
       };
       table.addRow(topRow);
   
