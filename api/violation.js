@@ -37,32 +37,32 @@ const apiData = new Request(atob(
 const get = await apiData.loadJSON();
 const url = get.infoURL
 
-const fileManager = FileManager.iCloud();
-const folder = fileManager.joinPath(fileManager.documentsDirectory(), "violation");
-const cacheFile = fileManager.joinPath(folder, 'data.json');
+const F_MGR = FileManager.iCloud();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "violation");
+const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
-if (fileManager.fileExists(cacheFile)) {
-  data = fileManager.readString(cacheFile)
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile)
   data = JSON.parse(data);
   verifyToken = data.verifyToken
   myPlate = data.myPlate
 }
 
 
-if (!fileManager.fileExists(folder) || verifyToken === undefined) {
+if (!F_MGR.fileExists(folder) || verifyToken === undefined) {
   // boxjs_data
   boxjs_request = new Request('http://boxjs.com/query/data/token_12123');
   boxjs_data = await boxjs_request.loadJSON();
   verifyToken = boxjs_data.val
-  if (fileManager.fileExists(cacheFile)) {
+  if (F_MGR.fileExists(cacheFile)) {
     data = {"verifyToken": `${verifyToken}`,"myPlate": `${myPlate}`}
     data = JSON.stringify(data);
-    fileManager.writeString(cacheFile, data);
+    F_MGR.writeString(cacheFile, data);
   }
 }
 
 
-if (!fileManager.fileExists(cacheFile)) {
+if (!F_MGR.fileExists(cacheFile)) {
   if (!verifyToken) {
     const loginAlert = new Alert();
     loginAlert.title = '交管 12123';
@@ -89,10 +89,10 @@ if (!fileManager.fileExists(cacheFile)) {
     myPlate = value
     
     if (input === 0) {
-      if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
+      if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
       data = {"verifyToken": `${boxjs_data.val}`,"myPlate": `${myPlate}`}
       data = JSON.stringify(data);
-      fileManager.writeString(cacheFile, data);
+      F_MGR.writeString(cacheFile, data);
       notice.title = '登录成功'
       notice.body = '请前往桌面添加中号小组件'
       notice.schedule();
@@ -185,7 +185,7 @@ if (success === true) {
   } else {
     data = {"myPlate": `${myPlate}`}
     data = JSON.stringify(data);
-    fileManager.writeString(cacheFile, data);
+    F_MGR.writeString(cacheFile, data);
     // notice
     notice.title = 'Token已过期 ⚠️'
     notice.body = '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )'
