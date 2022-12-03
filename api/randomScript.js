@@ -60,7 +60,7 @@ async function presentMenu() {
   alert.addAction('使用教程');
   alert.addAction('添加组件');
   alert.addAction('预览组件');
-  alert.addAction('退出');
+  alert.addAction('取消');
   response = await alert.presentAlert();
   if (response === 1) {
     await shortcutsTutorial();
@@ -137,7 +137,11 @@ async function addScriptURL() {
       await arr.push(url);
       const mainScript = JSON.stringify(arr);
       F_MGR.writeString(cacheFile, mainScript);  
-      notify('添加成功', '点击预览测试新组件效果');
+      let count = 0;  
+      for (const obj of arr) {
+        count++
+      }
+      notify('添加成功', `当前数据库中已储存${count}个小组件`);
     }
     await presentMenu();
   }
