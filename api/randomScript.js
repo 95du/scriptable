@@ -25,7 +25,6 @@ if (F_MGR.fileExists(cacheFile)) {
 }
 
 const mainScript = script[Math.floor(Math.random() * script.length)];
-const uri = Script.name()
 const scriptName = 'Random';
 const scriptUrl = mainScript
 const modulePath = await downloadModule(scriptName, scriptUrl);
@@ -85,6 +84,7 @@ async function presentMenu() {
     } else {
       FILE_MGR.writeString(module.filename, codeString)
       notify('小组件更新成功', '');
+      const uri = Script.name();
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
@@ -137,9 +137,9 @@ async function addScriptURL() {
       await arr.push(url);
       const mainScript = JSON.stringify(arr);
       F_MGR.writeString(cacheFile, mainScript);  
-      notify('添加成功', '点击预览测试新组件');
+      notify('添加成功', '点击预览测试新组件效果');
     }
-    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+    await presentMenu();
   }
 }
 
