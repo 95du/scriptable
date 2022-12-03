@@ -65,19 +65,19 @@ const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/
 const get = await apiData.loadJSON();
 
 
-const fileManager = FileManager.iCloud();
-const folder = fileManager.joinPath(fileManager.documentsDirectory(), "telecom");
-const cacheFile = fileManager.joinPath(folder, 'data.json');
+const F_MGR = FileManager.iCloud();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "telecom");
+const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
-if (fileManager.fileExists(cacheFile)) {
-  data = fileManager.readString(cacheFile);
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile);
   data = JSON.parse(data);
   cookie = data.cookie.split(';')[0]
   loginUrl = data.loginUrl
 }
 
 
-if (!fileManager.fileExists(folder) || cookie === undefined) {
+if (!F_MGR.fileExists(folder) || cookie === undefined) {
   // boxjs_data
   boxjs_request = new Request(get.getCookie);
   boxjs_data = await boxjs_request.loadJSON();
@@ -87,15 +87,15 @@ if (!fileManager.fileExists(folder) || cookie === undefined) {
   login_data = await loginUrl_request.loadJSON();
   loginUrl = login_data.val
   if (cookie) {
-    if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
+    if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
       data = {"cookie": `${cookie}`,"loginUrl": `${loginUrl}`}
       data = JSON.stringify(data);
-      fileManager.writeString(cacheFile, data);
+      F_MGR.writeString(cacheFile, data);
   }
 }
 
 
-if (!fileManager.fileExists(cacheFile)) {
+if (!F_MGR.fileExists(cacheFile)) {
   if (!cookie) {
     let loginAlert = new Alert();
     loginAlert.title = '中国电信';
@@ -141,7 +141,7 @@ async function presentMenu() {
     if (json.result === 0) {
       const webView = new WebView();
       await webView.loadURL(json.toUrl);
-      await webView.present(true);
+      await webView.present(false);
     } else {
       notice.title = '登录失败 ⚠️'
       notice.body = json.msg
@@ -193,7 +193,7 @@ const money = await balances.loadJSON();
 const balanceAvailable = money.totalBalanceAvailable / 100
 const balText = widget.addText('￥' + balanceAvailable);
 balText.textColor = Color.orange();
-balText.font = Font.boldSystemFont(22);
+balText.font = new Font("Georgia-Bold", 22)
 balText.centerAlignText();
 widget.addSpacer(3)
 
