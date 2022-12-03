@@ -13,13 +13,13 @@
 const notice = new Notification()
 const timestamp = Date.parse(new Date());
 
-const fileManager = FileManager.iCloud();
-const folder = fileManager.joinPath(fileManager.documentsDirectory(), "electric");
-const cacheFile = fileManager.joinPath(folder, 'data.json');
+const F_MGR = FileManager.iCloud();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "electric");
+const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
 // readString JSON
-if (fileManager.fileExists(cacheFile)) {
-  data = fileManager.readString(cacheFile)
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile)
   data = JSON.parse(data)
 } else {
   // 使用方法
@@ -43,10 +43,10 @@ if (fileManager.fileExists(cacheFile)) {
     const input = await alert.presentAlert();
     const value = alert.textFieldValue(0)
     if (input === 0) {
-      if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
+      if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
       data = {"token":`${value}`,"updateTime":`${timestamp}`}
       data = JSON.stringify(data);
-      fileManager.writeString(cacheFile, data);
+      F_MGR.writeString(cacheFile, data);
       notice.title = '登录成功'
       notice.body = '重新运行即可预览或前往桌面添加小组件'
       notice.schedule()
@@ -447,10 +447,10 @@ if (hours >= 12) {
     notice.schedule()
       
     // writeString JSON
-    if (fileManager.fileExists(folder)) {
+    if (F_MGR.fileExists(folder)) {
       data = {"token":`${data.token}`,"updateTime":`${timestamp}`}
       data = JSON.stringify(data);
-      fileManager.writeString(cacheFile, data);
+      F_MGR.writeString(cacheFile, data);
     }
   }
 }
