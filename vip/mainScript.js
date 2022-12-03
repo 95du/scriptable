@@ -3,7 +3,7 @@
 // icon-color: teal; icon-glyph: cloud-download-alt;
 async function main() {
   const bgColor = Color.dynamic(
-    new Color('#F5F5F5'), 
+    new Color('#F5F5F5'),
     new Color('#000000')
   );
   const Files = FileManager.iCloud();
@@ -41,21 +41,20 @@ async function main() {
     try {
       const table = new UITable();
       table.showSeparators = true;
-      
+  
       const gifRow = new UITableRow();
-      gifRow.height = 240;
+      gifRow.height = 80 * Device.screenScale();
       const gifImage = gifRow.addImageAtURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzEvQzgvQ2g0RnlXT0k2b0NBZjRQMUFFZ0trSzZxVVVrNTQyLmdpZg=='));
       gifImage.widthWeight = 0.4;
       gifImage.centerAligned();
-  
       table.addRow(gifRow);
-      
+  
       // interval
       const gapRow1 = new UITableRow();
       gapRow1.height = 30;
       gapRow1.backgroundColor = bgColor
       table.addRow(gapRow1);
-      
+  
       // topRow
       const topRow = new UITableRow();
       topRow.height = 70;
@@ -66,11 +65,11 @@ async function main() {
         await webView.loadURL(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci9pbWcvcGljdHVyZS9FeGFtcGxlLnBuZw=='));
         await webView.present(false);
       };
-      
+  
       const authorImage = topRow.addImageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/4qiao.png');
       authorImage.widthWeight = 0.4;
       authorImage.centerAligned();
-      
+  
       const rightText = topRow.addButton('电报群');
       rightText.widthWeight = 0.3;
       rightText.rightAligned();
@@ -78,13 +77,13 @@ async function main() {
         await Safari.openInApp('https://t.me/+ViT7uEUrIUV0B_iy', false);
       };
       table.addRow(topRow);
-      
+  
       // interval
       const gapRow2 = new UITableRow();
       gapRow2.height = 30;
       gapRow2.backgroundColor = bgColor
       table.addRow(gapRow2);
-      
+  
       // 如果是节点，则先远程获取
       const req = new Request(data.subscription);
       const subscription = await req.loadJSON();
@@ -131,7 +130,7 @@ async function main() {
         r.addCell(downloadCell);
         table.addRow(r);
       });
-      
+  
       // bottom interval
       const bottom = new UITableRow();
       bottom.height = 225;
@@ -151,6 +150,11 @@ async function main() {
   
   const Run = async () => {
     try {
+      // 默认订阅列表
+      const defaultSubscribeList = [{
+      author: '95度茅台',
+      subscription: 'https://gitcode.net/4qiao/framework/raw/master/scriptable/install.json'
+    }]
       const mainAlert = new Alert();
       mainAlert.title = "小组件下载";
       mainAlert.message = "可自行添加订阅地址";
@@ -204,8 +208,14 @@ async function main() {
             notify("错误提示", "订阅地址错误，不是一个 JSON 格式");
           }
         });
+        _actions.push(async () => {
+          Keychain.set(cacheKey, JSON.stringify(defaultSubscribeList));
+          await notify('小组件订阅', '订阅源重置成功');
+          await Run();
+      });
         // Main Menu
-        mainAlert.addDestructiveAction("添加订阅");
+        mainAlert.addAction("添加订阅");
+        mainAlert.addDestructiveAction("重置订阅");
         mainAlert.addCancelAction("取消操作");
         const _actionsIndex = await mainAlert.presentSheet();
         if (_actions[_actionsIndex]) {
@@ -236,7 +246,7 @@ async function main() {
   
   await Run();
 }
-    
+      
 module.exports = {
   main
 }
