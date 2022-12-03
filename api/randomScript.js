@@ -20,15 +20,16 @@ const cacheFile = F_MGR.joinPath(folder, 'data.json');
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
   script = JSON.parse(data);
-  mainScript = script[Math.floor(Math.random()*script.length)];
 } else {
-  mainScript = get.script[Math.floor(Math.random()*get.script.length)];
+  script = get.script
 }
 
+const mainScript = script[Math.floor(Math.random() * script.length)];
 const uri = Script.name()
 const scriptName = 'Random';
 const scriptUrl = mainScript
 const modulePath = await downloadModule(scriptName, scriptUrl);
+
 if (modulePath != null) {
   if (config.runsInWidget) {
     const importedModule = importModule(modulePath);
@@ -37,7 +38,7 @@ if (modulePath != null) {
     await presentMenu();
   }
 } else {
-  console.log('下载新模块失败');
+  console.log('Failed to download new module and could not find any local version.');
 }
 
 
@@ -100,8 +101,10 @@ async function shortcutsTutorial() {
   tutorial.addAction('返回上页');
   index = await tutorial.presentAlert();
   if (index === 0) {
-    await F_MGR.remove(folder);
-    notify('已重置数据', '请重新添加小组件URL');
+    if (F_MGR.fileExists(folder)) {
+      await F_MGR.remove(folder);
+      notify('已重置数据', '请重新添加小组件URL');  
+    }
   }
   if (index === 1) {
     Safari.open(get.shortcuts1);
