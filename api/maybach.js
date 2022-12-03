@@ -44,8 +44,7 @@ async function presentMenu() {
       finish.title = "更新成功"
       finish.addAction('OK')
       await finish.presentAlert();
-      const Name = 'Maybach';
-      Safari.open('scriptable:///run/' + encodeURIComponent(Name));
+      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
 }
@@ -58,6 +57,7 @@ try {
     await presentMenu()
   }
 } catch (error) {
+  console.log(error)
   const cover = await getData()
   const widget = createErrorWidget(cover)
   await widget.presentMedium();
@@ -67,6 +67,7 @@ try {
 // Create Widget Data
 async function createWidget() {
   // 组件背景渐变
+  const uri = Script.name()
   const widget = new ListWidget()
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient()
@@ -352,7 +353,6 @@ async function createWidget() {
   // jump show map
   textAddress.url = `${mapUrl}`;
   // jump run widget
-  const uri = Script.name()
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
     
     
