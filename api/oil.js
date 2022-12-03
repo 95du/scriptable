@@ -9,13 +9,13 @@
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
-const Req = new Request('https://mys4s.cn/v3/oil/price');
+const Req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));
 Req.method = 'POST'
 Req.body = 'region=海南'
 const Res = await Req.loadJSON();
 const oil = Res.data
 
-const req = new Request('http://m.qiyoujiage.com');
+const req = new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20='));
 const html = await req.loadString();
 const rule = 'var tishiContent="(.*?)";';
 const forecast = html.match(new RegExp(rule,"g")).map(str => {
@@ -27,9 +27,9 @@ const forecast = html.match(new RegExp(rule,"g")).map(str => {
     
 const widget = await createWidget(oil);
 
-const fileManager = FileManager.iCloud();
-const folder = fileManager.joinPath(fileManager.documentsDirectory(), "oil");
-const cacheFile = fileManager.joinPath(folder, 'data.json');
+const F_MGR = FileManager.iCloud();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
+const cacheFile = F_MGR.joinPath(folder, 'data.json');
   
 if (config.widgetFamily === "small") {return}
   
@@ -100,14 +100,14 @@ async function createWidget(oil, data) {
   dataStack2.addSpacer()
   // bar
   const barStack1 = dataStack2.addStack();
-  barStack1.setPadding(8, 10, 8, 10);
+  barStack1.setPadding(8, 8, 8, 8);
   barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack1.cornerRadius = 10
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
   const oilTipsText = barStack1.addText(`${forecast}`);
-  oilTipsText.textColor = new Color('#484848');
+  oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
   dataStack2.addSpacer()
@@ -232,14 +232,16 @@ async function createWidget(oil, data) {
 
 
 // readString
-if (fileManager.fileExists(cacheFile)) {
-  data = fileManager.readString(cacheFile)
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile)
   data = JSON.parse(data)
 } else {
-  if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
+  if (!F_MGR.fileExists(folder)) {
+    F_MGR.createDirectory(folder)
+  }
   data = {"oil":`${forecast}`}
   data = JSON.stringify(data);
-  fileManager.writeString(cacheFile, data);
+  F_MGR.writeString(cacheFile, data);
   return;
 }
   
@@ -253,10 +255,10 @@ if (adjustment !== data.oil) {
   notice.schedule();
     
   // writeString
-  if (fileManager.fileExists(folder)) {
+  if (F_MGR.fileExists(folder)) {
     data = {"oil":`${forecast}`}
     data = JSON.stringify(data);
-    fileManager.writeString(cacheFile, data);
+    F_MGR.writeString(cacheFile, data);
   }
 }
   
