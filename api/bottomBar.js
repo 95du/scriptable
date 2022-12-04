@@ -23,7 +23,7 @@ const eventTextColor = Color.dynamic(
 
 const timeStamp = Date.parse(new Date());
 const F_MGR = FileManager.iCloud();
-const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "weather");
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
 
