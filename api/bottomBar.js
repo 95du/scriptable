@@ -21,14 +21,49 @@ const eventTextColor = Color.dynamic(
   new Color('#fefefe')
 );
 
+const timeStamp = Date.parse(new Date());
+const F_MGR = FileManager.iCloud();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "weather");
+const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
-try {
+
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile)
+  data = JSON.parse(data)
+  // 计算时长
+  const pushTime = (timeStamp - data.updateTime);
+  const P1 = pushTime % (24 * 3600 * 1000);
+  const hours = Math.floor(P1 / (3600 * 1000));
+  if (hours <= 3) {
+    location = data
+  } else {
+    const location = await Location.current();
+    obj = {
+      ...location,
+      "updateTime":`${timeStamp}`
+    }
+    F_MGR.writeString(cacheFile, JSON.stringify(obj));
+  }
+  try {
   // Conversion GPS  
-  const location = await Location.current();
   convert = await getJson(`https://restapi.amap.com/v3/assistant/coordinate/convert?coordsys=gps&output=json&key=a35a9538433a183718ce973382012f55&locations=${location.longitude},${location.latitude}`);
-  widget = await createWidget();
-} catch(e) {
-  console.error(e);
+    widget = await createWidget();
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+
+if (!F_MGR.fileExists(folder)) {
+  F_MGR.createDirectory(folder);
+  const location = await Location.current();
+  obj = {
+    ...location,
+    "updateTime":`${timeStamp}`
+  }
+  F_MGR.writeString(cacheFile, JSON.stringify(obj));
+  const uri = Script.name();
+  await Safari.open('scriptable:///run/' + encodeURIComponent(uri));
 }
 
 
