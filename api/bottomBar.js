@@ -17,8 +17,8 @@ const stackBackground = Color.dynamic(
   new Color('#161D2A', 0.5)
 );
 const eventTextColor = Color.dynamic(
-  new Color('#1e1e1e'), 
-  new Color('#fefefe')
+  new Color('#1E1E1E'), 
+  new Color('#FEFEFE')
 );
 
 const timeStamp = Date.parse(new Date());
