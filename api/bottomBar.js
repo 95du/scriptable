@@ -196,7 +196,7 @@ async function createBackground() {
   }
 
   // Prompt for widget size and position.
-  message = "创建三种尺寸的小组件";
+  message = "创建哪一种尺寸";
   let sizes = ["小号", "中号", "大号"];
   let size = await generateAlert(message, sizes);
   let widgetSize = sizes[size];
