@@ -42,7 +42,6 @@ if (F_MGR.fileExists(cacheFile)) {
     F_MGR.writeString(cacheFile, JSON.stringify(obj));
   }
   try {
-  // Conversion GPS  
   convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${location.longitude},${location.latitude}`);
     widget = await createWidget();
   } catch(e) {
@@ -50,7 +49,7 @@ if (F_MGR.fileExists(cacheFile)) {
   }
 }
 
-
+// widget Initialization
 if (!F_MGR.fileExists(folder)) {
   F_MGR.createDirectory(folder);
   const location = await Location.current();
@@ -178,7 +177,6 @@ async function createWidget() {
   return widget
 }
 
-
 async function createBackground() {
   // Determine if user has taken the screenshot.
   message =
@@ -255,7 +253,6 @@ async function createBackground() {
     await createBackground();
   }
 }
-
 
 // Crop an image into the specified rect.
 function cropImage(img, rect) {
