@@ -2,14 +2,11 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-green; icon-glyph: comments;
 /**
-* iOS 16 负一屏底栏
-* 高仿微信通知信息样式
-* 内容显示未来两小时天气
-* 每日一句中英文
 * 小组件作者：95度茅台
+* 小机型修改第 8 行中的[70]⚠️
+* 微信图标修改第 108 行的链接
 */
 
-// 小机型修改第 10 行中的[70]⚠️
 const stackSize = new Size(0, 70);
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
@@ -65,14 +62,12 @@ if (!F_MGR.fileExists(folder)) {
   Safari.open('scriptable:///run/' + encodeURIComponent(uri));
 }
 
-
 if (config.runsInApp) {
   await presentMenu();
 } else {
   Script.setWidget(widget);
   Script.complete();
 }
-
 
 async function presentMenu() {
   let alert = new Alert();
@@ -430,7 +425,6 @@ function phoneSizes() {
   };
   return phones;
 }
-
 
 async function get(opts) {
   const coordinates = convert.locations.split(",");
