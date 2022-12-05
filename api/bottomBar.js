@@ -1,9 +1,15 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-green; icon-glyph: comments;
-// 小组件作者：95度茅台
+/**
+* iOS 16 负一屏底栏
+* 高仿微信通知信息样式
+* 内容显示未来两小时天气
+* 每日一句中英文
+* 小组件作者：95度茅台
+*/
 
-// 小机型修改第4行中的[70]⚠️
+// 小机型修改第 10 行中的[70]⚠️
 const stackSize = new Size(0, 70);
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
