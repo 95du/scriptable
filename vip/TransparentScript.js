@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: magic;
-const uri = Script.name();
+const uri = '负一屏底栏 1'
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
