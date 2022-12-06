@@ -1,7 +1,12 @@
-async function main() {
-  // Variables used by Scriptable.
+// Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: magic;
+const uri = Script.name();
+const F_MGR = FileManager.local();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
+const cacheFile = F_MGR.joinPath(folder, 'data.json');
+const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
+
 // Determine if user has taken the screenshot.
   message =
   "在主屏幕长按进入编辑模式。滑动到最右边的空白页 ( 桌面墙纸设置为模糊 ) 截图";
@@ -266,9 +271,4 @@ async function generateAlert(message, options) {
   }
   const response = await alert.presentAlert();
   return response;
-}
-}
-
-module.exports = {
-  main
 }
