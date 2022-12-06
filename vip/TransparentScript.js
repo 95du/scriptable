@@ -4,8 +4,7 @@
 const uri = '负一屏底栏 1'
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
-const cacheFile = F_MGR.joinPath(folder, 'data.json');
-const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
+const bgImage = F_MGR.joinPath(folder, "负一屏底栏 1.jpg");
 
 // Determine if user has taken the screenshot.
   message =
