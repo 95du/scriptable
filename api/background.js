@@ -98,7 +98,7 @@ if (blurred) {
   imgCrop = await blurImage(img,imgCrop, style)
 }
 
-message = "背景已制作成功";
+message = "小部件背景已制作成功";
 const exportPhotoOptions = ["导出相册", "重新制作", "完成"];
 const exportPhoto = await generateAlert(message, exportPhotoOptions);
 
