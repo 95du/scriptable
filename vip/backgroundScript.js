@@ -104,6 +104,10 @@ async function main() {
   const exportPhoto = await generateAlert(message, exportPhotoOptions);
   
   if (exportPhoto == 0) {
+    const uri = Script.name();  
+    const F_MGR = FileManager.local();
+    const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
+    const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
     F_MGR.writeImage(bgImage,imgCrop)
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   } else if (exportPhoto == 1) {
