@@ -113,7 +113,7 @@ async function main() {
   } else if (exportPhoto == 1) {
     Photos.save(imgCrop);
   } else if (exportPhoto == 2) {
-    await importedModule.main();
+    await downloadModule();
   }
   
   // Generate an alert with the provided array of options.
