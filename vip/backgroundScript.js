@@ -13,7 +13,7 @@ async function main() {
   let height = img.size.height
   let phone = phoneSizes()[height]
   if (!phone) {
-    message = "您似乎选择了非iPhone屏幕截图的图像，或者不支持您的iPhone。请使用其他图像";
+    message = "您似乎选择了非 iPhone 屏幕截图的图像，或者不支持您的 iPhone。请使用其他图像";
     await generateAlert(message, ["现在去截图"]);
     return;
   }
@@ -41,12 +41,12 @@ async function main() {
   }
   
   // Prompt for widget size and position.
-  message = "创建三种尺寸的小部件";
+  message = "创建哪一种尺寸的小部件";
   let sizes = ["小号", "中号", "大号"];
   let size = await generateAlert(message, sizes)
   let widgetSize = sizes[size]
   
-  message = "您想它在什么位置？";
+  message = "选择小部件所在的位置";
   message += height == 1136 ? " (请注意，您的设备仅支持两行小部件，因此中间和底部选项相同。)" : "";
   
   // Determine image crop based on phone size.
