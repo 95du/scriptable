@@ -107,9 +107,9 @@ async function main() {
     F_MGR.writeImage(bgImage,imgCrop)
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   } else if (exportPhoto == 1) {
-    Photos.save(imgCrop)
+    Photos.save(imgCrop);
   } else if (exportPhoto == 2) {
-    await createBackground();
+    await importedModule.main();
   }
   
   // Generate an alert with the provided array of options.
