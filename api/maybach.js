@@ -118,8 +118,7 @@ async function createWidget() {
     
   // Get address (aMap)
   const data = res.data
-  const REQ = new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${data.longitude},${data.latitude}`);  
-  const adr = await REQ.loadJSON();
+  const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${data.longitude},${data.latitude}`).loadJSON();
   const address = adr.regeocode.formatted_address  
     
   // Current timestamp
@@ -372,8 +371,7 @@ async function createWidget() {
   * 推送信息及通知
   */
   // Get accessToken
-  const Req = new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
-  const Res = await Req.loadJSON();
+  const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON();
 
   // coding cookie
   const cookie = ('eid=8498be9b-b0b9-4575-be7b-609054e63564; XSRF-TOKEN=e6a5aade-0613-4c0f-8447-ed8415f80134');
@@ -421,7 +419,7 @@ async function createWidget() {
     
     if (distance > 20) {
       // push message to WeChat_1
-      const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+      const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_1.method = 'POST'
       weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米","url":"${mapUrl}"}]}}`;
       const res_1 = await weChat_1.loadJSON();
@@ -466,7 +464,7 @@ async function createWidget() {
         
     if (moment >= duration) {
       // push message to WeChat_2
-      const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+      const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_2.method = 'POST'
       weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 更新时间 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_2 = await weChat_2.loadJSON();
@@ -484,7 +482,7 @@ async function createWidget() {
   } else {
     if (json.run != 'HONDA'){
       // push message to WeChat_3
-      const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+      const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_3.method = 'POST'
       weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 启动时间 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_3 = await weChat_3.loadJSON();
@@ -501,7 +499,7 @@ async function createWidget() {
 
     } else {
       // push message to WeChat_4
-      const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${Res.access_token}`);
+      const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_4.method = 'POST'
       weChat_4.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 更新时间 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_4 = await weChat_4.loadJSON();
