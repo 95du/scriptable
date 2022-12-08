@@ -69,7 +69,7 @@ async function main() {
   
     // Medium and large widgets have a fixed x-value.
     crop.x = phone.左边;
-    let positions = ["顶部", "中间", "底部"];
+    let positions = ["顶部", "中间", "底部", "负屏"];
     let position = await generateAlert(message, positions);
     let key = positions[position].toLowerCase();
     crop.y = phone[key];
