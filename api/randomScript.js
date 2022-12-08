@@ -5,7 +5,7 @@
 * 小组件作者: 95度茅台
 * 随机自动切换多个小组件
 * Version 1.0
-* 2022-12-02 15:30
+* 2022-12-04 15:30
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
@@ -135,8 +135,7 @@ async function addScriptURL() {
     const javaScript = url.substring(url.lastIndexOf(".") + 1);
     if (javaScript === 'js') {
       await arr.push(url);
-      const mainScript = JSON.stringify(arr);
-      F_MGR.writeString(cacheFile, mainScript);  
+      F_MGR.writeString(cacheFile, JSON.stringify(arr));  
       let count = 0;  
       for (const obj of arr) {
         count++
@@ -144,7 +143,7 @@ async function addScriptURL() {
       notify('添加成功', `当前数据库中已储存${count}个小组件`);
     }
     await presentMenu();
-  }
+  } 
 }
 
 
