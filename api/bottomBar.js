@@ -61,13 +61,6 @@ if (!F_MGR.fileExists(folder)) {
   Safari.open('scriptable:///run/' + encodeURIComponent(uri));
 }
 
-if (config.runsInApp) {
-  await presentMenu();
-} else {
-  Script.setWidget(widget);
-  Script.complete();
-}
-
 async function presentMenu() {
   let alert = new Alert();
   alert.title = 'iOS 16 负一屏底栏'
@@ -195,6 +188,13 @@ async function downloadModule() {
       return modulePath;
     }
   }
+}
+
+if (config.runsInApp) {
+  await presentMenu();
+} else {
+  Script.setWidget(widget);
+  Script.complete();
 }
 
 async function get(opts) {
