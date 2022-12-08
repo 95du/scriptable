@@ -96,7 +96,7 @@ async function shortcutsTutorial() {
   tutorial.title = '使用教程';
   tutorial.message = get.msg
   tutorial.addDestructiveAction('重置所有数据');
-  tutorial.addAction('多功能捷径');
+  tutorial.addAction('GitCode 捷径');
   tutorial.addAction('上传代码捷径');
   tutorial.addAction('返回上页');
   index = await tutorial.presentAlert();
