@@ -42,7 +42,7 @@ if (F_MGR.fileExists(cacheFile)) {
     F_MGR.writeString(cacheFile, JSON.stringify(obj));
   }
   try {
-  convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${location.longitude},${location.latitude}`);
+    convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${location.longitude},${location.latitude}`);
     widget = await createWidget();
   } catch(e) {
     console.error(e);
@@ -211,8 +211,7 @@ async function get(opts) {
       "lon": '${coordinates[0]}'
     }
   }`
-  result = await request.loadJSON();
-  return result
+  return result = await request.loadJSON();
 }
 
 async function getJson(url) {
