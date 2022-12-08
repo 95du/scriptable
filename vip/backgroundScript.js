@@ -108,6 +108,7 @@ async function main() {
     const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
     const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
     F_MGR.writeImage(bgImage,imgCrop)
+    F_MGR.remove(folder, 'tool.js');
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   } else if (exportPhoto == 1) {
     Photos.save(imgCrop);
