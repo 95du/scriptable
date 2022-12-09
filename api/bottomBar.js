@@ -34,7 +34,7 @@ if (F_MGR.fileExists(cacheFile)) {
   if (hours <= 3) {
     location = data
   } else {
-    const location = await Location.current();
+    location = await Location.current();
     obj = {
       ...location,
       "updateTime":`${timeStamp}`
