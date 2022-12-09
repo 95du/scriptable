@@ -58,11 +58,11 @@ async function main() {
       // topRow
       const topRow = new UITableRow();
       topRow.height = 70;
-      const leftText = topRow.addButton('示例图');
+      const leftText = topRow.addButton('效果图');
       leftText.widthWeight = 0.3;
       leftText.onTap = async () => {
         const webView = new WebView();
-        await webView.loadURL(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci9pbWcvcGljdHVyZS9FeGFtcGxlLnBuZw=='));
+        await webView.loadURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzEvRjMvQ2g0RnlXT1NuM3FBVG9pUUFDT2ZoaVpaUzFJNzY4LnBuZw=='));
         await webView.present(false);
       };
   
