@@ -178,7 +178,7 @@ async function main() {
           const a = new Alert();
           a.title = "输入订阅地址";
           a.addTextField(
-            "URL", Pasteboard.paste()
+            "URL", 'https://gitcode.net/4qiao/framework/raw/master/scriptable/install.json'
           );
           a.addAction("确定");
           a.addCancelAction("取消");
