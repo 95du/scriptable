@@ -177,7 +177,7 @@ async function main() {
         _actions.push(async () => {
           const a = new Alert();
           a.title = "输入订阅地址";
-          a.message = '默认为订阅作者，自行替换输入框内的链接'
+          a.message = '自行替换输入框内的链接'
           a.addTextField(
             "URL", 'https://gitcode.net/4qiao/framework/raw/master/scriptable/install.json'
           );
