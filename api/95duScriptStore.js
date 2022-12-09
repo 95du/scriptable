@@ -4,9 +4,9 @@
 /**
 * 框架修改自：@DmYY
 * DmYY订阅地址：https://raw.githubusercontent.com/dompling/Scriptable/master/install.json
-* LSP订阅地址：https://gitee.com/enjoyee/scriptable/raw/develop/install/package.json
+* LSP订阅地址：https://gitcode.net/enoyee/scriptable/-/raw/master/install/package.json
 * 感谢 LSP 的帮助
-* 订阅作者：95度茅台
+* 订阅作者 95度茅台
 */
 
 const scriptName = '95duSub';
