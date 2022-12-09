@@ -4,8 +4,8 @@
 /**
 * 框架修改自：@DmYY
 * DmYY订阅地址：https://raw.githubusercontent.com/dompling/Scriptable/master/install.json
+* 感谢 @LSP 的帮助
 * LSP订阅地址：https://gitcode.net/enoyee/scriptable/-/raw/master/install/package.json
-* 感谢 LSP 的帮助
 * 订阅作者 95度茅台
 */
 
@@ -32,11 +32,9 @@ async function downloadModule(scriptName, scriptUrl) {
   const moduleFilename = timeStamp.toString() + '.js';
   const modulePath = fm.joinPath(moduleDir, moduleFilename);
   if (fm.fileExists(modulePath)) {
-    console.log('Module already downlaoded ' + moduleFilename);
     return modulePath;
   } else {
     const [moduleFiles, moduleLatestFile] = getModuleVersions(scriptName);
-    console.log('Downloading ' + moduleFilename + ' from URL: ' + scriptUrl);
     const req = new Request(scriptUrl);
     const moduleJs = await req.load().catch(() => {
       return null;
