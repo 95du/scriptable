@@ -34,13 +34,18 @@ if (F_MGR.fileExists(cacheFile)) {
   if (hours <= 3) {
     location = data
   } else {
-    location = await Location.current();
-    obj = {
-      ...location,
-      "updateTime":`${timeStamp}`
+    try {
+      location = await Location.current();
+      obj = {
+        ...location,
+        "updateTime":`${timeStamp}`
+      }
+      F_MGR.writeString(cacheFile, JSON.stringify(obj));  
+    } catch (error) {
+      location = data
     }
-    F_MGR.writeString(cacheFile, JSON.stringify(obj));
   }
+  // Conversion GPS
   try {
     convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${location.longitude},${location.latitude}`);
     widget = await createWidget();
@@ -102,7 +107,9 @@ async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundImage = F_MGR.readImage(bgImage);
   // Wechat icon
-  weChat = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png');
+  const picture = await getJson(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL2JvdHRvbUJhci5qc29u'));
+  const items = picture.noticeApp[Math.floor(Math.random() * picture.noticeApp.length)];
+  weChat = await getImage(items);
   // One word
   const one = await getJson('http://open.iciba.com/dsapi');
   // Next two hours
@@ -163,7 +170,6 @@ async function createWidget() {
   const contentStack = widget.addStack();
   contentStack.layoutHorizontally();
   contentStack.centerAlignContent();
-  
   contentStack.addSpacer();
   contentStack.setPadding(0, 10, 0, 10);
   const textElement = contentStack.addText(`${one.note}\n${one.content}`);
