@@ -202,7 +202,7 @@ async function main() {
             }
             if (isPush) data.push({ author: response.author, subscription: url });
             Keychain.set(cacheKey, JSON.stringify(data));
-            notify("更新成功", "请重新运行本脚本");
+            await Run();
           } catch (e) {
             console.log(e);
             notify("错误提示", "订阅地址错误，不是一个 JSON 格式");
@@ -210,7 +210,6 @@ async function main() {
         });
         _actions.push(async () => {
           Keychain.set(cacheKey, JSON.stringify(defaultSubscribeList));
-          await notify('小组件订阅', '订阅源重置成功');
           await Run();
       });
         // Main Menu
