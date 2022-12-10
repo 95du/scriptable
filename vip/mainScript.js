@@ -135,10 +135,10 @@ async function main() {
       const bottom = new UITableRow();
       bottom.height = 225;
       bottom.backgroundColor = bgColor
-      const bottomText = bottom.addText('Copyright © 2022 界面修改自·@DmYY');
+      const bottomText = bottom.addText('Copyright ©️ 2022 界面修改自·@DmYY');
       bottomText.widthWeight = 0.3;
       bottomText.centerAligned();
-      bottomText.titleFont = Font.boldMonospacedSystemFont(12);
+      bottomText.titleFont = Font.boldMonospacedSystemFont(10);
       bottomText.titleColor = Color.gray();
       table.addRow(bottom);
       table.present(false);
