@@ -99,7 +99,7 @@ async function main() {
         nameCell.centerAligned();
         r.addCell(nameCell);
   
-        const downloadCell = UITableCell.button("安装");
+        const downloadCell = UITableCell.button("获取");
         downloadCell.centerAligned();
         downloadCell.dismissOnTap = true;
         downloadCell.onTap = async () => {
