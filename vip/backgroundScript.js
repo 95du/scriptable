@@ -102,7 +102,7 @@ async function main() {
   message = "小部件背景已制作成功";
   const exportPhotoOptions = ["立即使用", "导出相册", "重新制作"];
   const exportPhoto = await generateAlert(message, exportPhotoOptions);
-  const uri = Script.name();
+  //const uri = Script.name();
   if (exportPhoto == 0) {
     //const F_MGR = FileManager.local();
     //const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
