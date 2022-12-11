@@ -32,9 +32,8 @@ hostname = %APPEND% miniappcsfw.122.gov.cn
 */
 
 const notice = new Notification()
-const apiData = new Request(atob(
-'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u'));
-const get = await apiData.loadJSON();
+const get = await new Request(atob(
+'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON()
 const url = get.infoURL
 
 const F_MGR = FileManager.iCloud();
@@ -207,10 +206,10 @@ async function presentMenu() {
   let alert = new Alert();
   alert.title = "交管 12123"
   alert.message = get.Ver
-  alert.addDestructiveAction('更新代码')
-  alert.addAction('GetToken')
-  alert.addAction('预览组件')
-  alert.addAction('退出')
+  alert.addDestructiveAction('更新代码');
+  alert.addAction('GetToken');
+  alert.addAction('预览组件');
+  alert.addAction('退出');
   response = await alert.presentAlert();
   // menu action 1
   if (response === 1) {
@@ -230,12 +229,12 @@ async function presentMenu() {
     const finish = new Alert();
     if (codeString.indexOf("交管12123") == -1) {
       finish.title = "更新失败"
-      finish.addAction('OK')
+      finish.addAction('OK');
       await finish.presentAlert();
     } else {
-      FILE_MGR.writeString(module.filename, codeString)
+      FILE_MGR.writeString(module.filename, codeString);
       finish.title = "更新成功"
-      finish.addAction('OK')
+      finish.addAction('OK');
       await finish.presentAlert();
       const Name = 'violation';
       Safari.open('scriptable:///run/' + encodeURIComponent(Name));
@@ -249,7 +248,7 @@ if (config.widgetFamily === "small") {
   return;
 } else {
   if (!config.runsInWidget) {  
-    await presentMenu()
+    await presentMenu();
   } else {
     const widget = await createWidget(main);
     Script.setWidget(widget);
@@ -262,7 +261,7 @@ if (config.widgetFamily === "small") {
 async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
-  const gradient = new LinearGradient()
+  const gradient = new LinearGradient();
   color = [
   "#82B1FF", 
   "#757575", 
@@ -294,7 +293,7 @@ async function createWidget() {
   leftStack.layoutVertically();
   // plateStack
   const plateStack = leftStack.addStack();
-  textPlate = plateStack.addText(myPlate)
+  textPlate = plateStack.addText(myPlate);
   textPlate.font = Font.mediumSystemFont(19);
   textPlate.textColor = Color.black();
   leftStack.addSpacer(6)
@@ -452,7 +451,7 @@ async function createWidget() {
   if (list === undefined) {
     textAddress = tipsStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则');
   } else {
-    textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`)
+    textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
   }
   textAddress.font = Font.mediumSystemFont(11.3);
   textAddress.textColor = new Color('#484848');
