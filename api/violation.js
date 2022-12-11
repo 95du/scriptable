@@ -55,7 +55,10 @@ if (!F_MGR.fileExists(folder) || verifyToken === undefined) {
   boxjs_data = await boxjs_request.loadJSON();
   verifyToken = boxjs_data.val
   if (F_MGR.fileExists(cacheFile)) {
-    data = {"verifyToken": `${verifyToken}`,"myPlate": `${myPlate}`}
+    data = {
+      verifyToken: `${verifyToken}`,
+      myPlate: `${myPlate}`
+    }
     data = JSON.stringify(data);
     F_MGR.writeString(cacheFile, data);
   }
@@ -73,7 +76,7 @@ if (!F_MGR.fileExists(cacheFile)) {
     if (login === -1) {
       return;
     } else {
-      Safari.open(`${get.alipay}`);
+      Safari.open(get.alipay);
       return;
     }
   } else {
@@ -90,7 +93,10 @@ if (!F_MGR.fileExists(cacheFile)) {
     
     if (input === 0) {
       if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
-      data = {"verifyToken": `${boxjs_data.val}`,"myPlate": `${myPlate}`}
+      data = {
+        verifyToken: `${boxjs_data.val}`,
+        myPlate: `${myPlate}`
+      }
       data = JSON.stringify(data);
       F_MGR.writeString(cacheFile, data);
       notice.title = '登录成功'
@@ -183,7 +189,7 @@ if (success === true) {
   notice.title = main.resultMsg
     notice.schedule();
   } else {
-    data = {"myPlate": `${myPlate}`}
+    data = {myPlate: `${myPlate}`}
     data = JSON.stringify(data);
     F_MGR.writeString(cacheFile, data);
     // notice
@@ -208,7 +214,7 @@ async function presentMenu() {
   response = await alert.presentAlert();
   // menu action 1
   if (response === 1) {
-    Safari.open(get.alipay);
+    await Safari.open(get.alipay);
     return;
   }
   if (response === 2) {
@@ -465,12 +471,10 @@ async function createWidget() {
   return widget;
 }
 
-
 async function getImage(url) {
   const r = await new Request(url);
   return await r.loadImage();
 }
-
 
 async function shadowImage(img) {
   let ctx = new DrawContext()
