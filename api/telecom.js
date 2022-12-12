@@ -169,7 +169,7 @@ async function presentMenu() {
       finish.title = "更新成功"
       finish.addAction('OK');
       await finish.presentAlert();
-      const Name = 'telecom'
+      const Name = Script.name();
       Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     }
   }
