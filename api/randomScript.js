@@ -75,14 +75,13 @@ async function presentMenu() {
   if (response === 4) return;
   // Update the code
   if (response === 0) {
-    const FILE_MGR = FileManager.local();
-    const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
+    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(get.update);
     const codeString = await reqUpdate.loadString();
     if (codeString.indexOf('95度茅台') == -1) {
       notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
-      FILE_MGR.writeString(module.filename, codeString)
+      F_MGR.writeString(module.filename, codeString)
       notify('小组件更新成功', '');
       const uri = Script.name();
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
