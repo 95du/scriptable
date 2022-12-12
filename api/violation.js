@@ -222,8 +222,7 @@ async function presentMenu() {
   }
   if (response === 3) return;
   if (response === 0) {
-    const FILE_MGR = FileManager.local();
-    const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
+    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(get.update);
     const codeString = await reqUpdate.loadString();
     const finish = new Alert();
@@ -232,11 +231,11 @@ async function presentMenu() {
       finish.addAction('OK');
       await finish.presentAlert();
     } else {
-      FILE_MGR.writeString(module.filename, codeString);
+      F_MGR.writeString(module.filename, codeString);
       finish.title = "更新成功"
       finish.addAction('OK');
       await finish.presentAlert();
-      const Name = 'violation';
+      const Name = Script.name()
       Safari.open('scriptable:///run/' + encodeURIComponent(Name));
     }
   }
