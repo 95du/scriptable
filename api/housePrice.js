@@ -41,25 +41,27 @@ async function presentMenu() {
   if (mainMenu === 1) {
     if (F_MGR.fileExists(folder)) {
       await F_MGR.remove(folder);
+      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
+    return;
   }
-  if (mainMenu === 2) {
-    const modulePath = await downloadModule();
-    if (modulePath != null) {
-      const importedModule = importModule(modulePath);
-      await importedModule.main();
+  if (F_MGR.fileExists(cacheFile)) {
+    if (mainMenu === 2) {
+      const modulePath = await downloadModule();
+      if (modulePath != null) {
+        const importedModule = importModule(modulePath);
+        await importedModule.main();
+      }
     }
-  }
-  if (mainMenu === 3) {
-    await addHouseMsg();
-  }
-  if (mainMenu === 4) {
-    if (F_MGR.fileExists(cacheFile)) {
-    await getHouseMsg(obj);
-    await widget.presentMedium();
-    } else {
+    if (mainMenu === 3) {
       await addHouseMsg();
     }
+    if (mainMenu === 4) {
+      await getHouseMsg(obj);
+      await widget.presentMedium();
+    }
+  } else {
+    await addHouseMsg();
   }
   if (mainMenu === 4) return;
   if (mainMenu === 0) {
@@ -71,7 +73,6 @@ async function presentMenu() {
     } else {
       F_MGR.writeString(module.filename, codeString)
       notify('小组件更新成功', '');
-      const uri = Script.name();
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
@@ -103,7 +104,7 @@ async function createWidget(result) {
   const ironManIcon = logoStack.addImage(iconSymbol);
   ironManIcon.imageSize = new Size(180, 180);
   //leftStack.addSpacer()
-  */mainStack.addText(result.neighborhood)
+  */mainStack.addText(result.estimate_price_str)
   return widget
 }
 
@@ -201,21 +202,25 @@ async function getHouseMsg(obj) {
   const house = await getJson(`https://m.xflapp.com/f100/api/estimate_house_price?city_id=${obj.cityID}&neighborhood_id=${obj.num}&squaremeter=${obj.squa}&floor_plan_room=${obj.room}&floor_plan_hall=${obj.hall}&floor_plan_bath=${obj.bath}&total_floor=1&floor=1&facing_type=3&decoration_type=4&built_year=${obj.year}&building_type=1&source=h5`);
   // neighborhood
   const neighborhood = await getJson(`https://m.xflapp.com/f100/api/neighborhood/info?neighborhood_id=${obj.num}&source=h5`);
-  
   const pricing = house.data.estimate_pricing_persqm_str.split("元")[0];
+  if (!F_MGR.fileExists(cacheFile)) {
+    notify(obj.name, `房屋价值${house.data.estimate_price_str}万，均价${pricing}元/平方。`);
+  }
+  
   obj = {
     ...obj,
     pricing: pricing
   }
   if (!F_MGR.fileExists(folder)) {
     F_MGR.createDirectory(folder);
-    F_MGR.writeString(cacheFile, JSON.stringify(obj));
+    F_MGR.writeString(cacheFile, JSON.stringify(obj));  
+    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
   
   if (pricing > data.pricing || pricing < data.pricing || !F_MGR.fileExists(cacheFile)) {
-    notify(obj.name, `房屋价值${house.data.estimate_price_str}万，均价${house.data.estimate_pricing_persqm_str}`);
-    F_MGR.writeString(cacheFile, JSON.stringify(obj));
+    F_MGR.writeString(cacheFile, JSON.stringify(obj));  
   }
+  
   
   //房屋价值
   //console.log(house.data.estimate_price_str)
