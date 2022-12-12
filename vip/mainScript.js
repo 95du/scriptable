@@ -22,7 +22,7 @@ async function main() {
   };
   
   const saveFile = async ({ moduleName, url }) => {
-    const req = new Request(encodeURI(url));
+    const req = new Request(url);
     const content = await req.loadString();
     write(`${moduleName}`, content);
     return true;
