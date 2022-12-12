@@ -87,17 +87,19 @@ async function presentMenu() {
   }
   if (mainMenu === 3) return;
   if (mainMenu === 0) {
-    const FILE_MGR = FileManager.local();
-    const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
+    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
     const codeString = await reqUpdate.loadString();
-    if (codeString.indexOf('95度茅台') == -1) {
-      message = "⚠️更新失败，请检查网络或稍后再试";
-      await generateAlert(message, ["退出"]); return;
+    const finish = new Alert();
+    if (codeString.indexOf("95度茅台") == -1) {
+      finish.title = "更新失败"
+      finish.addAction('OK')
+      await finish.presentAlert();
     } else {
-      FILE_MGR.writeString(module.filename, codeString)
-      message = "小组件更新成功";
-      await generateAlert(message, ["OK"])
+      F_MGR.writeString(module.filename, codeString)
+      finish.title = "更新成功"
+      finish.addAction('OK')
+      await finish.presentAlert();
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
