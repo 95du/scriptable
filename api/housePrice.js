@@ -63,17 +63,15 @@ async function presentMenu() {
   }
   if (mainMenu === 4) return;
   if (mainMenu === 0) {
-    const FILE_MGR = FileManager.local();
-    const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-    const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
+    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
+    const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2hvdXNlUHJpY2UuanM='));
     const codeString = await reqUpdate.loadString();
     if (codeString.indexOf('95度茅台') == -1) {
-      message = "⚠️更新失败，请检查网络或稍后再试";
-      await generateAlert(message, ["退出"]); return;
+      notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
-      FILE_MGR.writeString(module.filename, codeString)
-      message = "小组件更新成功";
-      await generateAlert(message, ["OK"])
+      F_MGR.writeString(module.filename, codeString)
+      notify('小组件更新成功', '');
+      const uri = Script.name();
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
@@ -157,7 +155,7 @@ async function addHouseMsg() {
       { hint: '城市', value: '海口' },
       { hint: '小区', value: '滨江帝景' },
       { hint: '年份', value: '2010' },
-      { hint: '面积', value: '111' },
+      { hint: '面积', value: '128' },
       { hint: '几室', value: '3' },
       { hint: '几厅', value: '2' },
       { hint: '几卫', value: '2' }]
@@ -185,6 +183,7 @@ async function addHouseMsg() {
       obj = {
         cityID: cityID,
         num: num.id,
+        name: num.rich_name.text,
         year: inputArr[2].value,
         squa: inputArr[3].value,
         room: inputArr[4].value,
@@ -202,6 +201,7 @@ async function getHouseMsg(obj) {
   const house = await getJson(`https://m.xflapp.com/f100/api/estimate_house_price?city_id=${obj.cityID}&neighborhood_id=${obj.num}&squaremeter=${obj.squa}&floor_plan_room=${obj.room}&floor_plan_hall=${obj.hall}&floor_plan_bath=${obj.bath}&total_floor=1&floor=1&facing_type=3&decoration_type=4&built_year=${obj.year}&building_type=1&source=h5`);
   // neighborhood
   const neighborhood = await getJson(`https://m.xflapp.com/f100/api/neighborhood/info?neighborhood_id=${obj.num}&source=h5`);
+  
   const pricing = house.data.estimate_pricing_persqm_str.split("元")[0];
   obj = {
     ...obj,
@@ -213,9 +213,10 @@ async function getHouseMsg(obj) {
   }
   
   if (pricing > data.pricing || pricing < data.pricing || !F_MGR.fileExists(cacheFile)) {
+    notify(obj.name, `房屋价值${house.data.estimate_price_str}万，均价${house.data.estimate_pricing_persqm_str}`);
     F_MGR.writeString(cacheFile, JSON.stringify(obj));
   }
-
+  
   //房屋价值
   //console.log(house.data.estimate_price_str)
   //房屋均价
@@ -228,6 +229,7 @@ async function getHouseMsg(obj) {
 
   //在城市中占比
   //console.log(house.data.estimate_price_in_city_level)
+  
   result = {
     ...house.data,
     neighborhood: neighborhood.data.core_info[0].value
@@ -241,6 +243,16 @@ if (config.runsInApp) {
   await getHouseMsg(obj);
   Script.setWidget(widget);
   Script.complete();
+}
+
+async function notify (title, body, url, opts = {}) {
+  let n = new Notification()
+  n = Object.assign(n, opts);
+  n.title = title
+  n.body = body
+  n.sound = 'alert'
+  if (url) n.openURL = url
+  return await n.schedule();
 }
 
 async function getJson(url) {
