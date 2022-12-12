@@ -22,6 +22,7 @@ const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "house");
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
 
+
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
   obj = JSON.parse(data);
@@ -80,7 +81,27 @@ async function presentMenu() {
 
 async function createWidget(result) {
   const widget = new ListWidget();
-  widget.backgroundImage = F_MGR.readImage(bgImage);
+  if (F_MGR.readImage(bgImage)) {
+    widget.backgroundImage = F_MGR.readImage(bgImage);
+  } else {
+    const gradient = new LinearGradient()
+    color = [
+    "#82B1FF", 
+    "#757575", 
+    "#4FC3F7",
+    "#66CCFF",
+    "#99CCCC",
+    "#BCBBBB"
+    ]
+    const items = color[Math.floor(Math.random()*color.length)];
+    gradient.locations = [0, 1]
+    gradient.colors = [
+      new Color(`${items}`, 0.5),
+      new Color('#00000000')
+    ]
+    widget.backgroundGradient = gradient
+  }
+  
   // Wechat icon
   const picture = await getJson(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL2JvdHRvbUJhci5qc29u'));
   const items = picture.noticeApp[Math.floor(Math.random() * picture.noticeApp.length)];
@@ -93,7 +114,7 @@ async function createWidget(result) {
 
   /**
   * Left Stack
-  *
+  */
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
   // logo stack
@@ -103,8 +124,8 @@ async function createWidget(result) {
   const iconSymbol = await ironMan.loadImage();
   const ironManIcon = logoStack.addImage(iconSymbol);
   ironManIcon.imageSize = new Size(180, 180);
-  //leftStack.addSpacer()
-  */mainStack.addText(result.estimate_price_str)
+  leftStack.addSpacer()
+  mainStack.addText(result.estimate_price_str)
   return widget
 }
 
@@ -113,7 +134,7 @@ async function downloadModule() {
   if (F_MGR.fileExists(modulePath)) {
     return modulePath;
   } else {
-    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL2JhY2tncm91bmRTY3JpcHQuanM='));
+    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5TY3JpcHRIc0JhY2tncm91bmQuanM='));
     const moduleJs = await req.load().catch(() => {
       return null;
     });
