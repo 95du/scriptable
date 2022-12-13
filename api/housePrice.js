@@ -4,8 +4,8 @@
 /**
 * 幸福里房产大数据房屋估值
 * 小组件作者：95度茅台
-* 在第 7 行替换图片URL
-* 在第 8 行修改图片尺寸
+* 在第 9 行替换图片URL
+* 在第 10 行修改图片尺寸
 * 感谢 @LSP的帮助
 */
 
@@ -227,7 +227,7 @@ async function addHouseMsg() {
       const city = await getJson('https://fangchan.toutiao.com/f100/api/city_search?full_text=' + encodeURIComponent(inputArr[0].value));
       const cityID = city.data.data[0].city_id
       // subdistrict
-      const housing = await getJson('https://m.xflapp.com/f100/api/get_suggestion?city_id=15310&house_type=4&query=' + encodeURIComponent(inputArr[1].value) + '&only_neighborhood=1&source=h5')
+      const housing = await getJson('https://m.xflapp.com/f100/api/get_suggestion?city_id=15310&house_type=4&query=' + encodeURIComponent(inputArr[1].value) + '&only_neighborhood=1&source=h5');
       const houseList = housing.data
       const alert = new Alert();
       alert.title = '幸福里房产大数据';
@@ -237,7 +237,7 @@ async function addHouseMsg() {
         alert.addAction(item.text + '  在售' + item.tips + '🔥');
       });
       alert.addCancelAction('取消');
-      const houseId = await alert.presentSheet()
+      const houseId = await alert.presentSheet();
       const num = houseList[houseId]
       if (houseId === -1) return;
       if (F_MGR.fileExists(cacheFile)) {
@@ -264,6 +264,7 @@ async function getHouseMsg(obj) {
   const house = await getJson(`https://m.xflapp.com/f100/api/estimate_house_price?city_id=${obj.cityID}&neighborhood_id=${obj.num}&squaremeter=${obj.squa}&floor_plan_room=${obj.room}&floor_plan_hall=${obj.hall}&floor_plan_bath=${obj.bath}&total_floor=1&floor=1&facing_type=3&decoration_type=4&built_year=${obj.year}&building_type=1&source=h5`);
   // neighborhood
   const neighborhood = await getJson(`https://m.xflapp.com/f100/api/neighborhood/info?neighborhood_id=${obj.num}&source=h5`);
+  
   const pricing = house.data.estimate_pricing_persqm_str.split("元")[0];
   if (!F_MGR.fileExists(cacheFile)) {
     notify(obj.name, `房屋价值${house.data.estimate_price_str}万，均价${pricing}元/平方。`);
