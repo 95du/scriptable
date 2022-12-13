@@ -32,7 +32,7 @@ async function presentMenu() {
   alert.addAction('透明背景');
   alert.addAction('房屋估值');
   alert.addAction('预览组件');
-  alert.addAction('退出菜单');
+  alert.addAction('取消操作');
   mainMenu = await alert.presentAlert();
   if (mainMenu === 5) return;
   if (mainMenu === 1) {
