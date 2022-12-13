@@ -26,7 +26,7 @@ if (F_MGR.fileExists(cacheFile)) {
 async function presentMenu() {
   let alert = new Alert();
   alert.title = '我的房子值多少钱'
-  alert.message = 'Version 1.0.0\n\r幸福里房产大数据房屋估值';
+  alert.message = 'Version 1.0.0\n\r幸福里房产大数据房屋估值\n此组件获取的数据仅供参考';
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
   alert.addAction('透明背景');
