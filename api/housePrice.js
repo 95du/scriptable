@@ -2,26 +2,21 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-green; icon-glyph: home;
 /**
+* 幸福里房产大数据房屋估值
 * 小组件作者：95度茅台
-* 
-* 
+* 在第 7 行替换图片URL
+* 在第 8 行修改图片尺寸
+* 感谢 @LSP的帮助
 */
 
-const stackBackground = Color.dynamic(
-  new Color('#EFEBE9', 0.6), 
-  new Color('#161D2A', 0.5)
-);
-const eventTextColor = Color.dynamic(
-  new Color('#1E1E1E'), 
-  new Color('#FEFEFE')
-);
+const houseImageUrl = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/house/houseLogo.png').loadImage();
+const imageSize = 150;
 
 const uri = Script.name();
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "house");
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
-
 
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
@@ -31,7 +26,7 @@ if (F_MGR.fileExists(cacheFile)) {
 async function presentMenu() {
   let alert = new Alert();
   alert.title = '我的房子值多少钱'
-  alert.message = '\n幸福里房产大数据房屋估值';
+  alert.message = 'Version 1.0.0\n\r幸福里房产大数据房屋估值';
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
   alert.addAction('透明背景');
@@ -102,30 +97,75 @@ async function createWidget(result) {
     widget.backgroundGradient = gradient
   }
   
-  // Wechat icon
-  const picture = await getJson(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL2JvdHRvbUJhci5qc29u'));
-  const items = picture.noticeApp[Math.floor(Math.random() * picture.noticeApp.length)];
-  weChat = await getImage(items);
   
+  /**
+  * Frame Layout
+  * @param {Image} image
+  * @param {string} string
+  */
+  widget.setPadding(15, 15, 15, 15);
+  widget.addSpacer(30);
   
-  // Frame Layout
+  // Top Stack
+  const topStack = widget.addStack();
+  topStack.layoutHorizontally();
+  topStack.centerAlignContent();
+  topStack.addSpacer();
+  const nameText = topStack.addText(result.name);
+  nameText.textOpacity = 0.8;
+  nameText.font = Font.boldSystemFont(14);
+  nameText.centerAlignText();
+  
+  const noticeStack = topStack.addStack();
+  const symbol = SFSymbol.named(
+    result.pricing > data.upDown ? 'arrow.up' : 'arrow.down'
+  );
+  const icon = noticeStack.addImage(symbol.image);
+  icon.imageSize = new Size(16, 16);
+  icon.tintColor = new Color(
+    result.pricing > data.upDown ? '#00C853' : '#D50000'
+  )
+  topStack.addSpacer();
+  
+  // Main Stack
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
-
-  /**
-  * Left Stack
-  */
+  mainStack.addSpacer();
+  
+  // Left Stack
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
-  // logo stack
   const logoStack = leftStack.addStack();
-  logoStack.setPadding(0, 0, 0, 0);
-  const ironMan = new Request ('https://gitcode.net/4qiao/scriptable/raw/master/img/house/house.png');
-  const iconSymbol = await ironMan.loadImage();
-  const ironManIcon = logoStack.addImage(iconSymbol);
-  ironManIcon.imageSize = new Size(180, 180);
-  leftStack.addSpacer()
-  mainStack.addText(result.estimate_price_str)
+  const houseImage = logoStack.addImage(houseImageUrl);
+  houseImage.imageSize = new Size(imageSize, imageSize);
+  mainStack.addSpacer(35);
+  
+  // Right Stack
+  const rightStack = mainStack.addStack();
+  rightStack.layoutVertically();
+  rightStack.addSpacer();
+  const priceStack = rightStack.addStack();
+  const priceText = priceStack.addText(result.estimate_price_str);
+  priceText.font = new Font("Georgia-Bold", 50)
+  priceText.textColor = new Color('#D50000');
+  rightStack.addSpacer(10);
+
+  const averagePriceText = rightStack.addText(`房屋均价 ${result.estimate_pricing_persqm_str}`)
+  averagePriceText.textOpacity = 0.7;
+  averagePriceText.font = Font.mediumSystemFont(11);
+  rightStack.addSpacer(2);
+  
+  const neighborhood = rightStack.addText(`小区均价 ${result.neighborhood}`)
+  neighborhood.textOpacity = 0.7;
+  neighborhood.font = Font.mediumSystemFont(11);
+  rightStack.addSpacer(2);
+
+  const cityPriceText = rightStack.addText(`城市占比 ${result.estimate_price_in_city_level} %`)
+  cityPriceText.textOpacity = 0.7;
+  cityPriceText.font = Font.mediumSystemFont(11);
+  rightStack.addSpacer();
+  mainStack.addSpacer();
+  widget.addSpacer();
   return widget
 }
 
@@ -174,13 +214,13 @@ async function addHouseMsg() {
   await generateInputAlert ({
     title: '输入房屋估值信息',
     options: [
-      { hint: '城市', value: '海口' },
-      { hint: '小区', value: '滨江帝景' },
-      { hint: '年份', value: '2010' },
-      { hint: '面积', value: '128' },
-      { hint: '几室', value: '3' },
-      { hint: '几厅', value: '2' },
-      { hint: '几卫', value: '2' }]
+      { hint: '城市', value: '' },
+      { hint: '小区', value: '' },
+      { hint: '年份', value: '' },
+      { hint: '面积', value: '' },
+      { hint: '几室', value: '' },
+      { hint: '几厅', value: '' },
+      { hint: '几卫', value: '' }]
     }, 
     async (inputArr) => {
       const city = await getJson('https://fangchan.toutiao.com/f100/api/city_search?full_text=' + encodeURIComponent(inputArr[0].value));
@@ -227,37 +267,27 @@ async function getHouseMsg(obj) {
   if (!F_MGR.fileExists(cacheFile)) {
     notify(obj.name, `房屋价值${house.data.estimate_price_str}万，均价${pricing}元/平方。`);
   }
-  
+  // Consolidate data
   obj = {
     ...obj,
-    pricing: pricing
+    pricing: pricing,
+    upDown: pricing
   }
+  // Initialization
   if (!F_MGR.fileExists(folder)) {
     F_MGR.createDirectory(folder);
     F_MGR.writeString(cacheFile, JSON.stringify(obj));  
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
-  
+  // Save Valuation
   if (pricing > data.pricing || pricing < data.pricing || !F_MGR.fileExists(cacheFile)) {
     F_MGR.writeString(cacheFile, JSON.stringify(obj));  
   }
-  
-  
-  //房屋价值
-  //console.log(house.data.estimate_price_str)
-  //房屋均价
-  //console.log(house.data.estimate_pricing_persqm_str)
-  //环比价格
-  //console.log(house.data.estimate_price_rate_str)
-  
-  //小区均价
-  //console.log(neighborhood.data.core_info[0].value)
-
-  //在城市中占比
-  //console.log(house.data.estimate_price_in_city_level)
-  
+  // output data
   result = {
     ...house.data,
+    name: obj.name,
+    pricing: pricing,
     neighborhood: neighborhood.data.core_info[0].value
   }
   return widget = await createWidget(result);
@@ -284,9 +314,4 @@ async function notify (title, body, url, opts = {}) {
 async function getJson(url) {
   const req = await new Request(url)
   return await req.loadJSON();
-}
-
-async function getImage(url) {
-  const r = await new Request(url);
-  return await r.loadImage();
 }
