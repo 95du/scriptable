@@ -198,7 +198,7 @@ async function createWidget() {
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
   gradient.colors = [
-    new Color(`${items}`, 0.5),
+    new Color(items, 0.5),
     new Color('#00000000')
   ]
   widget.backgroundGradient = gradient
