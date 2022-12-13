@@ -59,7 +59,7 @@ async function presentMenu() {
   } else {
     await addHouseMsg();
   }
-  if (mainMenu === 4) return;
+  if (mainMenu === 5) return;
   if (mainMenu === 0) {
     const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2hvdXNlUHJpY2UuanM='));
