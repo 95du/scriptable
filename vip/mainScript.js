@@ -140,7 +140,7 @@ async function main() {
       // videoRow
       const videoRow = new UITableRow();
       videoRow.height = 70;
-      const videoText = videoRow.addButton('Animusic HD Pipe Dreams');
+      const videoText = videoRow.addButton('Animusic HD Pipe Dreams Video');
       videoText.widthWeight = 0.3;
       videoText.centerAligned();
       videoText.onTap = async () => {
