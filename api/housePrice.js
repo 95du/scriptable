@@ -115,6 +115,7 @@ async function createWidget(result) {
   nameText.textOpacity = 0.8;
   nameText.font = Font.boldSystemFont(14);
   nameText.centerAlignText();
+  topStack.addSpacer(5);
   
   const noticeStack = topStack.addStack();
   const symbol = SFSymbol.named(
@@ -230,8 +231,8 @@ async function addHouseMsg() {
       const houseList = housing.data
       const alert = new Alert();
       alert.title = '幸福里房产大数据';
-      alert.message = '选择小区开始房屋估值'
-          
+      alert.message = '选择估值的小区';
+      // forEach List
       houseList.forEach(item => {
         alert.addAction(item.text + '  在售' + item.tips + '🔥');
       });
