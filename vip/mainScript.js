@@ -49,7 +49,7 @@ async function main() {
       gifImage.centerAligned();
       table.addRow(gifRow);
   
-      // interval
+      // interval 1
       const gapRow1 = new UITableRow();
       gapRow1.height = 30;
       gapRow1.backgroundColor = bgColor
@@ -78,7 +78,7 @@ async function main() {
       };
       table.addRow(topRow);
   
-      // interval
+      // interval 2
       const gapRow2 = new UITableRow();
       gapRow2.height = 30;
       gapRow2.backgroundColor = bgColor
@@ -130,7 +130,24 @@ async function main() {
         r.addCell(downloadCell);
         table.addRow(r);
       });
-  
+      
+      // interval 3
+      const gapRow3 = new UITableRow();
+      gapRow3.height = 30;
+      gapRow3.backgroundColor = bgColor
+      table.addRow(gapRow3);
+      
+      // videoRow
+      const videoRow = new UITableRow();
+      videoRow.height = 70;
+      const videoText = videoRow.addButton('Animusic HD Pipe Dreams');
+      videoText.widthWeight = 0.3;
+      videoText.centerAligned();
+      videoText.onTap = async () => {
+        await Safari.openInApp(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzIvNUEvQ2g0RnlHT1l0dy1BSTI4Q0FPRDkzNDk1Y2hVMzMxLm1wNA=='),false);
+      };
+      table.addRow(videoRow);
+      
       // bottom interval
       const bottom = new UITableRow();
       bottom.height = 225;
