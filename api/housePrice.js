@@ -160,9 +160,9 @@ async function createWidget(result) {
   neighborhood.font = Font.mediumSystemFont(11);
   rightStack.addSpacer(2);
 
-  const cityPriceText = rightStack.addText(`城市占比 ${result.estimate_price_in_city_level} %`)
-  cityPriceText.textOpacity = 0.7;
-  cityPriceText.font = Font.mediumSystemFont(11);
+  const cityPriceText = rightStack.addText(`城市比率 ${result.estimate_price_in_city_level} %`)
+  cityPriceText.textColor = Color.green();
+  cityPriceText.font = Font.boldSystemFont(12);
   rightStack.addSpacer();
   mainStack.addSpacer();
   widget.addSpacer();
