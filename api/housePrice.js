@@ -34,6 +34,7 @@ async function presentMenu() {
   alert.addAction('预览组件');
   alert.addAction('退出菜单');
   mainMenu = await alert.presentAlert();
+  if (mainMenu === 5) return;
   if (mainMenu === 1) {
     if (F_MGR.fileExists(folder)) {
       await F_MGR.remove(folder);
@@ -59,7 +60,6 @@ async function presentMenu() {
   } else {
     await addHouseMsg();
   }
-  if (mainMenu === 5) return;
   if (mainMenu === 0) {
     const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2hvdXNlUHJpY2UuanM='));
