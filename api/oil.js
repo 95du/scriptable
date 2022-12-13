@@ -27,9 +27,9 @@ const forecast = html.match(new RegExp(rule,"g")).map(str => {
     
 const widget = await createWidget(oil);
 
-const F_MGR = FileManager.iCloud();
-const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
-const cacheFile = F_MGR.joinPath(folder, 'data.json');
+const fileManager = FileManager.iCloud();
+const folder = fileManager.joinPath(fileManager.documentsDirectory(), "oil");
+const cacheFile = fileManager.joinPath(folder, 'data.json');
   
 if (config.widgetFamily === "small") {return}
   
@@ -57,7 +57,7 @@ async function createWidget(oil, data) {
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
   gradient.colors = [
-    new Color(`${items}`, 0.5),
+    new Color(items, 0.5),
     new Color('#00000000')
   ]
   widget.backgroundGradient = gradient
@@ -232,16 +232,14 @@ async function createWidget(oil, data) {
 
 
 // readString
-if (F_MGR.fileExists(cacheFile)) {
-  data = F_MGR.readString(cacheFile)
+if (fileManager.fileExists(cacheFile)) {
+  data = fileManager.readString(cacheFile)
   data = JSON.parse(data)
 } else {
-  if (!F_MGR.fileExists(folder)) {
-    F_MGR.createDirectory(folder)
-  }
+  if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
   data = {"oil":`${forecast}`}
   data = JSON.stringify(data);
-  F_MGR.writeString(cacheFile, data);
+  fileManager.writeString(cacheFile, data);
   return;
 }
   
@@ -255,10 +253,10 @@ if (adjustment !== data.oil) {
   notice.schedule();
     
   // writeString
-  if (F_MGR.fileExists(folder)) {
+  if (fileManager.fileExists(folder)) {
     data = {"oil":`${forecast}`}
     data = JSON.stringify(data);
-    F_MGR.writeString(cacheFile, data);
+    fileManager.writeString(cacheFile, data);
   }
 }
   
