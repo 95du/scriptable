@@ -29,7 +29,7 @@ async function presentMenu() {
   alert.message = 'Version 1.0.0\n\r幸福里房产大数据房屋估值\n此组件获取的数据仅供参考';
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
-  alert.addAction('透明背景');
+  alert.addAction('组件下载');
   alert.addAction('房屋估值');
   alert.addAction('预览组件');
   alert.addAction('取消操作');
@@ -173,16 +173,15 @@ async function createWidget(result) {
 async function downloadModule() {
   const modulePath = F_MGR.joinPath(folder, 'tool.js');
   if (F_MGR.fileExists(modulePath)) {
+    await F_MGR.remove(modulePath)
+  }
+  const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5TY3JpcHQuanM='));
+  const moduleJs = await req.load().catch(() => {
+    return null;
+  });
+  if (moduleJs) {
+    F_MGR.write(modulePath, moduleJs);
     return modulePath;
-  } else {
-    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5TY3JpcHRIc0JhY2tncm91bmQuanM='));
-    const moduleJs = await req.load().catch(() => {
-      return null;
-    });
-    if (moduleJs) {
-      F_MGR.write(modulePath, moduleJs);
-      return modulePath;
-    }
   }
 }
 
@@ -270,20 +269,20 @@ async function getHouseMsg(obj) {
     notify(obj.name, `房屋价值${house.data.estimate_price_str}万，均价${pricing}元/平方。`);
   }
   // Consolidate data
-  obj = {
+  object = {
     ...obj,
     pricing: pricing,
-    upDown: pricing
+    upDown: (obj.pricing) ? obj.pricing : pricing
   }
   // Initialization
   if (!F_MGR.fileExists(folder)) {
     F_MGR.createDirectory(folder);
-    F_MGR.writeString(cacheFile, JSON.stringify(obj));  
+    F_MGR.writeString(cacheFile, JSON.stringify(object));  
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
   // Save Valuation
-  if (pricing > data.pricing || pricing < data.pricing || !F_MGR.fileExists(cacheFile)) {
-    F_MGR.writeString(cacheFile, JSON.stringify(obj));  
+  if (pricing > obj.pricing || pricing < obj.pricing || !F_MGR.fileExists(cacheFile)) {
+    F_MGR.writeString(cacheFile, JSON.stringify(object));  
   }
   // output data
   result = {
