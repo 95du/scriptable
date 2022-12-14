@@ -71,21 +71,25 @@ async function presentMenu() {
   alert.title = 'iOS 16 负一屏底栏'
   alert.message = "\n高仿微信通知信息样式\n内容显示未来两小时天气\n每日一句中英文";
   alert.addDestructiveAction('更新代码');
+  alert.addDestructiveAction('重置所有');
   alert.addAction('透明背景');
   alert.addAction('预览组件');
   alert.addAction('退出菜单');
   mainMenu = await alert.presentAlert();
   if (mainMenu === 1) {
+    await F_MGR.remove(folder)
+  }
+  if (mainMenu === 2) {
     const modulePath = await downloadModule();
     if (modulePath != null) {
       const importedModule = importModule(modulePath);
       await importedModule.main();
     }
   }
-  if (mainMenu === 2) {
+  if (mainMenu === 3) {
     await widget.presentMedium();
   }
-  if (mainMenu === 3) return;
+  if (mainMenu === 4) return;
   if (mainMenu === 0) {
     const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
