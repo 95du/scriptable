@@ -149,7 +149,7 @@ async function createWidget(result) {
   const priceText = priceStack.addText(result.estimate_price_str);
   priceText.font = new Font("Georgia-Bold", 50)
   priceText.textColor = new Color('#D50000');
-  rightStack.addSpacer(10);
+  rightStack.addSpacer(8);
 
   const averagePriceText = rightStack.addText(`房屋均价 ${result.estimate_pricing_persqm_str}`)
   averagePriceText.textOpacity = 0.7;
