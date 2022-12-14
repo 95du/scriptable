@@ -171,7 +171,7 @@ async function createWidget(result) {
 }
 
 async function downloadModule() {
-  const modulePath = F_MGR.joinPath(folder, 'tool.js');
+  const modulePath = F_MGR.joinPath(folder, 'store.js');
   if (F_MGR.fileExists(modulePath)) {
     await F_MGR.remove(modulePath)
   }
