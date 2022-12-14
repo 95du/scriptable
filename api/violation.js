@@ -466,8 +466,6 @@ async function createWidget() {
   barStack2.url = get.status;
   // jump to details
   textPlate2.url = get.details;
-  // jump 12123
-  widget.url = get.alipay;
   // jump show image
   if (list !== undefined) {
     textAddress.url = img;
