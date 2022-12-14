@@ -31,12 +31,12 @@ hostname = miniappcsfw.122.gov.cn
 hostname = %APPEND% miniappcsfw.122.gov.cn
 */
 
-const notice = new Notification()
 const get = await new Request(atob(
 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON()
 const url = get.infoURL
 
-const F_MGR = FileManager.iCloud();
+const uri = Script.name()
+const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "violation");
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
@@ -50,16 +50,20 @@ if (F_MGR.fileExists(cacheFile)) {
 
 if (!F_MGR.fileExists(folder) || verifyToken === undefined) {
   // boxjs_data
-  boxjs_request = new Request('http://boxjs.com/query/data/token_12123');
-  boxjs_data = await boxjs_request.loadJSON();
-  verifyToken = boxjs_data.val
+  try {
+    boxjs_request = new Request('http://boxjs.com/query/data/token_12123');
+    boxjs_data = await boxjs_request.loadJSON();
+    verifyToken = boxjs_data.val
+  } catch(e) {
+    console.log('获取boxJs数据失败 ⚠️\n需打开Quantumult-X获取verifyToken');  
+    return;
+  }
   if (F_MGR.fileExists(cacheFile)) {
     data = {
-      verifyToken: `${verifyToken}`,
-      myPlate: `${myPlate}`
+      verifyToken: verifyToken,
+      myPlate: myPlate
     }
-    data = JSON.stringify(data);
-    F_MGR.writeString(cacheFile, data);
+    F_MGR.writeString(cacheFile, JSON.stringify(data));
   }
 }
 
@@ -93,14 +97,11 @@ if (!F_MGR.fileExists(cacheFile)) {
     if (input === 0) {
       if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
       data = {
-        verifyToken: `${boxjs_data.val}`,
-        myPlate: `${myPlate}`
+        verifyToken: boxjs_data.val,
+        myPlate: myPlate
       }
-      data = JSON.stringify(data);
-      F_MGR.writeString(cacheFile, data);
-      notice.title = '登录成功'
-      notice.body = '请前往桌面添加中号小组件'
-      notice.schedule();
+      F_MGR.writeString(cacheFile, JSON.stringify(data));
+      notify('登录成功', '请前往桌面添加中号小组件');
     } else {
       return;
     }
@@ -185,17 +186,12 @@ if (success === true) {
   }
 } else {
   if (main.resultCode === 'SYSTEM_ERROR') {
-  notice.title = main.resultMsg
-    notice.schedule();
+  notify(main.resultMsg, '');
   } else {
-    data = {myPlate: `${myPlate}`}
-    data = JSON.stringify(data);
-    F_MGR.writeString(cacheFile, data);
+    data = {myPlate: myPlate}
+    F_MGR.writeString(cacheFile, JSON.stringify(data));
     // notice
-    notice.title = 'Token已过期 ⚠️'
-    notice.body = '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )'
-    notice.openURL = get.alipay
-    notice.schedule();
+    notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
   }
   return;
 }
@@ -207,20 +203,31 @@ async function presentMenu() {
   alert.title = "交管 12123"
   alert.message = get.Ver
   alert.addDestructiveAction('更新代码');
-  alert.addAction('GetToken');
+  alert.addDestructiveAction('重置所有');
+  alert.addAction('组件下载');
   alert.addAction('预览组件');
   alert.addAction('退出');
   response = await alert.presentAlert();
   // menu action 1
   if (response === 1) {
-    await Safari.open(get.alipay);
+    if (F_MGR.fileExists(folder)) {
+      await F_MGR.remove(folder);
+      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+    }
     return;
   }
   if (response === 2) {
+    const modulePath = await downloadModule();
+    if (modulePath != null) {
+      const importedModule = importModule(modulePath);
+      await importedModule.main();
+    }
+  }
+  if (response === 3) {
     const widget = await createWidget(main);
     await widget.presentMedium();
   }
-  if (response === 3) return;
+  if (response === 4) return;
   if (response === 0) {
     const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(get.update);
@@ -235,8 +242,7 @@ async function presentMenu() {
       finish.title = "更新成功"
       finish.addAction('OK');
       await finish.presentAlert();
-      const Name = Script.name()
-      Safari.open('scriptable:///run/' + encodeURIComponent(Name));
+      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
 }
@@ -464,9 +470,33 @@ async function createWidget() {
   widget.url = get.alipay;
   // jump show image
   if (list !== undefined) {
-    textAddress.url = `${img}`;
+    textAddress.url = img;
   }
   return widget;
+}
+
+async function downloadModule() {
+  const modulePath = F_MGR.joinPath(folder, 'store.js');
+  if (F_MGR.fileExists(modulePath)) {
+    await F_MGR.remove(modulePath)
+  }
+  const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5TY3JpcHQuanM='));
+  const moduleJs = await req.load().catch(() => {
+    return null;
+  });
+  if (moduleJs) {
+    F_MGR.write(modulePath, moduleJs);
+    return modulePath;
+  }
+}
+
+async function notify (title, body, url, opts = {}) {
+  let n = new Notification()
+  n = Object.assign(n, opts);
+  n.title = title
+  n.body = body
+  if (url) n.openURL = url
+  return await n.schedule()
 }
 
 async function getImage(url) {
