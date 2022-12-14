@@ -230,7 +230,6 @@ async function addHouseMsg() {
       const houseList = housing.data
       const alert = new Alert();
       alert.title = '幸福里房产大数据';
-      alert.message = '选择估值的小区';
       // forEach List
       houseList.forEach(item => {
         alert.addAction(item.text + '  在售' + item.tips + '🔥');
