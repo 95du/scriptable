@@ -44,6 +44,7 @@ async function main() {
   
       const gifRow = new UITableRow();
       gifRow.height = 85 * Device.screenScale();
+      gifRow.backgroundColor = bgColor
       const gifImage = gifRow.addImageAtURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzEvQzgvQ2g0RnlXT0k2b0NBZjRQMUFFZ0trSzZxVVVrNTQyLmdpZg=='));
       gifImage.widthWeight = 0.4;
       gifImage.centerAligned();
