@@ -478,7 +478,7 @@ async function downloadModule() {
   if (F_MGR.fileExists(modulePath)) {
     await F_MGR.remove(modulePath)
   }
-  const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5TY3JpcHQuanM='));
+  const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW45NWR1U3RvcmUuanM='));
   const moduleJs = await req.load().catch(() => {
     return null;
   });
