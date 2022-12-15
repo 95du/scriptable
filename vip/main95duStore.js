@@ -43,17 +43,11 @@ async function main() {
       table.showSeparators = true;
   
       const gifRow = new UITableRow();
-      gifRow.height = 80 * Device.screenScale();
+      gifRow.height = 85 * Device.screenScale();
       const gifImage = gifRow.addImageAtURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzEvQzgvQ2g0RnlXT0k2b0NBZjRQMUFFZ0trSzZxVVVrNTQyLmdpZg=='));
       gifImage.widthWeight = 0.4;
       gifImage.centerAligned();
       table.addRow(gifRow);
-  
-      // interval 1
-      const gapRow1 = new UITableRow();
-      gapRow1.height = 30;
-      gapRow1.backgroundColor = bgColor
-      table.addRow(gapRow1);
   
       // topRow
       const topRow = new UITableRow();
@@ -78,11 +72,11 @@ async function main() {
       };
       table.addRow(topRow);
   
-      // interval 2
-      const gapRow2 = new UITableRow();
-      gapRow2.height = 30;
-      gapRow2.backgroundColor = bgColor
-      table.addRow(gapRow2);
+      // interval 1
+      const gapRow1 = new UITableRow();
+      gapRow1.height = 30;
+      gapRow1.backgroundColor = bgColor
+      table.addRow(gapRow1);
   
       // 如果是节点，则先远程获取
       const req = new Request(data.subscription);
@@ -131,11 +125,11 @@ async function main() {
         table.addRow(r);
       });
       
-      // interval 3
-      const gapRow3 = new UITableRow();
-      gapRow3.height = 30;
-      gapRow3.backgroundColor = bgColor
-      table.addRow(gapRow3);
+      // interval 2
+      const gapRow2 = new UITableRow();
+      gapRow2.height = 30;
+      gapRow2.backgroundColor = bgColor
+      table.addRow(gapRow2);
       
       // videoRow
       const videoRow = new UITableRow();
