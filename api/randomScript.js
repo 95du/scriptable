@@ -9,9 +9,8 @@
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
-const apiData = new Request(atob(
-'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3JhbmRvbS5qc29u'));
-const get = await apiData.loadJSON();
+const get = await new Request(atob(
+'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3JhbmRvbS5qc29u')).loadJSON();
 
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duScript');
@@ -60,7 +59,7 @@ async function presentMenu() {
   alert.addAction('使用教程');
   alert.addAction('添加组件');
   alert.addAction('预览组件');
-  alert.addAction('取消');
+  alert.addAction('取消操作');
   response = await alert.presentAlert();
   if (response === 1) {
     await shortcutsTutorial();
