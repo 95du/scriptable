@@ -1,7 +1,6 @@
-async function main() {
-  // Variables used by Scriptable.
+// Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: pink; icon-glyph: cloud-download-alt;
+// icon-color: teal; icon-glyph: cloud-download-alt;
 async function main() {
   const bgColor = Color.dynamic(
     new Color('#F5F5F5'),
@@ -23,7 +22,7 @@ async function main() {
   };
   
   const saveFile = async ({ moduleName, url }) => {
-    const req = new Request(encodeURI(url));
+    const req = new Request(url);
     const content = await req.loadString();
     write(`${moduleName}`, content);
     return true;
@@ -75,7 +74,7 @@ async function main() {
       rightText.widthWeight = 0.3;
       rightText.rightAligned();
       rightText.onTap = async () => {
-        Safari.openInApp('https://sharecuts.cn/user/KVlQooAqzA', false);
+        Safari.openInApp('https://sharecuts.cn/user/KVlQooAqzA',false);
       };
       table.addRow(topRow);
   
@@ -131,13 +130,13 @@ async function main() {
         r.addCell(downloadCell);
         table.addRow(r);
       });
-  
+      
       // interval 3
       const gapRow3 = new UITableRow();
       gapRow3.height = 30;
       gapRow3.backgroundColor = bgColor
       table.addRow(gapRow3);
-  
+      
       // videoRow
       const videoRow = new UITableRow();
       videoRow.height = 70;
@@ -145,10 +144,10 @@ async function main() {
       videoText.widthWeight = 0.3;
       videoText.centerAligned();
       videoText.onTap = async () => {
-        await Safari.openInApp(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzIvNUEvQ2g0RnlHT1l0dy1BSTI4Q0FPRDkzNDk1Y2hVMzMxLm1wNA=='), false);
+        await Safari.openInApp(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzIvNUEvQ2g0RnlHT1l0dy1BSTI4Q0FPRDkzNDk1Y2hVMzMxLm1wNA=='),false);
       };
       table.addRow(videoRow);
-  
+      
       // bottom interval
       const bottom = new UITableRow();
       bottom.height = 225;
@@ -178,12 +177,7 @@ async function main() {
   };
   await Run();
 }
-
-module.exports = {
-  main
-}
-}
-
+      
 module.exports = {
   main
 }
