@@ -15,8 +15,7 @@ Req.body = 'region=海南'
 const Res = await Req.loadJSON();
 const oil = Res.data
 
-const req = new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20='));
-const html = await req.loadString();
+const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
 const rule = 'var tishiContent="(.*?)";';
 const forecast = html.match(new RegExp(rule,"g")).map(str => {
   const forecast = str.match(new RegExp(rule));  
