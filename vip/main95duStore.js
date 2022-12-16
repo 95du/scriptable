@@ -6,27 +6,6 @@ async function main() {
     new Color('#F5F5F5'),
     new Color('#000000')
   );
-  const Files = FileManager.iCloud();
-  const RootPath = Files.documentsDirectory();
-  
-  const saveFileName = (fileName) => {
-    const hasSuffix = fileName.lastIndexOf(".") + 1;
-    return !hasSuffix ? `${fileName}.js` : fileName;
-  };
-  
-  const write = (fileName, content) => {
-    let file = saveFileName(fileName);
-    const filePath = Files.joinPath(RootPath, file);
-    Files.writeString(filePath, content);
-    return true;
-  };
-  
-  const saveFile = async ({ moduleName, url }) => {
-    const req = new Request(url);
-    const content = await req.loadString();
-    write(`${moduleName}`, content);
-    return true;
-  };
   
   const notify = async (title, body, url, opts = {}) => {
     let n = new Notification();
@@ -99,12 +78,11 @@ async function main() {
         downloadCell.centerAligned();
         downloadCell.dismissOnTap = true;
         downloadCell.onTap = async () => {
-          const isWrite = await saveFile({
-            moduleName: item.name,
-            url: item.scriptURL,
-          });
-          if (isWrite) {
-            notify("已获取Script", `${item.title}下载/更新成功`);
+          const F_MGR = FileManager.iCloud();
+          const script = await new Request(item.scriptURL).loadString();
+          F_MGR.writeString(F_MGR.documentsDirectory() + `/${item.name}.js`, script)
+          if (script) {
+            notify("已获取Script", `小组件:${item.title}下载/更新成功`);
           }
         };
         r.addCell(downloadCell);
