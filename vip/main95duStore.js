@@ -33,6 +33,7 @@ async function main() {
     n = Object.assign(n, opts);
     n.title = title;
     n.body = body;
+    n.sound = 'popup';
     if (url) n.openURL = url;
     return await n.schedule();
   };
