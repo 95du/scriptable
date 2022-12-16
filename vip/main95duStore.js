@@ -98,28 +98,12 @@ async function main() {
         downloadCell.centerAligned();
         downloadCell.dismissOnTap = true;
         downloadCell.onTap = async () => {
-          if (item.depend) {
-            try {
-              for (let i = 0; i < item.depend.length; i++) {
-                const relyItem = item.depend[i];
-                const _isWrite = await saveFile({
-                  moduleName: relyItem.name,
-                  url: relyItem.scriptURL,
-                });
-                if (_isWrite) {
-                  notify("下载提示", `依赖插件:${relyItem.name}下载/更新成功`);
-                }
-              }
-            } catch (e) {
-              console.log(e);
-            }
-          }
           const isWrite = await saveFile({
             moduleName: item.name,
             url: item.scriptURL,
           });
           if (isWrite) {
-            notify("下载提示", `小组件:${item.title}下载/更新成功`);
+            notify("已获取Script", `${item.title}下载/更新成功`);
           }
         };
         r.addCell(downloadCell);
