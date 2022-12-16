@@ -60,8 +60,7 @@ async function main() {
       table.addRow(gapRow1);
   
       // 如果是节点，则先远程获取
-      const req = new Request(data.subscription);
-      const subscription = await req.loadJSON();
+      const subscription = await new Request(data.subscription).loadJSON()
       const apps = subscription.apps;
       apps.forEach((item) => {
         const r = new UITableRow();
