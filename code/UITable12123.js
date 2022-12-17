@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: car;
 const F_MGR = FileManager.iCloud();
-const uri = Script.name;
+const uri = Script.name();
 // Background Color
 const bgColor = Color.dynamic(
   new Color('#F5F5F5'), new Color('')
