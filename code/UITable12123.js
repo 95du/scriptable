@@ -2,6 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: car;
 const F_MGR = FileManager.iCloud();
+const uri = Script.name;
 // Background Color
 const bgColor = Color.dynamic(
   new Color('#F5F5F5'), new Color('')
@@ -251,7 +252,7 @@ async function updateVersion(title, desc) {
   const index = await generateAlert(title, message, options);
   if (index === 0) return;
   const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
-  const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2hvdXNlUHJpY2UuanM='));
+  const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvY29kZS9VSVRhYmxlMTIxMjMuanM='));
   const codeString = await reqUpdate.loadString();
   if (codeString.indexOf('95度茅台') == -1) {
     notify('更新失败⚠️', '请检查网络或稍后再试');
