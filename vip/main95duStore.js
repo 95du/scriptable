@@ -134,7 +134,5 @@ async function main() {
   };
   await Run();
 }
-      
-module.exports = {
-  main
-}
+// await Run main
+module.exports = { main }
