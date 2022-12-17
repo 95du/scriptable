@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: brown; icon-glyph: cloud-download-alt;
+// icon-color: red; icon-glyph: cloud-download-alt;
 /**
 * 框架修改自：@DmYY
 * DmYY订阅地址：https://raw.githubusercontent.com/dompling/Scriptable/master/install.json
