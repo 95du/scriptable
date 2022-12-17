@@ -55,8 +55,10 @@ if (!F_MGR.fileExists(folder) || verifyToken === undefined) {
     boxjs_data = await boxjs_request.loadJSON();
     verifyToken = boxjs_data.val
   } catch(e) {
-    console.log('获取boxJs数据失败 ⚠️\n需打开Quantumult-X获取verifyToken');  
-    return;
+    if (config.runsInApp) {
+      Safari.open('quantumult-x://');
+      notify('获取boxJs数据失败 ⚠️', '需打开Quantumult-X获取verifyToken');
+    }
   }
   if (F_MGR.fileExists(cacheFile)) {
     data = {
@@ -76,12 +78,9 @@ if (!F_MGR.fileExists(cacheFile)) {
     loginAlert.addAction('获取Token');
     loginAlert.addCancelAction('取消');
     login = await loginAlert.presentAlert();
-    if (login === -1) {
-      return;
-    } else {
-      Safari.open(get.alipay);
-      return;
-    }
+    if (login === -1) return;
+    Safari.open(get.alipay);
+    return;
   } else {
     console.log(`boxjs_token 获取成功: ${boxjs_data.val}`);
     const alert = new Alert();
@@ -113,10 +112,10 @@ if (!F_MGR.fileExists(cacheFile)) {
 const violation = new Request(url);
 violation.method = 'POST'
 violation.body = `params={
-    "productId": "${get.productId}",
-    "api": "${get.api1}",
-    "version": "${get.version}",
-    "verifyToken": "${verifyToken}"
+  "productId": "${get.productId}",
+  "api": "${get.api1}",
+  "version": "${get.version}",
+  "verifyToken": "${verifyToken}"
 }`
 const main = await violation.loadJSON();
 const success = main.success
@@ -252,7 +251,7 @@ async function presentMenu() {
 if (config.widgetFamily === "small") {
   return;
 } else {
-  if (!config.runsInWidget) {  
+  if (!config.runsInWidget) {
     await presentMenu();
   } else {
     const widget = await createWidget(main);
