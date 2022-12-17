@@ -259,7 +259,5 @@ async function main() {
   
   await Run();
 }
-      
-module.exports = {
-  main
-}
+// async function main()
+module.exports = { main }
