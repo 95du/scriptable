@@ -44,9 +44,11 @@ if (F_MGR.fileExists(cacheFile)) {
     const value = alert.textFieldValue(0)
     if (input === 0) {
       if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
-      data = {"token":`${value}`,"updateTime":`${timestamp}`}
-      data = JSON.stringify(data);
-      F_MGR.writeString(cacheFile, data);
+      data = {
+        "token": value,
+        "updateTime": timestamp
+      }
+      F_MGR.writeString(cacheFile, JSON.stringify(data));
       notice.title = '登录成功'
       notice.body = '重新运行即可预览或前往桌面添加小组件'
       notice.schedule()
@@ -171,11 +173,8 @@ const total = bill.totalPower
 const pay = bill.arrears
 const arrears = bill.totalElectricity
 
-
 // create Widget
 const widget = await createWidget(ele, balance, pay);
-
-if (config.widgetFamily === "small") {return}
   
 if (config.runsInWidget) {
   Script.setWidget(widget)
@@ -183,7 +182,6 @@ if (config.runsInWidget) {
 } else {
   await widget.presentMedium();
 }
-    
 
 // Create widget
 async function createWidget() {
@@ -428,7 +426,6 @@ async function createWidget() {
   arrearsTotalText.font = Font.boldSystemFont(14)
   arrearsTotalText.leftAlignText()
   rightStack.addSpacer(5)
-    
   return widget;
 }
 
@@ -448,27 +445,26 @@ if (hours >= 12) {
       
     // writeString JSON
     if (F_MGR.fileExists(folder)) {
-      data = {"token":`${data.token}`,"updateTime":`${timestamp}`}
-      data = JSON.stringify(data);
-      F_MGR.writeString(cacheFile, data);
+      data = {
+        "token": data.token,
+        "updateTime": timestamp
+      };
+      F_MGR.writeString(cacheFile, JSON.stringify(data));
     }
   }
 }
-
 
 async function getImage(url) {
   const r = await new Request(url);
   return await r.loadImage();
 }
-    
-  
+
 async function shadowImage(img) {
-  let ctx = new DrawContext()
+  let ctx = new DrawContext();
   ctx.size = img.size
   ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
   // 图片遮罩颜色、透明度设置
-  ctx.setFillColor(new Color("#000000", 0.2))
+  ctx.setFillColor(new Color("#000000", 0.2));
   ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-  let res = await ctx.getImage()
-  return res
+  return await ctx.getImage();
 }
