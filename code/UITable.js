@@ -81,7 +81,7 @@ async function renderTables(table) {
     },
     {
       icon: {
-        name: 'gearshape.fill',
+        name: 'applelogo',
         color: '#00BCD4'
       },
       title: 'AppleOS',
@@ -220,7 +220,7 @@ async function renderTables(table) {
   const updateVersion = [
     {
       icon: {
-        name: 'applelogo',
+        name: 'gearshape.fill',
         color: '#F9A825'
       },
       type: 'ver',
@@ -634,5 +634,5 @@ const Run = async () => {
     console.log("缓存读取错误" + e);
   }
 };
-// Setting Widget Config
+// await
 await setWidgetConfig()
