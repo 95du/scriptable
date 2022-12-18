@@ -108,7 +108,8 @@ async function main() {
     const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "house");
     const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
     F_MGR.writeImage(bgImage,imgCrop)
-    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+    await widget.presentMedium();
+    //Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   } else if (exportPhoto == 1) {
     Photos.save(imgCrop);
   } else if (exportPhoto == 2) {
