@@ -237,7 +237,10 @@ async function presentMenu() {
       finish.addAction('OK');
       await finish.presentAlert();
     } else {
-      F_MGR.writeString(module.filename, codeString);
+      F_MGR.writeString(  
+        module.filename,
+        codeString
+      );
       finish.title = "更新成功"
       finish.addAction('OK');
       await finish.presentAlert();
@@ -508,6 +511,5 @@ async function shadowImage(img) {
   // 图片遮罩颜色、透明度设置
   ctx.setFillColor(new Color("#000000", 0.2))
   ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-  let res = await ctx.getImage()
-  return res
+  return await ctx.getImage()
 }
