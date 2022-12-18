@@ -1,3 +1,6 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: red; icon-glyph: magic;
 async function main() {
   // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
@@ -322,9 +325,7 @@ async function preferences(table, arr, outfit) {
           options = ['完成'];
           await generateAlert(title, message, options);
         } else if (type == 'OS') {
-          Safari.openInApp(
-'https://developer.apple.com/news/releases', false
-          );
+          await abc()
         }
       }
     table.addRow(row);
