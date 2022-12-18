@@ -325,6 +325,8 @@ async function preferences(table, arr, outfit) {
           options = ['完成'];
           await generateAlert(title, message, options);
         } else if (type == 'OS') {
+          let importedModule = importModule(modulePath);
+  await importedModule.main();
           await abc()
         }
       }
