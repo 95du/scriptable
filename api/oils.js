@@ -5,54 +5,70 @@
 * 小组件作者: 95度茅台
 * Oil price
 * Version 1.2
-* 2022-11-19 11:30
+* 2022-12-19 11:30
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+* ⚠️适配机型: 手动第9、10行的数字
 */
+const value = 6 //小机型改成 4
+const wide = 9 //小机型改成 6
 
-// ⚠️适配机型: 手动第10行的数字
-const value = 8 //小机型改成 4
-const wide = 8 //小机型改成 6
-
-const location = await Location.current();
-    const locationText = await Location.reverseGeocode(
-      location.latitude,
-      location.longitude,
-    );
-    const {administrativeArea = ''} = locationText[0] || {};
-    const province = `${administrativeArea.replace('省', '')}`;
-
-const Req = new Request('https://mys4s.cn/v3/oil/price');
-Req.method = 'POST'
-Req.body = `region=${province}`
-const Res = await Req.loadJSON();
-const oil = Res.data
-
-const req = new Request('http://m.qiyoujiage.com');
-const html = await req.loadString();
-const rule = 'var tishiContent="(.*?)";';
-const forecast = html.match(new RegExp(rule,"g")).map(str=>{
-  const forecast = str.match(new RegExp(rule));  
-  const regex = /<br\/>/g;
-  const value = forecast[1].split(regex)
-  return value
-});
-    
-const widget = await createWidget(oil);
-const fileManager = FileManager.iCloud();
-const folder = fileManager.joinPath(fileManager.documentsDirectory(), "oil");
-const cacheFile = fileManager.joinPath(folder, 'data.json');
-  
-if (config.widgetFamily === "small") {return}
-  
-if (config.runsInWidget) {
-  Script.setWidget(widget)
-  Script.complete()
+const F_MGR = FileManager.iCloud();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
+const cacheFile = F_MGR.joinPath(folder, 'data.json');
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile)
+  data = JSON.parse(data)
 } else {
-  await widget.presentMedium();
+  await inputProvince();
 }
-    
+
+try {  
+  const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));
+  req.method = 'POST'
+  req.body = `region=${data.province}`
+  const res = await req.loadJSON();
+  const oil = res.data
   
-async function createWidget(oil, data) {
+  const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
+  if (html) {  
+    const rule = 'var tishiContent="(.*?)";';
+    const forecast = html.match(new RegExp(rule,"g")).map(str => {
+      const forecast = str.match(new RegExp(rule));  
+      const regex = /<br\/>/g;
+      const value = forecast[1].split(regex)
+      return value
+    });
+  } else {
+    forecast = data.oil
+  }
+  widget = await createWidget(oil);
+} catch(e) {
+  console.log('输入省份名称')
+}
+
+async function inputProvince() {
+  const alert = new Alert();
+  alert.title = '输入省份名称';
+  alert.addTextField('海南', '');
+  alert.addAction('确定');
+  alert.addCancelAction('取消');  
+  const input = await alert.presentAlert();
+  if (input === -1) return;
+  if (!F_MGR.fileExists(folder)) {
+    F_MGR.createDirectory(folder)
+    F_MGR.writeString(
+      cacheFile,
+      JSON.stringify({
+        "oil": forecast,
+        "province": alert.textFieldValue(0)
+      })
+    );
+    const uri = Script.name();
+    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+  }
+}
+
+async function createWidget(oil) {
   // 组件背景渐变
   const widget = new ListWidget()
   widget.backgroundColor = Color.white();
@@ -68,19 +84,20 @@ async function createWidget(oil, data) {
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
   gradient.colors = [
-    new Color(`${items}`, 0.5),
+    new Color(items, 0.5),
     new Color('#00000000')
   ]
   widget.backgroundGradient = gradient
-
+   
     
   // 灵动岛
-  widget.setPadding(6, 6, 6, 6);
+  widget.setPadding(7, 7, 7, 7);
   const mainStack = widget.addStack();
   mainStack.layoutVertically();
+  
+  // Dynamic Island bar
   const Stack = mainStack.addStack();
   Stack.addSpacer()
-  // Dynamic Island bar
   const barStack = Stack.addStack();
   barStack.backgroundColor = Color.black();
   barStack.setPadding(5, 42, 5, 42);
@@ -88,7 +105,7 @@ async function createWidget(oil, data) {
   barStack.borderColor = Color.black();
   barStack.borderWidth = 3
   //Text Color
-  const titleText = barStack.addText(`${province}油价`);
+  const titleText = barStack.addText(`${data.province}油价`);
   titleText.textColor = Color.green();
   titleText.font = Font.boldSystemFont(16)
   titleText.centerAlignText();
@@ -102,24 +119,24 @@ async function createWidget(oil, data) {
   carIcon.tintColor = Color.black();
   Stack.addSpacer()
   mainStack.addSpacer(10)
-    
+  
+  
   // oilPrice alert ‼️
   const dataStack2 = mainStack.addStack();
   dataStack2.layoutHorizontally();
   dataStack2.addSpacer()
   // bar
   const barStack1 = dataStack2.addStack();
-  barStack1.setPadding(8, 10, 8, 10);
+  barStack1.setPadding(8, 8, 8, 8);
   barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack1.cornerRadius = 10
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
-  const oilTipsText = barStack1.addText(`${forecast}`);
-  oilTipsText.textColor = new Color('#484848');
+  const oilTipsText = barStack1.addText(forecast);
+  oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
-  //barStack1.addSpacer(16)
   dataStack2.addSpacer()
   mainStack.addSpacer(10)
   
@@ -240,44 +257,34 @@ async function createWidget(oil, data) {
   return widget;
 }
 
-
-// readString
-if (fileManager.fileExists(cacheFile)) {
-  data = fileManager.readString(cacheFile)
-  data = JSON.parse(data)
+if (config.runsInWidget) {
+  Script.setWidget(widget)
+  Script.complete()
 } else {
-  if (!fileManager.fileExists(folder)) {fileManager.createDirectory(folder)}
-  data = {"oil":`${forecast}`}
-  data = JSON.stringify(data);
-  fileManager.writeString(cacheFile, data);
-  return;
+  await widget.presentMedium();
 }
-  
-var adjustment = `${forecast}`
-if (adjustment !== data.oil) {
-  const notice = new Notification()
+
+if (forecast !== data.oil) {
+  const notice = new Notification();
   notice.sound = 'alert'
-  notice.title = `${province}油价涨跌调整‼️`
-  notice.body = adjustment
-  notice.openURL = 'https://mys4s.cn/v3/oil/price'
+  notice.title = `${data.province}油价涨跌调整‼️`
+  notice.body = forecast
   notice.schedule();
-    
   // writeString
-  if (fileManager.fileExists(folder)) {
-    data = {"oil":`${forecast}`}
-    data = JSON.stringify(data);
-    fileManager.writeString(cacheFile, data);
-  }
+  fileManager.writeString(
+    JSON.stringify({
+      "oil": forecast,
+      "province": data.province
+    })
+  );
 }
-  
   
 async function shadowImage(img) {
-  let ctx = new DrawContext()
+  let ctx = new DrawContext();
   ctx.size = img.size
-  ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+  ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));
   // 图片遮罩颜色、透明度设置
   ctx.setFillColor(new Color("#000000", 0.3))
-  ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-  let res = await ctx.getImage()
-  return res
+  ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']));
+  return await ctx.getImage();
 }
