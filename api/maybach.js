@@ -40,7 +40,10 @@ async function presentMenu() {
       finish.addAction('OK')
       await finish.presentAlert();
     } else {
-      FILE_MGR.writeString(module.filename, codeString)
+      FILE_MGR.writeString(  
+        module.filename,
+        codeString
+      );
       finish.title = "更新成功"
       finish.addAction('OK')
       await finish.presentAlert();
