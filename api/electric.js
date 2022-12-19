@@ -31,14 +31,14 @@ if (F_MGR.fileExists(cacheFile)) {
   } else {
     const webview = new WebView();  
     await webview.loadURL('https://95598.csg.cn/#/hn/login/login');
-    await webview.present();
     const cookie = await webview.evaluateJavaScript(
       'document.cookie'
     );
+    await webview.present();
     console.log(cookie)
     try {
       if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
-      const token = cookie.match(/token=(.*?);/)[1];
+      const token = cookie.match(/token=(.*?);\s10=10/)[1];
       data = {
         token: token,
         updateTime: timestamp
