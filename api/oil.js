@@ -12,42 +12,29 @@
 const value = 6 //小机型改成 4
 const wide = 9 //小机型改成 6
 
+const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
+const rule = 'var tishiContent="(.*?)";';
+const forecast = html.match(new RegExp(rule,"g")).map(str => {
+  const forecast = str.match(new RegExp(rule));  
+  const regex = /<br\/>/g;
+  const value = forecast[1].split(regex)
+  return value
+});
+
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
-if (F_MGR.fileExists(cacheFile)) {
-  data = F_MGR.readString(cacheFile)
-  data = JSON.parse(data)
-} else {
-  await inputProvince();
-}
 
-try {  
-  const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile);
+  data = JSON.parse(data);
+  const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));  
   req.method = 'POST'
   req.body = `region=${data.province}`
   const res = await req.loadJSON();
-  const oil = res.data
-  
-  const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-  if (html) {  
-    const rule = 'var tishiContent="(.*?)";';
-    const forecast = html.match(new RegExp(rule,"g")).map(str => {
-      const forecast = str.match(new RegExp(rule));  
-      const regex = /<br\/>/g;
-      const value = forecast[1].split(regex)
-      return value
-    });
-  } else {
-    forecast = data.oil
-  }
+  oil = res.data
   widget = await createWidget(oil);
-} catch(e) {
-  console.log('输入省份名称')
-}
-
-
-async function inputProvince() {
+} else {
   const alert = new Alert();
   alert.title = '输入省份名称';
   alert.addTextField('海南', '海南');
@@ -61,19 +48,21 @@ async function inputProvince() {
     F_MGR.writeString(
       cacheFile,
       JSON.stringify({
-        "oil": forecast,
+        "oil": `${forecast}`,
         "province": province
       })
     );
-    return;
+    const uri = Script.name();
+    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
 }
 
+
 async function createWidget(oil) {
   // 组件背景渐变
-  const widget = new ListWidget()
+  const widget = new ListWidget();
   widget.backgroundColor = Color.white();
-  const gradient = new LinearGradient()
+  const gradient = new LinearGradient();
     color = [
     "#82B1FF", 
     "#757575", 
@@ -98,7 +87,7 @@ async function createWidget(oil) {
   
   // Dynamic Island bar
   const Stack = mainStack.addStack();
-  Stack.addSpacer()
+  Stack.addSpacer();
   const barStack = Stack.addStack();
   barStack.backgroundColor = Color.black();
   barStack.setPadding(5, 42, 5, 42);
@@ -108,7 +97,7 @@ async function createWidget(oil) {
   //Text Color
   const titleText = barStack.addText(`${data.province}油价`);
   titleText.textColor = Color.green();
-  titleText.font = Font.boldSystemFont(16)
+  titleText.font = Font.boldSystemFont(16);
   titleText.centerAlignText();
   Stack.addSpacer(5);
   
@@ -118,14 +107,14 @@ async function createWidget(oil) {
   const carIcon = noticeStack.addImage(iconSymbol2.image);
   carIcon.imageSize = new Size(29, 29);
   carIcon.tintColor = Color.black();
-  Stack.addSpacer()
+  Stack.addSpacer();
   mainStack.addSpacer(10)
   
   
   // oilPrice alert ‼️
   const dataStack2 = mainStack.addStack();
   dataStack2.layoutHorizontally();
-  dataStack2.addSpacer()
+  dataStack2.addSpacer();
   // bar
   const barStack1 = dataStack2.addStack();
   barStack1.setPadding(8, 8, 8, 8);
@@ -134,17 +123,17 @@ async function createWidget(oil) {
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
-  const oilTipsText = barStack1.addText(forecast);
+  const oilTipsText = barStack1.addText(`${forecast}`);
   oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
-  dataStack2.addSpacer()
+  dataStack2.addSpacer();
   mainStack.addSpacer(10)
   
   
   // First column ❤️
   const dataStack = mainStack.addStack();
-  dataStack.addSpacer()
+  dataStack.addSpacer();
   // Oil_0 bar
   const barStack0 = dataStack.addStack();
   barStack0.setPadding(3, wide, 3, wide);
@@ -254,39 +243,43 @@ async function createWidget(oil) {
   }
   totalMonthBar8.font = Font.mediumSystemFont(14);
   totalMonthBar8.textColor = new Color('#FFFFFF');
-  dataStack.addSpacer()
+  dataStack.addSpacer();
   return widget;
 }
 
-if (config.runsInWidget) {
-  Script.setWidget(widget)
-  Script.complete()
-} else {
-  await widget.presentMedium();
+try {  
+  if (config.runsInWidget) {
+    Script.setWidget(widget);
+    Script.complete();
+  } else {
+    await widget.presentMedium();
+  }
+} catch(error) {
+  console.log(error)
 }
 
-if (forecast !== data.oil) {
+if (`${forecast}` !== data.oil) {
   const notice = new Notification()
   notice.sound = 'alert'
   notice.title = `${data.province}油价涨跌调整‼️`
-  notice.body = forecast
+  notice.body = `${forecast}`
   notice.schedule();
   // writeString
-  fileManager.writeString(
+  F_MGR.writeString(
+    cacheFile,
     JSON.stringify({
-      "oil": forecast,
+      "oil": `${forecast}`,
       "province": data.province
     })
   );
 }
   
 async function shadowImage(img) {
-  let ctx = new DrawContext()
+  let ctx = new DrawContext();
   ctx.size = img.size
-  ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+  ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));
   // 图片遮罩颜色、透明度设置
   ctx.setFillColor(new Color("#000000", 0.3))
   ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-  let res = await ctx.getImage()
-  return res
+  return await ctx.getImage()
 }
