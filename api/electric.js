@@ -9,23 +9,19 @@
 * 2022-10-15 10:00
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
-
-const notice = new Notification()
 const timestamp = Date.parse(new Date());
 
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "electric");
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
-// readString JSON
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
   data = JSON.parse(data)
 } else {
-  // 使用方法
   const loginAlert = new Alert();
   loginAlert.title = '南网在线登录';
-  loginAlert.message = `\r\n注 : 南方电网只包括海南、广东、广西、云南、贵州。\n\n首次登录需用户自行在App中登录时抓包获取token，登录成功将储存在iCloud，token在抓包历史中找到https://95598.csg.cn/ucs/ma/zt/center/login，在响应头部拷贝x-auth-token的值\n\r\n小组件玩家: 95度茅台`;
+  loginAlert.message = `\r\n南方电网只包括海南、广东、广西、云南、贵州5个省份。\n\n首次登录需用户在南方电网的网页版中登录，组件自动抓取 token，登录成功稍等10秒后生效，关闭该页面，token 将储存在 iCloud.\n\r\n小组件作者: 95度茅台\n获取token方法: @LSP`;
   loginAlert.addAction('继续');
   loginAlert.addCancelAction('取消');
   login = await loginAlert.presentAlert();
@@ -33,35 +29,31 @@ if (F_MGR.fileExists(cacheFile)) {
   if (login === -1) {
     return;
   } else {
-    const alert = new Alert();
-    const token = Pasteboard.paste()
-    alert.title = '输入token即可使用小组件';
-    alert.message = '已获取剪贴板'
-    alert.addTextField('输入token', token);
-    alert.addAction('确定');
-    alert.addCancelAction('取消');
-    const input = await alert.presentAlert();
-    const value = alert.textFieldValue(0)
-    if (input === 0) {
+    const webview = new WebView();  
+    await webview.loadURL('https://95598.csg.cn/#/hn/login/login');
+    await webview.present();
+    const cookie = await webview.evaluateJavaScript(
+      'document.cookie'
+    );
+    console.log(cookie)
+    try {
       if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
+      const token = cookie.match(/token=(.*?);/)[1];
       data = {
-        "token": value,
-        "updateTime": timestamp
+        token: token,
+        updateTime: timestamp
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
-      notice.title = '登录成功'
-      notice.body = '重新运行即可预览或前往桌面添加小组件'
-      notice.schedule()
+      notify('登录成功', '前往桌面添加小组件');
+    } catch(e) {
+      return;
     }
-    return;
   }
 }
-
 
 // Get Year and Month
 const Year = new Date().getFullYear();
 const Month = new Date().getMonth() + 1;
-
 
 // UserInfo
 const req = new Request('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers');
@@ -70,12 +62,17 @@ req.headers = {
   "x-auth-token": `${data.token}`
 }
 const res = await req.loadJSON();
-const ele = res.data[0] //User
-const name = ele.userName
-const code = ele.areaCode
-const id = ele.bindingId
-const number = ele.eleCustNumber
-
+console.log(res)
+if (res.sta == 00) {
+  ele = res.data[0] //User
+  name = ele.userName
+  code = ele.areaCode
+  id = ele.bindingId
+  number = ele.eleCustNumber
+} else if (res.sta == 04) {
+  notify('南网在线', 'token已过期，请重新登录获取');
+  F_MGR.remove(folder); return
+}
 
 // Yesterday
 const yesterday = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPointYesterday');
@@ -429,7 +426,6 @@ async function createWidget() {
   return widget;
 }
 
-
 // 计算时长
 const pushTime = (timestamp - data.updateTime);
 const P1 = pushTime % (24 * 3600 * 1000);
@@ -437,21 +433,25 @@ const hours = Math.floor(P1 / (3600 * 1000));
     
 if (hours >= 12) {
   if (pay > 0) {
-    //Notification_1
-    notice.sound = 'alert'
-    notice.title = '用电缴费通知‼️'
-    notice.body = `${name}` + `，户号 ${number}` + `\n上月用电 ${total} 度 ，待缴电费 ${pay} 元`
-    notice.schedule()
-      
+    notify('用电缴费通知‼️', `${name}` + `，户号 ${number}` + `\n上月用电 ${total} 度 ，待缴电费 ${pay} 元`)
     // writeString JSON
     if (F_MGR.fileExists(folder)) {
       data = {
-        "token": data.token,
-        "updateTime": timestamp
+        token: data.token,
+        updateTime: timestamp
       };
       F_MGR.writeString(cacheFile, JSON.stringify(data));
     }
   }
+}
+
+async function notify (title, body, url, opts = {}) {
+  let n = new Notification()
+  n = Object.assign(n, opts);
+  n.title = title
+  n.body = body
+  if (url) n.openURL = url
+  return await n.schedule()
 }
 
 async function getImage(url) {
