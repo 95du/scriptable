@@ -99,13 +99,13 @@ async function createWidget(oil) {
   titleText.textColor = Color.green();
   titleText.font = Font.boldSystemFont(16);
   titleText.centerAlignText();
-  Stack.addSpacer(5);
+  Stack.addSpacer(3);
   
   // Notification icon
   const noticeStack = Stack.addStack();
   const iconSymbol2 = SFSymbol.named('bell.circle');
   const carIcon = noticeStack.addImage(iconSymbol2.image);
-  carIcon.imageSize = new Size(29, 29);
+  carIcon.imageSize = new Size(30, 30);
   carIcon.tintColor = Color.black();
   Stack.addSpacer();
   mainStack.addSpacer(10)
