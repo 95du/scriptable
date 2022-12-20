@@ -27,8 +27,8 @@ if (F_MGR.fileExists(cacheFile)) {
   login.message = `\r\n南方电网只包括海南、广东、广西、云南、贵州5个省份。\n\n首次登录需用户在南方电网的网页版中登录，如获取失败请重新打开登录页面组件将自动抓取 token，收到登录成功通知即 token 已储存在 iCloud.\n\r\n小组件作者: 95度茅台`;
   login.addAction('继续');
   login.addCancelAction('取消');
-  onChick = await login.presentAlert();
-  if (onChick === -1) {
+  onClick = await login.presentAlert();
+  if (onClick === -1) {
     return;
   } else {
     const webview = new WebView();  
