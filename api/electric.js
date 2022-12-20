@@ -5,48 +5,49 @@
 * 小组件作者: 95度茅台
 * 南网在线 App
 * 查看电费
-* Version 1.0
-* 2022-10-15 10:00
+* Version 1.1.0
+* 2022-12-20 16:00
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 const timestamp = Date.parse(new Date());
 
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "electric");
+if (!F_MGR.fileExists(folder)) {
+  F_MGR.createDirectory(folder)
+}
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
   data = JSON.parse(data)
 } else {
-  const loginAlert = new Alert();
-  loginAlert.title = '南网在线登录';
-  loginAlert.message = `\r\n南方电网只包括海南、广东、广西、云南、贵州5个省份。\n\n首次登录需用户在南方电网的网页版中登录，组件自动抓取 token，登录成功稍等10秒后生效，关闭该页面，token 将储存在 iCloud.\n\r\n小组件作者: 95度茅台\n获取token方法: @LSP`;
-  loginAlert.addAction('继续');
-  loginAlert.addCancelAction('取消');
-  login = await loginAlert.presentAlert();
-    
-  if (login === -1) {
+  const login = new Alert();
+  login.title = '南网在线登录';
+  login.message = `\r\n南方电网只包括海南、广东、广西、云南、贵州5个省份。\n\n首次登录需用户在南方电网的网页版中登录，如获取失败请重新打开登录页面组件将自动抓取 token，收到登录成功通知即 token 已储存在 iCloud.\n\r\n小组件作者: 95度茅台`;
+  login.addAction('继续');
+  login.addCancelAction('取消');
+  onChick = await login.presentAlert();
+  if (onChick === -1) {
     return;
   } else {
     const webview = new WebView();  
     await webview.loadURL('https://95598.csg.cn/#/hn/login/login');
+    await webview.present();
     const cookie = await webview.evaluateJavaScript(
       'document.cookie'
     );
-    await webview.present();
     console.log(cookie)
-    try {
-      if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
-      const token = cookie.match(/token=(.*?);\s10=10/)[1];
+    if (cookie.indexOf("is-login=true") == -1) {  
+      notify('南网在线', '获取失败或未登录，请重新运行小组件'); return;
+    } else {
+      const token = cookie.match(/token=([\w\-]+)/)[1];
       data = {
         token: token,
         updateTime: timestamp
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
-      notify('登录成功', '前往桌面添加小组件');
-    } catch(e) {
-      return;
+      notify('登录成功', 'token已储存，前往桌面添加小组件');  
     }
   }
 }
@@ -59,19 +60,15 @@ const Month = new Date().getMonth() + 1;
 const req = new Request('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers');
 req.method = 'POST'
 req.headers = {
-  "x-auth-token": `${data.token}`
+  "x-auth-token": data.token
 }
 const res = await req.loadJSON();
-console.log(res)
 if (res.sta == 00) {
   ele = res.data[0] //User
   name = ele.userName
   code = ele.areaCode
   id = ele.bindingId
   number = ele.eleCustNumber
-} else if (res.sta == 04) {
-  notify('南网在线', 'token已过期，请重新登录获取');
-  F_MGR.remove(folder); return
 }
 
 // Yesterday
