@@ -2,11 +2,14 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: bolt;
 /**
+获取Token重写：
+https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_95598_token.sgmodule
+
+* 使用方法：打开南网在线APP 登录即可自动抓取/更新Token。
 * 小组件作者: 95度茅台
-* 南网在线 App
-* 查看电费
+* 获取token作者: @Fokit
 * Version 1.1.0
-* 2022-12-20 16:00
+* 2022-12-20 20:15
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 const timestamp = Date.parse(new Date());
@@ -22,33 +25,38 @@ if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
   data = JSON.parse(data)
 } else {
+  // quantumult x get token
+  try {
+    boxjs = await new Request('http://boxjs.com/query/data/token_95598').loadJSON();
+    token = Pasteboard.copy(boxjs.val)
+  } catch (e) {
+    console.log(e)
+    notify('获取Token失败 ⚠️', '需打开 Quantumult-X 或手动抓包获取');
+  }  
+  
   const login = new Alert();
   login.title = '南网在线登录';
-  login.message = `\r\n南方电网只包括海南、广东、广西、云南、贵州5个省份。\n\n首次登录需用户在南方电网的网页版中登录，如获取失败请重新打开登录页面组件将自动抓取 token，收到登录成功通知即 token 已储存在 iCloud.\n\r\n小组件作者: 95度茅台`;
+  login.message = `\r\n南方电网只包括海南、广东、广西、云南、贵州5个\n\n首次登录需用户自行在App中登录时抓包获取token，登录成功将储存在iCloud，token在抓包历史中找到https://95598.csg.cn/ucs/ma/zt/center/login，在响应头部拷贝x-auth-token的值或使用Quantumult-X自动获取\n\r\n小组件作者: 95度茅台`;
   login.addAction('继续');
   login.addCancelAction('取消');
   onClick = await login.presentAlert();
   if (onClick === -1) {
     return;
   } else {
-    const webview = new WebView();  
-    await webview.loadURL('https://95598.csg.cn/#/hn/login/login');
-    await webview.present();
-    const cookie = await webview.evaluateJavaScript(
-      'document.cookie'
-    );
-    console.log(cookie)
-    if (cookie.indexOf("is-login=true") == -1) {  
-      notify('南网在线', '获取失败或未登录，请重新运行小组件'); return;
-    } else {
-      const token = cookie.match(/token=([\w\-]+)/)[1];
+    const alert = new Alert();
+    alert.title = '输入 token';
+    alert.addTextField('输入token', Pasteboard.paste());
+    alert.addAction('确定');
+    alert.addCancelAction('取消');
+    const input = await alert.presentAlert();
+    if (input === 0) {
       data = {
-        token: token,
+        token: alert.textFieldValue(0),
         updateTime: timestamp
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
-      notify('登录成功', 'token已储存，前往桌面添加小组件');  
-    }
+      notify('token已储存', '请前往桌面添加小组件');
+    } else { return }
   }
 }
 
@@ -69,6 +77,9 @@ if (res.sta == 00) {
   code = ele.areaCode
   id = ele.bindingId
   number = ele.eleCustNumber
+} else if (res.sta == 04) {
+  F_MGR.remove(folder);
+  notify('用户未登录⚠️', '需重新获取token'); return;
 }
 
 // Yesterday
