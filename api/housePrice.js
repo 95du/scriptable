@@ -67,7 +67,10 @@ async function presentMenu() {
     if (codeString.indexOf('95度茅台') == -1) {
       notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
-      F_MGR.writeString(module.filename, codeString)
+      F_MGR.writeString(  
+        module.filename,
+        codeString
+      );
       notify('小组件更新成功', '');
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
@@ -186,15 +189,15 @@ async function downloadModule() {
 }
 
 async function generateInputAlert(options,confirm) {  
-  options = {
-    ...options
-  };
   const inputAlert = new Alert();
   inputAlert.title = options.title;
   inputAlert.message = options.message;
   const fieldArr = options.options;
   for (const option of fieldArr) {
-    inputAlert.addTextField(option.hint, option.value);
+    inputAlert.addTextField(  
+      option.hint,
+      option.value
+    );
   }
   inputAlert.addAction('取消');
   inputAlert.addAction('确认');
@@ -312,6 +315,6 @@ async function notify (title, body, url, opts = {}) {
 }
 
 async function getJson(url) {
-  const req = await new Request(url)
+  const req = await new Request(url);
   return await req.loadJSON();
 }
