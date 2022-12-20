@@ -1,8 +1,20 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: car;
-const F_MGR = FileManager.iCloud();
 const uri = Script.name();
+const F_MGR = FileManager.iCloud();
+
+const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "framework");
+if (!F_MGR.fileExists(path)) {
+  F_MGR.createDirectory(path);
+}
+
+const cacheFile = F_MGR.joinPath(path, 'setting.json');
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile);
+  setting = JSON.parse(data);
+}
+
 // Background Color
 const bgColor = Color.dynamic(
   new Color('#F5F5F5'), new Color('')
@@ -10,6 +22,20 @@ const bgColor = Color.dynamic(
 const topBgColor = Color.dynamic(
   new Color('#EEEEEE'), new Color('')
 );
+
+const init = {
+  minute: 30,
+  color: "#131415",
+  bgImage1: "light",
+  bgImage1: "dark"
+}
+if (!F_MGR.fileExists(cacheFile)) {
+  F_MGR.writeString(
+    cacheFile,
+    JSON.stringify(init, null, 2)
+  );
+}
+
 
 /**
  * 设置组件内容
@@ -73,7 +99,6 @@ async function renderTables(table) {
       url: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/NicegramLogo.png',
       type: 'input',
       title: 'Telegram',
-      desc: 'Telegram电报群',
       val: 'in',
       onClick: async () => {
         Safari.openInApp('https://t.me/+ViT7uEUrIUV0B_iy', false);
@@ -89,10 +114,10 @@ async function renderTables(table) {
       onClick: async () => {
         const html = await new Request('https://developer.apple.com/news/releases/rss/releases.rss').loadString();
         const iOS = html.match(/<title>(iOS.*?)<\/title>/)[1];
-        const a = iOS.match(/(iOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC)?\s?\d*?)/)[1];
+        const a = iOS.match(/(iOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC\s?\d?))/)[1];
         const b = iOS.match(/\((.*?)\)/)[1];
         const iPadOS = html.match(/<title>(iPadOS.*?)<\/title>/)[1];
-        const c = iPadOS.match(/(iPadOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC)?\s?\d*?)/)[1];
+        const c = iPadOS.match(/(iPadOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC\s?\d?))/)[1];
         const d = iPadOS.match(/\((.*?)\)/)[1];
         const actions = [
           {
@@ -164,7 +189,7 @@ async function renderTables(table) {
       type: 'input',
       title: '快速刷新',
       desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
-      val: '>',
+      val: setting.minute,
       but: 0
     },
     {
@@ -173,7 +198,7 @@ async function renderTables(table) {
         color: '#F57C00'
       },
       type: 'background',
-      title: '透明背景',
+      title: '图片背景',
       val: '>',
     },
     {
@@ -185,7 +210,7 @@ async function renderTables(table) {
       title: '清除背景',
       desc: 'new Alert() 清除预警',
       val: '>',
-      onClick: () => {
+      onClick: async () => {
         notify('已清除背景', '请重新运行或重新配置小组件');
       }
     }
@@ -235,7 +260,7 @@ async function renderTables(table) {
       },
       type: 'options',
       title: '更新代码',
-      desc: '更新后当前脚本代码将被覆盖，请先做好备份，此操作不可恢复'
+      desc: '更新后当前脚本代码将被覆盖\n请先做好备份，此操作不可恢复'
     }
   ];
   await preferences(table, updateVersion, '版本更新');
@@ -302,7 +327,7 @@ async function preferences(table, arr, outfit) {
       imgCell.widthWeight = 500;
       row.addCell(imgCell);
     }
-    
+    // item.onClick
     const type = item.type;
     row.onSelect = item.onClick 
     ? async () => {
@@ -324,10 +349,41 @@ async function preferences(table, arr, outfit) {
           Safari.openInApp(
 'https://developer.apple.com/news/releases', false
           );
+        } else if (type == 'input') {
+          await inputInfo(
+            table,
+            item['title'],
+            item['desc'],
+            item['val']
+          );
         }
       }
     table.addRow(row);
   }
+}
+
+async function inputInfo(table, title, desc, val) {  
+  await generateInputAlert ({
+    title: title,
+    options: [
+      { 
+        hint: '时间',
+        value: `${val}`
+      }
+    ]
+  }, 
+    async (inputArr) => {
+      obj = {
+        ...init,
+        minute: inputArr[0].value
+      }
+      await F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(obj)
+      );
+      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+    }
+  );
 }
 
 
@@ -368,7 +424,9 @@ drawTableIcon = async (
   cornerWidth = 39
 ) => {
   const sfi = SFSymbol.named(icon);
-  sfi.applyFont(Font.mediumSystemFont(30));
+  sfi.applyFont(  
+    Font.mediumSystemFont(30)
+  );
   const imgData = Data.fromPNG(sfi.image).toBase64String();
   const html = `
     <img id="sourceImg" src="data:image/png;base64,${imgData}" />
@@ -515,6 +573,39 @@ async function generateAlert(title, message, options) {
 
 
 /**
+ * 弹出输入框
+ * @param title 标题
+ * @param desc  描述
+ * @param opt   属性
+ * @returns {Promise<void>}
+ */
+async function generateInputAlert(options,confirm) {  
+  const inputAlert = new Alert();
+  inputAlert.title = options.title;
+  inputAlert.message = options.message;
+  const fieldArr = options.options;
+  for (const option of fieldArr) {
+    inputAlert.addTextField(  
+      option.hint,
+      option.value
+    );
+  }
+  inputAlert.addAction('取消');
+  inputAlert.addAction('确认');
+  let getIndex = await inputAlert.presentAlert();
+  if (getIndex == 1) {
+    const inputObj = [];
+    fieldArr.forEach((_, index) => {
+      let value = inputAlert.textFieldValue(index);
+      inputObj.push({index, value});
+    });
+    confirm(inputObj);
+  }
+  return getIndex;
+}
+
+
+/**
  * Download Script
  * author: @95度茅台
  */
@@ -634,5 +725,5 @@ const Run = async () => {
     console.log("缓存读取错误" + e);
   }
 };
-// await
-await setWidgetConfig()
+// await setWidgetConfig
+await setWidgetConfig();
