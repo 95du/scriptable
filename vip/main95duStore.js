@@ -81,7 +81,7 @@ async function main() {
           const script = await new Request(item.scriptURL).loadString();
           F_MGR.writeString(F_MGR.documentsDirectory() + `/${item.name}.js`, script)
           if (script) {
-            notify("已获取Script", `小组件:${item.title}下载/更新成功`);
+            notify('', `小组件:${item.title}下载/更新成功`);
           }
         };
         r.addCell(downloadCell);
@@ -134,5 +134,5 @@ async function main() {
   };
   await Run();
 }
-// await Run main
+// async function main()
 module.exports = { main }
