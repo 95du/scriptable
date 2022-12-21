@@ -122,8 +122,9 @@ const success = main.success
 
 
 if (success === true) {
-  var list = main.data.list[0]
-  if (list === undefined) {
+  var list = main.data.list[0];
+  nothing = list === undefined;
+  if (nothing) {
     console.log(
       JSON.stringify(main, null, 2)
     );
@@ -205,7 +206,7 @@ async function presentMenu() {
   alert.addDestructiveAction('重置所有');
   alert.addAction('组件下载');
   alert.addAction('预览组件');
-  alert.addAction('退出');
+  alert.addAction('退出菜单');
   response = await alert.presentAlert();
   // menu action 1
   if (response === 1) {
@@ -251,18 +252,14 @@ async function presentMenu() {
   
   
 // config widget
-if (config.widgetFamily === "small") {
-  return;
+if (!config.runsInWidget) {
+  await presentMenu();
 } else {
-  if (!config.runsInWidget) {
-    await presentMenu();
-  } else {
-    const widget = await createWidget(main);
-    Script.setWidget(widget);
-    Script.complete();
-  }
+  const widget = await createWidget(main);
+  Script.setWidget(widget);
+  Script.complete();
 }
-  
+
 
 // createWidget
 async function createWidget() {
@@ -312,23 +309,14 @@ async function createWidget() {
   const man = SFSymbol.named('car');
   const carIcon = carIconStack.addImage(man.image);
   carIcon.imageSize = new Size(14, 14);
-  if (list === undefined) {
-    carIcon.tintColor = Color.black();
-  } else {
-    carIcon.tintColor = Color.red();
-  }
+  carIcon.tintColor = nothing ? Color.black() : Color.red();
   carIconStack.addSpacer(5);
   // vehicleModel
   const vehicleModel = carIconStack.addStack();
-  if (list === undefined) {
-    vehicleModelText = vehicleModel.addText('未处理违章 0');
-  } else {
-    vehicleModelText = vehicleModel.addText(`未处理违章 ${list.count} 条`);
-  }
+  vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${list.count} 条`);
   vehicleModelText.font = Font.mediumSystemFont(12);
   vehicleModelText.textColor = new Color('#494949');
   leftStack.addSpacer(3)
-
 
   // violationPoint
   const vioPointStack = leftStack.addStack();
@@ -342,7 +330,7 @@ async function createWidget() {
     
   // update icon
   const updateTimeStack = leftStack.addStack();
-  if (list === undefined) {
+  if (nothing) {
     const iconSymbol2 = SFSymbol.named('person.crop.circle');
     const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
     carIcon2.imageSize = new Size(14, 14);
@@ -352,17 +340,10 @@ async function createWidget() {
     
   // update time
   const updateTime = updateTimeStack.addStack();
-  if (list === undefined) {
-    textUpdateTime = updateTime.addText('Good Driving');
-    textUpdateTime.font = Font.mediumSystemFont(12);  
-    textUpdateTime.textColor = new Color('#484848');
-    leftStack.addSpacer(25)
-  } else {
-    textUpdateTime = updateTime.addText(`${vio.violationTime}`);
-    textUpdateTime.font = Font.mediumSystemFont(12);  
-    textUpdateTime.textColor = new Color('#484848');
-    leftStack.addSpacer(8)
-  }
+  const textUpdateTime = updateTime.addText(nothing ? 'Good Driving' : `${vio.violationTime}`);
+  textUpdateTime.font = Font.mediumSystemFont(12);  
+  textUpdateTime.textColor = new Color('#484848');
+  leftStack.addSpacer(nothing ? 25 : 8)
     
 
   // Status barRow
@@ -370,36 +351,24 @@ async function createWidget() {
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
   barStack.setPadding(3, 10, 3, 10);
-  if (list === undefined) {
-    // violation Early Warning
-    barStack.backgroundColor = new Color('#EEEEEE', 0.1);
-    barStack.cornerRadius = 10
-    barStack.borderColor = Color.green();
-    barStack.borderWidth = 2
-      
+  // violation Early Warning
+  barStack.backgroundColor = new Color('#EEEEEE', 0.1);
+  barStack.cornerRadius = 10
+  barStack.borderColor = nothing ? Color.green() : new Color('#FF1744', 0.7);
+  barStack.borderWidth = 2
+  if (nothing) {
     // bar icon
     const barIcon = SFSymbol.named('leaf.fill');
     const barIconElement = barStack.addImage(barIcon.image);
     barIconElement.imageSize = new Size(16, 16);
     barIconElement.tintColor = Color.green();
     barStack.addSpacer(4);
-    // bar text
-    const totalMonthBar = barStack.addText('无违章');
-    totalMonthBar.font = Font.mediumSystemFont(14);
-    totalMonthBar.textColor = new Color('#009201');
-    leftStack.addSpacer(8)
-  } else {
-    // Driver's license
-    barStack.backgroundColor = new Color('#EEEEEE', 0.1);
-    barStack.cornerRadius = 10
-    barStack.borderColor = new Color('#FF1744', 0.7);
-    barStack.borderWidth = 2
-    // bar text
-    const totalMonthBar = barStack.addText(`${vio.plateNumber}`);
-    totalMonthBar.font = Font.mediumSystemFont(14);
-    totalMonthBar.textColor = new Color('#D50000');
-    leftStack.addSpacer(8)
   }
+  // bar text
+  const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vio.plateNumber}`);
+  totalMonthBar.font = Font.mediumSystemFont(14);
+  totalMonthBar.textColor = new Color(nothing ? '#009201' : '#D50000');
+  leftStack.addSpacer(8)
 
 
   // Driver's license bar
@@ -455,11 +424,7 @@ async function createWidget() {
   tipsStack.layoutHorizontally();
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(230, 30)
-  if (list === undefined) {
-    textAddress = tipsStack.addText('温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则');
-  } else {
-    textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
-  }
+  const textAddress = tipsStack.addText(nothing ? '温馨提示: 请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
   textAddress.font = Font.mediumSystemFont(11.3);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
