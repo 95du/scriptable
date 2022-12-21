@@ -79,7 +79,7 @@ if (res.sta == 00) {
   number = ele.eleCustNumber
 } else if (res.sta == 04) {
   F_MGR.remove(folder);
-  notify('用户未登录⚠️', '需重新获取token'); return;
+  notify('用户未登录⚠️', '需重新获取Token'); return;
 }
 
 // Yesterday
@@ -193,11 +193,11 @@ async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient()
-    color = [
+  color = [
     "#4FC3F7",
     "#66CCFF",
     "#99CCCC"
-    ]
+  ]
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
   gradient.colors = [
