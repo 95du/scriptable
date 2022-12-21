@@ -137,8 +137,8 @@ async function createWidget() {
   const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${data.longitude},${data.latitude}`).loadJSON();
   const address = adr.regeocode.formatted_address  
   
-  const timestamp = Date.parse(new Date());
   // 计算停车时长
+  const timestamp = Date.parse(new Date());
   const parkingTime = (timestamp - data.updateTime);
   const days = Math.floor(parkingTime/(24 * 3600 * 1000));
   const P1 = parkingTime % (24 * 3600 * 1000);
@@ -167,6 +167,9 @@ async function createWidget() {
     F_MGR.writeString(
       cacheFile,
       JSON.stringify(object, null, 2)
+    );
+    json = JSON.parse(
+F_MGR.readString(cacheFile)
     );
   }
   
