@@ -2,10 +2,10 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: bolt;
 /**
-获取Token重写：
+Quantumult-X 获取Token重写：
 https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_95598_token.sgmodule
 
-* 使用方法：打开南网在线APP 登录即可自动抓取/更新Token。
+* 使用方法：打开南网在线APP，登录即可自动抓取/更新Token。
 * 小组件作者: 95度茅台
 * 获取token作者: @Fokit
 * Version 1.1.0
@@ -44,8 +44,8 @@ if (F_MGR.fileExists(cacheFile)) {
     return;
   } else {
     const alert = new Alert();
-    alert.title = '输入 token';
-    alert.addTextField('输入token', Pasteboard.paste());
+    alert.title = '输入 Token';
+    alert.addTextField('输入Token', Pasteboard.paste());
     alert.addAction('确定');
     alert.addCancelAction('取消');
     const input = await alert.presentAlert();
@@ -55,7 +55,7 @@ if (F_MGR.fileExists(cacheFile)) {
         updateTime: timestamp
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
-      notify('token已储存', '请前往桌面添加小组件');
+      notify('获取成功', 'Token已储存，请前往桌面添加小组件');
     } else { return }
   }
 }
