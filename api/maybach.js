@@ -135,21 +135,21 @@ async function createWidget() {
   const minutes1 = Math.floor(P2 / (60 * 1000));
 
   // Saved Data
-  runObj = {
-    updateTime: data.updateTime, 
-    address: address, 
-    run: data.owner,
-    coordinates: `${data.longitude},${data.latitude}`,
-    pushTime: timestamp
-  }
-  
-  runObj = {
-    updateTime: data.updateTime, 
-    address: address, 
-    run: data.speed,
-    coordinates: `${data.longitude},${data.latitude}`,
-    pushTime: timestamp
-  }
+  runObj = `{
+  "updateTime": "${data.updateTime}", 
+  "address": "${address}", 
+  "run": "${data.owner}", 
+  "coordinates": "${data.longitude},${data.latitude}",
+  "pushTime": "${timestamp}"
+  }`
+    
+  object = `{
+  "updateTime": "${data.updateTime}",        
+  "address": "${address}", 
+  "run": "${data.speed}", 
+  "coordinates": "${data.longitude},${data.latitude}",
+  "pushTime": "${timestamp}"
+  }`
 
   // Timestamp Conversion
   const date = new Date(data.updateTime);
