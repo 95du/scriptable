@@ -52,6 +52,9 @@ if (F_MGR.fileExists(cacheFile)) {
         "province": province
       }, null, 2)
     );
+    data = JSON.parse(
+F_MGR.readString(cacheFile)
+    );
     const uri = Script.name();
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
