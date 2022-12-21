@@ -10,7 +10,7 @@
 * ⚠️适配机型: 手动第9、10行的数字
 */
 const value = 6 //小机型改成 4
-const wide = 9 //小机型改成 6
+const wide = 8 //小机型改成 6
 
 const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
 const rule = 'var tishiContent="(.*?)";';
@@ -50,7 +50,7 @@ if (F_MGR.fileExists(cacheFile)) {
       JSON.stringify({
         "oil": `${forecast}`,
         "province": province
-      })
+      }, null, 2)
     );
     const uri = Script.name();
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
