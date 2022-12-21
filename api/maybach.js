@@ -11,6 +11,7 @@
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
+const uri = Script.name();
 const F_MGR = FileManager.iCloud();
 const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "mercedes");
 const cacheFile = F_MGR.joinPath(path, 'honda.json');
@@ -27,54 +28,58 @@ if (F_MGR.fileExists(cacheFile)) {
 async function presentMenu() {
   let alert = new Alert();
   alert.title = "Mercedes Maybach"
-  alert.message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息'
-  alert.addDestructiveAction('更新代码')
-  alert.addAction('家人地图')
-  alert.addAction('预览组件')
-  alert.addAction('退出菜单')
+  alert.message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
+  alert.addDestructiveAction('更新代码');
+  alert.addDestructiveAction('重置所有');
+  alert.addAction('家人地图');
+  alert.addAction('预览组件');
+  alert.addAction('退出菜单');
   response = await alert.presentAlert();
   if (response === 1) {
- Safari.open('amapuri://WatchFamily/myFamily')
+    F_MGR.remove(path);
+    return;
   }
   if (response === 2) {
-    widget = await createWidget()
+ Safari.open('amapuri://WatchFamily/myFamily');
   }
-  if (response === 3) return;
+  if (response === 3) {
+    widget = await createWidget();
+  }
+  if (response === 4) return;
   // Update the code
   if (response === 0) {
-    const FILE_MGR = FileManager.local()
+    const FILE_MGR = FileManager.local();
     const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js');
-    const codeString = await reqUpdate.loadString()  
+    const codeString = await reqUpdate.loadString();
     const finish = new Alert();
     if (codeString.indexOf("Maybach" || "HONDA") == -1) {
       finish.title = "更新失败"
-      finish.addAction('OK')
+      finish.addAction('OK');
       await finish.presentAlert();
     } else {
       FILE_MGR.writeString(  
         module.filename,
         codeString
       );
-      finish.title = "更新成功"
-      finish.addAction('OK')
+      finish.title = "更新成功";
+      finish.addAction('OK');
       await finish.presentAlert();
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
 }
   
-  
 try {
   if (config.runsInWidget) {
-    widget = await createWidget()
+    widget = await createWidget();
   } else {
-    await presentMenu()
+    await presentMenu();
   }
 } catch (error) {
-  console.log(error)
-  const cover = await getData()
-  const widget = createErrorWidget(cover)
+  //console.log(error)
+  const cover = await getData();
+  const widget = createErrorWidget(cover, error);
   await widget.presentMedium();
 }
 
@@ -86,23 +91,21 @@ try {
 * @param {string} sound
 */
 async function notify (title, body, url, opts = {}) {
-  let n = new Notification()
+  let n = new Notification();
   n = Object.assign(n, opts);
   n.title = title
   n.body = body
   n.sound = 'alert'
   if (url) n.openURL = url
-  return await n.schedule()
+  return await n.schedule();
 }
-
 
 // Create Widget Data
 async function createWidget() {
   // 组件背景渐变
-  const uri = Script.name()
-  const widget = new ListWidget()
+  const widget = new ListWidget();
   widget.backgroundColor = Color.white();
-  const gradient = new LinearGradient()
+  const gradient = new LinearGradient();
   color = [
     "#82B1FF",
     "#757575",
@@ -112,7 +115,7 @@ async function createWidget() {
     "#BCBBBB"
   ]
   const items = color[Math.floor(Math.random()*color.length)];
-  gradient.locations = [0, 1]
+  gradient.locations = [0, 1];
   gradient.colors = [
     new Color(items, 0.5),
     new Color('#00000000')
@@ -124,26 +127,22 @@ async function createWidget() {
   req.method = 'GET'
   req.headers = {"Cookie": "sessionid=ggylbvv5klxzm6ahibpfng4ldna2cxsy"}
   const res = await req.loadJSON();
-    
-  if (res.code != 1) {
-    return;// Token expiration
-  }
+  const data = res.data
+  if (res.code != 1) return;
     
   // Get address (aMap)
-  const data = res.data
   const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${data.longitude},${data.latitude}`).loadJSON();
   const address = adr.regeocode.formatted_address  
-    
-  // Current timestamp
+  
   const timestamp = Date.parse(new Date());
-  // 计算时长
+  // 计算停车时长
   const parkingTime = (timestamp - data.updateTime);
   const days = Math.floor(parkingTime/(24 * 3600 * 1000));
   const P1 = parkingTime % (24 * 3600 * 1000);
   const hours1 = Math.floor(P1 / (3600 * 1000));
   const P2 = P1 % (3600 * 1000);
   const minutes1 = Math.floor(P2 / (60 * 1000));
-
+  
   // Saved Data
   runObj = {
     updateTime: data.updateTime, 
@@ -357,32 +356,6 @@ async function createWidget() {
     Script.setWidget(widget);
     Script.complete();
   }
-    
-    
-  /**
-  * 获取企业微信应用 token
-  * 推送到微信及通知
-  */
-  
-  // Get accessToken
-  const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON();
-
-  const js = await json.loadString();
-  if (js.indexOf("{") == -1 ) {
-    recover = {
-      updateTime: "1664185402000", 
-      address: "海口市", 
-      run: "HONDA", 
-      coordinates: "110.38089,19.985773",
-      pushTime: "1664185402000"
-    }
-    // 错误后重新储存
-    F_MGR.writeString(
-      cacheFile,
-      JSON.stringify(recover)
-    );
-    return;
-  }
   
 
   /**
@@ -390,6 +363,8 @@ async function createWidget() {
   * 判断run为HONDA触发电子围栏
   * 推送信息到微信
   */
+  // Get accessToken
+  const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON();
   
   if (json.run !== 'HONDA') {
     const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${data.longitude},${data.latitude}`).loadJSON();  
@@ -399,7 +374,21 @@ async function createWidget() {
       // push message to WeChat_1
       const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_1.method = 'POST'
-      weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米","url":"${mapUrl}"}]}}`;
+      weChat_1.body = `{
+  "touser": "DianQiao",
+  "agentid": "1000004",
+  "msgtype": "news",
+  "news": {
+    "articles": [
+      {
+        "title": "${address}",
+        "picurl": "https://restapi.amap.com/v3/staticmap?&amp;amp;amp;key=a35a9538433a183718ce973382012f55&amp;amp;amp;zoom=14&amp;amp;amp;size=450*300&amp;amp;amp;markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "description": "${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米",
+        "url": "${mapUrl}"
+      }
+    ]
+  }
+}`;
       await weChat_1.loadJSON();
       // Notification_1
       notify(`${status}  `+`更新时间 ${GMT}`, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
@@ -411,7 +400,7 @@ async function createWidget() {
       return;// pushEnd_1
     }
   }
-      
+  
       
   /**
   * 车辆状态触发条件
@@ -433,7 +422,21 @@ async function createWidget() {
       // push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_2.method = 'POST'
-      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 停车时间 ${GMT}","url":"${mapUrl}"}]}}`;
+      weChat_2.body = `{
+  "touser": "DianQiao",
+  "agentid": "1000004",
+  "msgtype": "news",
+  "news": {
+    "articles": [
+      {
+        "title": "${address}",
+        "picurl": "https://restapi.amap.com/v3/staticmap?&amp;key=a35a9538433a183718ce973382012f55&amp;zoom=14&amp;size=450*300&amp;markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "description": "${status} 停车时间 ${GMT}",
+        "url": "${mapUrl}"
+      }
+    ]
+  }
+}`;
       await weChat_2.loadJSON();
       // Notification_2
       notify(status + '  停车时间 ' + GMT, address, mapUrl);
@@ -448,7 +451,21 @@ async function createWidget() {
       // push message to WeChat_3
       const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_3.method = 'POST'
-      weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 启动时间 ${GMT}","url":"${mapUrl}"}]}}`;
+      weChat_3.body = `{
+  "touser": "DianQiao",
+  "agentid": "1000004",
+  "msgtype": "news",
+  "news": {
+    "articles": [
+      {
+        "title": "${address}",
+        "picurl": "https://restapi.amap.com/v3/staticmap?&amp;key=a35a9538433a183718ce973382012f55&amp;zoom=14&amp;size=450*300&amp;markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "description": "${status} 启动时间 ${GMT}",
+        "url": "${mapUrl}"
+      }
+    ]
+  }
+}`;
       await weChat_3.loadJSON();
       // Notification_3
       notify(status + '  启动时间 ' + GMT, address, mapUrl)
@@ -461,7 +478,21 @@ async function createWidget() {
       // push message to WeChat_4
       const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_4.method = 'POST'
-      weChat_4.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 更新时间 ${GMT}","url":"${mapUrl}"}]}}`;
+      weChat_4.body = `{
+  "touser": "DianQiao",
+  "agentid": "1000004",
+  "msgtype": "news",
+  "news": {
+    "articles": [
+      {
+        "title": "${address}",
+        "picurl": "https://restapi.amap.com/v3/staticmap?&amp;key=a35a9538433a183718ce973382012f55&amp;zoom=14&amp;size=450*300&amp;markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "description": "${status} 更新时间 ${GMT}",
+        "url": "${mapUrl}"
+      }
+    ]
+  }
+}`;
       await weChat_4.loadJSON();
       // Notification_4
       notify(status + '  更新时间 ' + GMT, address, mapUrl);
@@ -475,8 +506,8 @@ async function createWidget() {
   }
   return widget;
 }
-  
-  
+
+
 // getImageUrl
 async function getImage(url) {
   const r = await new Request(url);
@@ -490,11 +521,23 @@ async function getData() {
   return fm.readImage(path)
 }
 
-function createErrorWidget(cover) {
+function createErrorWidget(cover, error) {
   const widget = new ListWidget()
-  const widgetImage = widget.addImage(cover)
+  widget.addSpacer(30)
+  const errorDetailStack = widget.addStack()
+  errorDetailStack.addSpacer()
+  const errorDetailElement = errorDetailStack.addText(error.toString().replace("Error: ", ""))
+  errorDetailElement.textColor = Color.red()
+  errorDetailElement.font = Font.systemFont(17);
+  errorDetailStack.addSpacer()
+  
+  const carImageStack = widget.addStack();
+  carImageStack.addSpacer()
+  carImageStack.setPadding(-40, 0, 0, 0);
+  const widgetImage = carImageStack.addImage(cover)
   widgetImage.imageSize = new Size(300, 180);
   widgetImage.centerAlignImage()
+  carImageStack.addSpacer()
   const gradient = new LinearGradient()
   gradient.locations = [0, 1]
   gradient.colors = [
