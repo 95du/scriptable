@@ -55,7 +55,6 @@ if (F_MGR.fileExists(cacheFile)) {
         updateTime: timestamp
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
-      notify('获取成功', 'Token已储存，请前往桌面添加小组件');
     } else { return }
   }
 }
@@ -79,7 +78,7 @@ if (res.sta == 00) {
   number = ele.eleCustNumber
 } else if (res.sta == 04) {
   F_MGR.remove(folder);
-  notify('用户未登录⚠️', '需重新获取Token'); return;
+  notify('用户未登录⚠️', 'Token错误，请重新获取'); return;
 }
 
 // Yesterday
