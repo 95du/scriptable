@@ -44,6 +44,7 @@ async function presentMenu() {
   }
   if (response === 3) {
     widget = await createWidget();
+    await widget.presentMedium();
   }
   if (response === 4) return;
   // Update the code
@@ -73,16 +74,18 @@ async function presentMenu() {
 try {
   if (config.runsInWidget) {
     widget = await createWidget();
+    Script.setWidget(widget);
+    Script.complete();
   } else {
     await presentMenu();
   }
 } catch (error) {
-  //console.log(error)
+  console.log(error)
   const cover = await getData();
   const widget = createErrorWidget(cover, error);
   await widget.presentMedium();
 }
-
+  
 /**
 * 弹出一个通知
 * @param {string} title
@@ -348,14 +351,6 @@ async function createWidget() {
   textAddress.url = mapUrl;
   // jump run widget
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
-    
-  if (!config.runsInWidget) {  
-    await widget.presentMedium();
-    return;
-  } else {
-    Script.setWidget(widget);
-    Script.complete();
-  }
   
 
   /**
