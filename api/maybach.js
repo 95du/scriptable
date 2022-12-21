@@ -19,7 +19,7 @@ async function presentMenu() {
   alert.addDestructiveAction('更新代码')
   alert.addAction('家人地图')
   alert.addAction('预览组件')
-  alert.addAction('退出')
+  alert.addAction('退出菜单')
   response = await alert.presentAlert();
   if (response === 1) {
  Safari.open('amapuri://WatchFamily/myFamily')
@@ -136,21 +136,21 @@ async function createWidget() {
 
   // Saved Data
   runObj = `{
-  "updateTime": "${data.updateTime}", 
-  "address": "${address}", 
-  "run": "${data.owner}", 
-  "coordinates": "${data.longitude},${data.latitude}",
-  "pushTime": "${timestamp}"
+    updateTime: ${data.updateTime}, 
+    address: ${address}, 
+    run: ${data.owner}, 
+    coordinates: ${data.longitude},${data.latitude},
+    pushTime: ${timestamp}
   }`
-    
+  
   object = `{
-  "updateTime": "${data.updateTime}",        
-  "address": "${address}", 
-  "run": "${data.speed}", 
-  "coordinates": "${data.longitude},${data.latitude}",
-  "pushTime": "${timestamp}"
+    updateTime: ${data.updateTime}, 
+    address: ${address}, 
+    run: ${data.speed}, 
+    coordinates: ${data.longitude},${data.latitude},
+    pushTime: ${timestamp}
   }`
-    
+
   // Timestamp Conversion
   const date = new Date(data.updateTime);
   const Y = date.getFullYear() + '-';
@@ -190,11 +190,7 @@ async function createWidget() {
   leftStack.layoutVertically();
   // plateStack
   const plateStack = leftStack.addStack();
-  if (minutes1 <= 3) {
-    textPlate = plateStack.addText('Maybach🚦');
-  } else {
-    textPlate = plateStack.addText('琼A·849A8')
-  }
+  const textPlate = plateStack.addText(minutes1 <= 3 ? 'Maybach🚦' : '琼A·849A8');
   textPlate.font = Font.mediumSystemFont(19);
   textPlate.textColor =Color.black();
   leftStack.addSpacer(3)
@@ -239,41 +235,22 @@ async function createWidget() {
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
   barStack.setPadding(3, 10, 3, 10);
-  if (data.speed <= 5) {
-    // 按钮 speed 小于 5
-    barStack.backgroundColor = new Color('#EEEEEE', 0.1);
-    barStack.cornerRadius = 10
-    barStack.borderColor = new Color('#AB47BC', 0.7);
-    barStack.borderWidth = 2
-    // bar icon
-    const barIcon = SFSymbol.named('location');
-    const barIconElement = barStack.addImage(barIcon.image);
-    barIconElement.imageSize = new Size(16, 16);
-    barIconElement.tintColor = Color.purple();
-    barStack.addSpacer(4);
-    // bar text
-    const totalMonthBar = barStack.addText(state);
-    totalMonthBar.font = Font.mediumSystemFont(14);
-    totalMonthBar.textColor = new Color('#AA00FF');
-    leftStack.addSpacer(8)
-  } else {
-    // 按钮 speed 大于 5
-    barStack.backgroundColor = new Color('#EEEEEE', 0.1);
-    barStack.cornerRadius = 10
-    barStack.borderColor = new Color('#FF1744', 0.7);
-    barStack.borderWidth = 2
-    // bar icon
-    const barIcon = SFSymbol.named('location.fill');
-    const barIconElement = barStack.addImage(barIcon.image);
-    barIconElement.imageSize = new Size(16, 16);
-    barIconElement.tintColor = Color.red();
-    barStack.addSpacer(4);
-    // bar text
-    const totalMonthBar = barStack.addText(state);
-    totalMonthBar.font = Font.mediumSystemFont(14);
-    totalMonthBar.textColor = new Color('#D50000');
-    leftStack.addSpacer(8)
-  }
+  
+  barStack.backgroundColor = new Color('#EEEEEE', 0.1);
+  barStack.cornerRadius = 10
+  barStack.borderColor = new Color(data.speed <= 5 ? '#AB47BC' : '#FF1744', 0.7);
+  barStack.borderWidth = 2
+  // bar icon
+  const barIcon = SFSymbol.named(data.speed <= 5 ? 'location' : 'location.fill');
+  const barIconElement = barStack.addImage(barIcon.image);
+  barIconElement.imageSize = new Size(16, 16);
+  barIconElement.tintColor = data.speed <= 5 ? Color.purple() : Color.red();
+  barStack.addSpacer(4);
+  // bar text
+  const totalMonthBar = barStack.addText(state);
+  totalMonthBar.font = Font.mediumSystemFont(14);
+  totalMonthBar.textColor = new Color(data.speed <= 5 ? '#AA00FF' : '#D50000');
+  leftStack.addSpacer(8)
     
 
   // Left Stack barRow2
@@ -348,8 +325,7 @@ async function createWidget() {
   textAddress.font = Font.mediumSystemFont(11.5);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
-    
-    
+  
   // jump show map
   barStack2.url = 'quantumult-x:///';
   // jump show map
@@ -357,8 +333,6 @@ async function createWidget() {
   // jump run widget
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
     
-    
-  //config widget
   if (!config.runsInWidget) {  
     await widget.presentMedium();
     return;
@@ -456,24 +430,14 @@ async function createWidget() {
   var moment = (hours * 60 + minutes)
     
   if (data.speed <= 5) {
-    run = (data.updateTime)
-    stop = (json.updateTime)
-      
-    if (run == stop) {
-      duration = "120"
-    } else {
-      duration = "10"
-    }
-        
-    if (moment >= duration) {
+    if (moment >= (data.updateTime == json.updateTime) ? 120 : 10) {
       // push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_2.method = 'POST'
-      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 更新时间 ${GMT}","url":"${mapUrl}"}]}}`;
+      weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 停车时间 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_2 = await weChat_2.loadJSON();
-        
       // Notification_2
-      notify(`${status}  `+`停车时间 ${GMT}`, address, mapUrl)
+      notify(status + '  停车时间 ' + GMT, address, mapUrl);
         
       // upload JSON_2
       const up_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
@@ -489,9 +453,8 @@ async function createWidget() {
       weChat_3.method = 'POST'
       weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 启动时间 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_3 = await weChat_3.loadJSON();
-        
       // Notification_3
-      notify(`${status}  `+`启动时间 ${GMT}`, address, mapUrl)
+      notify(status + '  启动时间 ' + GMT, address, mapUrl)
         
       // upload JSON_3
       const up_3 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
@@ -499,16 +462,14 @@ async function createWidget() {
       up_3.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
       up_3.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit.data.headCommit.commitId}`
       const upload_3 = await up_3.loadJSON();
-
     } else {
       // push message to WeChat_4
       const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_4.method = 'POST'
       weChat_4.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 更新时间 ${GMT}","url":"${mapUrl}"}]}}`;
       const res_4 = await weChat_4.loadJSON();
-        
       // Notification_4
-      notify(`${status}  `+`更新时间 ${GMT}`, address, mapUrl)
+      notify(status + '  更新时间 ' + GMT, address, mapUrl);
         
       // upload JSON_4
       const up_4 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
