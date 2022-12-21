@@ -75,12 +75,12 @@ async function createWidget() {
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient()
   color = [
-  "#82B1FF", 
-  "#757575", 
-  "#4FC3F7",
-  "#66CCFF",
-  "#99CCCC",
-  "#BCBBBB"
+    "#82B1FF",
+    "#757575",
+    "#4FC3F7",
+    "#66CCFF",
+    "#99CCCC",
+    "#BCBBBB"
   ]
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
