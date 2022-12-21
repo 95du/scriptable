@@ -4,8 +4,8 @@
 /**
 * 小组件作者: 4敲
 * Honda Civic
-* Version 1.0
-* 2022-11-14 00:30
+* Version 1.1.0
+* 2022-12-22 00:30
 * 模拟电子围栏
 * 显示车速，位置
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
