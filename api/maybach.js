@@ -11,6 +11,18 @@
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 */
 
+const F_MGR = FileManager.iCloud();
+const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "mercedes");
+const cacheFile = F_MGR.joinPath(path, 'honda.json');
+if (!F_MGR.fileExists(path)) {
+  F_MGR.createDirectory(path);
+}
+
+if (F_MGR.fileExists(cacheFile)) {
+  data = F_MGR.readString(cacheFile);
+  json = JSON.parse(data);
+}
+
 // Presents the main menu
 async function presentMenu() {
   let alert = new Alert();
@@ -66,6 +78,23 @@ try {
   await widget.presentMedium();
 }
 
+/**
+* 弹出一个通知
+* @param {string} title
+* @param {string} body
+* @param {string} url
+* @param {string} sound
+*/
+async function notify (title, body, url, opts = {}) {
+  let n = new Notification()
+  n = Object.assign(n, opts);
+  n.title = title
+  n.body = body
+  n.sound = 'alert'
+  if (url) n.openURL = url
+  return await n.schedule()
+}
+
 
 // Create Widget Data
 async function createWidget() {
@@ -89,25 +118,6 @@ async function createWidget() {
     new Color('#00000000')
   ]
   widget.backgroundGradient = gradient
-    
-    
-  /**
-  * 弹出一个通知
-  * @param {string} title
-  * @param {string} body
-  * @param {string} url
-  * @param {string} sound
-  */
-  const notify = async (title, body, url, opts = {}) => {
-    let n = new Notification()
-    n = Object.assign(n, opts);
-    n.title = title
-    n.body = body
-    n.sound = 'alert'
-    if (url) {n.openURL = url}
-    return await n.schedule()
-  }
-    
     
   // Data Request
   const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
@@ -135,22 +145,29 @@ async function createWidget() {
   const minutes1 = Math.floor(P2 / (60 * 1000));
 
   // Saved Data
-  runObj = `{
-  "updateTime": "${data.updateTime}", 
-  "address": "${address}", 
-  "run": "${data.owner}", 
-  "coordinates": "${data.longitude},${data.latitude}",
-  "pushTime": "${timestamp}"
-  }`
+  runObj = {
+    updateTime: data.updateTime, 
+    address: address,
+    run: data.owner,
+    coordinates: `${data.longitude},${data.latitude}`,
+    pushTime: timestamp
+  }
     
-  object = `{
-  "updateTime": "${data.updateTime}",        
-  "address": "${address}", 
-  "run": "${data.speed}", 
-  "coordinates": "${data.longitude},${data.latitude}",
-  "pushTime": "${timestamp}"
-  }`
-
+  object = {
+    updateTime: data.updateTime, 
+    address: address,
+    run: data.speed,
+    coordinates: `${data.longitude},${data.latitude}`,
+    pushTime: timestamp
+  }
+  
+  if (!F_MGR.fileExists(cacheFile)) {
+    F_MGR.writeString(
+      cacheFile,
+      JSON.stringify(object, null, 2)
+    );
+  }
+  
   // Timestamp Conversion
   const date = new Date(data.updateTime);
   const Y = date.getFullYear() + '-';
@@ -329,7 +346,7 @@ async function createWidget() {
   // jump show map
   barStack2.url = 'quantumult-x:///';
   // jump show map
-  textAddress.url = `${mapUrl}`;
+  textAddress.url = mapUrl;
   // jump run widget
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
     
@@ -343,41 +360,27 @@ async function createWidget() {
     
     
   /**
-  * 上传获取GitCode文件
-  * 获取企业微信token
-  * 推送信息及通知
+  * 获取企业微信应用 token
+  * 推送到微信及通知
   */
+  
   // Get accessToken
   const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON();
 
-  // coding cookie
-  const cookie = ('eid=8498be9b-b0b9-4575-be7b-609054e63564; XSRF-TOKEN=e6a5aade-0613-4c0f-8447-ed8415f80134');
-
-  // edit file_1
-  const edit = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/blob/master/code/script.json')
-  edit.method = 'GET'
-  edit.headers = {"Cookie": `${cookie}`}
-  const Edit = await edit.loadJSON();
-    
-  // Get Files 🗂
-  const file = new Request('https://diqiao.coding.net/p/shortcuts/d/4qiao/git/raw/master/code/script.json')
-  file.method = 'GET'
-  file.headers = {"Cookie": `${cookie}`}
-  const js = await file.loadString();
+  const js = await json.loadString();
   if (js.indexOf("{") == -1 ) {
-    recover = `{
-      "updateTime": "1664185402000", 
-      "address": "海口市", 
-      "run": "HONDA", 
-      "coordinates": "110.38089,19.985773",
-      "pushTime": "1664185402000"
-    }`
-    // 错误后重新上传
-    const up_0 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
-    up_0.method = 'POST'
-    up_0.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
-    up_0.body = `newRef=&newPath=&message="upload"&content=${recover}&lastCommitSha=${Edit.data.headCommit.commitId}`
-    const upload_0 = await up_0.loadJSON();  
+    recover = {
+      updateTime: "1664185402000", 
+      address: "海口市", 
+      run: "HONDA", 
+      coordinates: "110.38089,19.985773",
+      pushTime: "1664185402000"
+    }
+    // 错误后重新储存
+    F_MGR.writeString(
+      cacheFile,
+      JSON.stringify(recover)
+    );
     return;
   }
   
@@ -387,29 +390,24 @@ async function createWidget() {
   * 判断run为HONDA触发电子围栏
   * 推送信息到微信
   */
-  const json = await file.loadJSON();
   
   if (json.run !== 'HONDA') {
-    const fence = new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${data.longitude},${data.latitude}`);  
-    resFence = await fence.loadJSON();
-    const distance = resFence.route.paths[0].distance  
+    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${data.longitude},${data.latitude}`).loadJSON();  
+    const distance = fence.route.paths[0].distance  
     
     if (distance > 20) {
       // push message to WeChat_1
       const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_1.method = 'POST'
       weChat_1.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米","url":"${mapUrl}"}]}}`;
-      const res_1 = await weChat_1.loadJSON();
-      
+      await weChat_1.loadJSON();
       // Notification_1
       notify(`${status}  `+`更新时间 ${GMT}`, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
-      
-      // upload JSON_1
-      const up_1 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json');
-      up_1.method = 'POST'
-      up_1.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
-      up_1.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit.data.headCommit.commitId}`
-      const upload_1 = await up_1.loadJSON();
+      // Save JSON_1
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(runObj)
+      );
       return;// pushEnd_1
     }
   }
@@ -428,23 +426,22 @@ async function createWidget() {
   const L3 = L2 % (60 * 1000);
   const seconds = Math.round(L3 / 1000);
   var moment = (hours * 60 + minutes)
-    
+  
   if (data.speed <= 5) {
-    if (moment >= (data.updateTime == json.updateTime) ? 120 : 10) {
+    const duration = data.updateTime == json.updateTime ? 120 : 10
+    if (moment >= duration) {
       // push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_2.method = 'POST'
       weChat_2.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 停车时间 ${GMT}","url":"${mapUrl}"}]}}`;
-      const res_2 = await weChat_2.loadJSON();
+      await weChat_2.loadJSON();
       // Notification_2
       notify(status + '  停车时间 ' + GMT, address, mapUrl);
-        
-      // upload JSON_2
-      const up_2 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
-      up_2.method = 'POST'
-      up_2.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
-      up_2.body = `newRef=&newPath=&message="upload"&content=${object}&lastCommitSha=${Edit.data.headCommit.commitId}`
-        const upload_2 = await up_2.loadJSON();
+      // Save JSON_2
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(object)
+      );
     } 
   } else {
     if (json.run != 'HONDA'){
@@ -452,31 +449,27 @@ async function createWidget() {
       const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_3.method = 'POST'
       weChat_3.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 启动时间 ${GMT}","url":"${mapUrl}"}]}}`;
-      const res_3 = await weChat_3.loadJSON();
+      await weChat_3.loadJSON();
       // Notification_3
       notify(status + '  启动时间 ' + GMT, address, mapUrl)
-        
-      // upload JSON_3
-      const up_3 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
-      up_3.method = 'POST'
-      up_3.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
-      up_3.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit.data.headCommit.commitId}`
-      const upload_3 = await up_3.loadJSON();
+      // Save JSON_3
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(runObj)
+      );
     } else {
       // push message to WeChat_4
       const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_4.method = 'POST'
       weChat_4.body = `{"touser":"DianQiao","agentid":"1000004","msgtype":"news","news":{"articles":[{"title":"${address}","picurl":"https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}","description":"${status} 更新时间 ${GMT}","url":"${mapUrl}"}]}}`;
-      const res_4 = await weChat_4.loadJSON();
+      await weChat_4.loadJSON();
       // Notification_4
       notify(status + '  更新时间 ' + GMT, address, mapUrl);
-        
-      // upload JSON_4
-      const up_4 = new Request('https://diqiao.coding.net/api/user/diqiao/project/shortcuts/depot/4qiao/git/edit/master/code/script.json')
-      up_4.method = 'POST'
-      up_4.headers = {"Cookie": `${cookie}`,"X-XSRF-TOKEN": "e6a5aade-0613-4c0f-8447-ed8415f80134"}  
-      up_4.body = `newRef=&newPath=&message="upload"&content=${runObj}&lastCommitSha=${Edit.data.headCommit.commitId}`
-      const upload_4 = await up_4.loadJSON();  
+      // Save JSON_4
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(runObj)
+      );
       return;
     }
   }
