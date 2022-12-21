@@ -109,7 +109,7 @@ async function main() {
                   url: relyItem.scriptURL,
                 });
                 if (_isWrite) {
-                  notify("下载提示", `依赖插件:${relyItem.name}下载/更新成功`);
+                  notify('', `依赖插件:${relyItem.name}下载/更新成功`);
                 }
               }
             } catch (e) {
@@ -121,7 +121,7 @@ async function main() {
             url: item.scriptURL,
           });
           if (isWrite) {
-            notify("下载提示", `小组件:${item.title}下载/更新成功`);
+            notify('', `小组件:${item.title}下载/更新成功`);
           }
         };
         r.addCell(downloadCell);
