@@ -122,7 +122,7 @@ const success = main.success
 
 
 if (success === true) {
-  var list = main.data.list[0];
+  const list = main.data.list[0];
   nothing = list === undefined;
   if (nothing) {
     console.log(
@@ -267,12 +267,12 @@ async function createWidget() {
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient();
   color = [
-  "#82B1FF", 
-  "#757575", 
-  "#4FC3F7",
-  "#66CCFF",
-  "#99CCCC",
-  "#BCBBBB"
+    "#82B1FF",
+    "#757575",
+    "#4FC3F7",
+    "#66CCFF",
+    "#99CCCC",
+    "#BCBBBB"
   ]
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
@@ -321,7 +321,7 @@ async function createWidget() {
   // violationPoint
   const vioPointStack = leftStack.addStack();
   const vioPoint = vioPointStack.addStack();
-  if (list !== undefined) {
+  if (!nothing) {
     vioPointText = vioPoint.addText(`罚款${vio.fine}元、` + `扣${vio.violationPoint}分`);
     vioPointText.font = Font.mediumSystemFont(12);
     vioPointText.textColor = new Color('#484848');
@@ -434,7 +434,7 @@ async function createWidget() {
   // jump to details
   textPlate2.url = get.details;
   // jump show image
-  if (list !== undefined) {
+  if (!nothing) {
     textAddress.url = img;
   }
   return widget;
