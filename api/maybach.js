@@ -13,6 +13,7 @@ const uri = Script.name();
 const F_MGR = FileManager.iCloud();
 const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "mercedes");
 const cacheFile = F_MGR.joinPath(path, 'honda.json');
+
 if (!F_MGR.fileExists(path)) {
   F_MGR.createDirectory(path);
 }
@@ -42,7 +43,6 @@ async function presentMenu() {
   }
   if (response === 3) {
     widget = await createWidget();
-    await widget.presentMedium();
   }
   if (response === 4) return;
   // Update the code
@@ -68,38 +68,7 @@ async function presentMenu() {
     }
   }
 }
-  
-try {
-  if (config.runsInWidget) {
-    widget = await createWidget();
-    Script.setWidget(widget);
-    Script.complete();
-  } else {
-    await presentMenu();
-  }
-} catch (error) {
-  console.log(error)
-  const cover = await getData();
-  const widget = createErrorWidget(cover, error);
-  await widget.presentMedium();
-}
-  
-/**
-* 弹出一个通知
-* @param {string} title
-* @param {string} body
-* @param {string} url
-* @param {string} sound
-*/
-async function notify (title, body, url, opts = {}) {
-  let n = new Notification();
-  n = Object.assign(n, opts);
-  n.title = title
-  n.body = body
-  n.sound = 'alert'
-  if (url) n.openURL = url
-  return await n.schedule();
-}
+
 
 // Create Widget
 async function createWidget() {
@@ -196,9 +165,8 @@ F_MGR.readString(cacheFile)
 
   /**
   * 界面显示布局(左到右)
-  * Layout left and right
-  @ image
-  @ text
+  * @param {image} image
+  * @param {string} text
   * Cylindrical Bar Chart
   */
   widget.setPadding(10, 18, 10, 15);
@@ -296,10 +264,10 @@ F_MGR.readString(cacheFile)
     
     
   /**
-  * Right Main Stack
-  @ Car Logo
-  @ Car image
-  @ Address
+  * right Stack
+  * Car Logo and image
+  * @param {image} image
+  * @param {string} address
   */
   const rightStack = mainStack.addStack();
   rightStack.layoutVertically();
@@ -351,7 +319,13 @@ F_MGR.readString(cacheFile)
   textAddress.url = mapUrl;
   // jump run widget
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
-  
+  if (!config.runsInWidget) {  
+    await widget.presentMedium();
+    return;
+  } else {
+    Script.setWidget(widget);
+    Script.complete();
+  }
 
   /**
   * Electronic Fence
@@ -496,43 +470,31 @@ F_MGR.readString(cacheFile)
   return widget;
 }
 
+if (config.runsInWidget) {
+  widget = await createWidget();
+} else {
+  await presentMenu();
+}
+
+/**
+* 弹出一个通知
+* @param {string} title
+* @param {string} body
+* @param {string} url
+* @param {string} sound
+*/
+async function notify (title, body, url, opts = {}) {
+  let n = new Notification();
+  n = Object.assign(n, opts);
+  n.title = title
+  n.body = body
+  n.sound = 'alert'
+  if (url) n.openURL = url
+  return await n.schedule();
+}
 
 // getImageUrl
 async function getImage(url) {
   const r = await new Request(url);
   return await r.loadImage();
-}
-
-// Error widget
-async function getData() {
-  const fm = FileManager.iCloud();
-  const path = fm.documentsDirectory() + "/" + 'IMG_9347.png'
-  return fm.readImage(path)
-}
-
-function createErrorWidget(cover, error) {
-  const widget = new ListWidget()
-  widget.addSpacer(30)
-  const errorDetailStack = widget.addStack()
-  errorDetailStack.addSpacer()
-  const errorDetailElement = errorDetailStack.addText(error.toString().replace("Error: ", ""))
-  errorDetailElement.textColor = Color.blue();
-  errorDetailElement.font = Font.systemFont(17);
-  errorDetailStack.addSpacer()
-  
-  const carImageStack = widget.addStack();
-  carImageStack.addSpacer()
-  carImageStack.setPadding(-40, 0, 0, 0);
-  const widgetImage = carImageStack.addImage(cover)
-  widgetImage.imageSize = new Size(300, 180);
-  widgetImage.centerAlignImage()
-  carImageStack.addSpacer()
-  const gradient = new LinearGradient()
-  gradient.locations = [0, 1]
-  gradient.colors = [
-    new Color('#BCBBBB', 0.7),
-    new Color('#00000000')
-  ]
-  widget.backgroundGradient = gradient
-  return widget
 }
