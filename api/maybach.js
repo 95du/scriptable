@@ -6,9 +6,7 @@
 * Honda Civic
 * Version 1.1.0
 * 2022-12-22 00:30
-* 模拟电子围栏
-* 显示车速，位置
-* Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+* 模拟电子围栏，显示车速，位置
 */
 
 const uri = Script.name();
@@ -379,7 +377,7 @@ F_MGR.readString(cacheFile)
     "articles": [
       {
         "title": "${address}",
-        "picurl": "https://restapi.amap.com/v3/staticmap?&amp;amp;amp;key=a35a9538433a183718ce973382012f55&amp;amp;amp;zoom=14&amp;amp;amp;size=450*300&amp;amp;amp;markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "picurl": "https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
         "description": "${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米",
         "url": "${mapUrl}"
       }
@@ -387,9 +385,7 @@ F_MGR.readString(cacheFile)
   }
 }`;
       await weChat_1.loadJSON();
-      // Notification_1
       notify(`${status}  `+`更新时间 ${GMT}`, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
-      // Save JSON_1
       F_MGR.writeString(
         cacheFile,
         JSON.stringify(runObj)
@@ -427,7 +423,7 @@ F_MGR.readString(cacheFile)
     "articles": [
       {
         "title": "${address}",
-        "picurl": "https://restapi.amap.com/v3/staticmap?&amp;key=a35a9538433a183718ce973382012f55&amp;zoom=14&amp;size=450*300&amp;markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "picurl": "https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
         "description": "${status} 停车时间 ${GMT}",
         "url": "${mapUrl}"
       }
@@ -435,9 +431,7 @@ F_MGR.readString(cacheFile)
   }
 }`;
       await weChat_2.loadJSON();
-      // Notification_2
       notify(status + '  停车时间 ' + GMT, address, mapUrl);
-      // Save JSON_2
       F_MGR.writeString(
         cacheFile,
         JSON.stringify(object)
@@ -456,7 +450,7 @@ F_MGR.readString(cacheFile)
     "articles": [
       {
         "title": "${address}",
-        "picurl": "https://restapi.amap.com/v3/staticmap?&amp;key=a35a9538433a183718ce973382012f55&amp;zoom=14&amp;size=450*300&amp;markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "picurl": "https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
         "description": "${status} 启动时间 ${GMT}",
         "url": "${mapUrl}"
       }
@@ -464,9 +458,7 @@ F_MGR.readString(cacheFile)
   }
 }`;
       await weChat_3.loadJSON();
-      // Notification_3
       notify(status + '  启动时间 ' + GMT, address, mapUrl)
-      // Save JSON_3
       F_MGR.writeString(
         cacheFile,
         JSON.stringify(runObj)
@@ -483,7 +475,7 @@ F_MGR.readString(cacheFile)
     "articles": [
       {
         "title": "${address}",
-        "picurl": "https://restapi.amap.com/v3/staticmap?&amp;key=a35a9538433a183718ce973382012f55&amp;zoom=14&amp;size=450*300&amp;markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "picurl": "https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
         "description": "${status} 更新时间 ${GMT}",
         "url": "${mapUrl}"
       }
@@ -491,9 +483,7 @@ F_MGR.readString(cacheFile)
   }
 }`;
       await weChat_4.loadJSON();
-      // Notification_4
       notify(status + '  更新时间 ' + GMT, address, mapUrl);
-      // Save JSON_4
       F_MGR.writeString(
         cacheFile,
         JSON.stringify(runObj)
