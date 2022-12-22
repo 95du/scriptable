@@ -2,13 +2,15 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: car;
 /**
-支付宝小程序 交管12123
-小组件作者：95度茅台
-获取Token作者: @FoKit
-版本: Version 1.3
-Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * 支付宝小程序 交管12123
+ * 小组件作者：95度茅台
+ * 获取Token作者: @FoKit
+ * 版本: Version 1.3.2
+ * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 
-获取Token重写：https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
+获取Token重写：
+https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
+
 使用方法：配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
 使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
 
@@ -49,10 +51,8 @@ if (F_MGR.fileExists(cacheFile)) {
 
 
 if (!F_MGR.fileExists(folder) || verifyToken === undefined) {
-  // boxjs_data
   try {
-    boxjs_request = new Request('http://boxjs.com/query/data/token_12123');
-    boxjs_data = await boxjs_request.loadJSON();
+    boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
     verifyToken = boxjs_data.val
   } catch(e) {
     if (config.runsInApp) {
@@ -74,7 +74,7 @@ if (!F_MGR.fileExists(cacheFile)) {
   if (!verifyToken) {
     const loginAlert = new Alert();
     loginAlert.title = '交管 12123';
-    loginAlert.message = `\r\n注 : 自动获取Token需要Quantumult-X / Surge 辅助运行\n\n具体方法请查看小组件代码开头注释\n\r\n小组件作者: 95度茅台\n获取Token作者: @FoKit`;
+    loginAlert.message = `\r\n注 : 自动获取Token需要Quantumult-X / Surge 辅助运行，具体方法请查看小组件代码开头注释\n\r\n小组件作者: 95度茅台\n获取Token作者: @FoKit`;
     loginAlert.addAction('获取Token');
     loginAlert.addCancelAction('取消');
     login = await loginAlert.presentAlert();
@@ -83,28 +83,30 @@ if (!F_MGR.fileExists(cacheFile)) {
     return;
   } else {
     console.log(`boxjs_token 获取成功: ${boxjs_data.val}`);
-    const alert = new Alert();
-    alert.title = '输入车牌号';
-    alert.message = '将显示在小组件左上角'
-    alert.addTextField('输入车牌号');
-    alert.addAction('确定');
-    alert.addCancelAction('取消');
-    const input = await alert.presentAlert();
-    const value = alert.textFieldValue(0);
-    myPlate = value
-    
-    if (input === 0) {
-      if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
-      data = {
-        verifyToken: boxjs_data.val,
-        myPlate: myPlate
-      }
-      F_MGR.writeString(cacheFile, JSON.stringify(data));
-      notify('登录成功', '请前往桌面添加中号小组件');
-    } else {
-      return;
-    }
+    await addLicensePlate();
   }
+}
+
+
+async function addLicensePlate() {
+  const alert = new Alert();
+  alert.title = '输入车牌号';
+  alert.message = '将显示在小组件左上角'
+  alert.addTextField('输入车牌号', F_MGR.fileExists(cacheFile) ? myPlate : '');
+  alert.addAction('确定');
+  alert.addCancelAction('取消');
+  const input = await alert.presentAlert();
+  myPlate = alert.textFieldValue(0);
+  if (input === -1) return;
+    data = {
+      verifyToken: verifyToken,
+      myPlate: myPlate
+    }
+  if (!F_MGR.fileExists(folder)) {
+    F_MGR.createDirectory(folder)
+  }
+  F_MGR.writeString(cacheFile, JSON.stringify(data));
+  notify(myPlate, '您的车牌设置成功');
 }
 
 
@@ -125,9 +127,7 @@ if (success === true) {
   const list = main.data.list[0];
   nothing = list === undefined;
   if (nothing) {
-    console.log(
-      JSON.stringify(main, null, 2)
-    );
+    console.log(main.resultMsg)
   } else {
     // issueOrganization plate
     const plate = list.plateNumber
@@ -190,7 +190,6 @@ if (success === true) {
   } else {
     data = {myPlate: myPlate}
     F_MGR.writeString(cacheFile, JSON.stringify(data));
-    // notice
     notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
   }
   return;
@@ -205,6 +204,7 @@ async function presentMenu() {
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
   alert.addAction('组件下载');
+  alert.addAction('修改车牌')
   alert.addAction('预览组件');
   alert.addAction('退出菜单');
   response = await alert.presentAlert();
@@ -224,10 +224,13 @@ async function presentMenu() {
     }
   }
   if (response === 3) {
+    await addLicensePlate();
+  }
+  if (response === 4) {
     const widget = await createWidget(main);
     await widget.presentMedium();
   }
-  if (response === 4) return;
+  if (response === 5) return;
   if (response === 0) {
     const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(get.update);
@@ -249,9 +252,8 @@ async function presentMenu() {
     }
   }
 }
-  
-  
-// config widget
+
+
 if (!config.runsInWidget) {
   await presentMenu();
 } else {
