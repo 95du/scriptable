@@ -133,7 +133,7 @@ async function createWidget() {
   if (!F_MGR.fileExists(cacheFile)) {
     F_MGR.writeString(
       cacheFile,
-      JSON.stringify(object, null, 2)
+      JSON.stringify(runObj, null, 2)
     );
     json = JSON.parse(
 F_MGR.readString(cacheFile)
@@ -319,6 +319,7 @@ F_MGR.readString(cacheFile)
   textAddress.url = mapUrl;
   // jump run widget
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
+  
   if (!config.runsInWidget) {  
     await widget.presentMedium();
     return;
