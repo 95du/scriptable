@@ -361,6 +361,8 @@ F_MGR.readString(cacheFile)
   // Get accessToken
   const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON();
   
+  const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
+  
   if (json.run !== 'HONDA') {
     const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${data.longitude},${data.latitude}`).loadJSON();  
     const distance = fence.route.paths[0].distance  
@@ -377,7 +379,7 @@ F_MGR.readString(cacheFile)
     "articles": [
       {
         "title": "${address}",
-        "picurl": "https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "picurl": "${mapKey},0:${data.longitude},${data.latitude}",
         "description": "${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米",
         "url": "${mapUrl}"
       }
@@ -423,7 +425,7 @@ F_MGR.readString(cacheFile)
     "articles": [
       {
         "title": "${address}",
-        "picurl": "https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "picurl": "${mapKey},0:${data.longitude},${data.latitude}",
         "description": "${status} 停车时间 ${GMT}",
         "url": "${mapUrl}"
       }
@@ -450,7 +452,7 @@ F_MGR.readString(cacheFile)
     "articles": [
       {
         "title": "${address}",
-        "picurl": "https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "picurl": "${mapKey},0:${data.longitude},${data.latitude}",
         "description": "${status} 启动时间 ${GMT}",
         "url": "${mapUrl}"
       }
@@ -475,7 +477,7 @@ F_MGR.readString(cacheFile)
     "articles": [
       {
         "title": "${address}",
-        "picurl": "https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${data.longitude},${data.latitude}",
+        "picurl": "${mapKey},0:${data.longitude},${data.latitude}",
         "description": "${status} 更新时间 ${GMT}",
         "url": "${mapUrl}"
       }
