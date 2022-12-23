@@ -7,7 +7,7 @@
 * 微信图标修改第 108 行的链接
 */
 
-const stackSize = new Size(0, 70);
+const stackSize = new Size(0, 65);
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
@@ -38,7 +38,7 @@ if (F_MGR.fileExists(cacheFile)) {
       location = await Location.current();
       obj = {
         ...location,
-        "updateTime":`${timeStamp}`
+        "updateTime": timeStamp
       }
       F_MGR.writeString(cacheFile, JSON.stringify(obj));  
     } catch (error) {
@@ -60,7 +60,7 @@ if (!F_MGR.fileExists(folder)) {
   const location = await Location.current();
   obj = {
     ...location,
-    "updateTime":`${timeStamp}`
+    "updateTime": timeStamp
   }
   F_MGR.writeString(cacheFile, JSON.stringify(obj));
   Safari.open('scriptable:///run/' + encodeURIComponent(uri));
@@ -77,7 +77,7 @@ async function presentMenu() {
   alert.addAction('退出菜单');
   mainMenu = await alert.presentAlert();
   if (mainMenu === 1) {
-    await F_MGR.remove(folder)
+    await F_MGR.remove(folder);
   }
   if (mainMenu === 2) {
     const modulePath = await downloadModule();
@@ -100,7 +100,10 @@ async function presentMenu() {
       finish.addAction('OK')
       await finish.presentAlert();
     } else {
-      F_MGR.writeString(module.filename, codeString)
+      F_MGR.writeString(  
+        module.filename,
+        codeString
+      );
       finish.title = "更新成功"
       finish.addAction('OK')
       await finish.presentAlert();
@@ -137,7 +140,7 @@ async function createWidget() {
   
   // WeChat icon
   const imageElement = eventStack.addImage(weChat);
-  imageElement.imageSize = new Size(42, 42);
+  imageElement.imageSize = new Size(38, 38);
   imageElement.url = 'https://html5.moji.com/tpd/mojiweatheraggr/index.html#/home'
   eventStack.addSpacer(10);
   
@@ -165,7 +168,7 @@ async function createWidget() {
   statusText.textColor = eventTextColor
   statusText.textOpacity = 0.4
   timeStack.addSpacer();
-  widget.addSpacer(18)
+  widget.addSpacer(20)
   
   
   /** 
