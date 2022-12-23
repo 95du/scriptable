@@ -2,12 +2,12 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: car;
 /**
-* 小组件作者: 4敲
-* Honda Civic
-* Version 1.1.0
-* 2022-12-22 00:30
-* 模拟电子围栏，显示车速，位置
-*/
+ * 小组件作者: 4敲
+ * Honda Civic
+ * Version 1.1.0
+ * 2022-12-22 22:22
+ * 模拟电子围栏，显示车速，位置
+ */
 
 const uri = Script.name();
 const F_MGR = FileManager.iCloud();
@@ -39,7 +39,7 @@ async function presentMenu() {
     return;
   }
   if (response === 2) {
- Safari.open('amapuri://WatchFamily/myFamily');
+    Safari.open('amapuri://WatchFamily/myFamily');
   }
   if (response === 3) {
     widget = await createWidget();
@@ -97,9 +97,18 @@ async function createWidget() {
   req.method = 'GET'
   req.headers = {"Cookie": "sessionid=ggylbvv5klxzm6ahibpfng4ldna2cxsy"}
   const res = await req.loadJSON();
-  const data = res.data
   if (res.code != 1) return;
-    
+  const data = res.data
+  const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
+  // Status Data
+  if (data.speed <= 5) {
+    state = "已静止";
+    status = "[ 车辆静止中 ]";
+  } else {
+    state = `${data.speed} km·h`;
+    status = `[ 车速 ${data.speed} km·h ]`;
+  }
+  
   // Get address (aMap)
   const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${data.longitude},${data.latitude}`).loadJSON();
   const address = adr.regeocode.formatted_address  
@@ -151,24 +160,13 @@ F_MGR.readString(cacheFile)
   const GMT = (Y+M+D+h+m);//+s
   const GMT2 = (M+D+h+m);
     
-  // speed
-  if (data.speed <= 5) {
-    status = "[ 车辆静止中 ]";
-    state = "已静止";
-    mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
-  } else {
-    status = `[ 车速 ${data.speed} km·h ]`;
-    state = `${data.speed} km·h`;
-    mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
-  }
-    
 
   /**
-  * 界面显示布局(左到右)
-  * @param {image} image
-  * @param {string} text
-  * Cylindrical Bar Chart
-  */
+   * 界面显示布局(左到右)
+   * @param {image} image
+   * @param {string} text
+   * Cylindrical Bar Chart
+   */
   widget.setPadding(10, 18, 10, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
@@ -199,8 +197,7 @@ F_MGR.readString(cacheFile)
   vehicleModelText.font = Font.mediumSystemFont(14);
   vehicleModelText.textColor = new Color('#424242');
   leftStack.addSpacer(3)
-    
-    
+  
   // update time icon
   const updateTimeStack = leftStack.addStack();
   updateTimeStack.layoutHorizontally();
@@ -216,8 +213,7 @@ F_MGR.readString(cacheFile)
   textUpdateTime.font = Font.mediumSystemFont(14);
   textUpdateTime.textColor = new Color('#424242');
   leftStack.addSpacer(21)
-    
-    
+  
   // Left Stack barRow
   const barStack = leftStack.addStack();
   barStack.layoutHorizontally();
@@ -239,7 +235,6 @@ F_MGR.readString(cacheFile)
   totalMonthBar.font = Font.mediumSystemFont(14);
   totalMonthBar.textColor = new Color(data.speed <= 5 ? '#AA00FF' : '#D50000');
   leftStack.addSpacer(8)
-    
 
   // Left Stack barRow2
   const barStack2 = leftStack.addStack();
@@ -264,11 +259,11 @@ F_MGR.readString(cacheFile)
     
     
   /**
-  * right Stack
-  * Car Logo and image
-  * @param {image} image
-  * @param {string} address
-  */
+   * right Stack
+   * Car Logo and image
+   * @param {image} image
+   * @param {string} address
+   */
   const rightStack = mainStack.addStack();
   rightStack.layoutVertically();
   // Car Logo
@@ -329,12 +324,11 @@ F_MGR.readString(cacheFile)
   }
 
   /**
-  * Electronic Fence
-  * 判断run为HONDA触发电子围栏
-  * 推送信息到微信
-  */
-  // Get accessToken
-  const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON();
+   * Electronic Fence
+   * 判断run为HONDA触发电子围栏
+   * 推送信息到微信
+   */
+  const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON(); // accessToken
   
   const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
   
@@ -373,10 +367,10 @@ F_MGR.readString(cacheFile)
   
       
   /**
-  * 车辆状态触发条件
-  * 驻车时长，行驶中，静止状态
-  * 推送信息到微信
-  */
+   * 车辆状态触发条件
+   * 驻车时长，行驶中，静止状态
+   * 推送信息到微信
+   */
   const date1 = (timestamp - json.pushTime);
   const L1 = date1 % (24 * 3600 * 1000);
   const hours = Math.floor(L1 / (3600 * 1000));
@@ -478,12 +472,12 @@ if (config.runsInWidget) {
 }
 
 /**
-* 弹出一个通知
-* @param {string} title
-* @param {string} body
-* @param {string} url
-* @param {string} sound
-*/
+ * 弹出一个通知
+ * @param {string} title
+ * @param {string} body
+ * @param {string} url
+ * @param {string} sound
+ */
 async function notify (title, body, url, opts = {}) {
   let n = new Notification();
   n = Object.assign(n, opts);
