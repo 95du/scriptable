@@ -138,7 +138,7 @@ async function createWidget() {
     coordinates: `${data.longitude},${data.latitude}`,
     pushTime: timestamp
   }
-  
+  // Initial Save
   if (!F_MGR.fileExists(cacheFile)) {
     F_MGR.writeString(
       cacheFile,
@@ -465,8 +465,9 @@ F_MGR.readString(cacheFile)
   return widget;
 }
 
+const isMediumWidget =  config.widgetFamily === 'medium'
 if (config.runsInWidget) {
-  widget = await createWidget();
+  isMediumWidget ? widget = await createWidget() : await createErrorWidget();
 } else {
   await presentMenu();
 }
@@ -488,8 +489,15 @@ async function notify (title, body, url, opts = {}) {
   return await n.schedule();
 }
 
-// getImageUrl
 async function getImage(url) {
   const r = await new Request(url);
   return await r.loadImage();
+}
+
+async function createErrorWidget() {
+  const widget = new ListWidget();
+  const text = widget.addText('仅支持中尺寸');
+  text.font = Font.systemFont(17);
+  text.centerAlignText();
+  Script.setWidget(widget);
 }
