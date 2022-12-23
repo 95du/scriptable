@@ -82,7 +82,7 @@ if (!F_MGR.fileExists(cacheFile)) {
     Safari.open(get.alipay);
     return;
   } else {
-    console.log(`boxjs_token 获取成功: ${boxjs_data.val}`);
+    notify('交管12123', `boxjs_token 获取成功: ${boxjs_data.val}`);
     await addLicensePlate();
   }
 }
@@ -188,7 +188,7 @@ if (success === true) {
   if (main.resultCode === 'SYSTEM_ERROR') {
   notify(main.resultMsg, '');
   } else {
-    data = {myPlate: myPlate}
+    data = { myPlate: myPlate }
     F_MGR.writeString(cacheFile, JSON.stringify(data));
     notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
   }
