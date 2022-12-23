@@ -253,13 +253,17 @@ async function presentMenu() {
   }
 }
 
-
+const isMediumWidget =  config.widgetFamily === 'medium'
 if (!config.runsInWidget) {
   await presentMenu();
 } else {
-  const widget = await createWidget(main);
-  Script.setWidget(widget);
-  Script.complete();
+  if (isMediumWidget) {
+    const widget = await createWidget(main);
+    Script.setWidget(widget);
+    Script.complete();
+  } else {
+    await createErrorWidget();
+  }
 }
 
 
@@ -469,6 +473,14 @@ async function notify (title, body, url, opts = {}) {
 async function getImage(url) {
   const r = await new Request(url);
   return await r.loadImage();
+}
+
+async function createErrorWidget() {
+  const widget = new ListWidget();
+  const text = widget.addText('仅支持中尺寸');
+  text.font = Font.systemFont(17);
+  text.centerAlignText();
+  Script.setWidget(widget);
 }
 
 async function shadowImage(img) {
