@@ -60,19 +60,18 @@ F_MGR.readString(cacheFile)
   }
 }
 
-
 async function createWidget(oil) {
   // 组件背景渐变
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient();
     color = [
-    "#82B1FF", 
-    "#757575", 
-    "#4FC3F7",
-    "#66CCFF",
-    "#99CCCC",
-    "#BCBBBB"
+      "#82B1FF",
+      "#757575",
+      "#4FC3F7",
+      "#66CCFF",
+      "#99CCCC",
+      "#BCBBBB"
     ]
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
@@ -251,14 +250,19 @@ async function createWidget(oil) {
 }
 
 try {  
-  if (config.runsInWidget) {
-    Script.setWidget(widget);
-    Script.complete();
-  } else {
+  const isMediumWidget =  config.widgetFamily === 'medium'
+  if (!config.runsInWidget) {
     await widget.presentMedium();
+  } else {
+    if (isMediumWidget) {
+      Script.setWidget(widget);
+      Script.complete();
+    } else {
+      await createErrorWidget();
+    }
   }
 } catch(error) {
-  console.log(error)
+  console.log(error);
 }
 
 if (`${forecast}` !== data.oil) {
@@ -267,7 +271,6 @@ if (`${forecast}` !== data.oil) {
   notice.title = `${data.province}油价涨跌调整‼️`
   notice.body = `${forecast}`
   notice.schedule();
-  // writeString
   F_MGR.writeString(
     cacheFile,
     JSON.stringify({
@@ -276,7 +279,15 @@ if (`${forecast}` !== data.oil) {
     })
   );
 }
-  
+
+async function createErrorWidget() {
+  const widget = new ListWidget();
+  const text = widget.addText('仅支持中尺寸');
+  text.font = Font.systemFont(17);
+  text.centerAlignText();
+  Script.setWidget(widget);
+}
+
 async function shadowImage(img) {
   let ctx = new DrawContext();
   ctx.size = img.size
