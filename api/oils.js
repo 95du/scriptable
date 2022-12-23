@@ -2,13 +2,13 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-brown; icon-glyph: gas-pump;
 /**
-* 小组件作者: 95度茅台
-* Oil price
-* Version 1.2
-* 2022-12-19 11:30
-* Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
-* ⚠️适配机型: 手动第9、10行的数字
-*/
+ * 小组件作者: 95度茅台
+ * Oil price
+ * Version 1.2
+ * 2022-12-19 11:30
+ * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * ⚠️适配机型: 手动修改第9、10行的数字
+ */
 const value = 6 //小机型改成 4
 const wide = 8 //小机型改成 6
 
