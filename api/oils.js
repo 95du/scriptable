@@ -13,13 +13,7 @@ const value = 6 //小机型改成 4
 const wide = 8 //小机型改成 6
 
 const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-const rule = 'var tishiContent="(.*?)";';
-const forecast = html.match(new RegExp(rule,"g")).map(str => {
-  const forecast = str.match(new RegExp(rule));  
-  const regex = /<br\/>/g;
-  const value = forecast[1].split(regex)
-  return value
-});
+const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
 
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
@@ -48,8 +42,8 @@ if (F_MGR.fileExists(cacheFile)) {
     F_MGR.writeString(
       cacheFile,
       JSON.stringify({
-        "oil": `${forecast}`,
-        "province": province
+        oil: forecast,
+        province: province
       }, null, 2)
     );
     data = JSON.parse(
@@ -125,7 +119,7 @@ async function createWidget(oil) {
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
-  const oilTipsText = barStack1.addText(`${forecast}`);
+  const oilTipsText = barStack1.addText(forecast);
   oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
@@ -265,18 +259,18 @@ try {
   console.log(error);
 }
 
-if (`${forecast}` !== data.oil) {
+if (forecast !== data.oil) {
   const notice = new Notification()
   notice.sound = 'alert'
   notice.title = `${data.province}油价涨跌调整‼️`
-  notice.body = `${forecast}`
+  notice.body = forecast
   notice.schedule();
   F_MGR.writeString(
     cacheFile,
     JSON.stringify({
-      "oil": `${forecast}`,
-      "province": data.province
-    })
+      oil: forecast,
+      province: data.province
+    }, null, 2)
   );
 }
 
