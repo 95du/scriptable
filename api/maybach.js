@@ -47,17 +47,15 @@ async function presentMenu() {
   if (response === 4) return;
   // Update the code
   if (response === 0) {
-    const FILE_MGR = FileManager.local();
-    const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-    const reqUpdate = new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js');
-    const codeString = await reqUpdate.loadString();
+    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
+    const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
     const finish = new Alert();
     if (codeString.indexOf("Maybach" || "HONDA") == -1) {
       finish.title = "更新失败"
       finish.addAction('OK');
       await finish.presentAlert();
     } else {
-      FILE_MGR.writeString(  
+      F_MGR.writeString(  
         module.filename,
         codeString
       );
@@ -122,7 +120,7 @@ async function createWidget() {
   const P2 = P1 % (3600 * 1000);
   const minutes1 = Math.floor(P2 / (60 * 1000));
   
-  // Saved Data
+  // Saved Json
   runObj = {
     updateTime: data.updateTime, 
     address: address,
