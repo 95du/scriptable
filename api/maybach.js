@@ -175,7 +175,7 @@ F_MGR.readString(cacheFile)
   // Left Main Stack
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
-  leftStack.addSpacer()
+  leftStack.addSpacer();
   // plateStack
   const plateStack = leftStack.addStack();
   const textPlate = plateStack.addText(minutes1 <= 3 ? 'Maybach🚦' : '琼A·849A8');
@@ -257,7 +257,7 @@ F_MGR.readString(cacheFile)
   const totalMonthBar2 = barStack2.addText('已锁车');
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#616161');
-  leftStack.addSpacer()
+  leftStack.addSpacer();
     
     
   /**
@@ -268,10 +268,10 @@ F_MGR.readString(cacheFile)
    */
   const rightStack = mainStack.addStack();
   rightStack.layoutVertically();
-  rightStack.addSpacer()
+  rightStack.addSpacer();
   // Car Logo
   const carLogoStack = rightStack.addStack();
-  carLogoStack.addSpacer()
+  carLogoStack.addSpacer();
   const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
   const image = carLogoStack.addImage(carLogo);
   image.imageSize = new Size(27,27);
@@ -310,7 +310,7 @@ F_MGR.readString(cacheFile)
   textAddress.font = Font.mediumSystemFont(11.5);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
-  rightStack.addSpacer()
+  rightStack.addSpacer();
   
   // jump show map
   barStack2.url = 'quantumult-x:///';
