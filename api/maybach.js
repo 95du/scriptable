@@ -113,7 +113,7 @@ async function createWidget() {
   const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${data.longitude},${data.latitude}`).loadJSON();
   const address = adr.regeocode.formatted_address  
   
-  // 计算停车时长
+  // 计算停车时长(红绿灯图标)
   const timestamp = Date.parse(new Date());
   const parkingTime = (timestamp - data.updateTime);
   const days = Math.floor(parkingTime/(24 * 3600 * 1000));
@@ -122,13 +122,25 @@ async function createWidget() {
   const P2 = P1 % (3600 * 1000);
   const minutes1 = Math.floor(P2 / (60 * 1000));
   
+  // Timestamp Conversion
+  const date = new Date(data.updateTime);
+  const Y = date.getFullYear() + '-';
+  const M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+  const D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate()) + ' ';
+  const h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) + ':';
+  const m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes()); //+ ':';
+  //const s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
+  const GMT = (Y+M+D+h+m);//+s
+  const GMT2 = (M+D+h+m);
+  
   // Saved Json
   runObj = {
     updateTime: data.updateTime, 
     address: address,
     run: data.owner,
     coordinates: `${data.longitude},${data.latitude}`,
-    pushTime: timestamp
+    pushTime: timestamp,
+    parkingTime: GMT2
   }
     
   object = {
@@ -136,7 +148,8 @@ async function createWidget() {
     address: address,
     run: data.speed,
     coordinates: `${data.longitude},${data.latitude}`,
-    pushTime: timestamp
+    pushTime: timestamp,
+    parkingTime: GMT2
   }
   // Initial Save
   if (!F_MGR.fileExists(cacheFile)) {
@@ -149,31 +162,20 @@ F_MGR.readString(cacheFile)
     );
   }
   
-  // Timestamp Conversion
-  const date = new Date(data.updateTime);
-  const Y = date.getFullYear() + '-';
-  const M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-  const D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate()) + ' ';
-  const h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) + ':';
-  const m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes()); //+ ':';
-  //const s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
-  const GMT = (Y+M+D+h+m);//+s
-  const GMT2 = (M+D+h+m);
-    
-
   /**
    * 界面显示布局(左到右)
    * @param {image} image
    * @param {string} text
    * Cylindrical Bar Chart
    */
-  widget.setPadding(10, 18, 10, 15);
+  widget.setPadding(8, 18, 10, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
     
   // Left Main Stack
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
+  leftStack.addSpacer()
   // plateStack
   const plateStack = leftStack.addStack();
   const textPlate = plateStack.addText(minutes1 <= 3 ? 'Maybach🚦' : '琼A·849A8');
@@ -190,7 +192,7 @@ F_MGR.readString(cacheFile)
   const benzIcon = benzStack.addImage(iconSymbol);
   benzIcon.imageSize = new Size(14, 14);
   benzIcon.tintColor = Color.black();
-  benzStack.addSpacer(5);
+  benzStack.addSpacer(6);
   // mercedes text
   const vehicleModel = benzStack.addStack();
   const vehicleModelText = vehicleModel.addText('Mercedes');
@@ -204,15 +206,15 @@ F_MGR.readString(cacheFile)
   updateTimeStack.centerAlignContent();
   const iconSymbol2 = SFSymbol.named('car');
   const carIcon = updateTimeStack.addImage(iconSymbol2.image);
-  carIcon.imageSize = new Size(15, 15);
+  carIcon.imageSize = new Size(16, 16);
   carIcon.tintColor = Color.black();
-  updateTimeStack.addSpacer(5);
+  updateTimeStack.addSpacer(3);
   // update time text
   const updateTime = updateTimeStack.addStack();
   const textUpdateTime = updateTime.addText(GMT2);
   textUpdateTime.font = Font.mediumSystemFont(14);
   textUpdateTime.textColor = new Color('#424242');
-  leftStack.addSpacer(21)
+  leftStack.addSpacer(22)
   
   // Left Stack barRow
   const barStack = leftStack.addStack();
@@ -255,7 +257,7 @@ F_MGR.readString(cacheFile)
   const totalMonthBar2 = barStack2.addText('已锁车');
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#616161');
-  leftStack.addSpacer(2)
+  leftStack.addSpacer()
     
     
   /**
@@ -266,6 +268,7 @@ F_MGR.readString(cacheFile)
    */
   const rightStack = mainStack.addStack();
   rightStack.layoutVertically();
+  rightStack.addSpacer()
   // Car Logo
   const carLogoStack = rightStack.addStack();
   carLogoStack.addSpacer()
@@ -307,6 +310,7 @@ F_MGR.readString(cacheFile)
   textAddress.font = Font.mediumSystemFont(11.5);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
+  rightStack.addSpacer()
   
   // jump show map
   barStack2.url = 'quantumult-x:///';
