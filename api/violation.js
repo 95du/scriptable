@@ -299,7 +299,7 @@ async function createWidget() {
   */
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
-  leftStack.addSpacer()
+  leftStack.addSpacer();
   // plateStack
   const plateStack = leftStack.addStack();
   textPlate = plateStack.addText(myPlate);
@@ -395,7 +395,7 @@ async function createWidget() {
   const totalMonthBar2 = barStack2.addText('驾驶证');
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#757575');
-  leftStack.addSpacer()
+  leftStack.addSpacer();
 
 
   /*
@@ -406,10 +406,10 @@ async function createWidget() {
   */
   const rightStack = mainStack.addStack();
   rightStack.layoutVertically();
-  rightStack.addSpacer()
+  rightStack.addSpacer();
   // Car Logo
   const carLogoStack = rightStack.addStack();
-  carLogoStack.addSpacer()
+  carLogoStack.addSpacer();
   textPlate2 = carLogoStack.addText('交管12123')
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
@@ -434,7 +434,7 @@ async function createWidget() {
   textAddress.font = Font.mediumSystemFont(11.3);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
-  rightStack.addSpacer()
+  rightStack.addSpacer();
 
   // jump show status
   barStack2.url = get.status;
