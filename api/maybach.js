@@ -47,7 +47,6 @@ async function presentMenu() {
   if (response === 4) return;
   // Update the code
   if (response === 0) {
-    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
     const finish = new Alert();
     if (codeString.indexOf("Maybach" || "HONDA") == -1) {
@@ -55,14 +54,17 @@ async function presentMenu() {
       finish.addAction('OK');
       await finish.presentAlert();
     } else {
-      F_MGR.writeString(  
-        module.filename,
-        codeString
-      );
-      finish.title = "更新成功";
-      finish.addAction('OK');
-      await finish.presentAlert();
-      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+      const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
+      if (iCloudInUse) {
+        F_MGR.writeString(  
+          module.filename,
+          codeString
+        );
+        finish.title = "更新成功";
+        finish.addAction('OK');
+        await finish.presentAlert();
+        Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
+      }
     }
   }
 }
