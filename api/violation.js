@@ -3,7 +3,7 @@
 // icon-color: orange; icon-glyph: car;
 /**
  * 支付宝小程序 交管12123
- * 小组件作者：
+ * 小组件作者：95度茅台
  * 获取Token作者: @FoKit
  * 版本: Version 1.3.2
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
