@@ -61,9 +61,8 @@ const gradient = new LinearGradient()
   widget.backgroundGradient = gradient
 
 
-const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/telecom.json')
+const apiData = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/telecom.json');
 const get = await apiData.loadJSON();
-
 
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "telecom");
@@ -88,9 +87,11 @@ if (!F_MGR.fileExists(folder) || cookie === undefined) {
   loginUrl = login_data.val
   if (cookie) {
     if (!F_MGR.fileExists(folder)) {F_MGR.createDirectory(folder)}
-      data = {"cookie": `${cookie}`,"loginUrl": `${loginUrl}`}
-      data = JSON.stringify(data);
-      F_MGR.writeString(cacheFile, data);
+      data = {
+        "cookie": `${cookie}`,
+        "loginUrl": `${loginUrl}`
+      }
+      F_MGR.writeString(cacheFile, JSON.stringify(data));
   }
 }
 
@@ -118,11 +119,15 @@ if (!F_MGR.fileExists(cacheFile)) {
 // Automatic Login
 const login = new Request(loginUrl);
 login.method = 'GET'
-login.headers = {"Cookie": `${cookie}`,"Referer": `${get.referer}`}
+login.headers = {
+  "Cookie": `${cookie}`,
+  "Referer": `${get.referer}`
+}
 const sign = await login.loadString()
 const strLogin = sign.replaceAll('callbackMsg(','');
 const json = JSON.parse(
-  strLogin.replace(/\S{1}$/, '')
+  strLogin.replace(/\S{1}$/, ''
+  )
 );
 
 
@@ -134,7 +139,7 @@ async function presentMenu() {
   alert.addDestructiveAction('更新代码');
   alert.addAction('GetCookie');
   alert.addAction('预览组件');
-  alert.addAction('退出');
+  alert.addAction('退出菜单');
   response = await alert.presentAlert();
   // menu action 1
   if (response === 1) {
@@ -155,17 +160,17 @@ async function presentMenu() {
   }
   if (response === 3) return;
   if (response === 0) {
-    const FILE_MGR = FileManager.local();
-    const iCloudInUse = FILE_MGR.isFileStoredIniCloud(module.filename);
-    const reqUpdate = new Request(get.update);
-    const codeString = await reqUpdate.loadString();
+    const codeString = await new Request(get.update).loadString();
     const finish = new Alert();
     if (codeString.indexOf("中国电信") == -1) {
       finish.title = "更新失败"
       finish.addAction('OK');
       await finish.presentAlert();
     } else {
-      FILE_MGR.writeString(module.filename, codeString);
+      F_MGR.writeString(  
+        module.filename,
+        codeString
+      );
       finish.title = "更新成功"
       finish.addAction('OK');
       await finish.presentAlert();
