@@ -307,7 +307,7 @@ F_MGR.readString(cacheFile)
   } else {
     textAddress = adrStack.addText(address);
   }
-  textAddress.font = Font.mediumSystemFont(11.5);
+  textAddress.font = Font.mediumSystemFont(11.3);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
