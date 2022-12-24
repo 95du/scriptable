@@ -1,6 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: cog;
+const VERSION = '1.0.0'
 const uri = Script.name();
 const F_MGR = FileManager.iCloud();
 
@@ -255,7 +256,8 @@ async function renderTables(table) {
       type: 'ver',
       title: '当前版本',
       desc: '2022年12月15日\n修复已知问题，调整布局',
-      val: '1.0.0'
+      val: VERSION,
+      ver: 'Version ' + VERSION
     },
     {
       icon: {
@@ -346,13 +348,14 @@ async function preferences(table, arr, outfit) {
             item['val']
           );
         } else if (type == 'ver') {
-          title = 'Version ' + item.val;
-          message = item.desc;
-          options = ['完成'];
-          await generateAlert(title, message, options);
+          await generateAlert(
+            title = item.ver,
+            message = item.desc,
+            options = ['完成']
+          );
         } else if (type == 'OS') {
           ios = {
-            ...setting,
+            ...setting, 
             system: item.title
           }
           if (item.system) {
@@ -362,9 +365,7 @@ async function preferences(table, arr, outfit) {
             );
             notify('订阅成功', item.system + '\n将收到iOS最新开发者版或正式版通知');
           }
-          Safari.openInApp(
-'https://developer.apple.com/news/releases', false
-          );
+          Safari.openInApp('https://developer.apple.com/news/releases', false);
         } else if (type == 'input') {
           await inputInfo(
             item['title'],
@@ -377,39 +378,35 @@ async function preferences(table, arr, outfit) {
   }
 }
 
+// Refresh Time
 async function inputInfo(title, desc, val) {  
-  await generateInputAlert ({
-    title: desc,
-    options: [
-      { 
+  await generateInputAlert (
+    {
+      title: desc,
+      options: [{ 
         hint: '分钟',
         value: `${val}`
-      }
-    ]
-  }, 
+      }]
+    }, 
     async (inputArr) => {
-      obj = {
-        ...setting,
-        minute: inputArr[0].value
-      }
       await F_MGR.writeString(
         cacheFile,
-        JSON.stringify(obj)
+        JSON.stringify({ ...setting, minute: inputArr[0].value })
       );
     }
   );
 }
-
 
 /**
  * Download Script
  * @param {string} string
  */
 async function updateVersion(title, desc) {
-  title = title
-  message = desc
-  options = ['取消', '确认'];
-  const index = await generateAlert(title, message, options);
+  const index = await generateAlert(
+    title = title,
+    message = desc,
+    options = ['取消', '确认']
+  );
   if (index === 0) return;
   const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvZnJhbWUvVUlUYWJsZS5qcw=='));
   const codeString = await reqUpdate.loadString();
@@ -592,11 +589,11 @@ async function generateAlert(title, message, options) {
  * @param opt   属性
  * @returns {Promise<void>}
  */
-async function generateInputAlert(options,confirm) {  
+async function generateInputAlert(opt, confirm) {  
   const inputAlert = new Alert();
-  inputAlert.title = options.title;
-  inputAlert.message = options.message;
-  const fieldArr = options.options;
+  inputAlert.title = opt.title;
+  inputAlert.message = opt.message;
+  const fieldArr = opt.options;
   for (const option of fieldArr) {
     inputAlert.addTextField(  
       option.hint,
