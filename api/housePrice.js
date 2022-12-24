@@ -149,7 +149,7 @@ async function createWidget(result) {
   rightStack.layoutVertically();
   rightStack.addSpacer();
   const priceStack = rightStack.addStack();
-  const priceText = priceStack.addText(result.estimate_price_str);
+  const priceText = priceStack.addText(result.estimate_price_str + '.');
   priceText.font = new Font("Georgia-Bold", 50)
   priceText.textColor = new Color('#D50000');
   rightStack.addSpacer(8);
@@ -284,7 +284,7 @@ async function getHouseMsg(obj) {
   }
   // Save Valuation
   if (pricing > obj.pricing || pricing < obj.pricing || !F_MGR.fileExists(cacheFile)) {
-    F_MGR.writeString(cacheFile, JSON.stringify(object));  
+    F_MGR.writeString(cacheFile, JSON.stringify(object));
   }
   // output data
   result = {
@@ -296,12 +296,17 @@ async function getHouseMsg(obj) {
   return widget = await createWidget(result);
 }
 
+const isMediumWidget =  config.widgetFamily === 'medium'
 if (config.runsInApp) {
   await presentMenu();
 } else {
-  await getHouseMsg(obj);
-  Script.setWidget(widget);
-  Script.complete();
+  if (isMediumWidget) {
+    await getHouseMsg(obj);
+    Script.setWidget(widget);
+    Script.complete();
+  } else {
+    createErrorWidget();
+  }
 }
 
 async function notify (title, body, url, opts = {}) {
@@ -312,6 +317,14 @@ async function notify (title, body, url, opts = {}) {
   n.sound = 'alert'
   if (url) n.openURL = url
   return await n.schedule();
+}
+
+function createErrorWidget() {
+  const widget = new ListWidget();
+  const text = widget.addText('仅支持中尺寸');
+  text.font = Font.systemFont(17);
+  text.centerAlignText();
+  Script.setWidget(widget);
 }
 
 async function getJson(url) {
