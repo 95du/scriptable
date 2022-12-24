@@ -323,10 +323,11 @@ async function preferences(table, arr, outfit) {
       const but_off = await drawButton();
       const but_on = await drawButton(false);
       const img = settings.button[item.but] ? but_on : but_off;
-      QuickLook.present(img)
       const imgCell = UITableCell.image(img);
       */
-      const imgCell = UITableCell.imageAtURL('https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png');
+      
+      //https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png
+      const imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_false.png');
       imgCell.rightAligned();
       imgCell.widthWeight = 500;
       row.addCell(imgCell);
@@ -410,7 +411,7 @@ async function updateVersion(title, desc) {
   options = ['取消', '确认'];
   const index = await generateAlert(title, message, options);
   if (index === 0) return;
-  const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvY29kZS9VSVRhYmxlMTIxMjMuanM='));
+  const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvZnJhbWUvVUlUYWJsZS5qcw=='));
   const codeString = await reqUpdate.loadString();
   if (codeString.indexOf('95度茅台') == -1) {
     notify('更新失败⚠️', '请检查网络或稍后再试');
