@@ -10,7 +10,18 @@ if (!F_MGR.fileExists(path)) {
 }
 
 const cacheFile = F_MGR.joinPath(path, 'setting.json');
-if (F_MGR.fileExists(cacheFile)) {
+if (!F_MGR.fileExists(cacheFile)) {
+  setting = {
+    minute: 10,
+    system: 0,
+    bgImage1: "light",
+    bgImage1: "dark"
+  }
+  F_MGR.writeString(
+    cacheFile,
+    JSON.stringify(setting, null, 2)
+  );
+} else {
   data = F_MGR.readString(cacheFile);
   setting = JSON.parse(data);
 }
@@ -23,19 +34,10 @@ const topBgColor = Color.dynamic(
   new Color('#EEEEEE'), new Color('')
 );
 
-const init = {
-  minute: 30,
-  color: "#131415",
-  bgImage1: "light",
-  bgImage1: "dark"
-}
-if (!F_MGR.fileExists(cacheFile)) {
-  F_MGR.writeString(
-    cacheFile,
-    JSON.stringify(init, null, 2)
-  );
-}
-
+/**
+const interval = 1000 * 60 * setting.minute;
+widget.refreshAfterDate = new Date(Date.now() + interval);
+*/
 
 /**
  * 设置组件内容
@@ -83,6 +85,7 @@ async function renderTables(table) {
     delAlert.addCancelAction('取消');
     const action = await delAlert.presentAlert();
     if (action == 0) {
+      F_MGR.remove(path);
       notify('已清空数据', '请重新运行或重新配置小组件');
     }
   };
@@ -123,6 +126,7 @@ async function renderTables(table) {
           {
             title: iOS ? a : '正式版已发布',
             val: iOS ? b : '>',
+            system: iOS,
             type: 'OS',
             icon: {
               name: 'applelogo',
@@ -187,8 +191,8 @@ async function renderTables(table) {
         color: '#43CD80'
       },
       type: 'input',
-      title: '快速刷新',
-      desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
+      title: '刷新时间',
+      desc: '刷新时间仅供参考，具体时间由系统判断，单位：分钟',
       val: setting.minute,
       but: 0
     },
@@ -208,7 +212,7 @@ async function renderTables(table) {
       },
       type: 'clean',
       title: '清除背景',
-      desc: 'new Alert() 清除预警',
+      desc: 'new Alert()',
       val: '>',
       onClick: async () => {
         notify('已清除背景', '请重新运行或重新配置小组件');
@@ -346,12 +350,22 @@ async function preferences(table, arr, outfit) {
           options = ['完成'];
           await generateAlert(title, message, options);
         } else if (type == 'OS') {
+          ios = {
+            ...setting,
+            system: item.title
+          }
+          if (item.system) {
+            await F_MGR.writeString(
+              cacheFile,
+              JSON.stringify(ios)
+            );
+            notify('订阅成功', item.system + '\n将收到iOS最新开发者版或正式版通知');
+          }
           Safari.openInApp(
 'https://developer.apple.com/news/releases', false
           );
         } else if (type == 'input') {
           await inputInfo(
-            table,
             item['title'],
             item['desc'],
             item['val']
@@ -362,26 +376,25 @@ async function preferences(table, arr, outfit) {
   }
 }
 
-async function inputInfo(table, title, desc, val) {  
+async function inputInfo(title, desc, val) {  
   await generateInputAlert ({
-    title: title,
+    title: desc,
     options: [
       { 
-        hint: '时间',
+        hint: '分钟',
         value: `${val}`
       }
     ]
   }, 
     async (inputArr) => {
       obj = {
-        ...init,
+        ...setting,
         minute: inputArr[0].value
       }
       await F_MGR.writeString(
         cacheFile,
         JSON.stringify(obj)
       );
-      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   );
 }
@@ -397,7 +410,6 @@ async function updateVersion(title, desc) {
   options = ['取消', '确认'];
   const index = await generateAlert(title, message, options);
   if (index === 0) return;
-  const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
   const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvY29kZS9VSVRhYmxlMTIxMjMuanM='));
   const codeString = await reqUpdate.loadString();
   if (codeString.indexOf('95度茅台') == -1) {
@@ -672,7 +684,7 @@ renderTableList = async (data) => {
         const script = await new Request(item.scriptURL).loadString();
         F_MGR.writeString(F_MGR.documentsDirectory() + `/${item.name}.js`, script)
         if (script) {
-          notify("已获取Script", `小组件:${item.title}下载/更新成功`);
+          notify('', `小组件:${item.title}下载/更新成功`);
         }
       };
       r.addCell(downloadCell);
@@ -720,7 +732,7 @@ const Run = async () => {
       subscription: 'https://gitcode.net/4qiao/framework/raw/master/scriptable/install.json'
     });
     const script = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js').loadString();
-    F_MGR.writeString(F_MGR.documentsDirectory() + '/95duStore.js', script);
+    F_MGR.writeString(F_MGR.documentsDirectory() + '/95 °.js', script);
   } catch (e) {
     console.log("缓存读取错误" + e);
   }
