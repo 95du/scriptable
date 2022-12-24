@@ -91,19 +91,17 @@ async function renderTables(table) {
     }
   };
   table.addRow(topRow);
-
-  // interval 1
-  const gapRow = new UITableRow();
-  gapRow.height = 25
-  gapRow.backgroundColor = bgColor
-  table.addRow(gapRow);
   
+  // main Menu
   const basic = [
+    {
+      interval: 26
+    },
     {
       url: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/NicegramLogo.png',
       type: 'input',
       title: 'Telegram',
-      val: 'in',
+      val: '>',
       onClick: async () => {
         Safari.openInApp('https://t.me/+ViT7uEUrIUV0B_iy', false);
       }
@@ -220,15 +218,13 @@ async function renderTables(table) {
       }
     }
   ];
-  await preferences(table, basic, '组件设置');
-
-  // interval 2
-  const gapRow2 = new UITableRow();
-  gapRow2.height = 25
-  gapRow2.backgroundColor = bgColor
-  table.addRow(gapRow2);
+  await preferences(table, basic);
   
+  // Preview Menu
   const preview = [
+    {
+      interval: 26
+    },
     {
       icon: {
         name: 'lightswitch.on',
@@ -237,16 +233,14 @@ async function renderTables(table) {
       type: 'preview',
       title: '预览组件',
       val: '>'
+    },
+    {
+      interval: 26
     }
   ];
-  await preferences(table, preview, '版本更新');
-
-  // interval 3
-  const gapRow3 = new UITableRow();
-  gapRow3.height = 25;
-  gapRow3.backgroundColor = bgColor
-  table.addRow(gapRow3);
+  await preferences(table, preview);
   
+  // Version Menu
   const updateVersion = [
     {
       icon: {
@@ -267,15 +261,12 @@ async function renderTables(table) {
       type: 'options',
       title: '更新代码',
       desc: '更新后当前脚本代码将被覆盖\n请先做好备份，此操作不可恢复'
-    }
+    },
+    {
+      interval: 23.8 * Device.screenScale()
+    },
   ];
-  await preferences(table, updateVersion, '版本更新');
-  
-  // Bottom interval
-  const bottomRow = new UITableRow();
-  bottomRow.height = 24 * Device.screenScale();
-  bottomRow.backgroundColor = bgColor
-  table.addRow(bottomRow);
+  await preferences(table, updateVersion, '版本|更新');
 }
 
 
@@ -298,7 +289,7 @@ async function preferences(table, arr, outfit) {
     if (item.url) {
       const rowIcon = row.addImageAtURL(item.url);
       rowIcon.widthWeight = 100;
-    } else {
+    } else if (item.icon) {
       const icon = item.icon || {};
       const image = await drawTableIcon(
         icon.name,
@@ -311,6 +302,7 @@ async function preferences(table, arr, outfit) {
     let rowTitle = row.addText(item['title']);
     rowTitle.widthWeight = 400;
     rowTitle.titleFont = Font.systemFont(16);
+    
     if (item.val) {
       let valText = row.addText(
         `${item.val}`.toUpperCase()
@@ -320,6 +312,9 @@ async function preferences(table, arr, outfit) {
       valText.rightAligned();
       valText.titleColor = Color.blue();
       valText.titleFont = Font.mediumSystemFont(fontSize);
+    } else if (item.interval) {
+      row.height = item.interval;
+      row.backgroundColor = bgColor;
     } else {
       /**
       const but_off = await drawButton();
@@ -354,6 +349,7 @@ async function preferences(table, arr, outfit) {
             options = ['完成']
           );
         } else if (type == 'OS') {
+          Safari.openInApp('https://developer.apple.com/news/releases', false);
           ios = {
             ...setting, 
             system: item.title
@@ -365,7 +361,6 @@ async function preferences(table, arr, outfit) {
             );
             notify('订阅成功', item.system + '\n将收到iOS最新开发者版或正式版通知');
           }
-          Safari.openInApp('https://developer.apple.com/news/releases', false);
         } else if (type == 'input') {
           await inputInfo(
             item['title'],
@@ -628,7 +623,6 @@ renderTableList = async (data) => {
     gifRow.height = 85 * Device.screenScale();
     gifRow.backgroundColor = bgColor
     const gifImage = gifRow.addImageAtURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzEvQzgvQ2g0RnlXT0k2b0NBZjRQMUFFZ0trSzZxVVVrNTQyLmdpZg=='));
-    gifImage.widthWeight = 0.4;
     gifImage.centerAligned();
     table.addRow(gifRow);
 
@@ -636,7 +630,6 @@ renderTableList = async (data) => {
     const topRow = new UITableRow();
     topRow.height = 70;
     const leftText = topRow.addButton('效果图');
-    leftText.widthWeight = 0.3;
     leftText.onTap = async () => {
       const webView = new WebView();
       await webView.loadURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzEvRjMvQ2g0RnlXT1NuM3FBVG9pUUFDT2ZoaVpaUzFJNzY4LnBuZw=='));
@@ -644,11 +637,10 @@ renderTableList = async (data) => {
     };
 
     const authorImage = topRow.addImageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/4qiao.png');
-    authorImage.widthWeight = 0.4;
+    authorImage.widthWeight = 0.9
     authorImage.centerAligned();
 
     const rightText = topRow.addButton('快捷指令');
-    rightText.widthWeight = 0.3;
     rightText.rightAligned();
     rightText.onTap = async () => {
       Safari.openInApp('https://sharecuts.cn/user/KVlQooAqzA', false);
@@ -699,7 +691,6 @@ renderTableList = async (data) => {
     const videoRow = new UITableRow();
     videoRow.height = 70;
     const videoText = videoRow.addButton('Animusic HD Pipe Dreams Video');
-    videoText.widthWeight = 0.3;
     videoText.centerAligned();
     videoText.onTap = async () => {
       await Safari.openInApp(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzIvNUEvQ2g0RnlHT1l0dy1BSTI4Q0FPRDkzNDk1Y2hVMzMxLm1wNA=='), false);
@@ -711,7 +702,6 @@ renderTableList = async (data) => {
     bottom.height = 180;
     bottom.backgroundColor = bgColor
     const bottomText = bottom.addText('Copyright ©️ 2022 界面修改自·@DmYY');
-    bottomText.widthWeight = 0.3;
     bottomText.centerAligned();
     bottomText.titleFont = Font.boldMonospacedSystemFont(10);
     bottomText.titleColor = Color.gray();
