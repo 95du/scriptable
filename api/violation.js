@@ -232,7 +232,9 @@ async function presentMenu() {
   }
   if (response === 5) return;
   if (response === 0) {
-    const codeString = new Request(get.update).loadString();
+    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
+    const reqUpdate = new Request(get.update);
+    const codeString = await reqUpdate.loadString();
     const finish = new Alert();
     if (codeString.indexOf("交管12123") == -1) {
       finish.title = "更新失败"
