@@ -36,8 +36,8 @@ const topBgColor = Color.dynamic(
 );
 
 /**
-const interval = 1000 * 60 * setting.minute;
-widget.refreshAfterDate = new Date(Date.now() + interval);
+const refresh = 1000 * 60 * setting.minute;
+widget.refreshAfterDate = new Date(Date.now() + refresh);
 */
 
 /**
@@ -88,6 +88,7 @@ async function renderTables(table) {
     if (action == 0) {
       F_MGR.remove(path);
       notify('已清空数据', '请重新运行或重新配置小组件');
+      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   };
   table.addRow(topRow);
