@@ -3,7 +3,7 @@
 // icon-color: orange; icon-glyph: car;
 /**
  * 支付宝小程序 交管12123
- * 小组件作者：95度茅台
+ * 小组件作者：
  * 获取Token作者: @FoKit
  * 版本: Version 1.3.2
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
@@ -232,9 +232,7 @@ async function presentMenu() {
   }
   if (response === 5) return;
   if (response === 0) {
-    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
-    const reqUpdate = new Request(get.update);
-    const codeString = await reqUpdate.loadString();
+    const codeString = await new Request(get.update).loadString();
     const finish = new Alert();
     if (codeString.indexOf("交管12123") == -1) {
       finish.title = "更新失败"
