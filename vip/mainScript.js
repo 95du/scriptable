@@ -248,7 +248,7 @@ async function main() {
       const modules = {
         moduleName: "widget.Install",
         url:
-          "https://gitcode.net/4qiao/scriptable/raw/master/api/installScript.js",
+          "https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js",
       };
       const result = await saveFile(modules);
       if (result) console.log("自动更新成功");
