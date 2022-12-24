@@ -61,7 +61,6 @@ async function presentMenu() {
     await addHouseMsg();
   }
   if (mainMenu === 0) {
-    const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2hvdXNlUHJpY2UuanM='));
     const codeString = await reqUpdate.loadString();
     if (codeString.indexOf('95度茅台') == -1) {
