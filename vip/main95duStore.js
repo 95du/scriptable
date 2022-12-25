@@ -120,7 +120,7 @@ async function main() {
     const gapRow = new UITableRow();
     gapRow.height = 30;
     gapRow.backgroundColor = bgColor
-    await table.addRow(gapRow);
+    return table.addRow(gapRow);
   }
   
   const Run = async () => {
