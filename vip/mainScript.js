@@ -75,10 +75,7 @@ async function main() {
       table.addRow(topRow);
   
       // interval 1
-      const gapRow1 = new UITableRow();
-      gapRow1.height = 30;
-      gapRow1.backgroundColor = bgColor
-      table.addRow(gapRow1);
+      await gapRow(table);
       
   
       // 如果是节点，则先远程获取
@@ -129,10 +126,7 @@ async function main() {
       });
       
       // interval 2
-      const gapRow2 = new UITableRow();
-      gapRow2.height = 30;
-      gapRow2.backgroundColor = bgColor
-      table.addRow(gapRow2);
+      await gapRow(table);
       
       // videoRow
       const videoRow = new UITableRow();
@@ -241,6 +235,13 @@ async function main() {
       console.log("缓存读取错误" + e);
     }
   };
+  
+  async function gapRow(table) {
+    const gapRow = new UITableRow();
+    gapRow.height = 30;
+    gapRow.backgroundColor = bgColor
+    await table.addRow(gapRow);
+  }
   
   (async () => {
     try {
