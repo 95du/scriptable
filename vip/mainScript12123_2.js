@@ -1,8 +1,38 @@
-async function main() {
-  // Variables used by Scriptable.
+// Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: pink; icon-glyph: cloud-download-alt;
 async function main() {
+  /**
+   * 支付宝小程序 交管12123
+   * 小组件作者：95度茅台
+   * 获取Token作者: @FoKit
+   * 版本: Version 1.3.2
+   * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+  
+  获取Token重写：
+  https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
+  
+  使用方法：配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
+  使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
+  
+  一键添加 boxjs 重写到 Quantumult-X https://api.boxjs.app/quanx-install
+  
+  Boxjs订阅（可选）：http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubusercontent.com%2FFoKit%2FScripts%2Fmain%2Fboxjs%2Ffokit.boxjs.json
+  
+  手动配置重写规则：
+  =========Quantumult-X=========
+  [rewrite_local]
+  ^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js
+  
+  [MITM]
+  hostname = miniappcsfw.122.gov.cn
+  ============Surge=============
+  [Script]
+  12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
+  
+  [MITM]
+  hostname = %APPEND% miniappcsfw.122.gov.cn
+  */
   const Fm = FileManager.iCloud();
   const maybach = Fm.joinPath(Fm.joinPath(Fm.documentsDirectory(), "mercedes"), 'honda.json');
   if (Fm.fileExists(maybach)) {
@@ -10,11 +40,10 @@ async function main() {
   }
   
   // 12123
-  const get = await new Request(atob(
-'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON()
+  const get = await new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON();
   const url = get.infoURL
   
-  const uri = Script.name()
+  const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "violation");
   const cacheFile = F_MGR.joinPath(folder, 'data.json');
@@ -472,8 +501,5 @@ async function main() {
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage()
   }
-  }
-  module.exports = { main }
 }
-// async function main()
 module.exports = { main }
