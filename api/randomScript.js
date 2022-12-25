@@ -2,31 +2,32 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: pink; icon-glyph: th-large;
 /**
-* 小组件作者: 95度茅台
-* 随机自动切换多个小组件
-* Version 1.0
-* 2022-12-04 15:30
-* Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
-*/
+ * 小组件作者: 95度茅台
+ * 随机自动切换多个小组件
+ * Version 1.10
+ * 2022-12-26 15:30
+ * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ */
 
 const get = await new Request(atob(
 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3JhbmRvbS5qc29u')).loadJSON();
 
-const F_MGR = FileManager.iCloud();
-const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duScript');
+const F_MGR = FileManager.local();
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), 'randomScript');
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
+if (!F_MGR.fileExists(folder)) {
+  F_MGR.createDirectory(folder);
+};
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
   script = JSON.parse(data);
-} else {
-  script = get.script
+} else { 
+  script = get.script 
 }
 
-const mainScript = script[Math.floor(Math.random() * script.length)];
-const scriptName = 'Random';
-const scriptUrl = mainScript
-const modulePath = await downloadModule(scriptName, scriptUrl);
+const scriptUrl = script[Math.floor(Math.random() * script.length)];
+const modulePath = await downloadModule(scriptUrl);
 
 if (modulePath != null) {
   if (config.runsInWidget) {
@@ -35,8 +36,6 @@ if (modulePath != null) {
   } else {
     await presentMenu();
   }
-} else {
-  console.log('Failed to download new module and could not find any local version.');
 }
 
 
@@ -48,6 +47,22 @@ async function notify (title, body, url, opts = {}) {
   n.sound = 'alert'
   if (url) n.openURL = url
   return await n.schedule();
+}
+
+
+async function downloadModule() {
+  const modulePath = F_MGR.joinPath(folder, 'random.js');
+  if (F_MGR.fileExists(modulePath)) {
+    await F_MGR.remove(modulePath)
+  }
+  const req = new Request(scriptUrl);
+  const moduleJs = await req.load().catch(() => {
+    return null;
+  });
+  if (moduleJs) {
+    F_MGR.write(modulePath, moduleJs);
+    return modulePath;
+  }
 }
 
 
@@ -127,10 +142,7 @@ async function addScriptURL() {
   const install = await input.presentAlert();
   const url = input.textFieldValue(0)
   if (install === 0) {
-    if (!F_MGR.fileExists(folder)) {
-      F_MGR.createDirectory(folder);
-    };
-    (F_MGR.fileExists(cacheFile)) ? arr = script : arr = new Array();
+    F_MGR.fileExists(cacheFile) ? arr = script : arr = new Array();
     const javaScript = url.substring(url.lastIndexOf(".") + 1);
     if (javaScript === 'js') {
       await arr.push(url);
@@ -143,64 +155,4 @@ async function addScriptURL() {
     }
     await presentMenu();
   } 
-}
-
-
-async function downloadModule(scriptName, scriptUrl) {
-  const fm = FileManager.local();
-  const scriptPath = module.filename;
-  const moduleDir = scriptPath.replace(fm.fileName(scriptPath, true), scriptName);
-  if (fm.fileExists(moduleDir) && !fm.isDirectory(moduleDir)) fm.remove(moduleDir);
-  if (!fm.fileExists(moduleDir)) fm.createDirectory(moduleDir);
-  const timeStamp = Date.parse(new Date());
-  const moduleFilename = timeStamp.toString() + '.js';
-  const modulePath = fm.joinPath(moduleDir, moduleFilename);
-  if (fm.fileExists(modulePath)) {
-    console.log('Module already downlaoded ' + moduleFilename);
-    return modulePath;
-  } else {
-    const [moduleFiles, moduleLatestFile] = getModuleVersions(scriptName);
-    console.log('Downloading ' + moduleFilename + ' from URL: ' + scriptUrl);
-    const req = new Request(scriptUrl);
-    const moduleJs = await req.load().catch(() => {
-      return null;
-    });
-    if (moduleJs) {
-      fm.write(modulePath, moduleJs);
-      if (moduleFiles != null) {
-        moduleFiles.map(x => {
-          fm.remove(fm.joinPath(moduleDir, x));
-        });
-      }
-      return modulePath;
-    } else {
-      console.log('Failed to download new module. Using latest local version: ' + moduleLatestFile);
-      return (moduleLatestFile != null) ? fm.joinPath(moduleDir, moduleLatestFile) : null;
-    }
-  }
-}
-
-
-function getModuleVersions(scriptName) {
-  const fm = FileManager.local();
-  const scriptPath = module.filename
-  const moduleDir = scriptPath.replace(fm.fileName(scriptPath, true), scriptName);
-  const dirContents = fm.listContents(moduleDir);
-  if (dirContents.length > 0) {
-    const versions = dirContents.map(x => {
-      if (x.endsWith('.js')) return parseInt(x.replace('.js', ''));
-    });
-    versions.sort(function(a, b) {
-      return b - a;
-    });
-    //versions = versions.filter(Boolean);
-    if (versions.length > 0) {
-      const moduleFiles = versions.map(x => {
-        return x + '.js';
-      });
-      moduleLatestFile = versions[0] + '.js';
-      return [moduleFiles, moduleLatestFile];
-    }
-  }
-  return [null, null];
 }
