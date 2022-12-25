@@ -35,10 +35,13 @@ const topBgColor = Color.dynamic(
   new Color('#EEEEEE'), new Color('')
 );
 
-/**
-const refresh = 1000 * 60 * setting.minute;
-widget.refreshAfterDate = new Date(Date.now() + refresh);
-*/
+// refresh time
+if (setting.minute) {  
+  const widget = new ListWidget();
+  const refresh = 1000 * 60 * setting.minute;
+  widget.refreshAfterDate = new Date(Date.now() + refresh);
+}
+
 
 /**
  * 设置组件内容
@@ -233,6 +236,7 @@ async function renderTables(table) {
       },
       type: 'preview',
       title: '预览组件',
+      dismissOnSelect: true,
       val: '>'
     },
     {
@@ -311,7 +315,7 @@ async function preferences(table, arr, outfit) {
       const fontSize = !item.val ? 26 : 16;
       valText.widthWeight = 500;
       valText.rightAligned();
-      valText.titleColor = Color.blue();
+      valText.titleColor = item.val == '>' ? Color.gray() : Color.blue()
       valText.titleFont = Font.mediumSystemFont(fontSize);
     } else if (item.interval) {
       row.height = item.interval;
