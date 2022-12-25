@@ -4,7 +4,7 @@
 /**
  * 小组件作者: 95度茅台
  * 随机自动切换多个小组件
- * Version 1.10
+ * Version 1.1.0
  * 2022-12-26 15:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
