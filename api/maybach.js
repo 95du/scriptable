@@ -377,7 +377,7 @@ F_MGR.readString(cacheFile)
   const minutes = Math.floor(L2 / (60 * 1000));
   const L3 = L2 % (60 * 1000);
   const seconds = Math.round(L3 / 1000);
-  var moment = (hours * 60 + minutes)
+  let moment = (hours * 60 + minutes)
   
   if (data.speed <= 5) {
     const duration = data.updateTime == json.updateTime ? 120 : 10
@@ -408,7 +408,7 @@ F_MGR.readString(cacheFile)
       );
     } 
   } else {
-    if (json.run != 'HONDA'){
+    if (json.run !== 'HONDA'){
       // push message to WeChat_3
       const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_3.method = 'POST'
