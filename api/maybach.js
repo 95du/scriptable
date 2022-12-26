@@ -144,12 +144,8 @@ async function createWidget() {
   }
     
   object = {
-    updateTime: data.updateTime, 
-    address: address,
-    run: data.speed,
-    coordinates: `${data.longitude},${data.latitude}`,
-    pushTime: timestamp,
-    parkingTime: GMT2
+    ...runObj,
+    run: data.speed
   }
   // Initial Save
   if (!F_MGR.fileExists(cacheFile)) {
@@ -212,7 +208,7 @@ F_MGR.readString(cacheFile)
   // update time text
   const updateTime = updateTimeStack.addStack();
   const textUpdateTime = updateTime.addText(GMT2);
-  textUpdateTime.font = Font.mediumSystemFont(14);
+  textUpdateTime.font = Font.mediumSystemFont(13);
   textUpdateTime.textColor = new Color('#424242');
   leftStack.addSpacer(22)
   
@@ -321,7 +317,6 @@ F_MGR.readString(cacheFile)
   
   if (!config.runsInWidget) {  
     await widget.presentMedium();
-    return;
   } else {
     Script.setWidget(widget);
     Script.complete();
