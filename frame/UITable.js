@@ -13,10 +13,9 @@ if (!F_MGR.fileExists(path)) {
 const cacheFile = F_MGR.joinPath(path, 'setting.json');
 if (!F_MGR.fileExists(cacheFile)) {
   setting = {
-    minute: 10,
-    system: 0,
-    bgImage1: "light",
-    bgImage1: "dark"
+    minute: '10',
+    interval: '0',
+    province: '海南'
   }
   F_MGR.writeString(
     cacheFile,
@@ -42,6 +41,29 @@ if (setting.minute) {
   widget.refreshAfterDate = new Date(Date.now() + refresh);
 }
 
+let modulePath = await downloadModule();
+if (modulePath != null) {
+  if(config.runsInWidget) {  
+    const importedModule = importModule(modulePath);
+    await importedModule.main();
+  }
+}
+
+async function downloadModule() {
+  const modulePath = F_MGR.joinPath(path, 'oil.js');
+  if (F_MGR.fileExists(modulePath)) {
+    await F_MGR.remove(modulePath)
+  }
+  const req = new Request('https://gitcode.net/4qiao/scriptable/raw/master/vip/mainScriptOil.js');
+  const moduleJs = await req.load().catch(() => {
+    return null;
+  });
+  if (moduleJs) {
+    F_MGR.write(modulePath, moduleJs);
+    return modulePath;
+  }
+}
+
 
 /**
  * 设置组件内容
@@ -58,8 +80,8 @@ setWidgetConfig = async () => {
 async function renderTables(table) {
   // Header effectImage Row
   const effectRow = new UITableRow();
-  effectRow.height = 72 * Device.screenScale();
-  const effectImage = effectRow.addImageAtURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzIvMzUvQ2g0RnlXT2Q5ZFNBRG1uTUFBVUNaazlDcW40Nzc5LnBuZw=='));
+  effectRow.height = 70 * Device.screenScale();
+  const effectImage = effectRow.addImageAtURL(atob('aHR0cDovL210dy5zby81djNYTGw='));
   effectImage.widthWeight = 0.4;
   effectImage.centerAligned();
   effectRow.backgroundColor = topBgColor
@@ -96,7 +118,7 @@ async function renderTables(table) {
   };
   table.addRow(topRow);
   
-  // main Menu
+  // Main Menu
   const basic = [
     {
       interval: 26
@@ -118,68 +140,67 @@ async function renderTables(table) {
       title: 'AppleOS',
       val: '>',
       onClick: async () => {
-        const html = await new Request('https://developer.apple.com/news/releases/rss/releases.rss').loadString();
+        const html = await new Request(atob('aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL25ld3MvcmVsZWFzZXMvcnNzL3JlbGVhc2VzLnJzcw==')).loadString();
         const iOS = html.match(/<title>(iOS.*?)<\/title>/)[1];
-        const a = iOS.match(/(iOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC\s?\d?))/)[1];
-        const b = iOS.match(/\((.*?)\)/)[1];
         const iPadOS = html.match(/<title>(iPadOS.*?)<\/title>/)[1];
-        const c = iPadOS.match(/(iPadOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC\s?\d?))/)[1];
-        const d = iPadOS.match(/\((.*?)\)/)[1];
         const actions = [
           {
-            title: iOS ? a : '正式版已发布',
-            val: iOS ? b : '>',
-            system: iOS,
-            type: 'OS',
             icon: {
               name: 'applelogo',
               color: '#43CD80'
-            }
+            },
+            type: 'OS',
+            title: iOS ? iOS.match(/(iOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC\s?\d?))/)[1] : '正式版已发布',
+            val: iOS ? iOS.match(/\((.*?)\)/)[1] : '>',
+            system: iOS,
           },
           {
-            title: html.match(/<title>(iOS\s\d+\.\d\.?\d?)\s\(/)[1],
-            val: '>',
-            type: 'OS',
             icon: {
               name: 'applelogo',
               color: '#F57C00'
-            }
+            },
+            type: 'OS',
+            title: html.match(/<title>(iOS\s\d+\.\d\.?\d?)\s\(/)[1],
+            val: '>',
           },
           {
-            title: html.match(/<title>(iOS\s15\.\d\.?\d?)\s\(/)[1],
-            val: '>',
-            type: 'OS',
             icon: {
               name: 'applelogo',
               color: '#00BCD4'
-            }
+            },
+            type: 'OS',
+            title: html.match(/<title>(iOS\s15\.\d\.?\d?)\s\(/)[1],
+            val: '>',
           },
           {
-            title: iPadOS ? c : '正式版已发布',
-            val: iPadOS ? d : '>',
-            type: 'OS',
             icon: {
               name: 'applelogo',
               color: '#F9A825'
-            }
+            },
+            type: 'OS',
+            title: iPadOS ? iPadOS.match(/(iPadOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC\s?\d?))/)[1] : '正式版已发布',
+            val: iPadOS ? iPadOS.match(/\((.*?)\)/)[1] : '>',
           },
           {
-            title: html.match(/<title>(iPadOS\s\d+\.\d\.?\d?)\s\(/)[1],
-            val: '>',
-            type: 'OS',
             icon: {
               name: 'applelogo',
               color: '#AB47BC'
-            }
+            },
+            type: 'OS',
+            title: html.match(/<title>(iPadOS\s\d+\.\d\.?\d?)\s\(/)[1],
+            val: '>',
           },
           {
-            title: html.match(/<title>(iPadOS\s15\.\d\.?\d?)\s\(/)[1],
-            val: '>',
-            type: 'OS',
             icon: {
               name: 'applelogo',
               color: '#42A5F5'
-            }
+            },
+            type: 'OS',
+            title: html.match(/<title>(iPadOS\s15\.\d\.?\d?)\s\(/)[1],
+            val: '>',
+          },
+          {
+            interval: 158 * Device.screenScale()
           }
         ];
         const table = new UITable();
@@ -197,29 +218,29 @@ async function renderTables(table) {
       title: '刷新时间',
       desc: '刷新时间仅供参考，具体时间由系统判断，单位：分钟',
       val: setting.minute,
-      but: 0
+      value: setting.minute
     },
     {
       icon: {
-        name: 'photo',
+        name: 'mappin.and.ellipse',
         color: '#F57C00'
       },
-      type: 'background',
-      title: '图片背景',
+      type: 'input',
+      title: '省份地区',
+      desc: '输入你所在的省份名称',
       val: '>',
+      value: setting.province
     },
     {
       icon: {
         name: 'square.stack.3d.down.forward.fill',
         color: '#D50000'
       },
-      type: 'clean',
-      title: '清除背景',
-      desc: 'new Alert()',
-      val: '>',
-      onClick: async () => {
-        notify('已清除背景', '请重新运行或重新配置小组件');
-      }
+      type: 'input',
+      title: '设置间隔',
+      desc: '适配机型\n小机型设置间隔为 2 、3',
+      val: setting.interval,
+      value: setting.interval
     }
   ];
   await preferences(table, basic);
@@ -236,7 +257,8 @@ async function renderTables(table) {
       },
       type: 'preview',
       title: '预览组件',
-      dismissOnSelect: true,
+      //dismissOnSelect: true,
+      desc: '预览组件测试',
       val: '>'
     },
     {
@@ -281,7 +303,7 @@ async function renderTables(table) {
  * @param {string} string
  */
 async function preferences(table, arr, outfit) {
-  if (outfit == 'Apple OS') {
+  if (outfit === 'Apple OS') {
     let header = new UITableRow();
     let heading = header.addText(outfit);
     heading.titleFont = Font.mediumSystemFont(20);
@@ -328,64 +350,68 @@ async function preferences(table, arr, outfit) {
       const imgCell = UITableCell.image(img);
       */
       
-      //https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png
       const imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_false.png');
       imgCell.rightAligned();
       imgCell.widthWeight = 500;
       row.addCell(imgCell);
     }
+    table.addRow(row);
+    
     // item.onClick
     const type = item.type;
     row.onSelect = item.onClick 
     ? async () => {
-        await item.onClick(item, table);
-      }
+      await item.onClick(item, table);
+    }
     : async () => {
-        if (type == 'options') {
-          await updateVersion(
-            item['title'],
-            item['desc'],
-            item['val']
-          );
-        } else if (type == 'ver') {
-          await generateAlert(
-            title = item.ver,
-            message = item.desc,
-            options = ['完成']
-          );
-        } else if (type == 'OS') {
-          Safari.openInApp('https://developer.apple.com/news/releases', false);
-          ios = {
-            ...setting, 
-            system: item.title
-          }
-          if (item.system) {
-            await F_MGR.writeString(
-              cacheFile,
-              JSON.stringify(ios)
-            );
-            notify('订阅成功', item.system + '\n将收到iOS最新开发者版或正式版通知');
-          }
-        } else if (type == 'input') {
-          await inputInfo(
-            item['title'],
-            item['desc'],
-            item['val']
-          );
+      if (type == 'options') {
+        await updateVersion(
+          item['title'],
+          item['desc'],
+          item['val']
+        );
+      } else if (type == 'ver') {
+        await generateAlert(
+          title = item.ver,
+          message = item.desc,
+          options = ['完成']
+        );
+      } else if (type == 'OS') {
+        Safari.openInApp('https://developer.apple.com/news/releases', false);
+        ios = {
+          ...setting, 
+          system: item.title
         }
+        if (item.system) {
+          await F_MGR.writeString(
+            cacheFile,
+            JSON.stringify(ios)
+          );
+          notify('订阅成功', item.system + '\n将收到iOS最新开发者版或正式版通知');
+        }
+      } else if (type == 'input') {
+        await inputInfo(
+          item['title'],
+          item['desc'],
+          item['value']
+        );
+      } else if (type == 'preview') {
+        let importedModule = importModule(modulePath);
+        await importedModule.main();
       }
-    table.addRow(row);
+    }
   }
+  table.reload();
 }
 
 // Refresh Time
-async function inputInfo(title, desc, val) {  
+async function inputInfo(title, desc, value) {  
   await generateInputAlert (
     {
       title: desc,
       options: [{ 
-        hint: '分钟',
-        value: `${val}`
+        hint: value,
+        value: value
       }]
     }, 
     async (inputArr) => {
@@ -393,9 +419,11 @@ async function inputInfo(title, desc, val) {
         cacheFile,
         JSON.stringify({ ...setting, minute: inputArr[0].value })
       );
+      notify('设置成功', '刷新时间为' + inputArr[0].value + '分钟，重新组件运行即可生效');
     }
   );
 }
+
 
 /**
  * Download Script
@@ -495,7 +523,10 @@ drawTableIcon = async (
  * @param {bool} isOff 是否为关闭状态
  * @param {Size} size 按钮大小
 */
-async function drawButton (isOff = true, size = new Size(104, 64)) {
+async function drawButton (
+  isOff = true,
+  size = new Size(104, 64)
+) {
   const cacheKey = `button_${isOff}`;
   let cacheImg = this.loadImgCache(cacheKey, this.IMAGE_FOLDER);
   if (!!cacheImg) return cacheImg;
@@ -603,7 +634,7 @@ async function generateInputAlert(opt, confirm) {
   inputAlert.addAction('取消');
   inputAlert.addAction('确认');
   let getIndex = await inputAlert.presentAlert();
-  if (getIndex == 1) {
+  if (getIndex === 1) {
     const inputObj = [];
     fieldArr.forEach((_, index) => {
       let value = inputAlert.textFieldValue(index);
@@ -625,7 +656,7 @@ renderTableList = async (data) => {
     table.showSeparators = true;
 
     const gifRow = new UITableRow();
-    gifRow.height = 85 * Device.screenScale();
+    gifRow.height = 83 * Device.screenScale();
     gifRow.backgroundColor = bgColor
     const gifImage = gifRow.addImageAtURL(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzEvQzgvQ2g0RnlXT0k2b0NBZjRQMUFFZ0trSzZxVVVrNTQyLmdpZg=='));
     gifImage.centerAligned();
@@ -652,11 +683,8 @@ renderTableList = async (data) => {
     };
     table.addRow(topRow);
 
-    // interval 2
-    const gapRow2 = new UITableRow();
-    gapRow2.height = 30;
-    gapRow2.backgroundColor = bgColor
-    table.addRow(gapRow2);
+    // interval 1
+    await gapRow(table);
 
     // 如果是节点，则先远程获取
     const subscription = await new Request(data.subscription).loadJSON()
@@ -686,11 +714,8 @@ renderTableList = async (data) => {
       table.addRow(r);
     });
 
-    // interval 3
-    const gapRow3 = new UITableRow();
-    gapRow3.height = 30;
-    gapRow3.backgroundColor = bgColor
-    table.addRow(gapRow3);
+    // interval 2
+    await gapRow(table);
 
     // video Row
     const videoRow = new UITableRow();
@@ -718,6 +743,13 @@ renderTableList = async (data) => {
   }
 };
 
+async function gapRow(table) {
+  const gapRow = new UITableRow();
+  gapRow.height = 30;
+  gapRow.backgroundColor = bgColor
+  return table.addRow(gapRow);
+}
+
 const Run = async () => {
   try {
     await renderTableList({
@@ -730,5 +762,5 @@ const Run = async () => {
     console.log("缓存读取错误" + e);
   }
 };
-// await setWidgetConfig
+// await Runing()
 await setWidgetConfig();
