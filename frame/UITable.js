@@ -15,6 +15,8 @@ if (!F_MGR.fileExists(cacheFile)) {
   setting = {
     minute: '10',
     interval: '0',
+    notice: 'true',
+    gradient: '#123123',
     province: '海南',
     refreshview: "true"
   }
@@ -68,7 +70,7 @@ async function downloadModule() {
 
 /**
  * 设置组件内容
- * @returns {Promise<void>}
+ * @returns { Promise<void> }
  */
 setWidgetConfig = async () => {
   const table = new UITable();
@@ -219,7 +221,8 @@ async function renderTables(table) {
       title: '刷新时间',
       desc: '刷新时间仅供参考，具体时间由系统判断，单位：分钟',
       val: setting.minute,
-      value: setting.minute
+      value: setting.minute,
+      valKey: 'minute'
     },
     {
       icon: {
@@ -234,14 +237,59 @@ async function renderTables(table) {
     },
     {
       icon: {
-        name: 'square.stack.3d.down.forward.fill',
-        color: '#D50000'
+        name: 'gearshape.fill',
+        color: '#FF3B2F'
       },
-      type: 'input',
-      title: '设置间隔',
-      desc: '适配机型\n小机型设置间隔为 2 、3',
-      val: setting.interval,
-      value: setting.interval
+      type: 'jumpSet',
+      title: '辅助设置',
+      val: '>',
+      onClick: async () => {
+        const assist = [
+          {
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/interval.png',
+            type: 'input',
+            title: '底部间隔',
+            desc: '适配机型小机型设置间隔为 2 、3',
+            val: 'interval'
+          },
+          {
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/gradientBackground.png',
+            type: 'opt',
+            title: '显示时间',
+            desc: '最后刷新的时间显示在小部件',
+            val: 'refreshview'
+          },
+          {
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/refresh.png',
+            type: 'input',
+            title: '刷新时间',
+            desc: '刷新组件具体时间由系统判断',
+            val: 'minute',
+          },
+          {
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/gradientBackground.png',
+            type: 'input',
+            title: '渐变背景',
+            desc: '深色由上往下渐变',
+            val: 'gradient'
+          },
+          {
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/transparent.png',
+            type: 'background',
+            title: '透明背景'
+          },
+          {
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/notice.png',
+            type: 'opt',
+            title: '通知设置',
+            val: 'notice'
+          }
+        ];
+        const table = new UITable();
+        table.showSeparators = true;
+        await settingMenu(table, assist, '辅助设置');
+        await table.present();
+      }
     }
   ];
   await preferences(table, basic);
@@ -271,7 +319,7 @@ async function renderTables(table) {
   const updateVersion = [
     {
       icon: {
-        name: 'gearshape.fill',
+        name: 'externaldrive.fill',
         color: '#F9A825'
       },
       type: 'ver',
@@ -299,8 +347,8 @@ async function renderTables(table) {
 
 /**
  * Setting Main menu
- * @param {Image} image
- * @param {string} string
+ * @param { Image } image
+ * @param { string } string
  */
 async function preferences(table, arr, outfit) {
   if (outfit === 'Apple OS') {
@@ -370,7 +418,7 @@ async function preferences(table, arr, outfit) {
           options = ['完成']
         );
       } else if (type == 'OS') {
-        //Safari.openInApp('https://developer.apple.com/news/releases', false);
+        Safari.openInApp('https://developer.apple.com/news/releases', false);
         ios = {
           ...setting, 
           system: item.title
@@ -382,12 +430,12 @@ async function preferences(table, arr, outfit) {
           );
           notify('订阅成功', item.system + '\n将收到iOS最新开发者版或正式版通知');
         }
-        await renderSetTables();
       } else if (type == 'input') {
         await inputInfo(
           item['title'],
           item['desc'],
-          item['value']
+          item['value'],
+          item['valKey']
         );
       } else if (type == 'preview') {
         let importedModule = importModule(modulePath);
@@ -399,7 +447,7 @@ async function preferences(table, arr, outfit) {
 }
 
 // Refresh Time
-async function inputInfo(title, desc, value) {  
+async function inputInfo(title, desc, value, valKey) {  
   await generateInputAlert (
     {
       title: desc,
@@ -409,54 +457,29 @@ async function inputInfo(title, desc, value) {
       }]
     }, 
     async (inputArr) => {
-      await F_MGR.writeString(
-        cacheFile,
-        JSON.stringify({ ...setting, minute: inputArr[0].value })
-      );
-      notify('设置成功', '刷新时间为' + inputArr[0].value + '分钟，重新组件运行即可生效');
+      setting[valKey] = inputArr[0].value;
+      await saveSettings();
+      notify('设置成功', '桌面组件稍后将自动刷新');
     }
   );
 }
 
 
-async function renderSetTables() {
-  const actions = [
-    {
-      url: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/NicegramLogo.png',
-      type: 'a',
-      title: '显示时间',
-      desc: '最后刷新的时间显示在小部件',
-      val: 'refreshview'
-    },
-    {
-      url: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png',
-      type: 'input',
-      title: '刷新时间',
-      desc: '刷新组件时间由系统判断',
-      val: 'minute',
-    }
-  ];
-  await settingMenu(actions, '偏好设置');
-}
-
-
 /**
  * Setting Preferences
- * @param {Image} image
- * @param {string} string
+ * @param { Image } image
+ * @param { string } string
  */
-async function settingMenu(actions, outfit) {
-  const table = new UITable();
-  table.showSeparators = true
+async function settingMenu(table, assist, outfit) {
   function loadAllRows() {
     const title = new UITableRow()
     title.isHeader = true;
-    title.height = 70;
+    title.height = 60;
     const titleText = title.addText(outfit);
     titleText.centerAligned();
     table.addRow(title);
     
-    actions.forEach ((item) => {
+    assist.forEach ((item) => {
       const { title, url, val, desc, type } = item;
       const isBoolValue = (setting[val] !== "true" && setting[val] !== "false") ? false : true
       const row = new UITableRow();
@@ -478,20 +501,23 @@ async function settingMenu(actions, outfit) {
         imgCell.widthWeight = 500;
         row.addCell(imgCell);
       } else {
-        const valText = row.addText(setting[val]);
+        const valText = row.addText(!setting[val] ? '>' : setting[val]);
         valText.widthWeight = 500;
         valText.rightAligned();
-        valText.titleColor = Color.blue();
+        valText.titleColor = !item.desc ? Color.gray() : Color.blue();
         valText.titleFont = Font.mediumSystemFont(16);
       }
       
       row.dismissOnSelect = false
       row.onSelect = async () => {
-        let set = new Alert();
-        set.title = title;
-        set.message = desc;
         if (type === 'input') {
-          set.addTextField(val, setting[val]);
+          let set = new Alert();
+          set.title = title;
+          set.message = desc;
+          set.addTextField(  
+            setting[val],
+            setting[val]
+          );
           set.addCancelAction("取消");
           set.addAction("确认");
           const response = await set.present();
@@ -499,15 +525,13 @@ async function settingMenu(actions, outfit) {
             setting[val] = set.textFieldValue();
             await refreshAllRows();
           }
+        } else if (type == 'opt') {
+          setting[val] = setting[val] === 'true' ? "false" : "true"
+          await refreshAllRows();
         } else {
-          set.addAction("显示");
-          set.addAction("关闭");
-          set.addCancelAction("取消");
-          const response = await set.present();
-          if (response !== -1) {
-            setting[val] = response ? "false" : "true"
-            await refreshAllRows();
-          }
+          const modulePath = await backgroundModule();
+          const importedModule = importModule(modulePath);
+          await importedModule.main();
         }
       }
       table.addRow(row);
@@ -519,14 +543,22 @@ async function settingMenu(actions, outfit) {
     table.reload();
   }
   await loadAllRows();
-  await table.present();
-  await F_MGR.writeString(cacheFile, JSON.stringify(setting));
+  await saveSettings();
+}
+
+
+/**
+ * 存储当前设置
+ * @param { bool } notify
+ */
+async function saveSettings () {
+  typeof setting === 'object' ?  F_MGR.writeString(cacheFile, JSON.stringify(setting)) : null
 }
 
 
 /**
  * Download Script
- * @param {string} string
+ * @param { string } string
  */
 async function updateVersion(title, desc) {
   const index = await generateAlert(
@@ -552,8 +584,8 @@ async function updateVersion(title, desc) {
 
 /**
  * Setting drawTableIcon
- * @param {Image} image
- * @param {string} string
+ * @param { Image } image
+ * @param { string } string
  */
 drawTableIcon = async (
   icon = 'square.grid.2x2',
@@ -618,72 +650,34 @@ drawTableIcon = async (
 
 
 /**
- * 绘制系统按钮
- * @param {bool} isOff 是否为关闭状态
- * @param {Size} size 按钮大小
-*/
-async function drawButton (
-  isOff = true,
-  size = new Size(104, 64)
-) {
-  const cacheKey = `button_${isOff}`;
-  let cacheImg = this.loadImgCache(cacheKey, this.IMAGE_FOLDER);
-  if (!!cacheImg) return cacheImg;
-  const {width, height} = size;
-  let screenScale = Device.screenScale();
-  let color, x;
-  if (isOff) {
-    color = '#E8E8E8';
-    x = height / 2;
+ * 制作透明背景
+ * 获取截图中的组件剪裁图
+ * @param { image } 储存 Png
+ * @param { string } title 
+ */
+async function backgroundModule() {
+  const modulePath = F_MGR.joinPath(path, 'tool.js');
+  if (F_MGR.fileExists(modulePath)) {
+    return modulePath;
   } else {
-    color = '#34C759';
-    x = width-height / 2;
-  }
-  // 绘制圆角矩形
-  const canvas = this.makeCanvas(width, height);
-  this.fillRect(canvas, 0, 0, width, height, height / 2,new Color(color));
-  cacheImg = canvas.getImage();
-  const maskData = Data.fromPNG(cacheImg).toBase64String();
-  const html = `
-    <img id="bgImage" src="data:image/png;base64,${maskData}" />
-    <canvas id="canvas" />`;
-    const js = `
-    var drawRound = function(x, y, r, start, end, color, type) {
-      var unit = Math.PI / 180;
-      ctx.beginPath();
-      ctx.arc(x, y, r, start * unit, end * unit);
-      ctx[type + 'Style'] = color;
-      ctx.closePath();
-      ctx.shadowColor = 'rgba(152, 152, 152, 0.8)';
-      ctx.shadowBlur = 10;
-      ctx[type]();
+    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL2JhY2tncm91bmRTY3JpcHQuanM='));
+    const moduleJs = await req.load().catch(() => {
+      return null;
+    });
+    if (moduleJs) {
+      F_MGR.write(modulePath, moduleJs);
+      return modulePath;
     }
-    var bgImage = document.getElementById("bgImage");
-    var canvas = document.createElement("canvas");
-    var width = bgImage.width / ${screenScale};
-    var height = bgImage.height / ${screenScale};
-    canvas.width = width;
-    canvas.height = height;
-    var ctx = canvas.getContext('2d');
-    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = 'source-atop';
-    drawRound(${x}, height / 2, height / 2 - ${height * 0.075}, 0, 360, '#fff', 'fill');
-    output = canvas.toDataURL()`;
-  let wv = new WebView();
-  await wv.loadHTML(html);
-  const base64Image = await wv.evaluateJavaScript(js);
-  const image = await new Request(base64Image).loadImage();
-  this.saveImgCache(cacheKey, image, this.IMAGE_FOLDER);
-  return image;
+  }
 }
 
 
 /**
  * 弹出一个通知
- * @param {string} title
- * @param {string} body
- * @param {string} url
- * @param {string} sound
+ * @param { string } title
+ * @param { string } body
+ * @param { string } url
+ * @param { string } sound
  */
 async function notify (title, body, url, opts = {}) {
   let n = new Notification()
@@ -699,7 +693,7 @@ async function notify (title, body, url, opts = {}) {
 /**
  * @param message 内容
  * @param options 按键
- * @returns {Promise<number>}
+ * @returns { Promise<number> }
  */
 async function generateAlert(title, message, options) {
   let alert = new Alert();
@@ -717,7 +711,7 @@ async function generateAlert(title, message, options) {
  * @param title 标题
  * @param desc  描述
  * @param opt   属性
- * @returns {Promise<void>}
+ * @returns { Promise<void> }
  */
 async function generateInputAlert(opt, confirm) {  
   const inputAlert = new Alert();
