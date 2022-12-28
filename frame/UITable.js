@@ -222,7 +222,7 @@ async function renderTables(table) {
       desc: '刷新时间仅供参考，具体时间由系统判断，单位：分钟',
       val: setting.minute,
       value: setting.minute,
-      valKey: 'minute'
+      objKey: 'minute'
     },
     {
       icon: {
@@ -233,7 +233,8 @@ async function renderTables(table) {
       title: '省份地区',
       desc: '输入你所在的省份名称',
       val: '>',
-      value: setting.province
+      value: setting.province,
+      objKey: 'province'
     },
     {
       icon: {
@@ -435,7 +436,7 @@ async function preferences(table, arr, outfit) {
           item['title'],
           item['desc'],
           item['value'],
-          item['valKey']
+          item['objKey']
         );
       } else if (type == 'preview') {
         let importedModule = importModule(modulePath);
@@ -447,7 +448,7 @@ async function preferences(table, arr, outfit) {
 }
 
 // Refresh Time
-async function inputInfo(title, desc, value, valKey) {  
+async function inputInfo(title, desc, value, objKey) {  
   await generateInputAlert (
     {
       title: desc,
@@ -457,7 +458,7 @@ async function inputInfo(title, desc, value, valKey) {
       }]
     }, 
     async (inputArr) => {
-      setting[valKey] = inputArr[0].value;
+      setting[objKey] = inputArr[0].value;
       await saveSettings();
       notify('设置成功', '桌面组件稍后将自动刷新');
     }
