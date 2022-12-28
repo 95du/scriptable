@@ -258,7 +258,6 @@ async function renderTables(table) {
       },
       type: 'preview',
       title: '预览组件',
-      //dismissOnSelect: true,
       desc: '预览组件测试',
       val: '>'
     },
@@ -344,14 +343,6 @@ async function preferences(table, arr, outfit) {
       row.height = item.interval;
       row.backgroundColor = bgColor;
     } else {
-      
-      /**
-      const but_off = await drawButton();
-      const but_on = await drawButton(false);
-      const img = settings.button[item.but] ? but_on : but_off;
-      const imgCell = UITableCell.image(img);
-      */
-      
       const imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_false.png');
       imgCell.rightAligned();
       imgCell.widthWeight = 500;
@@ -429,29 +420,32 @@ async function inputInfo(title, desc, value) {
 
 
 async function renderSetTables() {
-  const actions = {
-    refreshview: "显示时间",
-    minute: "刷新时间"
-  }
-  const imgUrl = {
-    refreshview: "https://gitcode.net/4qiao/scriptable/raw/master/img/icon/NicegramLogo.png",
-    minute: "https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png",
-  }
-  const desc = {
-    refreshview: "最后刷新的时间显示在小部件的底部",
-    minute: "刷新组件时间由系统判断",
-  }
-  return await settingMenu(actions, imgUrl, desc, '基础设置');
+  const actions = [
+    {
+      url: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/NicegramLogo.png',
+      type: 'a',
+      title: '显示时间',
+      desc: '最后刷新的时间显示在小部件',
+      val: 'refreshview'
+    },
+    {
+      url: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png',
+      type: 'input',
+      title: '刷新时间',
+      desc: '刷新组件时间由系统判断',
+      val: 'minute',
+    }
+  ];
+  await settingMenu(actions, '偏好设置');
 }
 
 
 /**
- * Edit Preferences
- * Setting Main menu
+ * Setting Preferences
  * @param {Image} image
  * @param {string} string
  */
-async function settingMenu(actions, imgUrl, desc, outfit) {
+async function settingMenu(actions, outfit) {
   const table = new UITable();
   table.showSeparators = true
   function loadAllRows() {
@@ -462,68 +456,62 @@ async function settingMenu(actions, imgUrl, desc, outfit) {
     titleText.centerAligned();
     table.addRow(title);
     
-    let optionList = [];
-    for (thing in actions) {
-      const isBoolValue = (setting[thing] !== "true" && setting[thing] !== "false") ? false : true
+    actions.forEach ((item) => {
+      const { title, url, val, desc, type } = item;
+      const isBoolValue = (setting[val] !== "true" && setting[val] !== "false") ? false : true
       const row = new UITableRow();
-      row.dismissOnSelect = false;
-      if (thing) {
-        const rowIcon = row.addImageAtURL(imgUrl[thing]);
-      rowIcon.widthWeight = 100;
-        let rowTitle = row.addText(actions[thing]);
-        rowTitle.widthWeight = 400;
-        rowTitle.titleFont = Font.systemFont(16);
-
-        const settingTrueFalse = setting[thing] === "true"
-        if (isBoolValue) {
-          if (settingTrueFalse) {
-            imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_false.png');
-          } else {
-            imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_true.png');
-          }
-          imgCell.rightAligned();
-          imgCell.widthWeight = 500;
-          row.addCell(imgCell);
-        } else {
-          const valText = row.addText(setting[thing]);
-          valText.widthWeight = 500;
-          valText.rightAligned();
-          valText.titleColor = Color.blue();
-          valText.titleFont = Font.mediumSystemFont(16);
-        }
-      }
       row.height = 45;
-      optionList.push(thing);
-      table.addRow(row);
+      const rowIcon = row.addImageAtURL(url);
+      rowIcon.widthWeight = 100;
+      let rowTitle = row.addText(title);
+      rowTitle.widthWeight = 400;
+      rowTitle.titleFont = Font.systemFont(16);
       
-      // Row onSelect
-      row.onSelect = async (num) => {
-        const n = num - 1
-        const val = setting[optionList[n]];
-        const set = new Alert();
-        set.title = actions[optionList[n]];
-        set.message = desc[optionList[n]];
-        if (n === 1 || (val !== "true" && val !== "false")) {
-          set.addTextField(val, val)
-          set.addCancelAction("取消")
+      if (isBoolValue) {
+        const settingTrueFalse = setting[val] === "true";
+        if (settingTrueFalse) {
+          imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_false.png');
+        } else {
+          imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_true.png');
+        }
+        imgCell.rightAligned();
+        imgCell.widthWeight = 500;
+        row.addCell(imgCell);
+      } else {
+        const valText = row.addText(setting[val]);
+        valText.widthWeight = 500;
+        valText.rightAligned();
+        valText.titleColor = Color.blue();
+        valText.titleFont = Font.mediumSystemFont(16);
+      }
+      
+      row.dismissOnSelect = false
+      row.onSelect = async () => {
+        let set = new Alert();
+        set.title = title;
+        set.message = desc;
+        if (type === 'input') {
+          set.addTextField(val, setting[val]);
+          set.addCancelAction("取消");
           set.addAction("确认");
           const response = await set.present();
           if (response !== -1) {
-            setting[optionList[n]] = set.textFieldValue();
+            setting[val] = set.textFieldValue();
             await refreshAllRows();
           }
         } else {
           set.addAction("显示");
           set.addAction("关闭");
-          set.addCancelAction("取消")
+          set.addCancelAction("取消");
           const response = await set.present();
           if (response !== -1) {
-            setting[optionList[n]] = response ? "false" : "true"
+            setting[val] = response ? "false" : "true"
             await refreshAllRows();
           }
         }
       }
-    }
+      table.addRow(row);
+    });
   }
   function refreshAllRows() {
     table.removeAllRows();
