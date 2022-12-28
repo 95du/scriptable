@@ -1,7 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: cog;
-const VERSION = '1.0.0'
 const uri = Script.name();
 const F_MGR = FileManager.iCloud();
 
@@ -20,10 +19,7 @@ if (!F_MGR.fileExists(cacheFile)) {
     province: '海南',
     refreshview: "true"
   }
-  F_MGR.writeString(
-    cacheFile,
-    JSON.stringify(setting, null, 2)
-  );
+  await saveSettings();
 } else {
   data = F_MGR.readString(cacheFile);
   setting = JSON.parse(data);
@@ -325,9 +321,9 @@ async function renderTables(table) {
       },
       type: 'ver',
       title: '当前版本',
-      desc: '2022年12月15日\n修复已知问题，调整布局',
-      val: VERSION,
-      ver: 'Version ' + VERSION
+      desc: '2022年12月25日\n修复已知问题，调整布局',
+      val: '1.0.0',
+      ver: 'Version 1.0.0'
     },
     {
       icon: {
@@ -492,8 +488,8 @@ async function settingMenu(table, assist, outfit) {
       rowTitle.titleFont = Font.systemFont(16);
       
       if (isBoolValue) {
-        const settingTrueFalse = setting[val] === "true";
-        if (settingTrueFalse) {
+        const trueFalse = setting[val] === "true";
+        if (trueFalse) {
           imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_false.png');
         } else {
           imgCell = UITableCell.imageAtURL('https://gitcode.net/4qiao/framework/raw/master/img/icon/button_true.png');
