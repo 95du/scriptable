@@ -15,7 +15,7 @@ if (!F_MGR.fileExists(cacheFile)) {
     minute: '10',
     interval: '0',
     notice: 'true',
-    gradient: '#123123',
+    gradient: '123123',
     province: '海南',
     refreshview: "true"
   }
@@ -217,7 +217,6 @@ async function renderTables(table) {
       title: '刷新时间',
       desc: '刷新时间仅供参考，具体时间由系统判断，单位：分钟',
       val: setting.minute,
-      value: setting.minute,
       objKey: 'minute'
     },
     {
@@ -229,7 +228,6 @@ async function renderTables(table) {
       title: '省份地区',
       desc: '输入你所在的省份名称',
       val: '>',
-      value: setting.province,
       objKey: 'province'
     },
     {
@@ -253,7 +251,6 @@ async function renderTables(table) {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/gradientBackground.png',
             type: 'opt',
             title: '显示时间',
-            desc: '最后刷新的时间显示在小部件',
             val: 'refreshview'
           },
           {
@@ -431,7 +428,6 @@ async function preferences(table, arr, outfit) {
         await inputInfo(
           item['title'],
           item['desc'],
-          item['value'],
           item['objKey']
         );
       } else if (type == 'preview') {
@@ -444,13 +440,13 @@ async function preferences(table, arr, outfit) {
 }
 
 // Refresh Time
-async function inputInfo(title, desc, value, objKey) {  
+async function inputInfo(title, desc, objKey) {  
   await generateInputAlert (
     {
       title: desc,
       options: [{ 
-        hint: value,
-        value: value
+        hint: setting[objKey],
+        value: setting[objKey]
       }]
     }, 
     async (inputArr) => {
@@ -520,16 +516,16 @@ async function settingMenu(table, assist, outfit) {
           const response = await set.present();
           if (response !== -1) {
             setting[val] = set.textFieldValue();
-            await refreshAllRows();
           }
         } else if (type == 'opt') {
           setting[val] = setting[val] === 'true' ? "false" : "true"
-          await refreshAllRows();
         } else {
           const modulePath = await backgroundModule();
           const importedModule = importModule(modulePath);
           await importedModule.main();
         }
+        await refreshAllRows();
+        await saveSettings();
       }
       table.addRow(row);
     });
@@ -540,7 +536,6 @@ async function settingMenu(table, assist, outfit) {
     table.reload();
   }
   await loadAllRows();
-  await saveSettings();
 }
 
 
