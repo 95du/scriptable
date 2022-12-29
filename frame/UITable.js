@@ -14,10 +14,10 @@ if (!F_MGR.fileExists(cacheFile)) {
   setting = {
     minute: '10',
     interval: '0',
-    notice: 'true',
+    update: 'true',
     gradient: '123123',
     province: '海南',
-    refreshview: "true"
+    appleOS: "true",
   }
   await saveSettings();
 } else {
@@ -50,16 +50,17 @@ if (modulePath != null) {
 
 async function downloadModule() {
   const modulePath = F_MGR.joinPath(path, 'oil.js');
-  if (F_MGR.fileExists(modulePath)) {
-    await F_MGR.remove(modulePath)
-  }
-  const req = new Request('https://gitcode.net/4qiao/scriptable/raw/master/vip/mainScriptOil.js');
-  const moduleJs = await req.load().catch(() => {
-    return null;
-  });
-  if (moduleJs) {
-    F_MGR.write(modulePath, moduleJs);
+  if (setting.update === 'false') {
     return modulePath;
+  } else {
+    const req = new Request('https://gitcode.net/4qiao/scriptable/raw/master/vip/mainScriptOil.js');
+    const moduleJs = await req.load().catch(() => {
+      return null;
+    });
+    if (moduleJs) {
+      F_MGR.write(modulePath, moduleJs);
+      return modulePath;
+    }
   }
 }
 
@@ -151,7 +152,7 @@ async function renderTables(table) {
             type: 'OS',
             title: iOS ? iOS.match(/(iOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC\s?\d?))/)[1] : '正式版已发布',
             val: iOS ? iOS.match(/\((.*?)\)/)[1] : '>',
-            system: iOS,
+            system: iOS
           },
           {
             icon: {
@@ -199,7 +200,7 @@ async function renderTables(table) {
             val: '>',
           },
           {
-            interval: 158 * Device.screenScale()
+            interval: 145 * Device.screenScale()
           }
         ];
         const table = new UITable();
@@ -215,7 +216,7 @@ async function renderTables(table) {
       },
       type: 'input',
       title: '刷新时间',
-      desc: '刷新时间仅供参考，具体时间由系统判断，单位：分钟',
+      desc: '尝试改变刷新组件时间，具体时间由系统判断，单位：分钟',
       val: setting.minute,
       objKey: 'minute'
     },
@@ -236,7 +237,7 @@ async function renderTables(table) {
         color: '#FF3B2F'
       },
       type: 'jumpSet',
-      title: '辅助设置',
+      title: '偏好设置',
       val: '>',
       onClick: async () => {
         const assist = [
@@ -248,16 +249,16 @@ async function renderTables(table) {
             val: 'interval'
           },
           {
-            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/gradientBackground.png',
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/update.png',
             type: 'opt',
-            title: '显示时间',
-            val: 'refreshview'
+            title: '自动更新',
+            val: 'update'
           },
           {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/refresh.png',
             type: 'input',
             title: '刷新时间',
-            desc: '刷新组件具体时间由系统判断',
+            desc: '尝试改变刷新组件时间，具体时间由系统判断，单位: 分钟',
             val: 'minute',
           },
           {
@@ -275,13 +276,16 @@ async function renderTables(table) {
           {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/notice.png',
             type: 'opt',
-            title: '通知设置',
-            val: 'notice'
+            title: 'AppleOS',
+            val: 'appleOS'
+          },
+          {
+            interval: 145 * Device.screenScale()
           }
         ];
         const table = new UITable();
         table.showSeparators = true;
-        await settingMenu(table, assist, '辅助设置');
+        await settingMenu(table, assist, '偏好设置');
         await table.present();
       }
     }
@@ -300,7 +304,6 @@ async function renderTables(table) {
       },
       type: 'preview',
       title: '预览组件',
-      desc: '预览组件测试',
       val: '>'
     },
     {
@@ -347,6 +350,8 @@ async function renderTables(table) {
 async function preferences(table, arr, outfit) {
   if (outfit === 'Apple OS') {
     let header = new UITableRow();
+    header.height = 80;
+    header.backgroundColor = bgColor;
     let heading = header.addText(outfit);
     heading.titleFont = Font.mediumSystemFont(20);
     heading.centerAligned();
@@ -413,15 +418,9 @@ async function preferences(table, arr, outfit) {
         );
       } else if (type == 'OS') {
         Safari.openInApp('https://developer.apple.com/news/releases', false);
-        ios = {
-          ...setting, 
-          system: item.title
-        }
         if (item.system) {
-          await F_MGR.writeString(
-            cacheFile,
-            JSON.stringify(ios)
-          );
+          setting.iOS_push = item.system
+          await saveSettings();
           notify('订阅成功', item.system + '\n将收到iOS最新开发者版或正式版通知');
         }
       } else if (type == 'input') {
@@ -467,8 +466,10 @@ async function settingMenu(table, assist, outfit) {
   function loadAllRows() {
     const title = new UITableRow()
     title.isHeader = true;
-    title.height = 60;
+    title.height = 80;
+    title.backgroundColor = bgColor;
     const titleText = title.addText(outfit);
+    titleText.titleFont = Font.mediumSystemFont(19);
     titleText.centerAligned();
     table.addRow(title);
     
@@ -493,11 +494,14 @@ async function settingMenu(table, assist, outfit) {
         imgCell.rightAligned();
         imgCell.widthWeight = 500;
         row.addCell(imgCell);
+      } else if (item.interval) {
+        row.height = item.interval;
+        row.backgroundColor = bgColor;
       } else {
         const valText = row.addText(!setting[val] ? '>' : setting[val]);
         valText.widthWeight = 500;
         valText.rightAligned();
-        valText.titleColor = !item.desc ? Color.gray() : Color.blue();
+        valText.titleColor = !desc ? Color.gray() : Color.blue();
         valText.titleFont = Font.mediumSystemFont(16);
       }
       
@@ -524,6 +528,7 @@ async function settingMenu(table, assist, outfit) {
           const importedModule = importModule(modulePath);
           await importedModule.main();
         }
+        // Refresh Save
         await refreshAllRows();
         await saveSettings();
       }
@@ -730,6 +735,22 @@ async function generateInputAlert(opt, confirm) {
   return getIndex;
 }
 
+/**
+ * AppOS updateVersion
+ * Push Notification
+ * Developer & Official
+ */
+if (config.runsInWidget) {  
+  if (setting.appleOS === 'true') {
+    const html = await new Request(atob('aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL25ld3MvcmVsZWFzZXMvcnNzL3JlbGVhc2VzLnJzcw==')).loadString();
+    const iOS = html.match(/<title>(iOS.*?)<\/title>/)[1];
+    if (setting.iOS_push !== iOS) {
+      notify('AppleOS 更新通知 🔥', '新版本发布: ' + iOS)
+      setting.iOS_push = iOS
+      await saveSettings();
+    }
+  }
+}
 
 /**
  * Download Script
