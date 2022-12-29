@@ -152,7 +152,7 @@ async function renderTables(table) {
             type: 'OS',
             title: iOS ? iOS.match(/(iOS\s\d+\.\d*?\.?\d*?\s(beta\s?\d*?|RC\s?\d?))/)[1] : '正式版已发布',
             val: iOS ? iOS.match(/\((.*?)\)/)[1] : '>',
-            system: iOS
+            ios: iOS
           },
           {
             icon: {
@@ -417,11 +417,11 @@ async function preferences(table, arr, outfit) {
           options = ['完成']
         );
       } else if (type == 'OS') {
+        setting.iOS_push = item.ios
+        await saveSettings();
         Safari.openInApp('https://developer.apple.com/news/releases', false);
-        if (item.system) {
-          setting.iOS_push = item.system
-          await saveSettings();
-          notify('订阅成功', item.system + '\n将收到iOS最新开发者版或正式版通知');
+        if (item.ios) {
+          notify('订阅成功', item.ios + '\n将收到iOS最新开发者版或正式版通知');
         }
       } else if (type == 'input') {
         await inputInfo(
