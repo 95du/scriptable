@@ -14,9 +14,9 @@ if (!F_MGR.fileExists(cacheFile)) {
   setting = {
     minute: '10',
     interval: '0',
-    update: 'true',
     gradient: '123123',
     province: '海南',
+    update: 'true',
     appleOS: "true",
   }
   await saveSettings();
@@ -145,6 +145,9 @@ async function renderTables(table) {
         const iPadOS = html.match(/<title>(iPadOS.*?)<\/title>/)[1];
         const actions = [
           {
+            interval: 26
+          },
+          {
             icon: {
               name: 'applelogo',
               color: '#43CD80'
@@ -171,6 +174,9 @@ async function renderTables(table) {
             type: 'OS',
             title: html.match(/<title>(iOS\s15\.\d\.?\d?)\s\(/)[1],
             val: '>',
+          },
+          {
+            interval: 26
           },
           {
             icon: {
@@ -200,7 +206,7 @@ async function renderTables(table) {
             val: '>',
           },
           {
-            interval: 145 * Device.screenScale()
+            interval: 130.5 * Device.screenScale()
           }
         ];
         const table = new UITable();
@@ -241,6 +247,9 @@ async function renderTables(table) {
       val: '>',
       onClick: async () => {
         const assist = [
+          {
+            interval: 26
+          },
           {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/interval.png',
             type: 'input',
@@ -283,12 +292,12 @@ async function renderTables(table) {
             val: 'appleOS'
           },
           {
-            interval: 135 * Device.screenScale()
+            interval: 128 * Device.screenScale()
           }
         ];
         const table = new UITable();
         table.showSeparators = true;
-        await settingMenu(table, assist, '偏好设置');
+        await settingMenu(table, assist, '设置');
         await table.present();
       }
     }
@@ -333,7 +342,7 @@ async function renderTables(table) {
       desc: '更新后当前脚本代码将被覆盖\n请先做好备份，此操作不可恢复'
     },
     {
-      interval: 23.8 * Device.screenScale()
+      interval: 25.9 * Device.screenScale()
     },
   ];
   await preferences(table, updateVersion, '版本|更新');
@@ -349,10 +358,8 @@ async function preferences(table, arr, outfit) {
   if (outfit === 'Apple OS') {
     let header = new UITableRow();
     header.height = 80;
-    header.backgroundColor = bgColor;
     let heading = header.addText(outfit);
-    heading.titleFont = Font.mediumSystemFont(20);
-    heading.centerAligned();
+    heading.titleFont = Font.mediumSystemFont(30);
     table.addRow(header);
   }
   for (const item of arr) {
@@ -465,10 +472,8 @@ async function settingMenu(table, assist, outfit) {
     const title = new UITableRow()
     title.isHeader = true;
     title.height = 80;
-    title.backgroundColor = bgColor;
     const titleText = title.addText(outfit);
-    titleText.titleFont = Font.mediumSystemFont(19);
-    titleText.centerAligned();
+    titleText.titleFont = Font.mediumSystemFont(30);
     table.addRow(title);
     
     assist.forEach ((item) => {
@@ -522,9 +527,8 @@ async function settingMenu(table, assist, outfit) {
         } else if (type == 'opt') {
           setting[val] = setting[val] === 'true' ? "false" : "true"
         } else {
-          const modulePath = await backgroundModule();
-          const importedModule = importModule(modulePath);
-          await importedModule.main();
+          const importedModule = importModule(await backgroundModule());
+          await importedModule.main()
         }
         // Refresh Save
         await refreshAllRows();
@@ -548,6 +552,25 @@ async function settingMenu(table, assist, outfit) {
  */
 async function saveSettings () {
   typeof setting === 'object' ?  F_MGR.writeString(cacheFile, JSON.stringify(setting)) : null
+  console.log(JSON.stringify(setting, null, 2))
+}
+
+
+/**
+ * AppOS updateVersion
+ * Push Notification
+ * Developer & Official
+ */
+if (config.runsInWidget) {  
+  if (setting.appleOS === 'true') {
+    const html = await new Request(atob('aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL25ld3MvcmVsZWFzZXMvcnNzL3JlbGVhc2VzLnJzcw==')).loadString();
+    const iOS = html.match(/<title>(iOS.*?)<\/title>/)[1];
+    if (setting.iOS_push !== iOS) {
+      notify('AppleOS 更新通知 🔥', '新版本发布: ' + iOS)
+      setting.iOS_push = iOS
+      await saveSettings();
+    }
+  }
 }
 
 
@@ -733,22 +756,6 @@ async function generateInputAlert(opt, confirm) {
   return getIndex;
 }
 
-/**
- * AppOS updateVersion
- * Push Notification
- * Developer & Official
- */
-if (config.runsInWidget) {  
-  if (setting.appleOS === 'true') {
-    const html = await new Request(atob('aHR0cHM6Ly9kZXZlbG9wZXIuYXBwbGUuY29tL25ld3MvcmVsZWFzZXMvcnNzL3JlbGVhc2VzLnJzcw==')).loadString();
-    const iOS = html.match(/<title>(iOS.*?)<\/title>/)[1];
-    if (setting.iOS_push !== iOS) {
-      notify('AppleOS 更新通知 🔥', '新版本发布: ' + iOS)
-      setting.iOS_push = iOS
-      await saveSettings();
-    }
-  }
-}
 
 /**
  * Download Script
