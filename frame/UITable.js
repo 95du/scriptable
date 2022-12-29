@@ -4,7 +4,7 @@
 const uri = Script.name();
 const F_MGR = FileManager.iCloud();
 
-const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "framework");
+const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duFrame");
 if (!F_MGR.fileExists(path)) {
   F_MGR.createDirectory(path);
 }
@@ -249,12 +249,6 @@ async function renderTables(table) {
             val: 'interval'
           },
           {
-            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/update.png',
-            type: 'opt',
-            title: '自动更新',
-            val: 'update'
-          },
-          {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/refresh.png',
             type: 'input',
             title: '刷新时间',
@@ -274,13 +268,22 @@ async function renderTables(table) {
             title: '透明背景'
           },
           {
+            interval: 26
+          },
+          {
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/update.png',
+            type: 'opt',
+            title: '自动更新',
+            val: 'update'
+          },
+          {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/notice.png',
             type: 'opt',
             title: 'AppleOS',
             val: 'appleOS'
           },
           {
-            interval: 145 * Device.screenScale()
+            interval: 135 * Device.screenScale()
           }
         ];
         const table = new UITable();
@@ -292,8 +295,8 @@ async function renderTables(table) {
   ];
   await preferences(table, basic);
   
-  // Preview Menu
-  const preview = [
+  // Preview And Version Info
+  const updateVersion = [
     {
       interval: 26
     },
@@ -308,12 +311,7 @@ async function renderTables(table) {
     },
     {
       interval: 26
-    }
-  ];
-  await preferences(table, preview);
-  
-  // Version Menu
-  const updateVersion = [
+    },
     {
       icon: {
         name: 'externaldrive.fill',
