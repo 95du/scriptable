@@ -105,14 +105,9 @@ async function main() {
   const uri = Script.name();
   if (exportPhoto == 0) {
     const F_MGR = FileManager.local();
-    const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "house");
-    const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
+    //const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "house");
+    const bgImage = F_MGR.joinPath(F_MGR, uri + ".jpg");
     F_MGR.writeImage(bgImage,imgCrop)
-    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
-  } else if (exportPhoto == 1) {
-    Photos.save(imgCrop);
-  } else if (exportPhoto == 2) {
-    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
   
   // Generate an alert with the provided array of options.
