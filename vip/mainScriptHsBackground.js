@@ -99,7 +99,7 @@ async function main() {
     imgCrop = await blurImage(img,imgCrop, style)
   }
   
-  if (imgCrop) {
+  
     const F_MGR = FileManager.local();
     const folder = F_MGR.documentsDirectory()
     const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
@@ -108,7 +108,7 @@ async function main() {
     n.title = '背景制作成功'
     n.body = '桌面小组件稍后将自动刷新'
     n.schedule();
-  }
+  
   
   // Generate an alert with the provided array of options.
   async function generateAlert(message, options) {
