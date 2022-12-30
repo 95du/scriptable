@@ -105,9 +105,9 @@ async function main() {
   n.sound = 'alert'
   n.schedule();
   const F_MGR = FileManager.local();
-  const folder = F_MGR.documentsDirectory()
-  const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
-  F_MGR.writeImage(bgImage,imgCrop)
+  const uri = Script.name();
+  const bgImage = F_MGR.joinPath(F_MGR.documentsDirectory(), uri + ".jpg");
+  F_MGR.writeImage(bgImage, imgCrop);
   
   // Generate an alert with the provided array of options.
   async function generateAlert(message,options) {
