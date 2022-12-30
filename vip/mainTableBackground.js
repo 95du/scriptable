@@ -3,7 +3,7 @@
 // icon-color: purple; icon-glyph: kaaba;
 async function main() {
   // Determine if user has taken the screenshot.
-  message = "请在主屏幕上长按进入编辑模式。滑动到最右边的空白页截图。";
+  message = "请在主屏幕上长按，滑动到最右边的空白页截图。";
   let exitOptions = ["已有截图", "没有截图"];
   let shouldExit = await generateAlert(message, exitOptions);
   if (shouldExit) return;
