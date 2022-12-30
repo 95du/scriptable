@@ -186,7 +186,7 @@ async function createWidget() {
   const textElement = contentStack.addText(`${one.note}\n${one.content}`);
   textElement.textColor = textColor;
   textElement.font = Font.boldSystemFont(15);
-  textElement.textOpacity = 0.65
+  textElement.textOpacity = 0.6
   contentStack.addSpacer();
   return widget
 }
