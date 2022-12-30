@@ -99,26 +99,25 @@ async function main() {
     imgCrop = await blurImage(img,imgCrop, style)
   }
   
-  message = "小部件背景已制作成功";
-  const exportPhotoOptions = ["立即使用", "导出相册", "重新制作"];
-  const exportPhoto = await generateAlert(message, exportPhotoOptions);
-  const uri = Script.name();
-  if (exportPhoto == 0) {
+  if (imgCrop) {
     const F_MGR = FileManager.local();
     const folder = F_MGR.documentsDirectory()
     const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
     F_MGR.writeImage(bgImage,imgCrop)
+    const n = new Notification();
+    n.title = '背景制作成功'
+    n.body = '桌面小组件稍后将自动刷新'
+    n.schedule();
   }
   
   // Generate an alert with the provided array of options.
-  async function generateAlert(message,options) {
+  async function generateAlert(message, options) {
     let alert = new Alert()
     alert.message = message
     for (const option of options) {
       alert.addAction(option)
     }
-    let response = await alert.presentAlert()
-    return response
+    return await alert.presentAlert()
   }
   
   // Crop an image into the specified rect.
