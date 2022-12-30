@@ -12,7 +12,7 @@ const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
 );
-const eventTextColor = Color.dynamic(
+const textColor = Color.dynamic(
   new Color('#1E1E1E'), 
   new Color('#FEFEFE')
 );
@@ -155,7 +155,7 @@ async function createWidget() {
   twoHoursStack.layoutVertically();
   const contentText = twoHoursStack.addText(result.radarData.content);
   contentText.font = Font.boldSystemFont(13.5);
-  contentText.textColor = eventTextColor
+  contentText.textColor = textColor;
   contentText.textOpacity = 0.7
   
   // Right timeStack
@@ -164,11 +164,10 @@ async function createWidget() {
   timeStack.layoutVertically();
   const statusText = timeStack.addText('现在');
   statusText.font = Font.boldSystemFont(12);
-  statusText.textColor = eventTextColor
+  statusText.textColor = textColor;
   statusText.textOpacity = 0.4
   timeStack.addSpacer();
-  widget.addSpacer(20)
-  
+  widget.addSpacer();
   
   /** 
   * Bottom Content
@@ -180,11 +179,15 @@ async function createWidget() {
   contentStack.centerAlignContent();
   contentStack.addSpacer();
   contentStack.setPadding(0, 10, 0, 10);
+  contentStack.backgroundColor = stackBackground
+  contentStack.cornerRadius = 23
+  contentStack.size = new Size(0, 80);
+  
   const textElement = contentStack.addText(`${one.note}\n${one.content}`);
-  textElement.textColor = Color.white();
+  textElement.textColor = textColor;
   textElement.font = Font.boldSystemFont(15);
+  textElement.textOpacity = 0.65
   contentStack.addSpacer();
-  widget.addSpacer();
   return widget
 }
 
