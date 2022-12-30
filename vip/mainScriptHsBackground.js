@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: pink; icon-glyph: cloud-download-alt;
+// icon-color: purple; icon-glyph: kaaba;
 async function main() {
   // Determine if user has taken the screenshot.
   message = "透明背景生成步骤\n如果你没有屏幕截图请退出，并返回主屏幕长按进入编辑模式。滑动到最右边的空白页截图。然后重新运行！";
@@ -13,7 +13,7 @@ async function main() {
   let height = img.size.height
   let phone = phoneSizes()[height]
   if (!phone) {
-    message = "您似乎选择了非 iPhone 屏幕截图的图像，或者不支持您的 iPhone。请使用其他图像";
+    message = "您似乎选择了非 iPhone 屏幕截图的图像，或者不支持您的 iPhone，请使用其他图像。";
     await generateAlert(message, ["现在去截图"]);
     return;
   }
@@ -22,7 +22,7 @@ async function main() {
   if (height == 2436) {
   
     let files = FileManager.local()
-    let cacheName = "mz-phone-type"
+    let cacheName = "95du-phone-type"
     let cachePath = files.joinPath(files.libraryDirectory(), cacheName)
   
     // If we already cached the phone size, load it.
@@ -41,13 +41,13 @@ async function main() {
   }
   
   // Prompt for widget size and position.
-  message = "创建哪一种尺寸的小部件";
+  message = "创建哪一种尺寸的小组件";
   let sizes = ["小号", "中号", "大号"];
   let size = await generateAlert(message, sizes)
   let widgetSize = sizes[size]
   
-  message = "选择小组件所在位置\n负一屏底栏只适用于 Max 机型，截图时把编辑二字向上推，留出足够空白。";
-  message += height == 1136 ? " (请注意，您的设备仅支持两行小部件，因此中间和底部选项相同。)" : "";
+  message = "选择小组件所在位置";
+  message += height == 1136 ? " (请注意，您的设备仅支持两行小组件，因此中间和底部选项相同。)" : "";
   
   // Determine image crop based on phone size.
   let crop = { w: "", h: "", x: "", y: "" }
@@ -69,7 +69,7 @@ async function main() {
   
     // Medium and large widgets have a fixed x-value.
     crop.x = phone.左边;
-    let positions = ["顶部", "中间", "底部", "负屏"];
+    let positions = ["顶部", "中间", "底部"];
     let position = await generateAlert(message, positions);
     let key = positions[position].toLowerCase();
     crop.y = phone[key];
@@ -85,7 +85,7 @@ async function main() {
   }
   
   // Prompt for blur style.
-  message = "你想要一个完全透明的小部件，还是半透明的模糊效果？"
+  message = "你想要一个完全透明的小组件，还是半透明的模糊效果？"
   let blurOptions = ["透明背景", "浅色模糊", "深色模糊", "完全模糊"]
   let blurred = await generateAlert(message, blurOptions)
   
@@ -96,28 +96,28 @@ async function main() {
   if (blurred) {
     const styles = ["", "light", "dark", "none"]
     const style = styles[blurred]
-    imgCrop = await blurImage(img,imgCrop, style)
+    imgCrop = await blurImage(img, imgCrop, style)
   }
   
-  
-    const F_MGR = FileManager.local();
-    const folder = F_MGR.documentsDirectory()
-    const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
-    F_MGR.writeImage(bgImage,imgCrop)
-    const n = new Notification();
-    n.title = '背景制作成功'
-    n.body = '桌面小组件稍后将自动刷新'
-    n.schedule();
-  
+  const n = new Notification();
+  n.title = '背景制作成功'
+  n.body = '桌面小组件稍后将自动刷新'
+  n.sound = 'alert'
+  n.schedule();
+  const F_MGR = FileManager.local();
+  const folder = F_MGR.documentsDirectory()
+  const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
+  F_MGR.writeImage(bgImage,imgCrop)
   
   // Generate an alert with the provided array of options.
-  async function generateAlert(message, options) {
+  async function generateAlert(message,options) {
     let alert = new Alert()
     alert.message = message
     for (const option of options) {
       alert.addAction(option)
     }
-    return await alert.presentAlert()
+    let response = await alert.presentAlert()
+    return response
   }
   
   // Crop an image into the specified rect.
@@ -593,8 +593,7 @@ async function main() {
         右边: 681,
         顶部: 282,
         中间: 918,
-        底部: 1554,
-        负屏: 2304
+        底部: 1554
       },
       // 14 Pro
       2556: {
@@ -616,8 +615,7 @@ async function main() {
         右边: 678,
         顶部: 246,
         中间: 882,
-        底部: 1518,
-        负屏: 2268
+        底部: 1518
       },
       // 12/13 and 12/13 Pro
       2532: {
@@ -734,7 +732,4 @@ async function main() {
     return phones;
   }
 }
-  
-module.exports = {
-  main
-}
+module.exports = { main }
