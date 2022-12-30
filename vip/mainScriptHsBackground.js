@@ -105,8 +105,8 @@ async function main() {
   const uri = Script.name();
   if (exportPhoto == 0) {
     const F_MGR = FileManager.local();
-    //const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "house");
-    const bgImage = F_MGR.joinPath(F_MGR, uri + ".jpg");
+    const folder = F_MGR.joinPath(F_MGR.documentsDirectory());
+    const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
     F_MGR.writeImage(bgImage,imgCrop)
   }
   
