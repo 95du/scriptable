@@ -40,11 +40,8 @@ if (setting.minute) {
 }
 
 let modulePath = await downloadModule();
-if (modulePath != null) {
-  if(config.runsInWidget) {  
-    const importedModule = importModule(modulePath);
-    await importedModule.main();
-  }
+if (modulePath != null && config.runsInWidget) {
+  await importModule(modulePath).main();
 }
 
 async function downloadModule() {
@@ -529,6 +526,7 @@ async function settingMenu(table, assist, outfit) {
             filedVal.match(/(^\d+$)/)[1] ? setting[val] = filedVal : setting[val]
           }
         } else if (type == 'opt') {
+          notify('', '')
           setting[val] = setting[val] === 'true' ? "false" : "true"
         } else {
           const importedModule = importModule(await backgroundModule());
@@ -682,7 +680,7 @@ async function backgroundModule() {
   if (F_MGR.fileExists(modulePath)) {
     return modulePath;
   } else {
-    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL2JhY2tncm91bmRTY3JpcHQuanM='));
+    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM='));
     const moduleJs = await req.load().catch(() => {
       return null;
     });
