@@ -36,8 +36,7 @@ const topBgColor = Color.dynamic(
 // refresh time
 if (setting.minute) {  
   const widget = new ListWidget();
-  const refresh = 1000 * 60 * setting.minute;
-  widget.refreshAfterDate = new Date(Date.now() + refresh);
+  widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * setting.minute);
 }
 
 let modulePath = await downloadModule();
@@ -81,7 +80,7 @@ async function renderTables(table) {
   // Header effectImage Row
   const effectRow = new UITableRow();
   effectRow.height = 70 * Device.screenScale();
-  const effectImage = effectRow.addImageAtURL(atob('aHR0cDovL210dy5zby81djNYTGw='));
+  const effectImage = effectRow.addImageAtURL(atob('aHR0cDovL210dy5zby82ZHhvWDk='));
   effectImage.widthWeight = 0.4;
   effectImage.centerAligned();
   effectRow.backgroundColor = topBgColor
@@ -406,7 +405,11 @@ async function preferences(table, arr, outfit) {
     const type = item.type;
     row.onSelect = item.onClick 
     ? async () => {
-      await item.onClick(item, table);
+      try {
+        await item.onClick(item, table);
+      } catch (e) {
+        console.log(e);
+      }
     }
     : async () => {
       if (type == 'options') {
@@ -522,7 +525,8 @@ async function settingMenu(table, assist, outfit) {
           set.addAction("确认");
           const response = await set.present();
           if (response !== -1) {
-            setting[val] = set.textFieldValue();
+            const filedVal = set.textFieldValue();
+            filedVal.match(/(^\d+$)/)[1] ? setting[val] = filedVal : setting[val]
           }
         } else if (type == 'opt') {
           setting[val] = setting[val] === 'true' ? "false" : "true"
@@ -585,7 +589,7 @@ async function updateVersion(title, desc) {
     options = ['取消', '确认']
   );
   if (index === 0) return;
-  const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvZnJhbWUvVUlUYWJsZS5qcw=='));
+  const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdGFibGUvVUlUYWJsZS5qcw=='));
   const codeString = await reqUpdate.loadString();
   if (codeString.indexOf('95度茅台') == -1) {
     notify('更新失败⚠️', '请检查网络或稍后再试');
