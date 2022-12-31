@@ -106,7 +106,11 @@ async function main() {
   n.schedule();
   const F_MGR = FileManager.local();
   const uri = Script.name();
-  const bgImage = F_MGR.joinPath(F_MGR.documentsDirectory(), uri + ".jpg");
+  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
+  if (!F_MGR.fileExists(path)) {
+    F_MGR.createDirectory(path);
+  }
+  const bgImage = F_MGR.joinPath(path, uri + ".jpg");
   F_MGR.writeImage(bgImage, imgCrop);
   
   // Generate an alert with the provided array of options.
