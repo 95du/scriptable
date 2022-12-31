@@ -2,14 +2,18 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: cog;
 const uri = Script.name();
-const F_MGR = FileManager.iCloud();
-
+const F_MGR = FileManager.local();
+// Frame Path
 const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duFrame");
 if (!F_MGR.fileExists(path)) {
   F_MGR.createDirectory(path);
 }
-
+// Background image path
+const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
+const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+// json Path
 const cacheFile = F_MGR.joinPath(path, 'setting.json');
+
 if (!F_MGR.fileExists(cacheFile)) {
   setting = {
     minute: '10',
@@ -274,6 +278,11 @@ async function renderTables(table) {
             title: '透明背景'
           },
           {
+            url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/clearBg.png',
+            type: 'clear',
+            title: '清除背景'
+          },
+          {
             interval: 26
           },
           {
@@ -289,7 +298,7 @@ async function renderTables(table) {
             val: 'appleOS'
           },
           {
-            interval: 128 * Device.screenScale()
+            interval: 113 * Device.screenScale()
           }
         ];
         const table = new UITable();
@@ -480,6 +489,7 @@ async function settingMenu(table, assist, outfit) {
     assist.forEach ((item) => {
       const { title, url, val, desc, type, value } = item;
       const isBoolValue = (setting[val] !== "true" && setting[val] !== "false") ? false : true
+      let n = new Notification();
       const row = new UITableRow();
       row.height = 45;
       const rowIcon = row.addImageAtURL(url);
@@ -538,11 +548,14 @@ async function settingMenu(table, assist, outfit) {
               filedVal.match(/(^\d+$)/)[1] ? setting[val] = filedVal : setting[val]
             }
           }
-        } else if (type == 'opt') {
-          let n = new Notification();
+        } else if (type === 'opt') {
           n.sound = 'popup'
           n.schedule();
           setting[val] = setting[val] === 'true' ? "false" : "true"
+        } else if (type == 'clear') {
+          F_MGR.remove(bgImage);
+          n.sound = 'event'
+          n.schedule();
         } else {
           const importedModule = importModule(await backgroundModule());
           await importedModule.main()
