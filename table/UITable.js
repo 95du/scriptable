@@ -14,7 +14,7 @@ if (!F_MGR.fileExists(cacheFile)) {
   setting = {
     minute: '10',
     interval: '0',
-    gradient: '123123',
+    gradient: ['#82B1FF'],
     province: '海南',
     update: 'true',
     appleOS: "true",
@@ -264,8 +264,9 @@ async function renderTables(table) {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/gradientBackground.png',
             type: 'input',
             title: '渐变背景',
-            desc: '深色由上往下渐变',
-            val: 'gradient'
+            desc: '深色由上往下渐变淡，随机切换颜色\n' + setting.gradient,
+            val: 'gradient',
+            value: setting.gradient
           },
           {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/transparent.png',
@@ -477,7 +478,7 @@ async function settingMenu(table, assist, outfit) {
     table.addRow(title);
     
     assist.forEach ((item) => {
-      const { title, url, val, desc, type } = item;
+      const { title, url, val, desc, type, value } = item;
       const isBoolValue = (setting[val] !== "true" && setting[val] !== "false") ? false : true
       const row = new UITableRow();
       row.height = 45;
@@ -501,7 +502,7 @@ async function settingMenu(table, assist, outfit) {
         row.height = item.interval;
         row.backgroundColor = bgColor;
       } else {
-        const valText = row.addText(!setting[val] ? '>' : setting[val]);
+        const valText = row.addText(!setting[val] || val == 'gradient' ? '>' : setting[val]);
         valText.widthWeight = 500;
         valText.rightAligned();
         valText.titleColor = !desc ? Color.gray() : Color.blue();
@@ -514,19 +515,33 @@ async function settingMenu(table, assist, outfit) {
           let set = new Alert();
           set.title = title;
           set.message = desc;
-          set.addTextField(  
-            setting[val],
-            setting[val]
+          set.addTextField(
+            value ? '输入Hex颜色代码' : setting[val],
+            value ? '' : setting[val]
           );
           set.addCancelAction("取消");
           set.addAction("确认");
           const response = await set.present();
           if (response !== -1) {
             const filedVal = set.textFieldValue();
-            filedVal.match(/(^\d+$)/)[1] ? setting[val] = filedVal : setting[val]
+            const color = filedVal.match(/(\#?[\w\d]+)/)[1];
+            if (value && color) {
+              arr = value;
+              arr.push(color);
+              setting[val] = arr;
+              let count = 0;  
+              for (let obj of arr) {
+                count++
+              }
+              notify('添加成功', `当前数据库中已储存 ${count} 种颜色`);
+            } else {
+              filedVal.match(/(^\d+$)/)[1] ? setting[val] = filedVal : setting[val]
+            }
           }
         } else if (type == 'opt') {
-          notify('', '')
+          let n = new Notification();
+          n.sound = 'popup'
+          n.schedule();
           setting[val] = setting[val] === 'true' ? "false" : "true"
         } else {
           const importedModule = importModule(await backgroundModule());
@@ -704,7 +719,7 @@ async function notify (title, body, url, opts = {}) {
   n = Object.assign(n, opts);
   n.title = title
   n.body = body
-  n.sound = 'popup'
+  n.sound = 'alert'
   if (url) n.openURL = url
   return await n.schedule()
 }
