@@ -98,7 +98,6 @@ if (Y === null) {
 } else {
   ystdayPower = Y.power
 }
-  
 
 // queryMeteringPoint
 const point = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryMeteringPoint');
@@ -118,7 +117,6 @@ point.body = `{
 const resP = await point.loadJSON();
 const P = resP.data[0]
   
-  
 // Month
 const month = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint');
 month.method = 'POST'
@@ -132,13 +130,12 @@ month.body = `{
   "meteringPointId" : "${P.meteringPointId}"
 }`
 const resM = await month.loadJSON();
-const M = resM.data
-if (M === null) {
+
+if (resM.sta !== '00') {
   totalPower = '0.00 '
 } else {
-  totalPower = M.totalPower
+  totalPower = resM.data.totalPower
 }
-
   
 // UserAccountNumberSurplus
 const balance = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus');
@@ -159,7 +156,6 @@ if (Bdata === null) {
   bal = B.balance
 }
 
-
 // selectElecBill
 const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
 elecBill.method = 'POST'
@@ -173,10 +169,15 @@ elecBill.body = `{
 }`
 const resBill = await elecBill.loadJSON();
 const bill = resBill.data.billUserAndYear[0]
-const total = bill.totalPower
-const pay = bill.arrears
-const arrears = bill.totalElectricity
-
+if (bill === undefined) {
+  total = '0.00'
+  pay = '0.00'
+  arrears = '0.00'
+} else {
+  total = bill.totalPower
+  pay = bill.arrears
+  arrears = bill.totalElectricity
+}
 // create Widget
 const widget = await createWidget(ele, balance, pay);
   
