@@ -69,7 +69,7 @@ async function main() {
   
     // Medium and large widgets have a fixed x-value.
     crop.x = phone.左边;
-    let positions = ["顶部", "中间", "底部"];
+    let positions = ["顶部", "中间", "底部", "负屏"];
     let position = await generateAlert(message, positions);
     let key = positions[position].toLowerCase();
     crop.y = phone[key];
@@ -593,7 +593,8 @@ async function main() {
         右边: 681,
         顶部: 282,
         中间: 918,
-        底部: 1554
+        底部: 1554,
+        负屏: 2304
       },
       // 14 Pro
       2556: {
@@ -615,7 +616,8 @@ async function main() {
         右边: 678,
         顶部: 246,
         中间: 882,
-        底部: 1518
+        底部: 1518,
+        负屏: 2268
       },
       // 12/13 and 12/13 Pro
       2532: {
