@@ -186,7 +186,7 @@ if (success === true) {
   }
 } else {
   if (main.resultCode === 'SYSTEM_ERROR') {
-  notify(main.resultMsg, '');
+    notify(main.resultMsg, '');
   } else {
     data = { myPlate: myPlate }
     F_MGR.writeString(cacheFile, JSON.stringify(data));
