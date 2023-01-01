@@ -554,7 +554,7 @@ async function settingMenu(table, assist, outfit) {
           setting[val] = setting[val] === 'true' ? "false" : "true"
         } else if (type == 'clear') {
           F_MGR.remove(bgImage);
-          n.sound = 'event'
+          n.sound = 'complete'
           n.schedule();
         } else {
           const importedModule = importModule(await backgroundModule());
