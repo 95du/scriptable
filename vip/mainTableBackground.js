@@ -102,7 +102,6 @@ async function main() {
   const n = new Notification();
   n.title = '背景制作成功'
   n.body = '桌面小组件稍后将自动刷新'
-  n.sound = 'alert'
   n.schedule();
   const F_MGR = FileManager.local();
   const uri = Script.name();
