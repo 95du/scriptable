@@ -106,7 +106,7 @@ async function renderTables(table) {
   rightText.onTap = async () => {
     const delAlert = new Alert();
     delAlert.title = '清空所有数据';
-    delAlert.message = '\n该操作将把用户储存的所有数据清除，重置后需重新运行获取，否则组件可能无法正常运行或显示';
+    delAlert.message = '该操作将把用户储存的所有数据清除，重置后需重新运行获取，否则组件可能无法正常运行或显示';
     delAlert.addDestructiveAction('重置');
     delAlert.addCancelAction('取消');
     const action = await delAlert.presentAlert();
@@ -352,7 +352,7 @@ async function renderTables(table) {
       interval: 25.9 * Device.screenScale()
     },
   ];
-  await preferences(table, updateVersion, '版本|更新');
+  await preferences(table, updateVersion, '预览|版本|更新');
 }
 
 
@@ -582,7 +582,7 @@ async function settingMenu(table, assist, outfit) {
 
 /**
  * 存储当前设置
- * @param { bool } notify
+ * @param { JSON } string
  */
 async function saveSettings () {
   typeof setting === 'object' ?  F_MGR.writeString(cacheFile, JSON.stringify(setting)) : null
@@ -902,7 +902,8 @@ const Run = async () => {
       subscription: 'https://gitcode.net/4qiao/framework/raw/master/scriptable/install.json'
     });
     const script = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js').loadString();
-    F_MGR.writeString(F_MGR.documentsDirectory() + '/95 °.js', script);
+    const fm = FileManager.iCloud();
+    fm.writeString(fm.documentsDirectory() + '/95 ° Scripts.js', script);
   } catch (e) {
     console.log("缓存读取错误" + e);
   }
