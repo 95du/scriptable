@@ -280,7 +280,8 @@ async function renderTables(table) {
           {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/clearBg.png',
             type: 'clear',
-            title: '清除背景'
+            title: '清除背景',
+            desc: '删除正在使用的背景图'
           },
           {
             interval: 26
@@ -515,7 +516,7 @@ async function settingMenu(table, assist, outfit) {
         const valText = row.addText(!setting[val] || val == 'gradient' ? '>' : setting[val]);
         valText.widthWeight = 500;
         valText.rightAligned();
-        valText.titleColor = !desc ? Color.gray() : Color.blue();
+        valText.titleColor = type !== 'input' ? Color.gray() : Color.blue();
         valText.titleFont = Font.mediumSystemFont(16);
       }
       
@@ -553,9 +554,12 @@ async function settingMenu(table, assist, outfit) {
           n.schedule();
           setting[val] = setting[val] === 'true' ? "false" : "true"
         } else if (type == 'clear') {
-          F_MGR.remove(bgImage);
-          n.sound = 'complete'
-          n.schedule();
+          const clear = await generateAlert(title, desc, options = ['取消', '确认']);
+          if (clear === 1) {
+            F_MGR.remove(bgImage);
+            n.sound = 'complete'
+            n.schedule();
+          }
         } else {
           const importedModule = importModule(await backgroundModule());
           await importedModule.main()
@@ -704,7 +708,7 @@ drawTableIcon = async (
  * @param { string } title 
  */
 async function backgroundModule() {
-  const modulePath = F_MGR.joinPath(path, 'tool.js');
+  const modulePath = F_MGR.joinPath(path, 'image.js');
   if (F_MGR.fileExists(modulePath)) {
     return modulePath;
   } else {
