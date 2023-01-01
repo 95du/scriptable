@@ -557,7 +557,7 @@ async function settingMenu(table, assist, outfit) {
           const clear = await generateAlert(title, desc, options = ['取消', '确认']);
           if (clear === 1) {
             F_MGR.remove(bgImage);
-            n.sound = 'complete'
+            n.sound = 'event'
             n.schedule();
           }
         } else {
@@ -736,7 +736,6 @@ async function notify (title, body, url, opts = {}) {
   n = Object.assign(n, opts);
   n.title = title
   n.body = body
-  n.sound = 'alert'
   if (url) n.openURL = url
   return await n.schedule()
 }
