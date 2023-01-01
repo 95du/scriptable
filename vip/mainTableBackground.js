@@ -85,7 +85,7 @@ async function main() {
   }
   
   // Prompt for blur style.
-  message = "背景图效果？"
+  message = "背景图效果"
   let blurOptions = ["透明背景", "浅色模糊", "深色模糊", "完全模糊"]
   let blurred = await generateAlert(message, blurOptions)
   
