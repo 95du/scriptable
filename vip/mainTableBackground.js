@@ -41,12 +41,12 @@ async function main() {
   }
   
   // Prompt for widget size and position.
-  message = "创建哪一种尺寸的小组件";
+  message = "小组件尺寸";
   let sizes = ["小号", "中号", "大号"];
   let size = await generateAlert(message, sizes)
   let widgetSize = sizes[size]
   
-  message = "选择小组件所在位置";
+  message = "小组件位置";
   message += height == 1136 ? " (请注意，您的设备仅支持两行小组件，因此中间和底部选项相同。)" : "";
   
   // Determine image crop based on phone size.
@@ -85,7 +85,7 @@ async function main() {
   }
   
   // Prompt for blur style.
-  message = "你想要一个完全透明的小组件，还是半透明的模糊效果？"
+  message = "背景图效果？"
   let blurOptions = ["透明背景", "浅色模糊", "深色模糊", "完全模糊"]
   let blurred = await generateAlert(message, blurOptions)
   
