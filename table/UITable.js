@@ -268,9 +268,9 @@ async function renderTables(table) {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/gradientBackground.png',
             type: 'input',
             title: '渐变背景',
-            desc: '深色由上往下渐变淡，随机切换颜色\n' + setting.gradient,
-            val: 'gradient',
-            value: setting.gradient
+            desc: '深色由上往下渐变淡，随机切换颜色\n',
+            tips: '输入Hex颜色代码',
+            val: 'gradient'
           },
           {
             url: 'https://gitcode.net/4qiao/framework/raw/master/img/symbol/transparent.png',
@@ -488,7 +488,7 @@ async function settingMenu(table, assist, outfit) {
     table.addRow(title);
     
     assist.forEach ((item) => {
-      const { title, url, val, desc, type, value } = item;
+      const { title, url, val, desc, type, tips } = item;
       const isBoolValue = (setting[val] !== "true" && setting[val] !== "false") ? false : true
       let n = new Notification();
       const row = new UITableRow();
@@ -525,10 +525,10 @@ async function settingMenu(table, assist, outfit) {
         if (type === 'input') {
           let set = new Alert();
           set.title = title;
-          set.message = desc;
+          set.message = tips ? desc + setting[val] : desc
           set.addTextField(
-            value ? '输入Hex颜色代码' : setting[val],
-            value ? '' : setting[val]
+            tips ? tips : setting[val],
+            tips ? '' : setting[val]
           );
           set.addCancelAction("取消");
           set.addAction("确认");
@@ -536,10 +536,9 @@ async function settingMenu(table, assist, outfit) {
           if (response !== -1) {
             const filedVal = set.textFieldValue();
             const color = filedVal.match(/(\#?[\w\d]+)/)[1];
-            if (value && color) {
-              arr = value;
+            if (tips && color) {
+              arr = setting[val];
               arr.push(color);
-              setting[val] = arr;
               let count = 0;  
               for (let obj of arr) {
                 count++
