@@ -560,7 +560,7 @@ async function settingMenu(table, assist, outfit) {
             n.sound = 'event'
             n.schedule();
           }
-        } else {
+        } else if (type === 'background') {
           const importedModule = importModule(await backgroundModule());
           await importedModule.main()
         }
@@ -736,6 +736,7 @@ async function notify (title, body, url, opts = {}) {
   n = Object.assign(n, opts);
   n.title = title
   n.body = body
+  n.sound = 'alert'
   if (url) n.openURL = url
   return await n.schedule()
 }
