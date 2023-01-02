@@ -22,7 +22,8 @@ const uri = Script.name();
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
-const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
+const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
+const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
 
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
@@ -78,6 +79,7 @@ async function presentMenu() {
   mainMenu = await alert.presentAlert();
   if (mainMenu === 1) {
     await F_MGR.remove(folder);
+    await F_MGR.remove(bgImage)
   }
   if (mainMenu === 2) {
     const modulePath = await downloadModule();
@@ -178,7 +180,7 @@ async function createWidget() {
   contentStack.layoutHorizontally();
   contentStack.centerAlignContent();
   contentStack.addSpacer();
-  contentStack.setPadding(15, 15, 15, 15);
+  contentStack.setPadding(10, 18, 10, 18);
   contentStack.backgroundColor = stackBackground
   contentStack.cornerRadius = 23
   contentStack.size = new Size(0, 80);
@@ -192,11 +194,11 @@ async function createWidget() {
 }
 
 async function downloadModule() {
-  const modulePath = F_MGR.joinPath(folder, 'tool.js');
+  const modulePath = F_MGR.joinPath(folder, 'image.js');
   if (F_MGR.fileExists(modulePath)) {
     return modulePath;
   } else {
-    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL2JhY2tncm91bmRTY3JpcHQuanM='));
+    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM='));
     const moduleJs = await req.load().catch(() => {
       return null;
     });
