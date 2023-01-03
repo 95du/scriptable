@@ -18,30 +18,27 @@ async function main() {
   
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
   const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+  if (setting.oil === undefined) {
+    F_MGR.writeString(
+      cacheFile,
+      JSON.stringify({
+        oil: forecast
+      }, null, 2)
+    );
+    setting = JSON.parse(
+  F_MGR.readString(cacheFile)
+    );
+  }
   
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile);
-    data = JSON.parse(data);
+    setting = JSON.parse(data);
     const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));  
     req.method = 'POST'
-    req.body = `region=${data.province}`
+    req.body = `region=${setting.province}`
     const res = await req.loadJSON();
     oil = res.data
     widget = await createWidget(oil);
-  } else {
-    if (!F_MGR.fileExists(folder)) {
-      F_MGR.createDirectory(folder)
-      F_MGR.writeString(
-        cacheFile,
-        JSON.stringify({
-          oil: forecast,
-          province: setting.province
-        }, null, 2)
-      );
-      data = JSON.parse(
-  F_MGR.readString(cacheFile)
-      );
-    }
   }
   
   const value = 6 - setting.interval
