@@ -18,7 +18,7 @@ async function main() {
   
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
   const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
-  if (setting.oil === undefined) {
+  if (setting.oil === null) {
     F_MGR.writeString(
       cacheFile,
       JSON.stringify({
