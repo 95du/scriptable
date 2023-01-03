@@ -10,7 +10,7 @@
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
+  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duOilPrice");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
   // Background image path  
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
