@@ -91,7 +91,7 @@ if (!F_MGR.fileExists(cacheFile)) {
 async function addLicensePlate() {
   const alert = new Alert();
   alert.title = '输入车牌号';
-  alert.message = '将显示在小组件左上角'
+  alert.message = '显示在小组件左上角'
   alert.addTextField('输入车牌号', F_MGR.fileExists(cacheFile) ? myPlate : '');
   alert.addAction('确定');
   alert.addCancelAction('取消');
@@ -380,7 +380,7 @@ async function createWidget() {
   const barStack2 = leftStack.addStack();
   barStack2.layoutHorizontally();
   barStack2.centerAlignContent();
-  barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
+  barStack2.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack2.setPadding(3, 10, 3, 10);
   barStack2.cornerRadius = 10
   barStack2.borderColor = new Color('#AB47BC', 0.7);
