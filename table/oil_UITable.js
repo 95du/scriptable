@@ -4,14 +4,12 @@
 /**
  * 小组件作者: 95度茅台
  * Oil price
- * Version 1.2
- * 2022-12-19 11:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
- * ⚠️适配机型: 手动修改第9、10行的数字
+ * UITable Version 1.0.0
+ * 2023-01-03 11:30
  */
 async function main() {
   const uri = Script.name();
-  const F_MGR = FileManager.iCloud();
+  const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
   // Background image path  
