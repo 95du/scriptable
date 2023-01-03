@@ -35,7 +35,7 @@ async function main() {
         cacheFile,
         JSON.stringify({
           oil: forecast,
-          province: '海南'
+          province: setting.province
         }, null, 2)
       );
       data = JSON.parse(
