@@ -16,6 +16,10 @@ async function main() {
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95du12123");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
+  // Background image path  
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
+  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  
   
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile)
@@ -147,28 +151,31 @@ async function main() {
   async function createWidget() {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
-    const gradient = new LinearGradient();
-    colorArr = setting.gradient.length
-    if (colorArr === 0) {
-      color = [
-        "#82B1FF",
-        "#757575",
-        "#4FC3F7",
-        "#66CCFF",
-        "#99CCCC",
-        "#BCBBBB"
-      ]
+    if (F_MGR.fileExists(bgImage)) {
+      widget.backgroundImage = F_MGR.readImage(bgImage);
     } else {
-      color = setting.gradient
+      const gradient = new LinearGradient();
+      colorArr = setting.gradient.length
+      if (colorArr === 0) {
+        color = [
+          "#82B1FF",
+          "#757575",
+          "#4FC3F7",
+          "#66CCFF",
+          "#99CCCC",
+          "#BCBBBB"
+        ]
+      } else {
+        color = setting.gradient
+      }
+      const items = color[Math.floor(Math.random()*color.length)];
+      gradient.locations = [0, 1]
+      gradient.colors = [
+        new Color(items, Number(setting.transparency)),
+        new Color('#00000000')
+      ]
+      widget.backgroundGradient = gradient
     }
-    const items = color[Math.floor(Math.random()*color.length)];
-    gradient.locations = [0, 1]
-    gradient.colors = [
-      new Color(items, Number(setting.transparency)),
-      new Color('#00000000')
-    ]
-    widget.backgroundGradient = gradient
-  
   
     // Frame Layout
     widget.setPadding(15, 18, 15, 15);
