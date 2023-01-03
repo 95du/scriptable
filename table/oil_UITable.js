@@ -42,8 +42,8 @@ async function main() {
     widget = await createWidget(oil);
   }
   
-  const value = 6 - setting.interval
-  const wide = 8 - setting.interval
+  const value = 6 - Number(setting.interval);
+  const wide = 8 - Number(setting.interval);
   
   async function createWidget(oil) {
     // 组件背景渐变
