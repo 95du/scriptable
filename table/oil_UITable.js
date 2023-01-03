@@ -18,21 +18,21 @@ async function main() {
   
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
   const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
-  if (setting.oil === '0') {
-    F_MGR.writeString(
-      cacheFile,
-      JSON.stringify({
-        oil: forecast
-      }, null, 2)
-    );
-    setting = JSON.parse(
-  F_MGR.readString(cacheFile)
-    );
-  }
   
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
+    if (setting.oil === undefined) {
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify({
+          oil: forecast
+        }, null, 2)
+      );
+      setting = JSON.parse(
+    F_MGR.readString(cacheFile)
+      );
+    }
     const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));  
     req.method = 'POST'
     req.body = `region=${setting.province}`
