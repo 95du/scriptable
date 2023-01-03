@@ -42,8 +42,8 @@ async function main() {
     widget = await createWidget(oil);
   }
   
-  const value = 6 - 1
-  const wide = 8 - 1
+  const value = 6
+  const wide = 8
   
   async function createWidget(oil) {
     // 组件背景渐变
