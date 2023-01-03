@@ -163,7 +163,7 @@ async function main() {
       color = setting.gradient
     }
     const items = color[Math.floor(Math.random()*color.length)];
-    percent = setting.transparency
+    percent = String(setting.transparency)
     gradient.locations = [0, 1]
     gradient.colors = [
       new Color(items, percent),
