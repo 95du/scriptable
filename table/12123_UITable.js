@@ -20,7 +20,6 @@ async function main() {
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
   
-  
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile)
     setting = JSON.parse(data);
