@@ -61,7 +61,8 @@ if (F_MGR.fileExists(cacheFile)) {
 
 // Get Year and Month
 const Year = new Date().getFullYear();
-const Month = new Date().getMonth() + 1;
+const getMonth = new Date().getMonth() + 1;
+const Month = getMonth < 10 ? '0' + getMonth : getMonth
 
 // UserInfo
 const req = new Request('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers');
@@ -79,24 +80,6 @@ if (res.sta == 00) {
 } else if (res.sta == 04) {
   F_MGR.remove(folder);
   notify('用户未登录⚠️', 'Token错误，请重新获取'); return;
-}
-
-// Yesterday
-const yesterday = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPointYesterday');
-yesterday.method = 'POST'
-yesterday.headers = {
-  "x-auth-token": `${data.token}`,
-  "Content-Type":"application/json;charset=utf-8"}
-yesterday.body = `{
-  "areaCode": "${code}",
-  "eleCustId": "${id}"
-}`
-const resY = await yesterday.loadJSON();
-const Y = resY.data
-if (Y === null) {
-  ystdayPower = '0.00 '
-} else {
-  ystdayPower = Y.power
 }
 
 // queryMeteringPoint
@@ -130,11 +113,12 @@ month.body = `{
   "meteringPointId" : "${P.meteringPointId}"
 }`
 const resM = await month.loadJSON();
-
+const arr = resM.data.result
 if (resM.sta !== '00') {
   totalPower = '0.00 '
 } else {
   totalPower = resM.data.totalPower
+  ystdayPower = arr[arr.length-1].power
 }
   
 // UserAccountNumberSurplus
@@ -148,36 +132,37 @@ balance.body = `{
   "eleCustId": "${id}"
 }`
 const resB = await balance.loadJSON();
-const Bdata = resB.data
-if (Bdata === null) {
-  bal = '0'
-} else {
-  B = resB.data[0]
-  bal = B.balance
-}
+bal = resB.data[0].balance
+
 
 // selectElecBill
-const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
+const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryCharges');
 elecBill.method = 'POST'
 elecBill.headers = {
   "x-auth-token": `${data.token}`,
   "Content-Type":"application/json;charset=utf-8"}
 elecBill.body = `{
-  "electricityBillYear" : "${Year}",
+  "type" : 0,
   "areaCode" : "${code}",
-  "eleCustId" : "${id}"
+  "eleModels" : [
+    {
+      "areaCode" : "${code}",
+      "eleCustId" : "${id}"
+    }
+  ]
 }`
 const resBill = await elecBill.loadJSON();
-const bill = resBill.data.billUserAndYear[0]
+const bill = resBill.data[0].points[0]
 if (bill === undefined) {
   total = '0.00'
   pay = '0.00'
   arrears = '0.00'
 } else {
-  total = bill.totalPower
+  total = bill.billingElectricity
   pay = bill.arrears
-  arrears = bill.totalElectricity
+  arrears = bill.receieElectricity
 }
+
 // create Widget
 const widget = await createWidget(ele, balance, pay);
   
@@ -244,43 +229,23 @@ async function createWidget() {
   leftStack.addSpacer(3)
 
   // pay stack
-  if (pay < 1) {
-    const payStack = leftStack.addStack();
-    payStack.backgroundColor = new Color('#EEEEEE', 0.1);
-    payStack.setPadding(3, 10, 3, 10);
-    payStack.cornerRadius = 10
-    payStack.borderColor = Color.green();
-    payStack.borderWidth = 2
-    // pay bar icon
-    const payIcon = SFSymbol.named('leaf.fill');
-    const payIconElement = payStack.addImage(payIcon.image);
-    payIconElement.imageSize = new Size(15, 15);
-    payIconElement.tintColor = Color.green();
-    payStack.addSpacer(4);
-    // pay bar text
-    const payText = payStack.addText('已缴费');
-    payText.font = Font.mediumSystemFont(14);
-    payText.textColor = Color.green();
-    leftStack.addSpacer(6)
-  } else {
-    const payStack = leftStack.addStack();
-    payStack.backgroundColor = new Color('#EEEEEE', 0.1);
-    payStack.setPadding(3, 10, 3, 10);
-    payStack.cornerRadius = 10
-    payStack.borderColor = new Color('#FF1744', 0.7);
-    payStack.borderWidth = 2
-    // pay bsr icon
-    const payIcon = SFSymbol.named('leaf.fill');
-    const payIconElement = payStack.addImage(payIcon.image);
-    payIconElement.imageSize = new Size(15, 15);
-    payIconElement.tintColor = Color.red();
-    payStack.addSpacer(4);
-    // pay bar text
-    const payText = payStack.addText(pay);
-    payText.font = Font.mediumSystemFont(14);
-    payText.textColor = new Color('#D50000');
-    leftStack.addSpacer(6)
-  }
+  const payStack = leftStack.addStack();
+  payStack.backgroundColor = new Color('#EEEEEE', 0.1);
+  payStack.setPadding(3, 10, 3, 10);
+  payStack.cornerRadius = 10
+  payStack.borderColor = pay < 1 ? Color.green() : new Color('#FF1744', 0.7)
+  payStack.borderWidth = 2
+  // pay bar icon
+  const payIcon = SFSymbol.named('leaf.fill');
+  const payIconElement = payStack.addImage(payIcon.image);
+  payIconElement.imageSize = new Size(15, 15);
+  payIconElement.tintColor = pay < 1 ? Color.green() : Color.red()
+  payStack.addSpacer(4);
+  // pay bar text
+  const payText = payStack.addText(pay < 1 ? '已缴费' : pay);
+  payText.font = Font.mediumSystemFont(14);
+  payText.textColor = pay < 1 ? Color.green() : new Color('#D50000')
+  leftStack.addSpacer(6)
     
     
   /**
