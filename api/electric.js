@@ -113,14 +113,16 @@ month.body = `{
   "meteringPointId" : "${P.meteringPointId}"
 }`
 const resM = await month.loadJSON();
-const arr = resM.data.result
-if (resM.sta !== '00') {
-  totalPower = '0.00 '
-} else {
+try {  
+  const arr = resM.data.result
   totalPower = resM.data.totalPower
   ystdayPower = arr[arr.length-1].power
+} catch(e) {
+  console.log(e)
+  totalPower = '0.00 '
+  ystdayPower = '0.00 '
 }
-  
+
 // UserAccountNumberSurplus
 const balance = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus');
 balance.method = 'POST'
