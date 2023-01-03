@@ -22,6 +22,8 @@ async function main() {
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
+    const value = 6
+    const wide = 8
     if (setting.oil === undefined) {
       F_MGR.writeString(
         cacheFile,
@@ -41,9 +43,6 @@ async function main() {
     oil = res.data
     widget = await createWidget(oil);
   }
-  
-  const value = 6
-  const wide = 8
   
   async function createWidget(oil) {
     // 组件背景渐变
