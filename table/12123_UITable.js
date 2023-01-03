@@ -13,7 +13,7 @@ async function main() {
   const url = get.infoURL
   
   const uri = Script.name()
-  const F_MGR = FileManager.iCloud();
+  const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95du12123");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
   
