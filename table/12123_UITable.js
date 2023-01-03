@@ -33,7 +33,6 @@ async function main() {
         verifyToken: verifyToken
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
-      notify('交管12123', `boxjs_token 获取成功: ${boxjs_data.val}`);
     } catch(e) {
       notify('获取boxJs数据失败 ⚠️', '需打开Quantumult-X获取verifyToken');
     }
