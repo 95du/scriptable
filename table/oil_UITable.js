@@ -26,6 +26,7 @@ async function main() {
       F_MGR.writeString(
         cacheFile,
         JSON.stringify({
+          ...setting,
           oil: forecast
         }, null, 2)
       );
