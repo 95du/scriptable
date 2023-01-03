@@ -238,7 +238,7 @@ F_MGR.readString(cacheFile)
   const barStack2 = leftStack.addStack();
   barStack2.layoutHorizontally();
   barStack2.centerAlignContent();
-  barStack2.backgroundColor = new Color('#EEEEEE', 0.3);
+  barStack2.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack2.setPadding(3, 10, 3, 10);
   barStack2.cornerRadius = 10
   barStack2.borderColor = new Color('#616161', 0.7);
