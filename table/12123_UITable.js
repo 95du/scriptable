@@ -23,7 +23,7 @@ async function main() {
     verifyToken = setting.verifyToken
     myPlate = setting.myPlate
   }
-  
+  notify(setting.transparency, '')
   if (verifyToken === '0') {
     try {
       boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
@@ -165,7 +165,7 @@ async function main() {
     const items = color[Math.floor(Math.random()*color.length)];
     gradient.locations = [0, 1]
     gradient.colors = [
-      new Color(items, `${setting.transparency}`),
+      new Color(items, setting.transparency),
       new Color('#00000000')
     ]
     widget.backgroundGradient = gradient
