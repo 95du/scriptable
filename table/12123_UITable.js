@@ -163,9 +163,10 @@ async function main() {
       color = setting.gradient
     }
     const items = color[Math.floor(Math.random()*color.length)];
+    percent = setting.transparency
     gradient.locations = [0, 1]
     gradient.colors = [
-      new Color(items, 0.5),
+      new Color(items, percent),
       new Color('#00000000')
     ]
     widget.backgroundGradient = gradient
