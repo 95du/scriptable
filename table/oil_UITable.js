@@ -118,7 +118,7 @@ async function main() {
     barStack1.borderWidth = 2.5
     // bar text
     const oilTipsText = barStack1.addText(forecast);
-    oilTipsText.textColor = F_MGR.fileExists(bgImage) ? Color.white : new Color('#5e5e5e');
+    oilTipsText.textColor = F_MGR.fileExists(bgImage) ? Color.white() : new Color('#5e5e5e');
     oilTipsText.font = Font.boldSystemFont(13);
     oilTipsText.centerAlignText();
     dataStack2.addSpacer();
