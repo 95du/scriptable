@@ -1,8 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: magic;
-<! DOCTYPE html>
-<html>
+
 <head>
 <title>托迈酷客-自动任务</title>
    <meta charset="utf-8" />     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -102,4 +101,3 @@ Shortcut Author : ４丶敲（ 原创 ）</center></p>
 <p><strong><center><font color=#E16969>29900 积分 👉 <a href="https://hotels.folidaymall.com/tc-fostay/retail/productDetail/6226?isSharefrom=tc_app&trackCode=43NVWO0666Y7">迪士尼多功能电烤箱DI-B65255红色</a></font></center></center></strong></p>
 </div>
 </body>
-</html>
