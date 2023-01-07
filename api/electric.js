@@ -178,12 +178,14 @@ if (config.runsInWidget) {
 // Create widget
 async function createWidget() {
   const widget = new ListWidget();
-  widget.backgroundColor = Color.white();
   const gradient = new LinearGradient()
   color = [
+    "#82B1FF",
+    "#757575",
     "#4FC3F7",
     "#66CCFF",
-    "#99CCCC"
+    "#99CCCC",
+    "#BCBBBB"
   ]
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1]
@@ -222,12 +224,12 @@ async function createWidget() {
   const nameIcon = SFSymbol.named('person.crop.circle');
   const nameIconElement = nameStack.addImage(nameIcon.image);
   nameIconElement.imageSize = new Size(15, 15);
-  nameIconElement.tintColor = Color.black();
+  nameIconElement.tintColor = Color.dynamic(new Color('#1E1E1E'), new Color('#FEFEFE'));
   nameStack.addSpacer(4);
   // name text
   const nameText = nameStack.addText(name);
   nameText.font = Font.mediumSystemFont(14);
-  nameText.textColor = Color.black();
+  nameText.textOpacity = 0.8;
   leftStack.addSpacer(3)
 
   // pay stack
@@ -269,7 +271,7 @@ async function createWidget() {
   // yesterday text
   const yesterdayText = yesTDStack.addText('昨日');
   yesterdayText.font = Font.mediumSystemFont(14)
-  yesterdayText.textColor = new Color('#616161');
+  yesterdayText.textOpacity = 0.7;
   centerStack.addSpacer(3)
   // Yesterday Use text
   const yesterdayUseText = centerStack.addText(ystdayPower + ' kw·h')
@@ -291,7 +293,7 @@ async function createWidget() {
   // month text
   const monthText = monthStack.addText('本月');
   monthText.font = Font.mediumSystemFont(14)
-  monthText.textColor = new Color('#616161');
+  monthText.textOpacity = 0.7;
   centerStack.addSpacer(3)
   // month Use Text
   const monthUseText = centerStack.addText(totalPower + ' kw·h')
@@ -313,7 +315,7 @@ async function createWidget() {
   // Use ele text
   const useEleText = useEleStack.addText('上月');
   useEleText.font = Font.mediumSystemFont(14);
-  useEleText.textColor = new Color('#616161');
+  useEleText.textOpacity = 0.7;
   centerStack.addSpacer(3)
   // Use ele total text
   const useEleTotalText = centerStack.addText(`${total} kw·h`)
@@ -341,7 +343,7 @@ async function createWidget() {
   // balance text
   const balanceText = balStack.addText('余额');
   balanceText.font = Font.mediumSystemFont(14)
-  balanceText.textColor = new Color('#616161');
+  balanceText.textOpacity = 0.7;
   rightStack.addSpacer(3)
   //balance Use Text
   const contain = bal.indexOf(".") != -1
@@ -368,7 +370,7 @@ async function createWidget() {
   // ele Bill text
   const eleBillText = eleBiStack.addText('电费');
   eleBillText.font = Font.mediumSystemFont(14);
-  eleBillText.textColor = new Color('#616161');
+  eleBillText.textOpacity = 0.7;
   rightStack.addSpacer(3)
   // ele Bill Total Text
   const eleBillTotalText = rightStack.addText(`${arrears} rmb`)
@@ -390,7 +392,7 @@ async function createWidget() {
   // arrears text
   const arrearsText = arrearsStack.addText('待缴');
   arrearsText.font = Font.mediumSystemFont(14);
-  arrearsText.textColor = new Color('#616161');
+  arrearsText.textOpacity = 0.7;
   rightStack.addSpacer(3)
   // arrears total text
   const arrearsTotalText = rightStack.addText(`${pay} rmb`);
