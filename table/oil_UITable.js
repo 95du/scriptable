@@ -257,19 +257,13 @@ async function main() {
     console.log(error);
   }
   
-  if (forecast == setting.oil) {
+  if (forecast !== setting.oil) {
     const notice = new Notification()
     notice.sound = 'alert'
     notice.title = `${setting.province}油价涨跌调整‼️`
     notice.body = forecast
     notice.schedule();
-    F_MGR.writeString(
-      cacheFile,
-      JSON.stringify({
-        oil: forecast,
-        ...setting
-      }, null, 2)
-    );
+    F_MGR.writeString(cacheFile, JSON.stringify({ oil: forecast, ...setting }, null, 2));
   }
   
   function createErrorWidget() {
