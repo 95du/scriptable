@@ -267,7 +267,7 @@ async function main() {
       cacheFile,
       JSON.stringify({
         oil: forecast,
-        province: setting.province
+        ...setting
       }, null, 2)
     );
   }
