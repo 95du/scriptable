@@ -257,7 +257,7 @@ async function main() {
     console.log(error);
   }
   
-  if (forecast !== setting.oil) {
+  if (forecast.length !== setting.oil.length) {
     const notice = new Notification()
     notice.sound = 'alert'
     notice.title = `${setting.province}油价涨跌调整‼️`
