@@ -46,7 +46,7 @@ async function main() {
   let size = await generateAlert(message, sizes)
   let widgetSize = sizes[size]
   
-  message = "小组件位置\n负一屏底栏只适用于 Max 机型，截图时把编辑二字向上推，留出足够空白。";
+  message = "小组件位置";
   message += height == 1136 ? " (请注意，您的设备仅支持两行小组件，因此中间和底部选项相同。)" : "";
   
   // Determine image crop based on phone size.
