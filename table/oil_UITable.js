@@ -23,15 +23,9 @@ async function main() {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
     if (setting.oil === undefined) {
-      F_MGR.writeString(
-        cacheFile,
-        JSON.stringify({
-          ...setting,
-          oil: forecast
-        }, null, 2)
-      );
+      F_MGR.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
       setting = JSON.parse(
-    F_MGR.readString(cacheFile)
+        F_MGR.readString(cacheFile)
       );
     }
     const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));  
@@ -263,7 +257,7 @@ async function main() {
     notice.title = `${setting.province}油价涨跌调整‼️`
     notice.body = forecast
     notice.schedule();
-    F_MGR.writeString(cacheFile, JSON.stringify({ oil: forecast, ...setting }, null, 2));
+    F_MGR.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
   }
   
   function createErrorWidget() {
