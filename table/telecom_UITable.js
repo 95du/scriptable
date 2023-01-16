@@ -51,13 +51,14 @@ async function main() {
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   
-  if (!F_MGR.fileExists(cacheFile) || dayNumber > setting.dayNumber) {
+  if (setting.init === false || dayNumber > setting.dayNumber) {
     setting = {
       flow: flow,
       voice: voice,
       dayNumber: dayNumber,
       flowBalance: flowBalance,
-      voiceBalance: voiceBalance
+      voiceBalance: voiceBalance,
+      init: true
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
