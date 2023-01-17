@@ -46,7 +46,12 @@ async function main() {
   barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
   progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
   
-  const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
+  if (setting.picture) {
+    imageUrl = setting.picture
+  } else {
+    imageUrl = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
+  }
+  const image = await new Request(imageUrl).loadImage();
     
   const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
   balUrl.method = 'GET'
