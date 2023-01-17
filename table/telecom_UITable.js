@@ -382,7 +382,7 @@ async function main() {
     function getwidget(flowTotal, haveGone, str) {
       const titlew = widget.addText(str);
       titlew.centerAlignText();
-      titlew.textColor = textColor
+      titlew.textColor = F_MGR.fileExists(bgImage) ? Color.white() : textColor
       titlew.font = Font.boldSystemFont(13);
       widget.addSpacer(3)
       
