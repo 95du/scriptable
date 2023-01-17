@@ -9,6 +9,7 @@
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 async function main() {
+  const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duTelecom");
   if (!F_MGR.fileExists(folder)) {
