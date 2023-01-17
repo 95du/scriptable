@@ -21,8 +21,9 @@ async function main() {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
     cookie = setting.cookie
-  } else {
-    notify('未登录 ⚠️', '登录天翼账号中心即可使用');
+  }
+  if (!setting.cookie) {
+    notify('未登录 ⚠️', '请登录天翼账号中心获取 Cookie');
   }
   
   // Background image path  
