@@ -22,6 +22,10 @@ async function main() {
     cookie = setting.cookie
   }
   
+  // Background image path  
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
+  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
   widgetBgColor = Color.dynamic(
   new Color("#fefefe"), new Color("#1e1e1e"))
