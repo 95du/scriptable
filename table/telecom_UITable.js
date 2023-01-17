@@ -99,9 +99,23 @@ async function main() {
    */
   async function createWidget() {
     const widget = new ListWidget();
-    widget.backgroundColor = widgetBgColor;
-    widget.setPadding(15, 15, 15, 15);
+    if (F_MGR.fileExists(bgImage)) {
+      widget.backgroundImage = F_MGR.readImage(bgImage);
+    } else if (setting.gradient.length !== 0) {
+      const gradient = new LinearGradient();
+      color = setting.gradient
+      const items = color[Math.floor(Math.random()*color.length)];
+      gradient.locations = [0, 1]
+      gradient.colors = [
+        new Color(items, Number(setting.transparency)),
+        new Color('#00000000')
+      ]
+      widget.backgroundGradient = gradient
+    } else {
+      widget.backgroundColor = widgetBgColor;
+    }
     
+    widget.setPadding(15, 15, 15, 15);
     const top = widget.addStack();
     top.layoutHorizontally();
     top.size = new Size(0, 30);
@@ -330,13 +344,17 @@ async function main() {
   async function createSmallWidget() {
     const widget = new ListWidget();
     widget.setPadding(0, 0, -6, 0);
-    const gradient = new LinearGradient()
-    gradient.locations = [0, 1]
-    gradient.colors = [
-      bgColor1,
-      bgColor2
-    ]
-    widget.backgroundGradient = gradient
+    if (F_MGR.fileExists(bgImage)) {
+      widget.backgroundImage = F_MGR.readImage(bgImage);
+    } else {
+      const gradient = new LinearGradient()
+      gradient.locations = [0, 1]
+      gradient.colors = [
+        bgColor1,
+        bgColor2
+      ]
+      widget.backgroundGradient = gradient
+    }
     
     const width = 135
     const height = 10
