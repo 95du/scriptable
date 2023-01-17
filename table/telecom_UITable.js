@@ -79,7 +79,6 @@ async function main() {
       ...setting
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
-    notify('登录成功', '请前往桌面添加小组件')
   }
   
   const flow1st = setting.flow
