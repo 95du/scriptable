@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: pink; icon-glyph: rss;
+// icon-color: pink; icon-glyph: phone-volume;
 /**
  * 小组件作者: 95度茅台
  * 小组件名称: 中国电信余量
@@ -21,6 +21,8 @@ async function main() {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
     cookie = setting.cookie
+  } else {
+    notify('未登录 ⚠️', '登录天翼账号中心即可使用');
   }
   
   // Background image path  
@@ -77,6 +79,7 @@ async function main() {
       ...setting
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
+    notify('登录成功', '请前往桌面添加小组件')
   }
   
   const flow1st = setting.flow
@@ -421,6 +424,14 @@ async function main() {
     } else {
       await widget.presentSmall();
     }
+  }
+  async function notify (title, body, url) {
+    let n = new Notification()
+    n.title = title
+    n.body = body
+    n.sound = 'accept'
+    if (url) n.openURL = url
+    return await n.schedule()
   }
 }
 module.exports = { main }
