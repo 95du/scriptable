@@ -39,11 +39,17 @@ async function main() {
   progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
   
   const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
+    
+  const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
+  balUrl.method = 'GET'
+  balUrl.headers = { Cookie: cookie }
+  const balances = await balUrl.loadJSON();
+  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2)
   
-  const balUrl = await getJson('https://e.189.cn/store/user/balance_new.do?t=189Bill');
-  const balanceAvailable = (balUrl.totalBalanceAvailable / 100).toFixed(2)
-  
-  const res = await getJson('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+  const package = new Request('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+  package.method = 'GET'
+  package.headers = { Cookie: cookie }
+  const res = await package.loadJSON();
   const voiceAmount = res.voiceAmount
   const voiceBalance = res.voiceBalance
   const voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
@@ -392,13 +398,6 @@ async function main() {
     } else {
       await widget.presentSmall();
     }
-  }
-  
-  async function getJson(url) {
-    const req = await new Request(url);
-    req.method = 'GET'
-    req.headers { Cookie: cookie }
-    return await req.loadJSON();
   }
 }
 module.exports = { main }
