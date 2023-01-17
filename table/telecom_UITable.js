@@ -1,6 +1,13 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: pink; icon-glyph: rss;
+/**
+ * 小组件作者: 95度茅台
+ * 小组件名称: 中国电信余量
+ * Version 1.0.0
+ * 2023-01-17 14:30
+ * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ */
 async function main() {
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duTelecom");
