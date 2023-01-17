@@ -113,7 +113,7 @@ async function main() {
   async function createWidget() {
     const widget = new ListWidget();
     if (F_MGR.fileExists(bgImage)) {
-      widget.backgroundImage = F_MGR.readImage(bgImage);
+      widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
     } else if (setting.gradient.length !== 0) {
       const gradient = new LinearGradient();
       color = setting.gradient
@@ -430,6 +430,7 @@ async function main() {
       await widget.presentSmall();
     }
   }
+  
   async function notify (title, body, url) {
     let n = new Notification()
     n.title = title
@@ -437,6 +438,15 @@ async function main() {
     n.sound = 'accept'
     if (url) n.openURL = url
     return await n.schedule()
+  }
+  
+  async function shadowImage(img) {
+    let ctx = new DrawContext();
+    ctx.size = img.size
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']));
+    return await ctx.getImage();
   }
 }
 module.exports = { main }
