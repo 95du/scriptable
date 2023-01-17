@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: pink; icon-glyph: paper-plane;
+// icon-color: pink; icon-glyph: rss;
 async function main() {
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duTelecom");
@@ -15,7 +15,9 @@ async function main() {
   } else {
     const webView = new WebView();
     await webView.loadURL('http://u3v.cn/5uwtIP');
-    await webView.present(false);
+    await webview.present();
+    cookie = await webview.evaluateJavaScript('document.cookie');
+    console.log(cookie);
   }
   
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
@@ -58,6 +60,7 @@ async function main() {
       dayNumber: dayNumber,
       flowBalance: flowBalance,
       voiceBalance: voiceBalance,
+      cookie: cookie,
       init: true,
       ...setting
     }
@@ -69,11 +72,11 @@ async function main() {
   const voice1st = voice
   const voice2nd = setting.voice
   
-  const Step1st = 25  
-  const Step2nd = 80
-  const StepFin = 100
-  const barWidth = 15
-  const barHeigth = 105
+  const Step1st = 25;
+  const Step2nd = 80;
+  const StepFin = 100;
+  const barWidth = 15;
+  const barHeigth = 105;
   
   const isSmallWidget =  config.widgetFamily === 'small'
   if (config.runsInWidget && isSmallWidget) {
