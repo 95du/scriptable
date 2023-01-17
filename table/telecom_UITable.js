@@ -12,12 +12,7 @@ async function main() {
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
-  } else {
-    const webView = new WebView();
-    await webView.loadURL('http://u3v.cn/5uwtIP');
-    await webview.present();
-    cookie = await webview.evaluateJavaScript('document.cookie');
-    console.log(cookie);
+    cookie = setting.cookie
   }
   
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
@@ -60,7 +55,6 @@ async function main() {
       dayNumber: dayNumber,
       flowBalance: flowBalance,
       voiceBalance: voiceBalance,
-      cookie: cookie,
       init: true,
       ...setting
     }
@@ -395,6 +389,8 @@ async function main() {
   
   async function getJson(url) {
     const req = await new Request(url);
+    req.method = 'GET'
+    req.headers { Cookie: cookie }
     return await req.loadJSON();
   }
 }
