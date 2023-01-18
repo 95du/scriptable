@@ -33,10 +33,9 @@ async function main() {
   widgetBgColor = Color.dynamic(
   new Color("#fefefe"), new Color("#1e1e1e"));
   stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
+  barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
   MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
   SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
-  BarTextColor1 = Color.dynamic(new Color("#ffffff"), new Color("#000000"));
-  BarTextColor2 = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
   
   // Small Widget Color
   bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#151515'));  
@@ -283,7 +282,7 @@ async function main() {
     const path = new Path();
     path.addRoundedRect(new Rect(0, 0, barWidth, barHeigth), 4, 4);
     context.addPath(path);
-    context.setFillColor(stackBgColor);
+    context.setFillColor(barBgColor);
     context.fillPath();
     
     // BarValue1
@@ -320,12 +319,12 @@ async function main() {
     
     if (barValue1 < 90) {
       context.setTextColor(  
-        SubTextColor
+        new Color("#666666")
       );
       context.drawTextInRect('%', new Rect(0, 3, barWidth, barHeigth));
     } else {
       context.setTextColor(
-        BarTextColor1
+        Color.white()
       );
       context.drawTextInRect('%', new Rect(0, barHeigth - 15, barWidth, barHeigth));
     }
@@ -333,12 +332,12 @@ async function main() {
     if (barValue1 < 10) {
       PosCorr = -10
       context.setTextColor(
-        BarTextColor2
+        Color.white()
       );
     } else {
       PosCorr = 2
       context.setTextColor(
-        BarTextColor1
+        Color.white()
       );
     }
     context.drawTextInRect(
