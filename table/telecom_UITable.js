@@ -32,12 +32,12 @@ async function main() {
   
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
   widgetBgColor = Color.dynamic(
-  new Color("#fefefe"), new Color("#1e1e1e"))
-  stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"))
-  MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"))
-  SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"))
-  BarTextColor1 = Color.dynamic(new Color("#ffffff"), new Color("#000000"))
-  BarTextColor2 = Color.dynamic(new Color("#000000"), new Color("#ffffff"))
+  new Color("#fefefe"), new Color("#1e1e1e"));
+  stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
+  MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
+  SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
+  BarTextColor1 = Color.dynamic(new Color("#ffffff"), new Color("#000000"));
+  BarTextColor2 = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
   
   // Small Widget Color
   bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#151515'));  
@@ -57,7 +57,7 @@ async function main() {
   balUrl.method = 'GET'
   balUrl.headers = { Cookie: cookie }
   const balances = await balUrl.loadJSON();
-  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2)
+  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
   
   const package = new Request('https://e.189.cn/store/user/package_detail.do?t=189Bill');
   package.method = 'GET'
@@ -146,10 +146,10 @@ async function main() {
     
     const rightStack = top.addStack()
     rightStack.centerAlignContent();
-    rightStack.addSpacer()
+    rightStack.addSpacer();
     let balanceText = rightStack.addText(balanceAvailable);
     balanceText.centerAlignText();
-    balanceText.textColor = Color.red()
+    balanceText.textColor = Color.red();
     balanceText.font = new Font('Georgia-Bold', 25);
     rightStack.addSpacer();
     widget.addSpacer(5)
@@ -165,7 +165,7 @@ async function main() {
     const Stack1 = Content.addStack();
     Stack1.layoutVertically();
     Stack1.backgroundColor = stackBgColor;
-    Stack1.cornerRadius = 8
+    Stack1.cornerRadius = 8;
     Stack1.addSpacer(9);
     
     const Stack1Head = Stack1.addStack();
@@ -224,8 +224,8 @@ async function main() {
     const Stack2 = Content.addStack();
     Stack2.layoutVertically();
     Stack2.backgroundColor = stackBgColor
-    Stack2.cornerRadius = 8
-    Stack2.addSpacer(10)
+    Stack2.cornerRadius = 8;
+    Stack2.addSpacer(10);
     
     const Stack2Head = Stack2.addStack();
     Stack2Head.addSpacer();
