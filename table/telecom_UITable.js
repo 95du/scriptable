@@ -74,8 +74,11 @@ async function main() {
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   
-  init = setting.init === false
-  if (int || dayNumber > setting.dayNumber) {
+  if (setting.init === false) {
+    notify('测试', '')
+  }
+    
+  if (setting.init === false || dayNumber > setting.dayNumber) {
     setting = {
       flow: flow,
       voice: voice,
