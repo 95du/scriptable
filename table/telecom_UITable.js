@@ -225,7 +225,7 @@ async function main() {
     Stack2.layoutVertically();
     Stack2.backgroundColor = stackBgColor
     Stack2.cornerRadius = 8;
-    Stack2.addSpacer(10);
+    Stack2.addSpacer(9);
     
     const Stack2Head = Stack2.addStack();
     Stack2Head.addSpacer();
