@@ -73,7 +73,9 @@ async function main() {
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-  
+  if (setting.init === false) {
+    notify('hh', '')
+  }
   if (setting.init === false || dayNumber > setting.dayNumber) {
     setting = {
       flow: flow,
