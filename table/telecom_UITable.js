@@ -15,7 +15,10 @@ async function main() {
   if (!F_MGR.fileExists(folder)) {
     F_MGR.createDirectory(folder)
   }
-  
+  // Background image path  
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
+  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile);
@@ -25,10 +28,6 @@ async function main() {
   if (!setting.cookie) {
     notify('未登录 ⚠️', '请登录天翼账号中心获取 Cookie');
   }
-  
-  // Background image path  
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
   
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
   widgetBgColor = Color.dynamic(
