@@ -82,7 +82,7 @@ async function main() {
       flowBalance: flowBalance,
       voiceBalance: voiceBalance,
       ...setting,
-      init: setting.init = true
+      init: true
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
