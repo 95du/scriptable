@@ -73,10 +73,7 @@ async function main() {
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
 
-  if (!setting.init) {
-    notify('初始化', '数据库')
-  }
-  if (!setting.init || dayNumber > setting.dayNumber) {
+  if (setting.init === false || dayNumber > setting.dayNumber) {
     notify('初始化', '数据库已自动更新')
     setting = {
       flow: flow,
@@ -84,8 +81,8 @@ async function main() {
       dayNumber: dayNumber,
       flowBalance: flowBalance,
       voiceBalance: voiceBalance,
-      init: true,
-      ...setting
+      ...setting,
+      init: setting.init = true
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
