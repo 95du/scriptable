@@ -73,7 +73,7 @@ async function main() {
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
 
-  if (setting.init === false || dayNumber > setting.dayNumber) {
+  if (setting.init === false || setting.flow === 'NAN' || dayNumber > setting.dayNumber) {
     notify('初始化', '数据库已自动更新')
     setting = {
       flow: flow,
