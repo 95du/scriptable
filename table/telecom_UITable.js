@@ -73,12 +73,9 @@ async function main() {
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-  
-  if (setting.init === false) {
-    notify('测试', '')
-  }
     
   if (setting.init === false || dayNumber > setting.dayNumber) {
+    notify('初始化', '数据库已自动更新')
     setting = {
       flow: flow,
       voice: voice,
