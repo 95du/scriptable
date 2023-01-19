@@ -79,11 +79,6 @@ if (!F_MGR.fileExists(cacheFile) || dayNumber > setting.dayNumber) {
   F_MGR.writeString(cacheFile, JSON.stringify(setting));
 }
 
-const flow1st = setting.flow;
-const flow2nd = flow;
-const voice1st = voice;
-const voice2nd = setting.voice;
-
 const Step1st = 25;
 const Step2nd = 80;
 const StepFin = 100;
@@ -186,7 +181,7 @@ async function createWidget() {
   // Progress bar 1
   const BarContent1 = Content.addStack();
   BarContent1.layoutVertically();
-  const progressBar1st = BarContent1.addImage(creatProgress(flow2nd, flow1st));
+  const progressBar1st = BarContent1.addImage(creatProgress(flow, setting.flow));
   progressBar1st.cornerRadius = 5.5
   progressBar1st.imageSize = new Size(barWidth, barHeigth);
   Content.addSpacer();
@@ -194,7 +189,7 @@ async function createWidget() {
   // Progress bar 2
   const BarContent2 = Content.addStack();
   BarContent2.layoutVertically();
-  const progressBar2nd = BarContent2.addImage(creatProgress(voice1st, voice2nd));
+  const progressBar2nd = BarContent2.addImage(creatProgress(voice, setting.voice));
   progressBar2nd.cornerRadius = 5.5
   progressBar2nd.imageSize = new Size(barWidth, barHeigth);
   Content.addSpacer();
