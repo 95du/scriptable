@@ -35,7 +35,6 @@ async function main() {
   stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
   barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
   MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
-  BarTextColor1 = Color.dynamic(new Color("#ffffff"), new Color("#000000"));
   SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
   
   // Small Widget Color
@@ -333,7 +332,7 @@ async function main() {
     if (barValue1 < 10) {
       PosCorr = -10
       context.setTextColor(
-        BarTextColor1
+        Color.black()
       );
     } else {
       PosCorr = 2
