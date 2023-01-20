@@ -35,6 +35,7 @@ new Color("#fefefe"), new Color("#1e1e1e"));
 stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
 barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
 MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
+BarTextColor1 = Color.dynamic(new Color("#ffffff"), new Color("#000000"));
 SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
 
 // Small Widget Color
@@ -253,6 +254,7 @@ function creatProgress(barValue1, barValue2) {
   context.size = new Size(barWidth, barHeigth);
   context.opaque = false
   context.respectScreenScale = true
+  
   const path = new Path();
   path.addRoundedRect(new Rect(0, 0, barWidth, barHeigth), 4, 4);
   context.addPath(path);
@@ -305,7 +307,7 @@ function creatProgress(barValue1, barValue2) {
   if (barValue1 < 10) {
     PosCorr = -10
     context.setTextColor(
-      Color.white()
+      BarTextColor1
     );
   } else {
     PosCorr = 2
