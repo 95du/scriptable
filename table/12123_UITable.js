@@ -316,7 +316,7 @@ async function main() {
     }
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(225,100);
+    imageCar.imageSize = new Size(setting.width, setting.height);
     rightStack.addSpacer(2)
   
     // show address
