@@ -99,7 +99,7 @@ async function main() {
     mainStack.addSpacer(10)
     
     
-    // oilPrice alert ‼️
+    // oilPrice Alert
     const dataStack2 = mainStack.addStack();
     dataStack2.layoutHorizontally();
     dataStack2.addSpacer();
@@ -119,7 +119,7 @@ async function main() {
     mainStack.addSpacer(10)
     
     
-    // First column ❤️
+    // First column
     const dataStack = mainStack.addStack();
     dataStack.addSpacer();
     // Oil_0 bar
@@ -130,27 +130,13 @@ async function main() {
     barStack0.borderColor = new Color('#FB8C00');
     barStack0.borderWidth = 3
     // bar text
-    let oil0 = `${oil.Oil0}`
-    const a = {};
-    a.GetLength = function(str) {
-      return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
-    };  
-    str0 = (a.GetLength(oil0));
-      
-    if (str0 <= 3) {
-      totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}0`);
-    } else if (str0 > 4) {
-      oil0 = oil0.replace(/\S{1}$/, '');
-      totalMonthBar0 = barStack0.addText(`0# - ${oil0}`);
-    } else {
-      totalMonthBar0 = barStack0.addText(`0# - ${oil.Oil0}`);
-    }
+    const totalMonthBar0 = barStack0.addText(`0# - ${(oil.Oil0).toPrecision(3)}`);
     totalMonthBar0.font = Font.mediumSystemFont(14);
     totalMonthBar0.textColor = Color.white();
     dataStack.addSpacer(value)
     
     
-    // Second column ❤️
+    // Second column
     // Oil_92 bar
     const barStack2 = dataStack.addStack();
     barStack2.setPadding(3, wide, 3, wide);
@@ -159,26 +145,13 @@ async function main() {
     barStack2.borderColor = Color.blue();
     barStack2.borderWidth = 3
     // bar text
-    let oil92 = `${oil.Oil92}`
-    const b = {};
-    b.GetLength = function(str) {
-      return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
-    };  
-    str92 = (b.GetLength(oil92));
-    if (str92 <= 3) {
-      totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}0`);
-    } else if (str92 > 4) {
-      oil92 = oil92.replace(/\S{1}$/, '');
-      totalMonthBar2 = barStack2.addText(`0# - ${oil92}`);
-    } else {
-      totalMonthBar2 = barStack2.addText(`92 - ${oil.Oil92}`);
-    }
+    totalMonthBar2 = barStack2.addText(`92 - ${(oil.Oil92).toPrecision(3)}`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#FFFFFF');
     dataStack.addSpacer(value)
     
     
-    // Third column ❤️
+    // Third column
     // Oil_95 bar
     const barStack5 = dataStack.addStack();
     barStack5.setPadding(3, wide, 3, wide);
@@ -187,26 +160,13 @@ async function main() {
     barStack5.borderColor = new Color('#00C853');
     barStack5.borderWidth = 3
     // bar text
-    let oil95 = `${oil.Oil95}`
-    const c = {};
-    c.GetLength = function(str) {
-      return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
-    };  
-    str95 = (c.GetLength(oil95));
-    if (str95 <= 3) {
-      totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}0`);
-    } else if (str95 > 4) {
-      oil95 = oil95.replace(/\S{1}$/, '');
-      totalMonthBar5 = barStack5.addText(`95 - ${oil95}`);
-    } else {
-      totalMonthBar5 = barStack5.addText(`95 - ${oil.Oil95}`);
-    }
+    const totalMonthBar5 = barStack5.addText(`95 - ${(oil.Oil95).toPrecision(3)}`);
     totalMonthBar5.font = Font.mediumSystemFont(14);
     totalMonthBar5.textColor = new Color('#FFFFFF');
     dataStack.addSpacer(value)
     
       
-    // Fourth column ❤️
+    // Fourth column
     // Oil_98 bar
     const barStack8 = dataStack.addStack();
     barStack8.setPadding(3, wide, 3, wide);
@@ -215,20 +175,7 @@ async function main() {
     barStack8.borderColor = Color.purple();
     barStack8.borderWidth = 3
     // bar text
-    let oil98 = `${oil.Oil98}`
-    const d = {};
-    d.GetLength = function(str) {
-      return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
-    };  
-    str98 = (d.GetLength(oil98));
-    if (str98 <= 3) {
-      totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}0`);
-    } else if (str98 > 4) {
-      oil98 = oil98.replace(/\S{1}$/, '');
-      totalMonthBar8 = barStack8.addText(`98 - ${oil98}`);
-    } else {
-      totalMonthBar8 = barStack8.addText(`98 - ${oil.Oil98}`);  
-    }
+    const totalMonthBar8 = barStack8.addText(`98 - ${(oil.Oil98).toPrecision(3)}`);
     totalMonthBar8.font = Font.mediumSystemFont(14);
     totalMonthBar8.textColor = new Color('#FFFFFF');
     dataStack.addSpacer();
