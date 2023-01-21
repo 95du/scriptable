@@ -69,7 +69,7 @@ async function main() {
      
       
     // 灵动岛
-    widget.setPadding(7, 7, 7, 7);
+    widget.setPadding(7, 9, 7, 9);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     
