@@ -221,13 +221,13 @@ async function get(opts) {
   const request = new Request(opts.url);
   request.method = 'POST'
   request.body = `{
-    "common": {
-      "platform": "iPhone",
-      "language": "CN"
+    common: {
+      platform: "iPhone",
+      language: "CN"
     }, 
-    "params": {
-      "lat": '${coordinates[1]}', 
-      "lon": '${coordinates[0]}'
+    params: {
+      lat: ${coordinates[1]}, 
+      lon: ${coordinates[0]}
     }
   }`
   return result = await request.loadJSON();
