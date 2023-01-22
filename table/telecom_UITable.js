@@ -329,7 +329,7 @@ async function main() {
       context.drawTextInRect('%', new Rect(0, barHeigth - 15, barWidth, barHeigth));
     }
     
-    if (barValue1 < 10) {
+    if (barValue1 <= 10) {
       PosCorr = -10
       context.setTextColor(
         Color.black()
