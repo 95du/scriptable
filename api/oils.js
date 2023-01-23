@@ -76,7 +76,7 @@ async function createWidget(oil) {
    
     
   // 灵动岛
-  widget.setPadding(7, 9, 7, 9);
+  widget.setPadding(7, 8, 7, 8);
   const mainStack = widget.addStack();
   mainStack.layoutVertically();
   
@@ -226,14 +226,4 @@ async function createErrorWidget() {
   text.font = Font.systemFont(17);
   text.centerAlignText();
   Script.setWidget(widget);
-}
-
-async function shadowImage(img) {
-  let ctx = new DrawContext();
-  ctx.size = img.size
-  ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));
-  // 图片遮罩颜色、透明度设置
-  ctx.setFillColor(new Color("#000000", 0.3))
-  ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-  return await ctx.getImage()
 }
