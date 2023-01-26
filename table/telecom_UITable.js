@@ -85,6 +85,15 @@ async function main() {
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
   
+  if (dayNumber !== setting.dayNumber) {
+    setting = {
+      ...setting,
+      dayNumber: dayNumber
+    }
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
+  }
+    
+  
   const flow1st = setting.flow
   const flow2nd = flow
   const voice1st = voice
