@@ -16,8 +16,10 @@ async function main() {
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
   
-  const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-  const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+  try {  
+    const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
+    const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+  } catch(e) { error = e }
   
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile);
@@ -111,7 +113,7 @@ async function main() {
     barStack1.borderColor = new Color('#D50000', 0.8);
     barStack1.borderWidth = 2.5
     // bar text
-    const oilTipsText = barStack1.addText(forecast);
+    const oilTipsText = barStack1.addText(error ? data.oil : forecast);
     oilTipsText.textColor = F_MGR.fileExists(bgImage) ? Color.white() : new Color('#5e5e5e');
     oilTipsText.font = Font.boldSystemFont(13);
     oilTipsText.centerAlignText();
@@ -182,29 +184,29 @@ async function main() {
     return widget;
   }
   
-  try {  
-    const isMediumWidget =  config.widgetFamily === 'medium'
-    if (!config.runsInWidget) {
-      await widget.presentMedium();
+  const isMediumWidget =  config.widgetFamily === 'medium'
+  if (!config.runsInWidget) {
+    await widget.presentMedium();
+  } else {
+    if (isMediumWidget) {
+      Script.setWidget(widget);
+      Script.complete();
     } else {
-      if (isMediumWidget) {
-        Script.setWidget(widget);
-        Script.complete();
-      } else {
-        createErrorWidget();
-      }
+      createErrorWidget();
+    }
+  }
+  
+  try {
+    if (forecast.length !== setting.oil.length) {
+      const notice = new Notification()
+      notice.sound = 'alert'
+      notice.title = `${setting.province}油价涨跌调整‼️`
+      notice.body = forecast
+      notice.schedule();
+      F_MGR.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
     }
   } catch(error) {
     console.log(error);
-  }
-  
-  if (forecast.length !== setting.oil.length) {
-    const notice = new Notification()
-    notice.sound = 'alert'
-    notice.title = `${setting.province}油价涨跌调整‼️`
-    notice.body = forecast
-    notice.schedule();
-    F_MGR.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
   }
   
   function createErrorWidget() {
