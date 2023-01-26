@@ -183,12 +183,10 @@ F_MGR.readString(cacheFile)
   const benzStack = leftStack.addStack();
   benzStack.layoutHorizontally();
   benzStack.centerAlignContent();
-  const benz = new Request ('https://gitcode.net/4qiao/scriptable/raw/master/img/car/mercedesLogo.png');
-  const iconSymbol = await benz.loadImage();
-  const benzIcon = benzStack.addImage(iconSymbol);
-  benzIcon.imageSize = new Size(14, 14);
-  benzIcon.tintColor = Color.black();
-  benzStack.addSpacer(6);
+  const iconSymbol = SFSymbol.named('car');
+  const carIcon1 = benzStack.addImage(iconSymbol.image);
+  carIcon1.imageSize = new Size(16, 16);
+  benzStack.addSpacer(4);
   // mercedes text
   const vehicleModel = benzStack.addStack();
   const vehicleModelText = vehicleModel.addText('Mercedes');
@@ -200,11 +198,10 @@ F_MGR.readString(cacheFile)
   const updateTimeStack = leftStack.addStack();
   updateTimeStack.layoutHorizontally();
   updateTimeStack.centerAlignContent();
-  const iconSymbol2 = SFSymbol.named('car');
-  const carIcon = updateTimeStack.addImage(iconSymbol2.image);
-  carIcon.imageSize = new Size(16, 16);
-  carIcon.tintColor = Color.black();
-  updateTimeStack.addSpacer(3);
+  const iconSymbol2 = SFSymbol.named('timer');
+  const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
+  carIcon2.imageSize = new Size(16, 16);
+  updateTimeStack.addSpacer(4);
   // update time text
   const updateTime = updateTimeStack.addStack();
   const textUpdateTime = updateTime.addText(GMT2);
@@ -483,7 +480,7 @@ async function notify (title, body, url, opts = {}) {
   n = Object.assign(n, opts);
   n.title = title
   n.body = body
-  n.sound = 'event'
+  n.sound = 'piano_success'
   if (url) n.openURL = url
   return await n.schedule();
 }
