@@ -380,7 +380,7 @@ F_MGR.readString(cacheFile)
   let moment = (hours * 60 + minutes)
   
   if (data.speed <= 5) {
-    const duration = data.updateTime == json.updateTime ? 120 : 10
+    const duration = data.updateTime == json.updateTime ? 180 : 10
     if (moment >= duration) {
       // push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
@@ -483,7 +483,7 @@ async function notify (title, body, url, opts = {}) {
   n = Object.assign(n, opts);
   n.title = title
   n.body = body
-  n.sound = 'alert'
+  n.sound = 'event'
   if (url) n.openURL = url
   return await n.schedule();
 }
