@@ -72,27 +72,18 @@ async function main() {
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   console.log(dayNumber)
-  if (setting.init === false || dayNumber !== setting.dayNumber) {
+  if (setting.init === false || dayNumber === setting.dayNumber) {
     setting = {
+      ...setting,
       flow: flow,
       voice: voice,
       dayNumber: dayNumber,
       flowBalance: flowBalance,
       voiceBalance: voiceBalance,
-      ...setting,
       init: true
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
-  
-  if (dayNumber !== setting.dayNumber) {
-    setting = {
-      ...setting,
-      dayNumber: dayNumber
-    }
-    F_MGR.writeString(cacheFile, JSON.stringify(setting));
-  }
-    
   
   const flow1st = setting.flow
   const flow2nd = flow
