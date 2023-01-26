@@ -35,7 +35,6 @@ new Color("#fefefe"), new Color("#1e1e1e"));
 stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
 barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
 MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
-BarTextColor1 = Color.dynamic(new Color("#ffffff"), new Color("#000000"));
 SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
 
 // Small Widget Color
@@ -67,15 +66,15 @@ const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
 const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-
-if (!F_MGR.fileExists(cacheFile) || dayNumber > setting.dayNumber) {
+console.log(dayNumber)
+if (!F_MGR.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
   setting = {
     flow: flow,
     voice: voice,
     dayNumber: dayNumber,
     flowBalance: flowBalance,
     voiceBalance: voiceBalance,
-    cookie: cookie
+    cookie: cookie.match(/(CZSSON=[a-zA-Z\d]+)/)[1]
   }
   F_MGR.writeString(cacheFile, JSON.stringify(setting));
 }
@@ -304,10 +303,10 @@ function creatProgress(barValue1, barValue2) {
     context.drawTextInRect('%', new Rect(0, barHeigth - 15, barWidth, barHeigth));
   }
   
-  if (barValue1 < 10) {
+  if (barValue1 <= 10) {
     PosCorr = -10
     context.setTextColor(
-      BarTextColor1
+      Color.black()
     );
   } else {
     PosCorr = 2
