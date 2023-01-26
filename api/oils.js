@@ -12,8 +12,10 @@
 const value = 6 //小机型改成 4
 const wide = 8 //小机型改成 6
 
-const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+try {  
+  const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
+  const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+} catch(e) { error = e }
 
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
@@ -42,7 +44,7 @@ if (F_MGR.fileExists(cacheFile)) {
     F_MGR.writeString(
       cacheFile,
       JSON.stringify({
-        oil: forecast,
+        alert: forecast,
         province: province
       }, null, 2)
     );
@@ -118,7 +120,7 @@ async function createWidget(oil) {
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
-  const oilTipsText = barStack1.addText(forecast);
+  const oilTipsText = barStack1.addText(error ? data.alert : forecast);
   oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
@@ -189,36 +191,34 @@ async function createWidget(oil) {
   return widget;
 }
 
-try {  
-  const isMediumWidget =  config.widgetFamily === 'medium'
-  if (!config.runsInWidget) {
-    await widget.presentMedium();
+const isMediumWidget =  config.widgetFamily === 'medium'
+if (!config.runsInWidget) {
+  await widget.presentMedium();
+} else {
+  if (isMediumWidget) {
+    Script.setWidget(widget);
+    Script.complete();
   } else {
-    if (isMediumWidget) {
-      Script.setWidget(widget);
-      Script.complete();
-    } else {
-      await createErrorWidget();
-    }
+    await createErrorWidget();
   }
-} catch(error) {
-  console.log(error);
 }
 
-if (forecast.length !== data.oil.length) {
-  const notice = new Notification()
-  notice.sound = 'alert'
-  notice.title = `${data.province}油价涨跌调整‼️`
-  notice.body = forecast
-  notice.schedule();
-  F_MGR.writeString(
-    cacheFile,
-    JSON.stringify({
-      oil: forecast,
-      province: data.province
-    }, null, 2)
-  );
-}
+try {  
+  if (forecast.length !== data.oil.length) {
+    const notice = new Notification()
+    notice.sound = 'alert'
+    notice.title = `${data.province}油价涨跌调整‼️`
+    notice.body = forecast
+    notice.schedule();
+    F_MGR.writeString(
+      cacheFile,
+      JSON.stringify({
+        alert: forecast,
+        province: data.province
+      }, null, 2)
+    );
+  }
+} catch(e) { console.log(e) }
 
 async function createErrorWidget() {
   const widget = new ListWidget();
