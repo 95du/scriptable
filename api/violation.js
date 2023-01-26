@@ -314,7 +314,7 @@ async function createWidget() {
   const man = SFSymbol.named('car');
   const carIcon = carIconStack.addImage(man.image);
   carIcon.imageSize = new Size(14, 14);
-  carIcon.tintColor = nothing ? Color.black() : Color.red();
+  carIcon.tintColor = nothing ? Color.blue() : Color.red();
   carIconStack.addSpacer(5);
   // vehicleModel
   const vehicleModel = carIconStack.addStack();
@@ -339,7 +339,7 @@ async function createWidget() {
     const iconSymbol2 = SFSymbol.named('person.crop.circle');
     const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
     carIcon2.imageSize = new Size(14, 14);
-    carIcon2.tintColor = Color.black();
+    carIcon2.tintColor = Color.orange();
     updateTimeStack.addSpacer(5);
   }
     
@@ -366,7 +366,6 @@ async function createWidget() {
     const barIcon = SFSymbol.named('leaf.fill');
     const barIconElement = barStack.addImage(barIcon.image);
     barIconElement.imageSize = new Size(16, 16);
-    barIconElement.tintColor = Color.green();
     barStack.addSpacer(4);
   }
   // bar text
@@ -422,7 +421,7 @@ async function createWidget() {
   const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
-  imageCar.imageSize = new Size(225,100);
+  imageCar.imageSize = new Size(228, 100);
   rightStack.addSpacer(2)
 
   // show address
