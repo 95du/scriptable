@@ -14,8 +14,8 @@ const wide = 8 //小机型改成 6
 
 try {  
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-  const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
-} catch(e) { error = e }
+  forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+} catch(e) { console.log(e) }
 
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
@@ -120,7 +120,7 @@ async function createWidget(oil) {
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
-  const oilTipsText = barStack1.addText(error ? data.alert : forecast);
+  const oilTipsText = barStack1.addText(!forecast ? data.alert : forecast);
   oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
@@ -204,7 +204,7 @@ if (!config.runsInWidget) {
 }
 
 try {  
-  if (forecast.length !== data.oil.length) {
+  if (forecast.length !== data.alert.length) {
     const notice = new Notification()
     notice.sound = 'alert'
     notice.title = `${data.province}油价涨跌调整‼️`
