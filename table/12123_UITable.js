@@ -225,7 +225,7 @@ async function main() {
     // update icon
     const updateTimeStack = leftStack.addStack();
     if (nothing) {
-      const iconSymbol2 = SFSymbol.named('person.crop.circle');
+      const iconSymbol2 = SFSymbol.named('steeringwheel');
       const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
       carIcon2.imageSize = new Size(14, 14);
       carIcon2.tintColor = Color.orange();
