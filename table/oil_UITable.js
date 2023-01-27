@@ -19,7 +19,7 @@ async function main() {
   try {  
     const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
     const forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
-  } catch(e) { error = e }
+  } catch(e) { console.log(e) }
   
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile);
@@ -113,7 +113,7 @@ async function main() {
     barStack1.borderColor = new Color('#D50000', 0.8);
     barStack1.borderWidth = 2.5
     // bar text
-    const oilTipsText = barStack1.addText(error ? setting.oil : forecast);
+    const oilTipsText = barStack1.addText(!forecast ? setting.oil : forecast);
     oilTipsText.textColor = F_MGR.fileExists(bgImage) ? Color.white() : new Color('#5e5e5e');
     oilTipsText.font = Font.boldSystemFont(13);
     oilTipsText.centerAlignText();
