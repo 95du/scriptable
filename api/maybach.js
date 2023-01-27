@@ -305,8 +305,8 @@ F_MGR.readString(cacheFile)
   textAddress.centerAlignText();
   rightStack.addSpacer();
   
-  // jump show map
-  barStack2.url = 'quantumult-x:///';
+  // jump show familyMap
+  barStack2.url = 'amapuri://WatchFamily/myFamily';
   // jump show map
   textAddress.url = mapUrl;
   // jump run widget
