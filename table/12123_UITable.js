@@ -148,22 +148,31 @@ async function main() {
   async function createWidget() {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
-    const gradient = new LinearGradient();
-    color = [
-      "#82B1FF",
-      "#757575",
-      "#4FC3F7",
-      "#66CCFF",
-      "#99CCCC",
-      "#BCBBBB"
-    ]
-    const items = color[Math.floor(Math.random()*color.length)];
-    gradient.locations = [0, 1]
-    gradient.colors = [
-      new Color(items, 0.5),
-      new Color('#00000000')
-    ]
-    widget.backgroundGradient = gradient
+    if (F_MGR.fileExists(bgImage)) {
+      widget.backgroundImage = F_MGR.readImage(bgImage);
+    } else {
+      const gradient = new LinearGradient();
+      colorArr = setting.gradient.length
+      if (colorArr === 0) {
+        color = [
+          "#82B1FF",
+          "#757575",
+          "#4FC3F7",
+          "#66CCFF",
+          "#99CCCC",
+          "#BCBBBB"
+        ]
+      } else {
+        color = setting.gradient
+      }
+      const items = color[Math.floor(Math.random()*color.length)];
+      gradient.locations = [0, 1]
+      gradient.colors = [
+        new Color(items, Number(setting.transparency)),
+        new Color('#00000000')
+      ]
+      widget.backgroundGradient = gradient
+    }
   
   
     // Frame Layout
@@ -297,10 +306,15 @@ async function main() {
     // Car image
     const carImageStack = rightStack.addStack();
     carImageStack.setPadding(-20, 6, 0, 0);
-    const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
+    imgArr = setting.picture.length
+    if (imgArr === 0) {
+      item = get.maybach[Math.floor(Math.random() * get.maybach.length)];
+    } else {
+      item = setting.picture[Math.floor(Math.random() * imgArr)];
+    }
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(228, 100);
+    imageCar.imageSize = new Size(setting.width, setting.height);
     rightStack.addSpacer(2)
   
     // show address
