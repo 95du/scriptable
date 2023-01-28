@@ -42,7 +42,7 @@ async function main() {
   }
   
   
-  // violation main
+    // violation main
   const violation = new Request(url);
   violation.method = 'POST'
   violation.body = `params={
@@ -54,15 +54,15 @@ async function main() {
   const main = await violation.loadJSON();
   const success = main.success
   
-  
   if (success === true) {
-    const list = main.data.list[0];
-    nothing = list === undefined;
+    vehicle = main.data.list
+    vioList = vehicle[Math.floor(Math.random() * vehicle.length)];
+    nothing = vioList === undefined;
     if (nothing) {
       console.log(main.resultMsg)
     } else {
       // issueOrganization plate
-      const plate = list.plateNumber
+      const plate = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z])/)[1];
       const issueOrganization = new Request(url);
       issueOrganization.method = 'POST'
       issueOrganization.body = `params={
@@ -71,66 +71,64 @@ async function main() {
     "version": "${get.version}",
     "verifyToken": "${verifyToken}",
     "params": {
-      "plateNumber": "${plate}",
-      "plateType": "02"
+      "internalOrder": "${vioList.internalOrder}",
+      "plateType": "02",
+      "_issueOrganization": "${plate}"
     }
   }`
       const issue = await issueOrganization.loadJSON();
-      const issueData = issue.data.vioCity[0]
-  
-  
+      const issueItems = issue.data.vioCity
+      const issueData = issueItems[Math.floor(Math.random() * issueItems.length)];
+      
       // get surveils
       const area = new Request(url);
       area.method = 'POST'
       area.body = `params={
-      "productId": "${get.productId}", 
-      "api": "${get.api3}",
-      "version": "${get.version}",
-      "verifyToken": "${verifyToken}", 
+        "productId": "${get.productId}", 
+        "api": "${get.api3}",
+        "version": "${get.version}",
+        "verifyToken": "${verifyToken}", 
       "params": {
-          "plateNumber": "${plate}", 
-          "plateType": "02", 
-          "issueOrganization": "${issueData.issueOrganization}"
+        "internalOrder": "${vioList.internalOrder}",
+        "plateType": "02",
+        "issueOrganization": "${issueData.issueOrganization}"
       }
   }`
       const surveils = await area.loadJSON();
-      const detail = surveils.data.surveils[0]
-  
+      const vioItems = surveils.data.surveils
+      const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
   
       // violation Message
       if (detail !== undefined) {
         const violationMsg = new Request(url);
         violationMsg.method = 'POST'
         violationMsg.body = `params={
-      "productId": "${get.productId}", 
-      "api": "${get.api4}",
-      "version": "${get.version}",
-      "verifyToken": "${verifyToken}", 
-      "params": {
-          "violationSerialNumber": "${detail.violationSerialNumber}", 
-          "issueOrganization": "${detail.issueOrganization}"
+          "productId": "${get.productId}",
+          "api": "${get.api4}",
+          "version": "${get.version}",
+          "verifyToken": "${verifyToken}", 
+          "params": {
+            "violationSerialNumber": "${detail.violationSerialNumber}", 
+            "issueOrganization": "${detail.issueOrganization}"
       }
   }`
         const details = await violationMsg.loadJSON();
         vio = details.data.detail
-        img = details.data.photos
+        const imgItems = details.data.photos
+        photos = imgItems[Math.floor(Math.random() * imgItems.length)];
       }
     }
   } else {
     if (main.resultCode === 'SYSTEM_ERROR') {
       notify(main.resultMsg, '');
     } else {
-      data = {
-        ...setting,
-        verifyToken: '0'
-      }
+      data = { myPlate: myPlate }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
       notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
     }
     return;
   }
-    
-  
+
   const isMediumWidget =  config.widgetFamily === 'medium'
   if (!config.runsInWidget) {
     const widget = await createWidget(main);
@@ -150,31 +148,23 @@ async function main() {
   async function createWidget() {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
-    if (F_MGR.fileExists(bgImage)) {
-      widget.backgroundImage = F_MGR.readImage(bgImage);
-    } else {
-      const gradient = new LinearGradient();
-      colorArr = setting.gradient.length
-      if (colorArr === 0) {
-        color = [
-          "#82B1FF",
-          "#757575",
-          "#4FC3F7",
-          "#66CCFF",
-          "#99CCCC",
-          "#BCBBBB"
-        ]
-      } else {
-        color = setting.gradient
-      }
-      const items = color[Math.floor(Math.random()*color.length)];
-      gradient.locations = [0, 1]
-      gradient.colors = [
-        new Color(items, Number(setting.transparency)),
-        new Color('#00000000')
-      ]
-      widget.backgroundGradient = gradient
-    }
+    const gradient = new LinearGradient();
+    color = [
+      "#82B1FF",
+      "#757575",
+      "#4FC3F7",
+      "#66CCFF",
+      "#99CCCC",
+      "#BCBBBB"
+    ]
+    const items = color[Math.floor(Math.random()*color.length)];
+    gradient.locations = [0, 1]
+    gradient.colors = [
+      new Color(items, 0.5),
+      new Color('#00000000')
+    ]
+    widget.backgroundGradient = gradient
+  
   
     // Frame Layout
     widget.setPadding(15, 18, 15, 15);
@@ -207,7 +197,7 @@ async function main() {
     carIconStack.addSpacer(5);
     // vehicleModel
     const vehicleModel = carIconStack.addStack();
-    vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${list.count} 条`);
+    vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
     vehicleModelText.font = Font.mediumSystemFont(12);
     vehicleModelText.textColor = new Color('#494949');
     leftStack.addSpacer(3)
@@ -255,11 +245,10 @@ async function main() {
       const barIcon = SFSymbol.named('leaf.fill');
       const barIconElement = barStack.addImage(barIcon.image);
       barIconElement.imageSize = new Size(16, 16);
-      barIconElement.tintColor = Color.green();
       barStack.addSpacer(4);
     }
     // bar text
-    const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vio.plateNumber}`);
+    const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
     totalMonthBar.font = Font.mediumSystemFont(14);
     totalMonthBar.textColor = new Color(nothing ? '#009201' : '#D50000');
     leftStack.addSpacer(8)
@@ -275,7 +264,7 @@ async function main() {
     barStack2.borderColor = new Color('#AB47BC', 0.7);
     barStack2.borderWidth = 2
     // bsr icon
-    const barIcon2 = SFSymbol.named('mail.fill');
+    const barIcon2 = SFSymbol.named('person.text.rectangle.fill');
     const barIconElement2 = barStack2.addImage(barIcon2.image);
     barIconElement2.imageSize = new Size(16, 16);
     barIconElement2.tintColor = Color.purple();
@@ -308,15 +297,10 @@ async function main() {
     // Car image
     const carImageStack = rightStack.addStack();
     carImageStack.setPadding(-20, 6, 0, 0);
-    imgArr = setting.picture.length
-    if (imgArr === 0) {
-      item = get.maybach[Math.floor(Math.random() * get.maybach.length)];
-    } else {
-      item = setting.picture[Math.floor(Math.random() * imgArr)];
-    }
+    const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(setting.width, setting.height);
+    imageCar.imageSize = new Size(228, 100);
     rightStack.addSpacer(2)
   
     // show address
@@ -336,24 +320,9 @@ async function main() {
     textPlate2.url = get.details;
     // jump show image
     if (!nothing) {
-      textAddress.url = img;
+      textAddress.url = `${photos}`;
     }
     return widget;
-  }
-  
-  async function downloadModule() {
-    const modulePath = F_MGR.joinPath(folder, 'store.js');
-    if (F_MGR.fileExists(modulePath)) {
-      await F_MGR.remove(modulePath)
-    }
-    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW45NWR1U3RvcmUuanM='));
-    const moduleJs = await req.load().catch(() => {
-      return null;
-    });
-    if (moduleJs) {
-      F_MGR.write(modulePath, moduleJs);
-      return modulePath;
-    }
   }
   
   async function notify (title, body, url, opts = {}) {
