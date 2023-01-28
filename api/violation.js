@@ -122,15 +122,15 @@ violation.body = `params={
 const main = await violation.loadJSON();
 const success = main.success
 
-
 if (success === true) {
-  const list = main.data.list[0];
-  nothing = list === undefined;
+  vehicle = main.data.list
+  vioList = vehicle[Math.floor(Math.random() * vehicle.length)];
+  nothing = vioList === undefined;
   if (nothing) {
     console.log(main.resultMsg)
   } else {
     // issueOrganization plate
-    const plate = list.plateNumber
+    const plate = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z])/)[1];
     const issueOrganization = new Request(url);
     issueOrganization.method = 'POST'
     issueOrganization.body = `params={
@@ -139,49 +139,51 @@ if (success === true) {
   "version": "${get.version}",
   "verifyToken": "${verifyToken}",
   "params": {
-    "plateNumber": "${plate}",
-    "plateType": "02"
+    "internalOrder": "${vioList.internalOrder}",
+    "plateType": "02",
+    "_issueOrganization": "${plate}"
   }
 }`
     const issue = await issueOrganization.loadJSON();
-    const issueData = issue.data.vioCity[0]
-
-
+    const issueItems = issue.data.vioCity
+    const issueData = issueItems[Math.floor(Math.random() * issueItems.length)];
+    
     // get surveils
     const area = new Request(url);
     area.method = 'POST'
     area.body = `params={
-    "productId": "${get.productId}", 
-    "api": "${get.api3}",
-    "version": "${get.version}",
-    "verifyToken": "${verifyToken}", 
+      "productId": "${get.productId}", 
+      "api": "${get.api3}",
+      "version": "${get.version}",
+      "verifyToken": "${verifyToken}", 
     "params": {
-        "plateNumber": "${plate}", 
-        "plateType": "02", 
-        "issueOrganization": "${issueData.issueOrganization}"
+      "internalOrder": "${vioList.internalOrder}",
+      "plateType": "02",
+      "issueOrganization": "${issueData.issueOrganization}"
     }
 }`
     const surveils = await area.loadJSON();
-    const detail = surveils.data.surveils[0]
-
+    const vioItems = surveils.data.surveils
+    const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
 
     // violation Message
     if (detail !== undefined) {
       const violationMsg = new Request(url);
       violationMsg.method = 'POST'
       violationMsg.body = `params={
-    "productId": "${get.productId}", 
-    "api": "${get.api4}",
-    "version": "${get.version}",
-    "verifyToken": "${verifyToken}", 
-    "params": {
-        "violationSerialNumber": "${detail.violationSerialNumber}", 
-        "issueOrganization": "${detail.issueOrganization}"
+        "productId": "${get.productId}",
+        "api": "${get.api4}",
+        "version": "${get.version}",
+        "verifyToken": "${verifyToken}", 
+        "params": {
+          "violationSerialNumber": "${detail.violationSerialNumber}", 
+          "issueOrganization": "${detail.issueOrganization}"
     }
 }`
       const details = await violationMsg.loadJSON();
       vio = details.data.detail
-      img = details.data.photos
+      const imgItems = details.data.photos
+      photos = imgItems[Math.floor(Math.random() * imgItems.length)];
     }
   }
 } else {
@@ -318,7 +320,7 @@ async function createWidget() {
   carIconStack.addSpacer(5);
   // vehicleModel
   const vehicleModel = carIconStack.addStack();
-  vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${list.count} 条`);
+  vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
   vehicleModelText.font = Font.mediumSystemFont(12);
   vehicleModelText.textColor = new Color('#494949');
   leftStack.addSpacer(3)
@@ -369,7 +371,7 @@ async function createWidget() {
     barStack.addSpacer(4);
   }
   // bar text
-  const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vio.plateNumber}`);
+  const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
   totalMonthBar.font = Font.mediumSystemFont(14);
   totalMonthBar.textColor = new Color(nothing ? '#009201' : '#D50000');
   leftStack.addSpacer(8)
@@ -441,7 +443,7 @@ async function createWidget() {
   textPlate2.url = get.details;
   // jump show image
   if (!nothing) {
-    textAddress.url = img;
+    textAddress.url = `${photos}`;
   }
   return widget;
 }
