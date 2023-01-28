@@ -321,7 +321,7 @@ async function main() {
     const tipsStack = rightStack.addStack();
     tipsStack.layoutHorizontally();
     tipsStack.centerAlignContent();
-    tipsStack.size = new Size(230, 30)
+    tipsStack.size = new Size(Number(setting.layout), 30)
     const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
     textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : 11.3);
     textAddress.textColor = new Color('#484848');
