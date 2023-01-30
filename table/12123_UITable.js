@@ -5,7 +5,7 @@
  * 支付宝小程序 交管12123
  * 小组件作者：95度茅台
  * 获取Token作者: @FoKit
- * UITable 版本: Version 1.0.0
+ * UITable 版本: Version 1.1.0
  */
 async function main() {
   const get = await new Request(atob(
@@ -25,6 +25,7 @@ async function main() {
     setting = JSON.parse(data);
     verifyToken = setting.verifyToken
     myPlate = setting.myPlate
+    referer = setting.referer
   }
   
   if (verifyToken === null) {
