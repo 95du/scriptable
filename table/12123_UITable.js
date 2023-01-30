@@ -286,7 +286,7 @@ async function main() {
     // cumulativePoint Bar Text
     const totalMonthBar2 = barStack2.addText(`记${referer.split('&')[17].match(/cumulativePoint=(.+)/)[1]}分`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
-    totalMonthBar2.textColor = new Color(referer.split('&')[17].match(/cumulativePoint=(.+)/)[1] >= 6 '#D50000' : '#757575');
+    totalMonthBar2.textColor = new Color('#757575');
     leftStack.addSpacer();
   
   
