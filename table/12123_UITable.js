@@ -27,13 +27,16 @@ async function main() {
     myPlate = setting.myPlate
   }
   
-  if (verifyToken === '0') {
+  if (verifyToken === null) {
     try {
-      boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
+      const boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
       verifyToken = boxjs_data.val
+      const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
+      referer = boxjs_referer.val
       data = {
         ...setting,
-        verifyToken: verifyToken
+        verifyToken: verifyToken,
+        referer: referer
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
     } catch(e) {
@@ -122,11 +125,13 @@ async function main() {
     if (main.resultCode === 'SYSTEM_ERROR') {
       notify(main.resultMsg, '');
     } else {
-      data = { myPlate: myPlate }
+      data = {
+        ...setting,
+        verifyToken: null
+      }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
       notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
     }
-    return;
   }
 
   const isMediumWidget =  config.widgetFamily === 'medium'
@@ -221,19 +226,18 @@ async function main() {
       leftStack.addSpacer(3)
     }
       
-    // update icon
+    // validPeriodEnd icon
     const updateTimeStack = leftStack.addStack();
     if (nothing) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
       carIcon2.imageSize = new Size(14, 14);
-      carIcon2.tintColor = Color.orange();
       updateTimeStack.addSpacer(5);
     }
       
-    // update time
+    // validPeriodEndDate
     const updateTime = updateTimeStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing ? 'Good Driving' : `${vio.violationTime}`);
+    const textUpdateTime = updateTime.addText(nothing ? referer.split('&')[13].match(/validPeriodEnd=(.+)/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
     leftStack.addSpacer(nothing ? 25 : 8)
@@ -278,8 +282,8 @@ async function main() {
     barIconElement2.imageSize = new Size(16, 16);
     barIconElement2.tintColor = Color.purple();
     barStack2.addSpacer(4);
-    // bar text
-    const totalMonthBar2 = barStack2.addText('驾驶证');
+    // cumulativePoint Bar Text
+    const totalMonthBar2 = barStack2.addText(`记${referer.split('&')[17].match(/cumulativePoint=(.+)/)[1]}分`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#757575');
     leftStack.addSpacer();
