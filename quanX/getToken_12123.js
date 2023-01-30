@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: red; icon-glyph: magic;
+// icon-color: green; icon-glyph: magic;
 /*
 脚本名称：获取12123_token
 更新时间：2023-01-30
@@ -43,22 +43,22 @@ $.is_debug = $.getdata('is_debug');
         $.token = $.rest_body.verifyToken;
         debug($.token);
         $.setdata($.token, $.token_key);
-        console.log(`🎉 12123_Token获取成功:\n${$.token}`);
-        $.msg($.name, ``, `🎉 12123_Token获取成功。`);
+        $.msg($.name, ``, `12123_verifyToken 获取成功。`);
+        console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
-        console.log(`‼️ Token未变动，跳过更新。\n${$.token}`);
+        console.log(`verifyToken未变动‼️ 跳过更新。\n${$.token}`);
       }
 
-      if ($request.headers.Referer.indexOf("cumulativePoint") > -1 ) {
+      if ($request.headers.Referer.indexOf("appxPageId=") > -1 ) {
         debug($request.headers);
         $.new_referer = $request.headers.Referer.match(/appxPageId=.+/)[0];
         debug($.new_referer);
         if ($.new_referer !== $.referer) {
           $.setdata($.new_referer, $.referer_key);
-          console.log(`🎉 12123_Referer获取成功:\n${$.new_referer}`);
-          $.msg($.name, ``, `🎉 12123_Referer获取成功。`);
+          $.msg($.name, ``, `12123_Referer获取成功。`);
+          console.log(`12123_Referer获取成功:\n${$.new_referer}`);
         } else {
-          console.log(`‼️ Referer未变动，跳过更新。\n${$.new_referer}`);
+          console.log(`Referer未变动‼️跳过更新。\n${$.new_referer}`);
         }
       }
     }
@@ -66,11 +66,7 @@ $.is_debug = $.getdata('is_debug');
 
   function debug(text) {
     if ($.is_debug === 'true') {
-      if (typeof text == "string") {
-        console.log(text);
-      } else if (typeof text == "object") {
-        console.log($.toStr(text));
-      }
+      console.log(text);
     }
   }
 
