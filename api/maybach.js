@@ -352,7 +352,7 @@ F_MGR.readString(cacheFile)
   }
 }`;
       await weChat_1.loadJSON();
-      notify(`${status}  `+`更新时间 ${GMT}`, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
+      notify(status + ' ' + GMT, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
       F_MGR.writeString(
         cacheFile,
         JSON.stringify(runObj)
@@ -398,7 +398,7 @@ F_MGR.readString(cacheFile)
   }
 }`;
       await weChat_2.loadJSON();
-      notify(status + '  停车时间 ' + GMT, address, mapUrl);
+      notify(status + ' ' + GMT, address, mapUrl);
       F_MGR.writeString(
         cacheFile,
         JSON.stringify(object)
@@ -425,7 +425,7 @@ F_MGR.readString(cacheFile)
   }
 }`;
       await weChat_3.loadJSON();
-      notify(status + '  启动时间 ' + GMT, address, mapUrl)
+      notify(status + ' ' + GMT, address, mapUrl)
       F_MGR.writeString(
         cacheFile,
         JSON.stringify(runObj)
@@ -450,7 +450,7 @@ F_MGR.readString(cacheFile)
   }
 }`;
       await weChat_4.loadJSON();
-      notify(status + '  更新时间 ' + GMT, address, mapUrl);
+      notify(status + ' ' + GMT, address, mapUrl);
       F_MGR.writeString(
         cacheFile,
         JSON.stringify(runObj)
