@@ -268,7 +268,7 @@ async function main() {
     // bar text
     const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
     totalMonthBar.font = Font.mediumSystemFont(14);
-    totalMonthBar.textColor = new Color(nothing ? '#009201' : '#D50000');
+    totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000');
     leftStack.addSpacer(8)
   
   
