@@ -242,7 +242,7 @@ async function main() {
       
     // validPeriodEndDate
     const updateTime = updateTimeStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing ? referer.split('&')[13].match(/validPeriodEnd=(.+)/)[1] : `${vio.violationTime}`);
+    const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
     leftStack.addSpacer(nothing ? 25 : 8)
@@ -288,7 +288,7 @@ async function main() {
     barIconElement2.tintColor = Color.purple();
     barStack2.addSpacer(4);
     // cumulativePoint Bar Text
-    const totalMonthBar2 = barStack2.addText(`记${referer.split('&')[17].match(/cumulativePoint=(.+)/)[1]}分`);
+    const totalMonthBar2 = barStack2.addText(`记${referer.match(/cumulativePoint=(.+)/)[1]}分`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#757575');
     leftStack.addSpacer();
