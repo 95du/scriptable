@@ -28,6 +28,11 @@ async function main() {
     referer = setting.referer
   }
   
+  if (verifyToken && !referer) {
+    Safari.open('alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Fvehicle-illegal-query%2Findex');
+    notify('boxjs_referer ⚠️', '点击车牌号或查询即可更新/获取');
+  }
+  
   if (verifyToken === null) {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
