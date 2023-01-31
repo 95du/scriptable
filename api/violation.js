@@ -227,7 +227,7 @@ async function presentMenu() {
     data = { myPlate: myPlate, verifyToken: verifyToken }
     F_MGR.writeString(cacheFile, JSON.stringify(data));
     Safari.open(get.details);
-    notify('12123_Referer', '点击查询即可更新/获取‼️');
+    notify('12123_Referer‼️', '点击车牌号码或查询即可更新/获取');
   }
   if (response === 3) {
     const modulePath = await downloadModule();
