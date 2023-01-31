@@ -26,7 +26,7 @@ async function main() {
     cookie = setting.cookie
   }
   if (!setting.cookie) {
-    notify('未登录 ⚠️', '请登录天翼账号中心获取 Cookie'); return;
+    notify('用户未登录 ⚠️', '请登录天翼账号中心获取 Cookie'); return;
   }
   
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
