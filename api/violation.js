@@ -405,7 +405,7 @@ async function createWidget() {
   // cumulativePoint Bar Text
   const totalMonthBar2 = barStack2.addText(`记${referer.match(/cumulativePoint=(.+)/)[1]}分`);
   totalMonthBar2.font = Font.mediumSystemFont(14);
-  totalMonthBar2.textColor = new Color('#757575')
+  totalMonthBar2.textColor = new Color('#555555')
   leftStack.addSpacer();
 
 
