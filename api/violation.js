@@ -383,7 +383,7 @@ async function createWidget() {
   // bar text
   const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
   totalMonthBar.font = Font.mediumSystemFont(14);
-  totalMonthBar.textColor = new Color(nothing ? '#009201' : '#D50000')
+  totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000')
   leftStack.addSpacer(8)
 
 
@@ -397,7 +397,7 @@ async function createWidget() {
   barStack2.borderColor = new Color('#AB47BC', 0.7);
   barStack2.borderWidth = 2
   // bsr icon
-  const barIcon2 = SFSymbol.named('person.text.rectangle.fill');
+  const barIcon2 = SFSymbol.named('mail.fill');
   const barIconElement2 = barStack2.addImage(barIcon2.image);
   barIconElement2.imageSize = new Size(16, 16);
   barIconElement2.tintColor = Color.purple();
