@@ -5,7 +5,20 @@
 Quantumult-X 获取Token重写：
 https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_95598_token.sgmodule
 
-* 使用方法：打开南网在线APP，登录即可自动抓取/更新Token。
+使用方法：打开南网在线APP，登录即可自动抓取/更新Token。
+
+手动添加：
+=========Quantumult-X=========
+[MITM]
+hostname = 95598.csg.cn
+[rewrite_local]
+^https:\/\/95598\.csg\.cn\/ucs\/ma\/zt\/eleCustNumber\/queryBindEleUsers url script-request-header https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/SouthernPower.js
+============Surge=============
+[Script]
+南网在线Token = type=http-request,pattern=^https:\/\/95598\.csg\.cn\/ucs\/ma\/zt\/eleCustNumber\/queryBindEleUsers,requires-body=0,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/SouthernPower.js,script-update-interval=0
+[MITM]
+hostname = %APPEND% 95598.csg.cn
+
 * 小组件作者: 95度茅台
 * 获取token作者: @Fokit
 * Version 1.1.0
