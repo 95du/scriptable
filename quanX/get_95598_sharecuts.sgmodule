@@ -1,0 +1,12 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: purple; icon-glyph: id-card;
+#!name=捷径社区Token
+#!desc=自动抓取捷径社区Token，支持Surge和Quantumult-X（QX需要配合解析器）
+#!使用方法：打开 捷径社区APP 登录即可自动抓取Token。资源解析器：https://t.me/QuanXNews/110
+
+[Script]
+捷径社区Token = type=http-request,pattern=^https:\/\/api\.sharecuts\.cn\/categories,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_sharecuts_token.js,script-update-interval=0
+
+[MITM]
+hostname = %APPEND% api.sharecuts.cn
