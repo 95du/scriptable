@@ -183,7 +183,7 @@ async function createWidget() {
   contentStack.cornerRadius = 23
   contentStack.size = new Size(0, 80);
   
-  const textElement = contentStack.addText(one.note.length > 18 ? one.note : `${one.note}\n${one.content}`);
+  const textElement = contentStack.addText(`${one.note}\n${one.content}`);
   textElement.textColor = textColor;
   textElement.font = Font.boldSystemFont(14);
   textElement.textOpacity = 0.6
