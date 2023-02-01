@@ -30,8 +30,8 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("updatable/v1/preUpgrade") > -1 && $request.headers) {
       debug($request.headers);
-      if ($request['headers']['Cookie'] || $request['headers']['cookie'] !== $.cookie) {
-        $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie']
+      if ($request['headers']['Cookie'] !== $.cookie) {
+        $.cookie = $request['headers']['Cookie'];
         debug($.cookie);
         $.setdata($.cookie, $.cookie_key);
         $.msg($.name, ``, `高德地图 Cookie 获取成功。\n${$.cookie}`);
