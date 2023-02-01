@@ -39,7 +39,7 @@ $.is_debug = $.getdata('is_debug');
       } else {
         console.log(`sharecuts_Token未变动‼️跳过更新。\n${$.token}`);
       }
-      if ($request['headers']['X-User'] === $.user) {
+      if ($request['headers']['X-User']) {
         $.user = $request['headers']['X-User'];
         debug($.user);
         $.setdata($.user,
