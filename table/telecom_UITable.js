@@ -9,6 +9,21 @@
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 async function main() {
+  logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
+  widgetBgColor = Color.dynamic(
+  new Color("#fefefe"), new Color("#1e1e1e"));
+  stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
+  barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
+  MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
+  SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
+  
+  // Small Widget Color
+  bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#151515'));  
+  bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
+  textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
+  barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
+  progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
+
   const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duTelecom");
@@ -28,21 +43,6 @@ async function main() {
   if (!setting.cookie) {
     notify('用户未登录 ⚠️', '请登录天翼账号中心获取 Cookie'); return;
   }
-  console.log(setting)
-  logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
-  widgetBgColor = Color.dynamic(
-  new Color("#fefefe"), new Color("#1e1e1e"));
-  stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
-  barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
-  MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
-  SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
-  
-  // Small Widget Color
-  bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#151515'));  
-  bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
-  textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
-  barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
-  progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
   
   if (setting.picture) {
     imageUrl = setting.picture
