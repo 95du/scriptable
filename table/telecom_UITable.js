@@ -51,7 +51,7 @@ async function main() {
     imageUrl = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
   }
   const image = await new Request(imageUrl).loadImage();
-    
+  console.log(setting)
   const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
   balUrl.method = 'GET'
   balUrl.headers = { Cookie: cookie }
@@ -70,7 +70,7 @@ async function main() {
   const bal = res.balance / 1024000
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
-  console.log(setting)
+  
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   console.log(setting.init)
   if (setting.init === 'false' || dayNumber !== setting.dayNumber) {
