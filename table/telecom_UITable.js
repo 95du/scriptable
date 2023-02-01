@@ -44,7 +44,7 @@ async function main() {
   if (!setting.cookie) {
     notify('用户未登录 ⚠️', '请登录天翼账号中心获取 Cookie'); return;
   }
-  console.log(setting)
+  
   if (setting.picture) {
     imageUrl = setting.picture
   } else {
@@ -70,7 +70,7 @@ async function main() {
   const bal = res.balance / 1024000
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
-  
+  console.log(setting)
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   console.log(setting.init)
   if (setting.init === 'false' || dayNumber !== setting.dayNumber) {
