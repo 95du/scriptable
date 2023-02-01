@@ -50,7 +50,6 @@ async function main() {
   } else {
     imageUrl = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
   }
-  console.log(setting)
   const image = await new Request(imageUrl).loadImage();
   
   const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
@@ -74,7 +73,7 @@ async function main() {
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   console.log(setting.init)
-  if (setting.init === 'false' || dayNumber !== setting.dayNumber) {
+  if (setting.init === false || dayNumber !== setting.dayNumber) {
     setting = {
       ...setting,
       flow: flow,
