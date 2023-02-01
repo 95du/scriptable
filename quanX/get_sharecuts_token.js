@@ -34,11 +34,11 @@ $.is_debug = $.getdata('is_debug');
         $.token = $request['headers']['X-Token'];
         debug($.token);
         $.setdata($.token, $.token_key);
-        $.user = $request['headers']['X-User'];
-        debug($.token);
-        $.setdata($.user, $.user_key);
         $.msg($.name, ``, `${user}Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
+        $.user = $request['headers']['X-User'];
+        debug($.user);
+        $.setdata($.user, $.user_key);
       } else {
         console.log(`sharecuts_Token未变动‼️跳过更新。\n${$.token}`);
       }
