@@ -6,7 +6,7 @@
 更新时间：2023-02-02
 =================================
 配置 (QuanX)
-^https:\/\/m5.amap.com\/ws\/shield\/frogserver\/aocs\/updatable\/1?ent=2,requires-body=1,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_aMap_cookie.js,script-update-interval=0
+^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/1\?ent\=2,requires-body=1,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_aMap_cookie.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% miniappcsfw.m5.amap.com
