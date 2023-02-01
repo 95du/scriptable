@@ -36,9 +36,13 @@ $.is_debug = $.getdata('is_debug');
         $.setdata($.token, $.token_key);
         $.msg($.name, ``, `捷径社区Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
+      } if ($request['headers']['X-User'] === $.user) {
         $.user = $request['headers']['X-User'];
         debug($.user);
-        $.setdata($.user, $.user_key);
+        $.setdata($.user,
+ $.user_key);
+        $.msg($.name, ``, `User获取成功。\n${$.user}`);
+        console.log(`User获取成功: \n${$.user}`);
       } else {
         console.log(`sharecuts_Token未变动‼️跳过更新。\n${$.token}`);
       }
