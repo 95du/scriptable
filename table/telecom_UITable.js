@@ -75,11 +75,11 @@ async function main() {
   if (setting.init === false || dayNumber !== setting.dayNumber) {
     setting = {
       ...setting,
-      flow: flow,
-      voice: voice,
-      dayNumber: dayNumber,
-      flowBalance: flowBalance,
-      voiceBalance: voiceBalance,
+      flow: `${flow}`,
+      voice: `${voice}`,
+      dayNumber: `${dayNumber}`,
+      flowBalance: `${flowBalance}`,
+      voiceBalance: `${voiceBalance}`,
       init: true
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
