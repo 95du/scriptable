@@ -25,6 +25,9 @@ async function main() {
     setting = JSON.parse(data);
     cookie = setting.cookie
   }
+  if (!setting.cookie) {
+    notify('用户未登录 ⚠️', '请登录天翼账号中心获取 Cookie'); return;
+  }
   
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
   widgetBgColor = Color.dynamic(
@@ -68,18 +71,17 @@ async function main() {
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-  console.log(setting.init)
-  if (setting.init === false || dayNumber !== setting.dayNumber) {
-    F_MGR.writeString(cacheFile, JSON.stringify(
-      setting.flow = flow,
-      setting.voice = voice,
-      setting.dayNumber = dayNumber,
-      setting.flowBalance = flowBalance,
-      setting.voiceBalance = voiceBalance,
-      setting.init = true
-    ));
-    notify('中国电信', '设置成功或数据更新完成')
-    return;
+  if (setting.init === 'false' || dayNumber !== setting.dayNumber) {
+    setting = {
+      ...setting,
+      flow: flow,
+      voice: voice,
+      dayNumber: dayNumber,
+      flowBalance: flowBalance,
+      voiceBalance: voiceBalance,
+      init: 'true'
+    }
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
   
   const flow1st = setting.flow
