@@ -3,7 +3,7 @@
 #!使用方法：打开高德地图登录即可自动抓取Cookie。资源解析器：https://t.me/QuanXNews/110
 
 [Script]
-高德地图Cookie = type=http-request,pattern=^https:\/\/m5.amap.com\/ws\/shield\/nest\/updatable\/v1\/preUpgrade?ent=2,requires-body=1,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_aMap_cookie.js,script-update-interval=0
+高德地图Cookie = type=http-request,pattern=^https:\/\/m5.amap.com\/ws\/shield\/frogserver\/aocs\/updatable\/1?ent=2,requires-body=1,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_aMap_cookie.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% miniappcsfw.m5.amap.com
