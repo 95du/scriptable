@@ -40,10 +40,11 @@ async function main() {
     setting = JSON.parse(data);
     cookie = setting.cookie
   }
+  
   if (!setting.cookie) {
     notify('用户未登录 ⚠️', '请登录天翼账号中心获取 Cookie'); return;
   }
-  
+  console.log(setting)
   if (setting.picture) {
     imageUrl = setting.picture
   } else {
