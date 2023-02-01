@@ -97,11 +97,11 @@ async function main() {
   }
   
   if (setting.picture) {
-    imageUrl = setting.picture
+    image = setting.picture
   } else {
-    imageUrl = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
+    image = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
   }
-  image = await new Request(imageUrl).loadImage();
+  //image = await new Request(imageUrl).loadImage();
   /**
    * Create Medium Widget
    * @param { string } string
