@@ -101,7 +101,7 @@ async function main() {
   } else {
     imageUrl = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
   }
-  const image = await new Request(imageUrl).loadImage();
+  image = await new Request(imageUrl).loadImage();
   /**
    * Create Medium Widget
    * @param { string } string
