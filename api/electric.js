@@ -120,7 +120,18 @@ try {
 } catch(e) {
   console.log(e)
   totalPower = '0.00 '
-  ystdayPower = '0.00 '
+  // Yesterday
+  const yesterday = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPointYesterday');
+  yesterday.method = 'POST'
+  yesterday.headers = {
+    "x-auth-token": `${data.token}`,
+    "Content-Type":"application/json;charset=utf-8"}
+  yesterday.body = `{
+    "areaCode": "${code}",
+    "eleCustId": "${id}"
+  }`
+  const resY = await yesterday.loadJSON();
+  ystdayPower = resY.data.power
 }
 
 // UserAccountNumberSurplus
