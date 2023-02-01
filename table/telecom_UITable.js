@@ -89,6 +89,8 @@ async function main() {
   const barWidth = 15;
   const barHeigth = 105;
   
+  const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
+  
   const isSmallWidget =  config.widgetFamily === 'small'
   if (config.runsInWidget && isSmallWidget) {
     await createSmallWidget();
@@ -96,12 +98,7 @@ async function main() {
     await createWidget();
   }
   
-  if (setting.picture) {
-    image = setting.picture
-  } else {
-    image = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
-  }
-  //image = await new Request(imageUrl).loadImage();
+  
   /**
    * Create Medium Widget
    * @param { string } string
