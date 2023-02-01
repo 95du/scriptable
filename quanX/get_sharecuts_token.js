@@ -34,7 +34,7 @@ $.is_debug = $.getdata('is_debug');
         $.token = $request['headers']['X-Token'];
         debug($.token);
         $.setdata($.token, $.token_key);
-        $.msg($.name, ``, `${user}Token获取成功。\n${$.token}`);
+        $.msg($.name, ``, `捷径社区Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
         $.user = $request['headers']['X-User'];
         debug($.user);
