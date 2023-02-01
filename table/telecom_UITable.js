@@ -28,7 +28,7 @@ async function main() {
   if (!setting.cookie) {
     notify('用户未登录 ⚠️', '请登录天翼账号中心获取 Cookie'); return;
   }
-  
+  console.log(setting)
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
   widgetBgColor = Color.dynamic(
   new Color("#fefefe"), new Color("#1e1e1e"));
@@ -71,7 +71,7 @@ async function main() {
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-  console.log(setting)
+  console.log(setting.init)
   if (setting.init === 'false' || dayNumber !== setting.dayNumber) {
     setting = {
       ...setting,
