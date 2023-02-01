@@ -12,7 +12,9 @@
 hostname = %APPEND% miniappcsfw.m5.amap.com
 =================================
 
+请求 URL
 https://m5.amap.com/ws/shield/frogserver/aocs/updatable/1?ent=2
+
 */
 
 
@@ -28,7 +30,7 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.url.indexOf("shield/frogserver/aocs/updatable") > -1 && $request.headers) {
+    if ($request && $request.url.indexOf("https://m5.amap.com/ws/shield/frogserver") > -1 && $request.headers) {
       debug($request.headers);
       if ($request['headers']['Cookie'] !== $.cookie) {
         $.cookie = $request['headers']['Cookie'];
