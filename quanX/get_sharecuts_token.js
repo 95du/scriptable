@@ -2,28 +2,24 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-blue; icon-glyph: user-tie;
 /*
-脚本名称：获取南网在线token
-更新时间：2022-10-22
-====================================================================================================
+脚本名称：获取捷径社区token
+更新时间：2023-02-02
+
 配置 (QuanX)
-[MITM]
-hostname = 95598.csg.cn
-
+==================================
 [rewrite_local]
-^https:\/\/95598\.csg\.cn\/ucs\/ma\/zt\/eleCustNumber\/queryBindEleUsers url script-request-header https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/SouthernPower.js
-====================================================================================================
-配置 (Surge)
-[Script]
-南网在线Token = type=http-request,pattern=^https:\/\/95598\.csg\.cn\/ucs\/ma\/zt\/eleCustNumber\/queryBindEleUsers,requires-body=0,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/SouthernPower.js,script-update-interval=0
+^https:\/\/api\.sharecuts\.cn\/categories,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_sharecuts_token.js,script-update-interval=0
 
 [MITM]
-hostname = %APPEND% 95598.csg.cn
-=====================================
+hostname = %APPEND% api.sharecuts.cn
+==================================
 */
 
 const $ = new Env('捷径社区');
 $.token_key = 'token_sharecuts';
 $.token = $.getdata($.token_key);
+$.user_key = 'user_sharecuts';
+$.user = $.getdata($.user_key);
 $.is_debug = $.getdata('is_debug');
 
 !(async () => {
@@ -38,7 +34,10 @@ $.is_debug = $.getdata('is_debug');
         $.token = $request['headers']['X-Token'];
         debug($.token);
         $.setdata($.token, $.token_key);
-        $.msg($.name, ``, `捷径社区Token获取成功。\n${$.token}`);
+        $.user = $request['headers']['X-User'];
+        debug($.user);
+        $.setdata($.user, $.user_key);
+        $.msg($.name, ``, `${user}Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
       } else {
         console.log(`sharecuts_Token未变动‼️跳过更新。\n${$.token}`);
