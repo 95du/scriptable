@@ -43,13 +43,6 @@ async function main() {
   textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
   barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
   progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
-  
-  if (setting.picture) {
-    imageUrl = setting.picture
-  } else {
-    imageUrl = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
-  }
-  const image = await new Request(imageUrl).loadImage();
     
   const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
   balUrl.method = 'GET'
@@ -103,6 +96,12 @@ async function main() {
     await createWidget();
   }
   
+  if (setting.picture) {
+    imageUrl = setting.picture
+  } else {
+    imageUrl = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
+  }
+  const image = await new Request(imageUrl).loadImage();
   /**
    * Create Medium Widget
    * @param { string } string
