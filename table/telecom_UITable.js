@@ -81,7 +81,7 @@ async function main() {
       dayNumber: dayNumber,
       flowBalance: flowBalance,
       voiceBalance: voiceBalance,
-      init: 'true'
+      init: true
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
