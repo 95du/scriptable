@@ -62,30 +62,6 @@
       ]
     },
     {
-      "id": "cookie_aMap",
-      "name": "高德地图_Cookie",
-      "author": "@95du",
-      "descs_html": [
-        "高德地图_Cookie"
-      ],
-      "icons": [
-        "https://gitcode.net/4qiao/framework/raw/master/img/icon/aMap.png",
-        "https://gitcode.net/4qiao/framework/raw/master/img/icon/aMap.png"
-      ],
-      "keys": [
-        "cookie_aMap"
-      ],
-      "settings": [
-        {
-          "id": "cookie_aMap",
-          "name": "高德地图_Cookie",
-          "val": "",
-          "type": "text",
-          "desc": ""
-        }
-      ]
-    },
-    {
       "id": "token_sharecuts",
       "name": "捷径社区_Token",
       "author": "@95du",
