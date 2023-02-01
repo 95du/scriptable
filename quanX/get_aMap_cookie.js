@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-blue; icon-glyph: user-tie;
+// icon-color: deep-blue; icon-glyph: location-arrow;
 /*
 脚本名称：获取高德地图Cookie
 更新时间：2023-02-02
