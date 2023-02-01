@@ -86,6 +86,30 @@
       ]
     },
     {
+      "id": "token_sharecuts",
+      "name": "捷径社区_Token",
+      "author": "@95du",
+      "descs_html": [
+        "捷径社区_Token"
+      ],
+      "icons": [
+        "http://mtw.so/66n570",
+        "http://mtw.so/66n570"
+      ],
+      "keys": [
+        "token_sharecuts"
+      ],
+      "settings": [
+        {
+          "id": "token_sharecuts",
+          "name": "捷径社区_Token",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        }
+      ]
+    },
+    {
       "id": "token_95598",
       "name": "南网在线Token",
       "author": "@FoKit",
