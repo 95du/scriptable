@@ -50,8 +50,9 @@ async function main() {
   } else {
     imageUrl = 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png'
   }
-  const image = await new Request(imageUrl).loadImage();
   console.log(setting)
+  const image = await new Request(imageUrl).loadImage();
+  
   const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
   balUrl.method = 'GET'
   balUrl.headers = { Cookie: cookie }
