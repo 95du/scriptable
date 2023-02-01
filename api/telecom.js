@@ -44,8 +44,6 @@ textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
 barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
 progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
 
-const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
-
 const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
 balUrl.method = 'GET'
 balUrl.headers = { Cookie: cookie }
@@ -56,9 +54,15 @@ const package = new Request('https://e.189.cn/store/user/package_detail.do?t=189
 package.method = 'GET'
 package.headers = { Cookie: cookie }
 const res = await package.loadJSON();
-const voiceAmount = res.voiceAmount
-const voiceBalance = res.voiceBalance
-const voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
+if (res.isUnlimit === '0') {
+  voiceAmount = '1';
+  voiceBalance = '0';
+  voice = '0';
+} else {
+  voiceAmount = res.voiceAmount
+  voiceBalance = res.voiceBalance
+  voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
+}
 
 const flowTotal = res.total / 1024000
 const bal = res.balance / 1024000
@@ -66,7 +70,7 @@ const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
 const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-console.log(dayNumber)
+
 if (!F_MGR.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
   setting = {
     flow: flow,
@@ -84,6 +88,8 @@ const Step2nd = 80;
 const StepFin = 100;
 const barWidth = 15;
 const barHeigth = 105;
+
+const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
 
 const isSmallWidget =  config.widgetFamily === 'small'
 if (config.runsInWidget && isSmallWidget) {
@@ -261,8 +267,8 @@ function creatProgress(barValue1, barValue2) {
   context.fillPath();
   
   // BarValue1
-  if (barValue1 < Step1st) {BarColor1 = new Color("#bb1e10")}
-  if (barValue2 < Step1st) {BarColor2 = new Color("#bb1e1075")} 
+  if (barValue1 <= Step1st) {BarColor1 = new Color("#bb1e10")}
+  if (barValue2 <= Step1st) {BarColor2 = new Color("#bb1e1075")} 
  
   if (barValue1 >= Step1st && barValue1 < Step2nd) {BarColor1 = new Color("#f7b500")}
   else if (barValue1 >= Step2nd) {BarColor1 = new Color("#00b347")}
