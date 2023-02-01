@@ -116,11 +116,9 @@ async function presentMenu() {
 async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundImage = F_MGR.readImage(bgImage);
-  // Wechat icon
   const picture = await getJson(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL2JvdHRvbUJhci5qc29u'));
   const items = picture.noticeApp[Math.floor(Math.random() * picture.noticeApp.length)];
   weChat = await getImage(items);
-  // One word
   const one = await getJson('http://open.iciba.com/dsapi');
   // Next two hours
   await get({"url": "https://ssfc.api.moji.com/sfc/json/nowcast"})
@@ -180,14 +178,14 @@ async function createWidget() {
   contentStack.layoutHorizontally();
   contentStack.centerAlignContent();
   contentStack.addSpacer();
-  contentStack.setPadding(10, 18, 10, 18);
+  //contentStack.setPadding(10, 18, 10, 18);
   contentStack.backgroundColor = stackBackground
   contentStack.cornerRadius = 23
   contentStack.size = new Size(0, 80);
   
-  const textElement = contentStack.addText(`${one.note}\n${one.content}`);
+  const textElement = contentStack.addText(one.note.length > 18 ? one.note : `${one.note}\n${one.content}`);
   textElement.textColor = textColor;
-  textElement.font = Font.boldSystemFont(15);
+  textElement.font = Font.boldSystemFont(14);
   textElement.textOpacity = 0.6
   contentStack.addSpacer();
   return widget
