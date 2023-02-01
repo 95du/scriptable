@@ -62,7 +62,7 @@
       ]
     },
     {
-      "id": "token_sharecuts",
+      "id": "user_token_sharecuts",
       "name": "捷径社区_Token",
       "author": "@95du",
       "descs_html": [
@@ -73,6 +73,7 @@
         "http://mtw.so/66n570"
       ],
       "keys": [
+        "token_sharecuts",
         "token_sharecuts"
       ],
       "settings": [
