@@ -82,6 +82,13 @@
           "val": "",
           "type": "text",
           "desc": ""
+        },
+        {
+          "id": "user_sharecuts",
+          "name": "捷径社区_User",
+          "val": "",
+          "type": "text",
+          "desc": ""
         }
       ]
     },
