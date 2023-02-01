@@ -54,9 +54,15 @@ async function main() {
   package.method = 'GET'
   package.headers = { Cookie: cookie }
   const res = await package.loadJSON();
-  const voiceAmount = res.voiceAmount
-  const voiceBalance = res.voiceBalance
-  const voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
+  if (res.isUnlimit === '0') {
+    voiceAmount = '1';
+    voiceBalance = '0';
+    voice = '0';
+  } else {
+    voiceAmount = res.voiceAmount
+    voiceBalance = res.voiceBalance
+    voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
+  }
   
   const flowTotal = res.total / 1024000
   const bal = res.balance / 1024000
@@ -77,7 +83,7 @@ async function main() {
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
-  console.log(setting)
+  
   const flow1st = setting.flow
   const flow2nd = flow
   const voice1st = voice
@@ -143,7 +149,8 @@ async function main() {
     rightStack.addSpacer();
     let balanceText = rightStack.addText(balanceAvailable);
     balanceText.centerAlignText();
-    balanceText.textColor = Color.red();
+    const wordItems = setting.words[Math.floor(Math.random() * setting.words.length)];
+    balanceText.textColor = setting.words.length > 0 ? wordItems : Color.red();
     balanceText.font = new Font('Georgia-Bold', 25);
     rightStack.addSpacer();
     widget.addSpacer(5)
@@ -282,8 +289,8 @@ async function main() {
     context.fillPath();
     
     // BarValue1
-    if (barValue1 < Step1st) {BarColor1 = new Color("#bb1e10")}
-    if (barValue2 < Step1st) {BarColor2 = new Color("#bb1e1075")} 
+    if (barValue1 <= Step1st) {BarColor1 = new Color("#bb1e10")}
+    if (barValue2 <= Step1st) {BarColor2 = new Color("#bb1e1075")} 
    
     if (barValue1 >= Step1st && barValue1 < Step2nd) {BarColor1 = new Color("#f7b500")}
     else if (barValue1 >= Step2nd) {BarColor1 = new Color("#00b347")}
