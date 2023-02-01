@@ -149,9 +149,7 @@ async function main() {
     rightStack.addSpacer();
     let balanceText = rightStack.addText(balanceAvailable);
     balanceText.centerAlignText();
-    const words = setting.words
-    const wordItems = words[Math.floor(Math.random() * words.length)];
-    balanceText.textColor = words.length > 0 ? wordItems : Color.red();
+    balanceText.textColor = Color.red();
     balanceText.font = new Font('Georgia-Bold', 25);
     rightStack.addSpacer();
     widget.addSpacer(5)
