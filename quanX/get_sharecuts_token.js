@@ -30,16 +30,21 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("categories") > -1 && $request.headers) {
       debug($request.headers);
-      if ($request['headers']['X-Token'] !== $.token ||$request['headers']['X-User']) {
-        $.token = $request['headers']['X-Token'];
-        debug($.token);
-        $.setdata($.token, $.token_key);
+      
+      if ($request['headers']['X-User']) {
         $.user = $request['headers']['X-User'];
         debug($.user);
         $.setdata($.user,
  $.user_key);
-        $.msg($.name, ``, `${user} Token获取成功。\n${$.token}`);
-        console.log(`捷径社区Token获取成功: \n${$.token}`);
+        console.log(`User获取成功: ${$.user}`);
+      }
+      
+      if ($request['headers']['X-Token'] !== $.token) {
+        $.token = $request['headers']['X-Token'];
+        debug($.token);
+        $.setdata($.token, $.token_key);
+        $.msg($.name, ``, `捷径社区Token获取成功。\n${$.token}`);
+        console.log(`捷径社区${user}，Token获取成功: \n${$.token}`);
       } else {
         console.log(`sharecuts_Token未变动‼️跳过更新。\n${$.token}`);
       }
