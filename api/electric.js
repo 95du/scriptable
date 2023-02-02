@@ -210,9 +210,6 @@ async function createWidget() {
   const gradient = new LinearGradient()
   color = [
     "#82B1FF",
-    "#757575",
-    "#4FC3F7",
-    "#66CCFF",
     "#99CCCC",
     "#BCBBBB"
   ]
