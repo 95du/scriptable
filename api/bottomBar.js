@@ -123,7 +123,7 @@ async function createWidget() {
   // Next two hours
   await get({"url": "https://ssfc.api.moji.com/sfc/json/nowcast"})
   
-  
+  console.log(one)
   /**
   * Frame Layout
   * Top Row Events
@@ -188,7 +188,9 @@ async function createWidget() {
   textElement.font = Font.boldSystemFont(14);
   textElement.textOpacity = 0.6
   contentStack.addSpacer();
-  return widget
+  
+  textElement.url = one.fenxiang_img
+  return widget;
 }
 
 async function downloadModule() {
