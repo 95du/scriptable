@@ -250,7 +250,7 @@ async function shadowImage(img) {
   ctx.size = img.size
   ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
   // 图片遮罩颜色、透明度设置
-  ctx.setFillColor(new Color("#000000", 0.45))
+  ctx.setFillColor(new Color("#000000", 0.4))
   ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
   return await ctx.getImage()
 }
