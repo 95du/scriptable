@@ -39,7 +39,6 @@ $.is_debug = $.getdata('is_debug');
         debug($.user);
         $.setdata($.user,
    $.user_key);
-        console.log(`User获取成功: ${$.user}`);
         $.msg($.name, ``, `${$.user}，Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
       } else {
