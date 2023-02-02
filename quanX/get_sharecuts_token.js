@@ -34,6 +34,7 @@ $.is_debug = $.getdata('is_debug');
         $.token = $request['headers']['X-Token'];
         debug($.token);
         $.setdata($.token, $.token_key);
+        // Get X-User
         $.user = $request['headers']['X-User'];
         debug($.user);
         $.setdata($.user,
