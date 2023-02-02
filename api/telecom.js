@@ -54,7 +54,7 @@ const package = new Request('https://e.189.cn/store/user/package_detail.do?t=189
 package.method = 'GET'
 package.headers = { Cookie: cookie }
 const res = await package.loadJSON();
-if (res.isUnlimit === '0') {
+if (!res.voiceAmount) {
   voiceAmount = '1';
   voiceBalance = '0';
   voice = '0';
