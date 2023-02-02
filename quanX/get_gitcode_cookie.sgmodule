@@ -1,10 +1,10 @@
-#!name=GitCode_Token
+#!name=GitCode_Cookie
 #!desc=自动抓取GitCode_Cookie
 Quantumult-X（QX需要配合解析器）
-#!使用方法：打开 https://gitcode.net登录，点击个人主页即可自动抓取Cookie。资源解析器：https://t.me/QuanXNews/110
+#!使用方法：打开 https://gitcode.net登录，点击我的代码仓即可自动抓取Cookie。资源解析器：https://t.me/QuanXNews/110
 
 [Script]
-捷径社区Token = type=http-request,pattern=^https:\/\/gitcode\.net\/users\/m0\_55742433,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
+GitCode_Cookie = type=http-request,pattern=^https:\/\/gitcode\.net\/dashboard\/projects\/home,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% gitcode.net
