@@ -10,7 +10,7 @@
       "name": "交管12123",
       "author": "@FoKit",
       "descs_html": [
-        "交管12123"
+        "交管12123_Token"
       ],
       "icons": [
         "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png",
@@ -22,7 +22,7 @@
       "settings": [
         {
           "id": "token_12123",
-          "name": "交管12123_Token",
+          "name": "Token",
           "val": "",
           "type": "text",
           "desc": ""
@@ -63,7 +63,7 @@
     },
     {
       "id": "user_token_sharecuts",
-      "name": "捷径社区_Token",
+      "name": "捷径社区",
       "author": "@95du",
       "descs_html": [
         "捷径社区_Token"
@@ -79,14 +79,14 @@
       "settings": [
         {
           "id": "token_sharecuts",
-          "name": "捷径社区_Token",
+          "name": "Token",
           "val": "",
           "type": "text",
           "desc": ""
         },
         {
           "id": "user_sharecuts",
-          "name": "捷径社区_User",
+          "name": "User",
           "val": "",
           "type": "text",
           "desc": ""
@@ -95,7 +95,7 @@
     },
     {
       "id": "token_95598",
-      "name": "南网在线Token",
+      "name": "南网在线",
       "author": "@FoKit",
       "descs_html": [
         "南网在线Token"
@@ -110,7 +110,7 @@
       "settings": [
         {
           "id": "token_95598",
-          "name": "南网在线Token",
+          "name": "Token",
           "val": "",
           "type": "text",
           "desc": ""
@@ -119,7 +119,7 @@
     },
     {
       "id": "cookie_gitcode",
-      "name": "GitCode_Cookie",
+      "name": "GitCode",
       "author": "@95du",
       "descs_html": [
         "GitCode_Cookie"
@@ -134,7 +134,7 @@
       "settings": [
         {
           "id": "cookie_gitcode",
-          "name": "GitCode_Cookie",
+          "name": "Cookie",
           "val": "",
           "type": "text",
           "desc": ""
