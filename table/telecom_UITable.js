@@ -54,7 +54,7 @@ async function main() {
   package.method = 'GET'
   package.headers = { Cookie: cookie }
   const res = await package.loadJSON();
-  if (res.isUnlimit === '0') {
+  if (!res.voiceAmount) {
     voiceAmount = '1';
     voiceBalance = '0';
     voice = '0';
