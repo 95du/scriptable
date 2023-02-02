@@ -8,7 +8,7 @@
 配置 (QuanX)
 ==================================
 [rewrite_local]
-^https:\/\/gitcode\.net\/users\/m0\_55742433\/groups,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
+^https:\/\/gitcode\.net\/users\/m0\_55742433,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% gitcode.net
