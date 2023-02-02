@@ -34,7 +34,7 @@ $.is_debug = $.getdata('is_debug');
         $.setdata($.cookie, $.cookie_key);
         if ($.cookie !== undefined && $.cookie.indexOf("UserNick") > -1) {
           $.msg($.name + 'Cookie获取成功', ``, $.cookie);
-          console.log(`GitCode_代码仓Cookie获取成功: \n${$.cookie}`);  
+          console.log(`${$.name}Cookie获取成功: \n${$.cookie}`);  
         }
       } else {
         console.log(`GitCode_Cookie未变动‼️跳过更新。\n${$.cookie}`);
