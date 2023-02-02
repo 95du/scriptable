@@ -32,7 +32,7 @@ $.is_debug = $.getdata('is_debug');
         $.cookie = $request['headers']['Cookie'];
         debug($.cookie);
         $.setdata($.cookie, $.cookie_key);
-        if ($.cookie !== undefined) {
+        if ($.cookie !== undefined && $.cookie.indexOf("UserNick") > -1) {
           $.msg($.name, ``, `GitCode_代码仓Cookie获取成功。\n${$.cookie}`);
           console.log(`GitCode_代码仓Cookie获取成功: \n${$.cookie}`);  
         }
