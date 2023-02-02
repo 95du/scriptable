@@ -123,7 +123,8 @@ async function createWidget() {
   // Next two hours
   await get({"url": "https://ssfc.api.moji.com/sfc/json/nowcast"})
   
-  console.log(one)
+  const stackBgImage = await getImage(one.picture4);
+
   /**
   * Frame Layout
   * Top Row Events
@@ -178,15 +179,16 @@ async function createWidget() {
   contentStack.layoutHorizontally();
   contentStack.centerAlignContent();
   contentStack.addSpacer();
-  //contentStack.setPadding(10, 18, 10, 18);
-  contentStack.backgroundColor = stackBackground
+  
+  //contentStack.backgroundColor = stackBackground
+  contentStack.backgroundImage = await shadowImage(stackBgImage)
   contentStack.cornerRadius = 23
   contentStack.size = new Size(0, 80);
   
   const textElement = contentStack.addText(`${one.note}\n${one.content}`);
-  textElement.textColor = textColor;
+  textElement.textColor = Color.white();
   textElement.font = Font.boldSystemFont(14);
-  textElement.textOpacity = 0.6
+  textElement.textOpacity = 0.9
   contentStack.addSpacer();
   
   textElement.url = one.fenxiang_img
@@ -241,4 +243,14 @@ async function getJson(url) {
 async function getImage(url) {
   const r = await new Request(url);
   return await r.loadImage();
+}
+
+async function shadowImage(img) {
+  let ctx = new DrawContext()
+  ctx.size = img.size
+  ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+  // 图片遮罩颜色、透明度设置
+  ctx.setFillColor(new Color("#000000", 0.45))
+  ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+  return await ctx.getImage()
 }
