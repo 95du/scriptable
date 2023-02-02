@@ -116,6 +116,30 @@
           "desc": ""
         }
       ]
+    },
+    {
+      "id": "cookie_gitcode",
+      "name": "GitCode_Cookie",
+      "author": "@95du",
+      "descs_html": [
+        "GitCode_Cookie"
+      ],
+      "icons": [
+        "http://mtw.so/5CYGGc",
+        "http://mtw.so/5CYGGc"
+      ],
+      "keys": [
+        "cookie_gitcode"
+      ],
+      "settings": [
+        {
+          "id": "cookie_gitcode",
+          "name": "GitCode_Cookie",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        }
+      ]
     }
   ]
 }
