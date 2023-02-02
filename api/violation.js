@@ -53,7 +53,7 @@ if (F_MGR.fileExists(cacheFile)) {
   referer = data.referer
 }
 
-if (!F_MGR.fileExists(folder) || !verifyToken || !referer) {
+if (!F_MGR.fileExists(folder) || !verifyToken || !referer || referer) {
   try {
     const boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
     verifyToken = boxjs_data.val
