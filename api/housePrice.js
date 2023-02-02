@@ -63,7 +63,7 @@ async function presentMenu() {
   if (mainMenu === 0) {
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2hvdXNlUHJpY2UuanM='));
     const codeString = await reqUpdate.loadString();
-    if (codeString.indexOf('95度茅台') == -1) {
+    if (codeString.indexOf('95度茅台') === -1) {
       notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
       F_MGR.writeString(  
@@ -78,19 +78,17 @@ async function presentMenu() {
 
 async function createWidget(result) {
   const widget = new ListWidget();
-  if (F_MGR.readImage(bgImage)) {
+  if (F_MGR.fileExists(bgImage)) {
     widget.backgroundImage = F_MGR.readImage(bgImage);
   } else {
     const gradient = new LinearGradient()
     color = [
-    "#82B1FF", 
-    "#757575", 
-    "#4FC3F7",
-    "#66CCFF",
+    "#82B1FF",
+    "#757575",
     "#99CCCC",
     "#BCBBBB"
     ]
-    const items = color[Math.floor(Math.random()*color.length)];
+    const items = color[Math.floor(Math.random() * color.length)];
     gradient.locations = [0, 1]
     gradient.colors = [
       new Color(items, 0.5),
