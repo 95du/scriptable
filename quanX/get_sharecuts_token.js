@@ -43,7 +43,7 @@ $.is_debug = $.getdata('is_debug');
         $.token = $request['headers']['X-Token'];
         debug($.token);
         $.setdata($.token, $.token_key);
-        $.msg($.name, ``, `捷径社区${user}，Token获取成功。\n${$.token}`);
+        $.msg($.name, ``, `捷径社区${$.user}，Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
       } else {
         console.log(`sharecuts_Token未变动‼️跳过更新。\n${$.token}`);
