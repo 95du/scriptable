@@ -30,7 +30,7 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("categories") > -1 && $request.headers) {
       debug($request.headers);
-      if ($request['headers']['X-Token'] !== $.token) {
+      if ($request['headers']['X-Token'] !== $.token && if ($request['headers']['X-Token']) {
         $.token = $request['headers']['X-Token'];
         debug($.token);
         $.setdata($.token, $.token_key);
@@ -38,7 +38,7 @@ $.is_debug = $.getdata('is_debug');
         $.user = $request['headers']['X-User'];
         debug($.user);
         $.setdata($.user,
- $.user_key);
+   $.user_key);
         console.log(`User获取成功: ${$.user}`);
         $.msg($.name, ``, `${$.user}，Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
