@@ -1,13 +1,10 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: apple-alt;
 #!name=GitCode_Token
 #!desc=自动抓取GitCode_Token
 Quantumult-X（QX需要配合解析器）
 #!使用方法：打开 GitCode_APP 登录即可自动抓取Token。资源解析器：https://t.me/QuanXNews/110
 
 [Script]
-捷径社区Token = type=http-request,pattern=^https:\/\/api\.sharecuts\.cn\/categories,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_sharecuts_token.js,script-update-interval=0
+捷径社区Token = type=http-request,pattern=^https:\/\/gitcode\.net,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
 
 [MITM]
-hostname = %APPEND% api.sharecuts.cn
+hostname = %APPEND% gitcode.net
