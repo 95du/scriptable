@@ -40,7 +40,7 @@ $.is_debug = $.getdata('is_debug');
         $.setdata($.user,
  $.user_key);
         console.log(`User获取成功: ${$.user}`);
-        $.msg($.name, ``, `捷径社区${$.user}，Token获取成功。\n${$.token}`);
+        $.msg($.name, ``, `${$.user}，Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
       } else {
         console.log(`sharecuts_Token未变动‼️跳过更新。\n${$.token}`);
