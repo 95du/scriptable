@@ -33,7 +33,7 @@ $.is_debug = $.getdata('is_debug');
         debug($.cookie);
         $.setdata($.cookie, $.cookie_key);
         if ($.cookie !== undefined && $.cookie.indexOf("UserNick") > -1) {
-          $.msg($.name, ``, `GitCode_代码仓Cookie获取成功。\n${$.cookie}`);
+          $.msg($.name 'Cookie获取成功', ``, $.cookie);
           console.log(`GitCode_代码仓Cookie获取成功: \n${$.cookie}`);  
         }
       } else {
