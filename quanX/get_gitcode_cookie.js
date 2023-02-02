@@ -32,8 +32,10 @@ $.is_debug = $.getdata('is_debug');
         $.cookie = $request['headers']['Cookie'];
         debug($.cookie);
         $.setdata($.cookie, $.cookie_key);
-        $.msg($.name, ``, `GitCode_代码仓Cookie获取成功。\n${$.cookie}`);
-        console.log(`GitCode_代码仓Cookie获取成功: \n${$.cookie}`);
+        if ($.cookie !== undefined) {
+          $.msg($.name, ``, `GitCode_代码仓Cookie获取成功。\n${$.cookie}`);
+          console.log(`GitCode_代码仓Cookie获取成功: \n${$.cookie}`);  
+        }
       } else {
         console.log(`GitCode_Cookie未变动‼️跳过更新。\n${$.cookie}`);
       }
