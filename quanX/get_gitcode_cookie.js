@@ -8,7 +8,7 @@
 配置 (QuanX)
 ==================================
 [rewrite_local]
-^https:\/\/gitcode\.net\/users\/m0\_55742433,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
+^https:\/\/gitcode\.net\/dashboard\/projects\/home,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% gitcode.net
@@ -26,7 +26,7 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.url.indexOf("gitcode.net") > -1 && $request.headers) {
+    if ($request && $request.url === "https://gitcode.net/dashboard/projects/home" && $request.headers) {
       debug($request.headers);
       if ($request['headers']['Cookie'] !== $.cookie) {
         $.cookie = $request['headers']['Cookie'];
