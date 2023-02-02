@@ -8,7 +8,7 @@
 配置 (QuanX)
 ==================================
 [rewrite_local]
-^https:\/\/gitcode\.net,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
+^https:\/\/gitcode\.net\/users\/m0\_55742433\/groups,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% gitcode.net
@@ -26,10 +26,10 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.url.indexOf("https://gitcode.net") > -1 && $request.headers) {
+    if ($request && $request.url.indexOf("gitcode.net") > -1 && $request.headers) {
       debug($request.headers);
       if ($request['headers']['Cookie'] !== $.cookie) {
-        $.token = $request['headers']['Cookie'];
+        $.cookie = $request['headers']['Cookie'];
         debug($.cookie);
         $.setdata($.cookie, $.cookie_key);
         $.msg($.name, ``, `GitCode_代码仓Cookie获取成功。\n${$.cookie}`);
