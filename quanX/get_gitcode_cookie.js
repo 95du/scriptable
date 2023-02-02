@@ -8,18 +8,16 @@
 配置 (QuanX)
 ==================================
 [rewrite_local]
-^https:\/\/api\.sharecuts\.cn\/categories,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
+^https:\/\/gitcode\.net,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
 
 [MITM]
-hostname = %APPEND% api.sharecuts.cn
+hostname = %APPEND% gitcode.net
 ==================================
 */
 
-const $ = new Env('捷径社区');
-$.token_key = 'token_sharecuts';
-$.token = $.getdata($.token_key);
-$.user_key = 'user_sharecuts';
-$.user = $.getdata($.user_key);
+const $ = new Env('GitCode_代码仓');
+$.cookie_key = 'cookie_gitcode';
+$.cookie = $.getdata($.cookie_key);
 $.is_debug = $.getdata('is_debug');
 
 !(async () => {
@@ -30,20 +28,14 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("https://gitcode.net") > -1 && $request.headers) {
       debug($request.headers);
-      if ($request['headers']['X-Token'] !== $.token) {
-        $.token = $request['headers']['X-Token'];
-        debug($.token);
-        $.setdata($.token, $.token_key);
-        // Get X-User
-        $.user = $request['headers']['X-User'];
-        debug($.user);
-        $.setdata($.user,
- $.user_key);
-        console.log(`User获取成功: ${$.user}`);
-        $.msg($.name, ``, `${$.user}，Token获取成功。\n${$.token}`);
-        console.log(`捷径社区Token获取成功: \n${$.token}`);
+      if ($request['headers']['Cookie'] !== $.cookie) {
+        $.token = $request['headers']['Cookie'];
+        debug($.cookie);
+        $.setdata($.cookie, $.cookie_key);
+        $.msg($.name, ``, `GitCode_代码仓Cookie获取成功。\n${$.cookie}`);
+        console.log(`GitCode_代码仓Cookie获取成功: \n${$.cookie}`);
       } else {
-        console.log(`sharecuts_Token未变动‼️跳过更新。\n${$.token}`);
+        console.log(`GitCode_Cookie未变动‼️跳过更新。\n${$.cookie}`);
       }
     }
   }
