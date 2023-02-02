@@ -62,8 +62,8 @@ async function createWidget(oil) {
   const gradient = new LinearGradient();
     color = [
       "#82B1FF",
-      "#757575",
       "#4FC3F7",
+      "#C2B280",
       "#66CCFF",
       "#99CCCC",
       "#BCBBBB"
