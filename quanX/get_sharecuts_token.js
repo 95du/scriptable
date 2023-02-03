@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-blue; icon-glyph: user-tie;
+// icon-color: deep-blue; icon-glyph: cog;
 /*
 脚本名称：获取捷径社区token
 更新时间：2023-02-02
@@ -11,7 +11,7 @@
 ^https:\/\/api\.sharecuts\.cn\/categories,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_sharecuts_token.js,script-update-interval=0
 
 [MITM]
-hostname = %APPEND% api.sharecuts.cn
+hostname = api.sharecuts.cn
 ==================================
 */
 
