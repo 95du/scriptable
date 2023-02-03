@@ -1,24 +1,24 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: green; icon-glyph: magic;
+// icon-color: green; icon-glyph: car;
 /*
 脚本名称：获取12123_token
 更新时间：2023-01-30
-====================================================================================================
+===================================
 配置 (QuanX)
 [rewrite_local]
 ^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js
 
 [MITM]
 hostname = miniappcsfw.122.gov.cn
-====================================================================================================
+===================================
 配置 (Surge)
 [Script]
 12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% miniappcsfw.122.gov.cn:8443
-====================================================================================================
+===================================
 */
 
 const $ = new Env('交管12123');
