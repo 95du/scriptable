@@ -38,7 +38,7 @@ $.is_debug = $.getdata('is_debug');
         $.token = $request['headers']['x-auth-token'];
         debug($.token);
         $.setdata($.token, $.token_key);
-        $.msg($.name, ``, `南网在线Token获取成功。\n${$.token}`);
+        $.msg($.name, ``, `95598Token获取成功。\n${$.token}`);
         console.log(`南网在线Token获取成功: \n${$.token}`);
       } else {
         console.log(`95598_Token未变动‼️跳过更新。\n${$.token}`);
