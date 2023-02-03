@@ -15,7 +15,7 @@ hostname = %APPEND% gitcode.net
 ==================================
 */
 
-const $ = new Env('GitCode_代码仓');
+const $ = new Env('GitCode代码仓');
 $.cookie_key = 'cookie_gitcode';
 $.cookie = $.getdata($.cookie_key);
 $.is_debug = $.getdata('is_debug');
@@ -26,7 +26,7 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.url === "https://gitcode.net/dashboard/projects/home" && $request.headers) {
+    if ($request && $request.url === "home" && $request.headers) {
       debug($request.headers);
       if ($request['headers']['Cookie'] !== $.cookie) {
         $.cookie = $request['headers']['Cookie'];
