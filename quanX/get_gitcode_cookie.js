@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-blue; icon-glyph: user-tie;
+// icon-color: blue; icon-glyph: cog;
 /*
 脚本名称：获取GitCode代码仓Cookie
 更新时间：2023-02-02
@@ -11,7 +11,7 @@
 ^https:\/\/gitcode\.net\/dashboard\/projects\/home,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_gitcode_cookie.js,script-update-interval=0
 
 [MITM]
-hostname = %APPEND% gitcode.net
+hostname = gitcode.net
 ==================================
 */
 
