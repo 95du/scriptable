@@ -287,24 +287,17 @@ async function main() {
     context.setFillColor(barBgColor);
     context.fillPath();
     
-    // BarValue1
+    // BarValue1 Color
     if (barValue1 <= Step1st) {BarColor1 = new Color("#bb1e10")}
     if (barValue2 <= Step1st) {BarColor2 = new Color("#bb1e1075")} 
    
     if (barValue1 >= Step1st && barValue1 < Step2nd) {BarColor1 = new Color("#f7b500")}
     else if (barValue1 >= Step2nd) {BarColor1 = new Color("#00b347")}
-   
+    
+    // BarValue2 Color
     if (barValue2 >= Step1st && barValue2 < Step2nd) {BarColor2 = new Color("#f7b50075")} 
     else if (barValue2 >= Step2nd) {BarColor2 = new Color("#00b34775")}
-   
-    // BarValue2
-    context.setFillColor(BarColor2);
-    const path2 = new Path();
-    const path2BarHeigth = (barHeigth * (barValue2 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue2 / StepFin);
-    path2.addRoundedRect(new Rect(0, barHeigth, barWidth, -path2BarHeigth), 2, 2);
-    context.addPath(path2);
-    context.fillPath();
-   
+    
     // BarValue1
     context.setFillColor(BarColor1);
     const path1 = new Path();
@@ -313,6 +306,13 @@ async function main() {
     context.addPath(path1);
     context.fillPath();
     
+    // BarValue2
+    context.setFillColor(BarColor2);
+    const path2 = new Path();
+    const path2BarHeigth = (barHeigth * (barValue2 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue2 / StepFin);
+    path2.addRoundedRect(new Rect(0, barHeigth, barWidth, -path2BarHeigth), 2, 2);
+    context.addPath(path2);
+    context.fillPath();
     // context Font(size)
     context.setFont(
       Font.boldSystemFont(flow || voice >= '99.5' ? 4 : 8)
