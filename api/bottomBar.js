@@ -122,8 +122,7 @@ async function createWidget() {
   const one = await getJson('http://open.iciba.com/dsapi');
   // Next two hours
   await get({"url": "https://ssfc.api.moji.com/sfc/json/nowcast"})
-  
-  const stackBgImage = await getImage(one.picture4);
+  const stackBgImage = await getImage(one.fenxiang_img);
 
   /**
   * Frame Layout
@@ -153,21 +152,22 @@ async function createWidget() {
   
   // Two Hours Weather
   twoHoursStack.addSpacer(2);
-  twoHoursStack.layoutVertically();
   const contentText = twoHoursStack.addText(result.radarData.content);
   contentText.font = Font.boldSystemFont(13.5);
   contentText.textColor = textColor;
   contentText.textOpacity = 0.7
+  eventStack.addSpacer();
   
   // Right timeStack
-  eventStack.addSpacer();
-  const timeStack = eventStack.addStack();
-  timeStack.layoutVertically();
-  const statusText = timeStack.addText('现在');
-  statusText.font = Font.boldSystemFont(12);
-  statusText.textColor = textColor;
-  statusText.textOpacity = 0.4
-  timeStack.addSpacer();
+  if (result.radarData.content.length < 18) {
+    const timeStack = eventStack.addStack();
+    timeStack.layoutVertically();
+    const statusText = timeStack.addText('现在');
+    statusText.font = Font.boldSystemFont(12);
+    statusText.textColor = textColor;
+    statusText.textOpacity = 0.4
+    timeStack.addSpacer();
+  }
   widget.addSpacer();
   
   /** 
@@ -188,10 +188,10 @@ async function createWidget() {
   const textElement = contentStack.addText(`${one.note}\n${one.content}`);
   textElement.textColor = Color.white();
   textElement.font = Font.boldSystemFont(14);
-  textElement.textOpacity = 0.9
+  textElement.textOpacity = 0.9;
+  textElement.url = one.fenxiang_img
   contentStack.addSpacer();
   
-  textElement.url = one.fenxiang_img
   return widget;
 }
 
