@@ -159,7 +159,7 @@ async function createWidget() {
   eventStack.addSpacer();
   
   // Right timeStack
-  if (result.radarData.content.length < 18) {
+  if (result.radarData.content.length <= 18) {
     const timeStack = eventStack.addStack();
     timeStack.layoutVertically();
     const statusText = timeStack.addText('现在');
