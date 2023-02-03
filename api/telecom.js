@@ -293,7 +293,7 @@ function creatProgress(barValue1, barValue2) {
   context.fillPath();
   // context Font(size)
   context.setFont(
-    Font.boldSystemFont(8)
+    Font.boldSystemFont(flow || voice >= '99.5' ? 4 : 8)
   );
   context.setTextAlignedCenter();
   
