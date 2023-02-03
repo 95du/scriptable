@@ -1,7 +1,7 @@
 {
   "id": "fokit.app.sub",
   "name": "95度茅台应用订阅",
-  "author": "@FoKit",
+  "author": "@95du",
   "icon": "https://gitcode.net/4qiao/framework/raw/master/img/icon/4qiao.png",
   "repo": "https://gitcode.net/4qiao/scriptable",
   "apps": [
@@ -10,7 +10,7 @@
       "name": "交管12123",
       "author": "@FoKit",
       "descs_html": [
-        "交管12123_Token"
+        "交管12123 Token"
       ],
       "icons": [
         "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png",
@@ -66,7 +66,7 @@
       "name": "捷径社区",
       "author": "@95du",
       "descs_html": [
-        "捷径社区_Token"
+        "捷径社区 Token"
       ],
       "icons": [
         "http://mtw.so/66n570",
@@ -98,7 +98,7 @@
       "name": "南网在线",
       "author": "@FoKit",
       "descs_html": [
-        "南网在线Token"
+        "南网在线 Token"
       ],
       "icons": [
         "https://raw.githubusercontent.com/FoKit/Scripts/main/images/95598.png",
@@ -122,7 +122,7 @@
       "name": "GitCode",
       "author": "@95du",
       "descs_html": [
-        "GitCode_Cookie"
+        "GitCode Cookie"
       ],
       "icons": [
         "http://mtw.so/5CYGGc",
