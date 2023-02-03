@@ -15,7 +15,7 @@ hostname = %APPEND% gitcode.net
 ==================================
 */
 
-const $ = new Env('GitCode代码仓');
+const $ = new Env('GitCode');
 $.cookie_key = 'cookie_gitcode';
 $.cookie = $.getdata($.cookie_key);
 $.is_debug = $.getdata('is_debug');
@@ -26,15 +26,15 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.url.indexOf( "project/home" ) && $request.headers) {
+    if ($request && $request.url.indexOf("project/home") > -1 && $request.headers) {
       debug($request.headers);
       if ($request['headers']['Cookie'] !== $.cookie) {
         $.cookie = $request['headers']['Cookie'];
         debug($.cookie);
         $.setdata($.cookie, $.cookie_key);
         if ($.cookie !== undefined && $.cookie.indexOf("UserNick") > -1) {
-          $.msg($.name + 'Cookie获取成功', ``, $.cookie);
-          console.log(`${$.name}Cookie获取成功: \n${$.cookie}`);  
+          $.msg($.name + '_Cookie 获取成功', ``, $.cookie);
+          console.log(`${$.name}_Cookie 获取成功: \n${$.cookie}`);  
         }
       } else {
         console.log(`GitCode_Cookie未变动‼️跳过更新。\n${$.cookie}`);
