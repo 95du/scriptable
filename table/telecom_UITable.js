@@ -315,7 +315,7 @@ async function main() {
     
     // context Font(size)
     context.setFont(
-      Font.boldSystemFont(8)
+      Font.boldSystemFont(flow || voice >= '99.5' ? 4 : 8)
     );
     context.setTextAlignedCenter();
     
