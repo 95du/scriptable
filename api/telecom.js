@@ -266,15 +266,24 @@ function creatProgress(barValue1, barValue2) {
   context.setFillColor(barBgColor);
   context.fillPath();
   
-  // BarValue1
+  // BarValue1 Color
   if (barValue1 <= Step1st) {BarColor1 = new Color("#bb1e10")}
   if (barValue2 <= Step1st) {BarColor2 = new Color("#bb1e1075")} 
  
   if (barValue1 >= Step1st && barValue1 < Step2nd) {BarColor1 = new Color("#f7b500")}
   else if (barValue1 >= Step2nd) {BarColor1 = new Color("#00b347")}
  
+  // BarValue2 Color
   if (barValue2 >= Step1st && barValue2 < Step2nd) {BarColor2 = new Color("#f7b50075")} 
   else if (barValue2 >= Step2nd) {BarColor2 = new Color("#00b34775")}
+  
+  // BarValue1
+  context.setFillColor(BarColor1);
+  const path1 = new Path();
+  const path1BarHeigth = (barHeigth * (barValue1 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue1 / StepFin);
+  path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
+  context.addPath(path1);
+  context.fillPath();
   
   // BarValue2
   context.setFillColor(BarColor2);
@@ -282,14 +291,6 @@ function creatProgress(barValue1, barValue2) {
   const path2BarHeigth = (barHeigth * (barValue2 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue2 / StepFin);
   path2.addRoundedRect(new Rect(0, barHeigth, barWidth, -path2BarHeigth), 2, 2);
   context.addPath(path2);
-  context.fillPath();
- 
-  // BarValue1
-  context.setFillColor(BarColor1);
-  const path1 = new Path();
-  const path1BarHeigth = (barHeigth * (barValue1 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue1 / StepFin);
-  path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
-  context.addPath(path1);
   context.fillPath();
   // context Font(size)
   context.setFont(
