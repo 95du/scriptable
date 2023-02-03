@@ -26,7 +26,7 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.url.indexOf("project/home") > -1 && $request.headers) {
+    if ($request && $request.url.indexOf("home") > -1 && $request.headers) {
       debug($request.headers);
       if ($request['headers']['Cookie'] !== $.cookie) {
         $.cookie = $request['headers']['Cookie'];
