@@ -180,15 +180,15 @@ async function createWidget() {
   contentStack.centerAlignContent();
   contentStack.addSpacer();
   
-  //contentStack.backgroundColor = stackBackground
-  contentStack.backgroundImage = await shadowImage(stackBgImage)
+  contentStack.backgroundColor = stackBackground
+  //contentStack.backgroundImage = await shadowImage(stackBgImage)
   contentStack.cornerRadius = 23
   contentStack.size = new Size(0, 80);
   
   const textElement = contentStack.addText(`${one.note}\n${one.content}`);
-  textElement.textColor = Color.white();
+  textElement.textColor = textColor
   textElement.font = Font.boldSystemFont(14);
-  textElement.textOpacity = 0.9;
+  textElement.textOpacity = 0.7;
   textElement.url = one.fenxiang_img
   contentStack.addSpacer();
   
