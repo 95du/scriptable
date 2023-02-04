@@ -7,6 +7,7 @@
 * 感谢 @LSP 的帮助
 * LSP订阅地址：https://gitcode.net/enoyee/scriptable/-/raw/master/install/package.json
 * 订阅作者 95度茅台
+⚠️ 如运行报错，在 iCloud 里的 Scriptable 文件夹删除 95duSub
 */
 
 const scriptName = '95duSub';
