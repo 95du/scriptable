@@ -179,9 +179,9 @@ async function createWidget() {
   contentStack.layoutHorizontally();
   contentStack.centerAlignContent();
   contentStack.addSpacer();
-  
   contentStack.backgroundColor = stackBackground
   //contentStack.backgroundImage = await shadowImage(stackBgImage)
+  contentStack.setPadding(10, 18, 10, 18);
   contentStack.cornerRadius = 23
   contentStack.size = new Size(0, 80);
   
