@@ -30,15 +30,14 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("categories") > -1 && $request.headers) {
       debug($request.headers);
-      $.token = $request['headers']['X-Token'];
-      if ($request['headers']['X-Token'] !== $.token && $.token) {
+      $.user = $request['headers']['X-User'];
+      debug($.user);
+      $.setdata($.user,
+   $.user_key);
+      if ($request['headers']['X-Token'] !== $.token && $.user) {
+        $.token = $request['headers']['X-Token'];
         debug($.token);
         $.setdata($.token, $.token_key);
-        // Get X-User
-        $.user = $request['headers']['X-User'];
-        debug($.user);
-        $.setdata($.user,
-   $.user_key);
         $.msg($.name, ``, `${$.user}，Token获取成功。\n${$.token}`);
         console.log(`捷径社区Token获取成功: \n${$.token}`);
       } else {
