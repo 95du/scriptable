@@ -28,6 +28,7 @@ Boxjs订阅（可选）：http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubuse
 
 [MITM]
 hostname = miniappcsfw.122.gov.cn
+
 ============Surge=============
 [Script]
 12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
@@ -227,7 +228,7 @@ async function presentMenu() {
     data = { myPlate: myPlate, verifyToken: verifyToken }
     F_MGR.writeString(cacheFile, JSON.stringify(data));
     Safari.open(get.details);
-    notify('12123_Referer‼️', '点击车牌号码或查询即可更新/获取');
+    notify('12123_Referer', '点击车牌号码或查询即可更新/获取');
   }
   if (response === 3) {
     const modulePath = await downloadModule();
