@@ -30,8 +30,8 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("categories") > -1 && $request.headers) {
       debug($request.headers);
-      $.token = $request['headers']['X-Token'];
-      if ($request['headers']['X-Token'] !== $.token && token) {
+      if ($request['headers']['X-Token'] !== $.token && $request['headers']['X-Token']) {
+        $.token = $request['headers']['X-Token'];
         debug($.token);
         $.setdata($.token, $.token_key);
         // Get X-User
