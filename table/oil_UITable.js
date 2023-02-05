@@ -50,9 +50,8 @@ async function main() {
       colorArr = setting.gradient.length
       if (colorArr === 0) {
         color = [
-          "#82B1FF",
+          "#757575",
           "#4FC3F7",
-          "#C2B280",
           "#66CCFF",
           "#99CCCC",
           "#BCBBBB"
