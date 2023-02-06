@@ -248,8 +248,7 @@ async function main() {
       console.log("自动更新开始");
       const modules = {
         moduleName: "widget.Install",
-        url:
-          "https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js",
+        url: "https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js",
       };
       const result = await saveFile(modules);
       if (result) console.log("自动更新成功");
@@ -257,8 +256,6 @@ async function main() {
       console.log(e);
     }
   })();
-  
   await Run();
 }
-// async function main()
 module.exports = { main }
