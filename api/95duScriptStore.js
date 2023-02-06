@@ -15,15 +15,16 @@ const scriptUrl = atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9t
 
 const modulePath = await downloadModule(scriptName, scriptUrl);
 if (modulePath != null) {
-  const importedModule = importModule(modulePath);
-  await importedModule.main();
-} else {
-  console.log('Failed to download new module and could not find any local version.');
+  try {
+    const importedModule = importModule(modulePath);
+    await importedModule.main();
+  } catch(e) {
+    Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
+  }
 }
 
 
 async function downloadModule(scriptName, scriptUrl) {
-  // returns path of latest module version which is accessible
   const fm = FileManager.local();
   const scriptPath = module.filename;
   const moduleDir = scriptPath.replace(fm.fileName(scriptPath, true), scriptName);
@@ -44,7 +45,11 @@ async function downloadModule(scriptName, scriptUrl) {
       fm.write(modulePath, moduleJs);
       if (moduleFiles != null) {
         moduleFiles.map(x => {
-          fm.remove(fm.joinPath(moduleDir, x));
+          try {
+fm.remove(fm.joinPath(moduleDir, x));  
+          } catch(e) {
+            fm.remove(moduleDir)
+          }
         });
       }
       return modulePath;
@@ -57,7 +62,6 @@ async function downloadModule(scriptName, scriptUrl) {
 
 
 function getModuleVersions(scriptName) {
-  // returns all saved module versions and latest version of them
   const fm = FileManager.local();
   const scriptPath = module.filename
   const moduleDir = scriptPath.replace(fm.fileName(scriptPath, true), scriptName);
@@ -69,7 +73,6 @@ function getModuleVersions(scriptName) {
     versions.sort(function(a, b) {
       return b - a;
     });
-    //versions = versions.filter(Boolean);
     if (versions.length > 0) {
       const moduleFiles = versions.map(x => {
         return x + '.js';
