@@ -55,8 +55,7 @@ async function main() {
   
       // interval 1
       await gapRow(table);
-  
-      // 如果是节点，则先远程获取
+      
       const subscription = await new Request(data.subscription).loadJSON()
       const apps = subscription.apps;
       apps.forEach((item) => {
@@ -135,5 +134,4 @@ async function main() {
   };
   await Run();
 }
-// async function main()
 module.exports = { main }
