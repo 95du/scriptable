@@ -78,7 +78,6 @@ async function createWidget() {
   const gradient = new LinearGradient();
   color = [
     "#82B1FF",
-    "#757575",
     "#4FC3F7",
     "#66CCFF",
     "#99CCCC",
@@ -163,9 +162,11 @@ F_MGR.readString(cacheFile)
    * @param {image} image
    * @param {string} text
    * Cylindrical Bar Chart
+   * setPadding(10, 17, 10, 15)
    */
-  widget.setPadding(10, 17, 10, 15);
+  widget.setPadding(10, 8, 10, 15);
   const mainStack = widget.addStack();
+  mainStack.addSpacer();
   mainStack.layoutHorizontally();
     
   // Left Main Stack
