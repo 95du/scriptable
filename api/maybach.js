@@ -164,7 +164,7 @@ F_MGR.readString(cacheFile)
    * Cylindrical Bar Chart
    * setPadding(10, 17, 10, 15)
    */
-  widget.setPadding(10, 8, 10, 15);
+  widget.setPadding(10, 10, 10, 15);
   const mainStack = widget.addStack();
   mainStack.addSpacer();
   mainStack.layoutHorizontally();
