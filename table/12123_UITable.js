@@ -341,9 +341,7 @@ async function main() {
   
     // jump show status
     barStack2.url = get.status;
-    // jump to details
     textPlate2.url = get.details;
-    // jump show image
     if (!nothing) {
       textAddress.url = `${photos}`;
     }
