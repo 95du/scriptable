@@ -326,7 +326,7 @@ async function main() {
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
     imageCar.imageSize = new Size(setting.width, setting.height);
-    rightStack.addSpacer(vio.violationAddress.length <= 19 ? 5 : 2)
+    rightStack.addSpacer(!nothing && vio.violationAddress.length <= 19 ? 5 : 2)
   
     // show address
     const tipsStack = rightStack.addStack();
