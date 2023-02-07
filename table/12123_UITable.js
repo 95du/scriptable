@@ -184,16 +184,19 @@ async function main() {
     }
   
   
-    // Frame Layout
-    widget.setPadding(15, 18, 15, 15);
+    /**
+     * 界面显示布局(左到右)
+     * @param {image} image
+     * @param {string} text
+     * Cylindrical Bar Chart
+     * setPadding(15, 18, 15, 15)
+     */
+    widget.setPadding(15, 14, 15, 10);
     const mainStack = widget.addStack();
+    mainStack.addSpacer();
     mainStack.layoutHorizontally();
     
-    /* 
-    * Left Main Stack
-    * Violation content
-    * Status
-    */
+    // Left Stack Violation Data
     const leftStack = mainStack.addStack();
     leftStack.layoutVertically();
     leftStack.addSpacer();
