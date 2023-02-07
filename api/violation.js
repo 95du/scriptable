@@ -298,18 +298,20 @@ async function createWidget() {
     new Color('#00000000')
   ]
   widget.backgroundGradient = gradient
-
-
-  // Frame Layout
-  widget.setPadding(15, 18, 15, 15);
+  
+  /**
+   * 界面显示布局(左到右)
+   * @param {image} image
+   * @param {string} text
+   * Cylindrical Bar Chart
+   * setPadding(15, 18, 15, 15)
+   */
+  widget.setPadding(15, 14, 15, 10);
   const mainStack = widget.addStack();
+  mainStack.addSpacer();
   mainStack.layoutHorizontally();
   
-  /* 
-  * Left Main Stack
-  * Violation content
-  * Status
-  */
+  // Left Main Stack Violation Data
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
   leftStack.addSpacer();
@@ -447,11 +449,9 @@ async function createWidget() {
   textAddress.centerAlignText();
   rightStack.addSpacer();
 
-  // jump show status
+  // jump content
   barStack2.url = get.status;
-  // jump to details
   textPlate2.url = get.details;
-  // jump show image
   if (!nothing) {
     textAddress.url = `${photos}`;
   }
