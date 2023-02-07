@@ -286,7 +286,6 @@ async function createWidget() {
   const gradient = new LinearGradient();
   color = [
     "#82B1FF",
-    "#757575",
     "#4FC3F7",
     "#66CCFF",
     "#99CCCC",
@@ -435,7 +434,7 @@ async function createWidget() {
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
   imageCar.imageSize = new Size(228, 100);
-  rightStack.addSpacer(2)
+  rightStack.addSpacer(vio.violationAddress.length <= 19 ? 5 : 2)
 
   // show address
   const tipsStack = rightStack.addStack();
