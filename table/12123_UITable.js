@@ -230,7 +230,7 @@ async function main() {
       vioPointText = vioPoint.addText(`罚款${vio.fine}元、` + `扣${vio.violationPoint}分`);
       vioPointText.font = Font.mediumSystemFont(12);
       vioPointText.textColor = new Color('#484848');
-      leftStack.addSpacer(3)
+      leftStack.addSpacer(3);
     }
       
     // validPeriodEnd icon
@@ -312,7 +312,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing ? 16 : 14)
+    rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length <= 19 ? 17 : 14);
   
     // Car image
     const carImageStack = rightStack.addStack();
@@ -326,7 +326,7 @@ async function main() {
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
     imageCar.imageSize = new Size(setting.width, setting.height);
-    rightStack.addSpacer(!nothing && vio.violationAddress.length <= 19 ? 5 : 2)
+    rightStack.addSpacer(2);
   
     // show address
     const tipsStack = rightStack.addStack();
