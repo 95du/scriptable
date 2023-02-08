@@ -5,33 +5,38 @@
  * 支付宝小程序 交管12123
  * 小组件作者：95度茅台
  * 获取Token作者: @FoKit
- * 版本: Version 1.3.2
+ * 版本: Version 1.2.0
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 
-获取Token重写：
+获取Token重写:
 https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
 
-使用方法：配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
-使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
+============ 使用方法 ============
+1，配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
+2，Referer (用于获取车辆检验有效期时间及累积记分) 按提示点击12123小程序页面。
+3，使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
 
+================================
 一键添加 boxjs 重写到 Quantumult-X https://api.boxjs.app/quanx-install
 
 Boxjs订阅（可选）：http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubusercontent.com%2FFoKit%2FScripts%2Fmain%2Fboxjs%2Ffokit.boxjs.json
 
 手动配置重写规则：
-=========Quantumult-X=========
+========= Quantumult-X =========
 [rewrite_local]
 ^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js
 
 [MITM]
 hostname = miniappcsfw.122.gov.cn
-============Surge=============
+
+============ Surge =============
 [Script]
 12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% miniappcsfw.122.gov.cn
 */
+
 async function main() {
   const get = await new Request(atob(
   'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON()
@@ -47,25 +52,28 @@ async function main() {
     data = JSON.parse(data);
     verifyToken = data.verifyToken
     myPlate = data.myPlate
+    referer = data.referer
   }
   
-  
-  if (!F_MGR.fileExists(folder) || verifyToken === undefined) {
+  if (!F_MGR.fileExists(folder) || !verifyToken || !referer || referer) {
     try {
-      boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
+      const boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
       verifyToken = boxjs_data.val
+      const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
+      referer = boxjs_referer.val
     } catch(e) {
       if (config.runsInApp) {
         Safari.open('quantumult-x://');
         notify('获取boxJs数据失败 ⚠️', '需打开Quantumult-X获取verifyToken');
       }
     }
+    if (verifyToken && !referer) {
+      Safari.open(get.details);
+      notify('boxjs_referer ⚠️', '点击车牌号或查询即可更新/获取');
+      return;
+    }
     if (F_MGR.fileExists(cacheFile)) {
-      data = {
-        verifyToken: verifyToken,
-        myPlate: myPlate
-      }
-      F_MGR.writeString(cacheFile, JSON.stringify(data));
+      await saveSettings();
     }
   }
   
@@ -74,19 +82,18 @@ async function main() {
     if (!verifyToken) {
       const loginAlert = new Alert();
       loginAlert.title = '交管 12123';
-      loginAlert.message = `\r\n注 : 自动获取Token需要Quantumult-X / Surge 辅助运行，具体方法请查看小组件代码开头注释\n\r\n小组件作者: 95度茅台\n获取Token作者: @FoKit`;
-      loginAlert.addAction('获取Token');
+      loginAlert.message = `\r\n注 : 自动获取Token以及Referer需要Quantumult-X / Surge 辅助运行，具体方法请查看小组件代码开头注释\n\n⚠️获取Referer方法: 当跳转到支付宝12123时点击【 查机动车违法 】再点击【 查询 】，用于获取检验有效期的日期和累积记分\n\r\n小组件作者: 95度茅台\n获取Token作者: @FoKit`;
+      loginAlert.addAction('获取');
       loginAlert.addCancelAction('取消');
       login = await loginAlert.presentAlert();
       if (login === -1) return;
       Safari.open(get.alipay);
       return;
     } else {
-      notify('交管12123', `boxjs_token 获取成功: ${boxjs_data.val}`);
+      notify('交管12123', `boxjs_token 获取成功: ${verifyToken}`);
       await addLicensePlate();
     }
   }
-  
   
   async function addLicensePlate() {
     const alert = new Alert();
@@ -97,16 +104,15 @@ async function main() {
     alert.addCancelAction('取消');
     const input = await alert.presentAlert();
     myPlate = alert.textFieldValue(0);
-    if (input === -1) return;
-      data = {
-        verifyToken: verifyToken,
-        myPlate: myPlate
+    if (!myPlate || input === -1) {
+      return
+    } else {
+      if (!F_MGR.fileExists(folder)) {
+        F_MGR.createDirectory(folder);
       }
-    if (!F_MGR.fileExists(folder)) {
-      F_MGR.createDirectory(folder)
+      await saveSettings();
+      notify(myPlate, '您的车牌设置成功');
     }
-    F_MGR.writeString(cacheFile, JSON.stringify(data));
-    notify(myPlate, '您的车牌设置成功');
   }
   
   
@@ -190,7 +196,7 @@ async function main() {
     if (main.resultCode === 'SYSTEM_ERROR') {
       notify(main.resultMsg, '');
     } else {
-      data = { myPlate: myPlate }
+      data = { myPlate: myPlate, referer: referer }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
       notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
     }
@@ -205,6 +211,7 @@ async function main() {
     alert.message = get.Ver
     alert.addDestructiveAction('更新代码');
     alert.addDestructiveAction('重置所有');
+    alert.addAction('累积记分');
     alert.addAction('组件下载');
     alert.addAction('修改车牌')
     alert.addAction('预览组件');
@@ -219,20 +226,26 @@ async function main() {
       return;
     }
     if (response === 2) {
+      data = { myPlate: myPlate, verifyToken: verifyToken }
+      F_MGR.writeString(cacheFile, JSON.stringify(data));
+      Safari.open(get.details);
+      notify('12123_Referer', '点击车牌号码或查询即可更新/获取');
+    }
+    if (response === 3) {
       const modulePath = await downloadModule();
       if (modulePath != null) {
         const importedModule = importModule(modulePath);
         await importedModule.main();
       }
     }
-    if (response === 3) {
+    if (response === 4) {
       await addLicensePlate();
     }
-    if (response === 4) {
+    if (response === 5) {
       const widget = await createWidget(main);
       await widget.presentMedium();
     }
-    if (response === 5) return;
+    if (response === 6) return;
     if (response === 0) {
       const codeString = await new Request(get.update).loadString();
       const finish = new Alert();
@@ -274,7 +287,6 @@ async function main() {
     const gradient = new LinearGradient();
     color = [
       "#82B1FF",
-      "#757575",
       "#4FC3F7",
       "#66CCFF",
       "#99CCCC",
@@ -287,18 +299,19 @@ async function main() {
       new Color('#00000000')
     ]
     widget.backgroundGradient = gradient
-  
-  
-    // Frame Layout
+    
+    /**
+     * 界面显示布局(左到右)
+     * @param {image} image
+     * @param {string} text
+     * Cylindrical Bar Chart
+     */
     widget.setPadding(15, 18, 15, 15);
+    widget.addSpacer()
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     
-    /* 
-    * Left Main Stack
-    * Violation content
-    * Status
-    */
+    // Left Stack Violation Data
     const leftStack = mainStack.addStack();
     leftStack.layoutVertically();
     leftStack.addSpacer();
@@ -335,19 +348,20 @@ async function main() {
       leftStack.addSpacer(3)
     }
       
-    // update icon
-    const updateTimeStack = leftStack.addStack();
+    // validPeriodEnd icon
+    const dateStack = leftStack.addStack();
+    dateStack.layoutHorizontally();
+    dateStack.centerAlignContent();
     if (nothing) {
-      const iconSymbol2 = SFSymbol.named('steeringwheel');
-      const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
+      const iconSymbol2 = SFSymbol.named('timer');
+      const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(14, 14);
-      carIcon2.tintColor = Color.orange();
-      updateTimeStack.addSpacer(5);
+      dateStack.addSpacer(5);
     }
       
-    // update time
-    const updateTime = updateTimeStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing ? 'Good Driving' : `${vio.violationTime}`);
+    // validPeriodEndDate
+    const updateTime = dateStack.addStack();
+    const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
     leftStack.addSpacer(nothing ? 25 : 8)
@@ -373,7 +387,7 @@ async function main() {
     // bar text
     const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
     totalMonthBar.font = Font.mediumSystemFont(14);
-    totalMonthBar.textColor = new Color(nothing ? '#009201' : '#D50000');
+    totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000')
     leftStack.addSpacer(8)
   
   
@@ -387,15 +401,15 @@ async function main() {
     barStack2.borderColor = new Color('#AB47BC', 0.7);
     barStack2.borderWidth = 2
     // bsr icon
-    const barIcon2 = SFSymbol.named('person.text.rectangle.fill');
+    const barIcon2 = SFSymbol.named('mail.fill');
     const barIconElement2 = barStack2.addImage(barIcon2.image);
     barIconElement2.imageSize = new Size(16, 16);
     barIconElement2.tintColor = Color.purple();
     barStack2.addSpacer(4);
-    // bar text
-    const totalMonthBar2 = barStack2.addText('驾驶证');
+    // cumulativePoint Bar Text
+    const totalMonthBar2 = barStack2.addText(`记${referer.match(/cumulativePoint=(.+)/)[1]}分`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
-    totalMonthBar2.textColor = new Color('#757575');
+    totalMonthBar2.textColor = new Color('#616161')
     leftStack.addSpacer();
   
   
@@ -415,7 +429,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing ? 16 : 14)
+    rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length <= 19 ? 17 : 14);
   
     // Car image
     const carImageStack = rightStack.addStack();
@@ -423,8 +437,8 @@ async function main() {
     const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(228, 100);
-    rightStack.addSpacer(2)
+    imageCar.imageSize = new Size(225, 100);
+    rightStack.addSpacer(2);
   
     // show address
     const tipsStack = rightStack.addStack();
@@ -436,12 +450,11 @@ async function main() {
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     rightStack.addSpacer();
+    widget.addSpacer();
   
-    // jump show status
+    // jump content
     barStack2.url = get.status;
-    // jump to details
     textPlate2.url = get.details;
-    // jump show image
     if (!nothing) {
       textAddress.url = `${photos}`;
     }
@@ -461,6 +474,20 @@ async function main() {
       F_MGR.write(modulePath, moduleJs);
       return modulePath;
     }
+  }
+  
+  /**
+   * 存储当前设置
+   * @param { JSON } string
+   */
+  async function saveSettings () {
+    data = {
+      verifyToken: verifyToken,
+      referer: referer,
+      myPlate: myPlate
+    }
+    typeof data === 'object' ?  F_MGR.writeString(cacheFile, JSON.stringify(data)) : null
+    console.log(JSON.stringify(data, null, 2))
   }
   
   async function notify (title, body, url, opts = {}) {
