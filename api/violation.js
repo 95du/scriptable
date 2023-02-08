@@ -13,7 +13,7 @@ https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgm
 
 ============使用方法============
 1，配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
-2，获取Referer按提示点击12123小程序页面。
+2，Referer (用于获取车辆检验有效期时间及累积记分) 按提示点击12123小程序页面。
 3，使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
 
 ===============================
@@ -305,7 +305,7 @@ async function createWidget() {
    * @param {string} text
    * Cylindrical Bar Chart
    */
-  widget.setPadding(0, 18, 0, 16);
+  widget.setPadding(16, 18, 16, 16);
   widget.addSpacer()
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
