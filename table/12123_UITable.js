@@ -190,7 +190,7 @@ async function main() {
      * @param {string} text
      * Cylindrical Bar Chart
      */
-    widget.setPadding(16, 18, 16, 16);
+    widget.setPadding(15, 18, 15, 15);
     widget.addSpacer();
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
