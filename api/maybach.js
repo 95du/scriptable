@@ -196,15 +196,15 @@ F_MGR.readString(cacheFile)
   leftStack.addSpacer(3)
   
   // update time icon
-  const updateTimeStack = leftStack.addStack();
-  updateTimeStack.layoutHorizontally();
-  updateTimeStack.centerAlignContent();
+  const dateStack = leftStack.addStack();
+  dateStack.layoutHorizontally();
+  dateStack.centerAlignContent();
   const iconSymbol2 = SFSymbol.named('timer');
-  const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
+  const carIcon2 = dateStack.addImage(iconSymbol2.image)
   carIcon2.imageSize = new Size(16, 16);
-  updateTimeStack.addSpacer(4);
+  dateStack.addSpacer(4);
   // update time text
-  const updateTime = updateTimeStack.addStack();
+  const updateTime = dateStack.addStack();
   const textUpdateTime = updateTime.addText(GMT2);
   textUpdateTime.font = Font.mediumSystemFont(13);
   textUpdateTime.textColor = new Color('#424242');
