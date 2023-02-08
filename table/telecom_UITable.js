@@ -149,7 +149,7 @@ async function main() {
     rightStack.addSpacer();
     let balanceText = rightStack.addText(balanceAvailable);
     balanceText.centerAlignText();
-    balanceText.textColor = Color.red();
+    balanceText.textColor = setting.balanceColor;
     balanceText.font = new Font('Georgia-Bold', 25);
     rightStack.addSpacer();
     widget.addSpacer(5)
