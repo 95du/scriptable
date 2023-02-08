@@ -189,11 +189,10 @@ async function main() {
      * @param {image} image
      * @param {string} text
      * Cylindrical Bar Chart
-     * setPadding(15, 18, 15, 15)
      */
-    widget.setPadding(15, 14, 15, 10);
+    widget.setPadding(0, 16, 0, 16);
+    widget.addSpacer();
     const mainStack = widget.addStack();
-    mainStack.addSpacer();
     mainStack.layoutHorizontally();
     
     // Left Stack Violation Data
@@ -338,7 +337,8 @@ async function main() {
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     rightStack.addSpacer();
-  
+    widget.addSpacer();
+    
     // jump show status
     barStack2.url = get.status;
     textPlate2.url = get.details;
