@@ -1,286 +1,78 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: orange; icon-glyph: car;
+// icon-color: purple; icon-glyph: car;
 /**
- * 支付宝小程序 交管12123
- * 小组件作者：95度茅台
- * 获取Token作者: @FoKit
- * 版本: Version 1.2.0
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * 小组件作者: 4敲
+ * Honda Civic
+ * Version 1.1.0
+ * 2022-12-22 22:22
+ * 模拟电子围栏，显示车速，位置
+ */
 
-获取Token重写:
-https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
+const uri = Script.name();
+const F_MGR = FileManager.iCloud();
+const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "mercedes");
+const cacheFile = F_MGR.joinPath(path, 'honda.json');
 
-============使用方法============
-1，配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
-2，Referer (用于获取车辆检验有效期时间及累积记分) 按提示点击12123小程序页面。
-3，使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
-
-===============================
-一键添加 boxjs 重写到 Quantumult-X https://api.boxjs.app/quanx-install
-
-Boxjs订阅（可选）：http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubusercontent.com%2FFoKit%2FScripts%2Fmain%2Fboxjs%2Ffokit.boxjs.json
-
-手动配置重写规则：
-=========Quantumult-X=========
-[rewrite_local]
-^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js
-
-[MITM]
-hostname = miniappcsfw.122.gov.cn
-
-============Surge=============
-[Script]
-12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
-
-[MITM]
-hostname = %APPEND% miniappcsfw.122.gov.cn
-*/
-
-const get = await new Request(atob(
-'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON()
-const url = get.infoURL
-
-const uri = Script.name()
-const F_MGR = FileManager.local();
-const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "violation");
-const cacheFile = F_MGR.joinPath(folder, 'data.json');
+if (!F_MGR.fileExists(path)) {
+  F_MGR.createDirectory(path);
+}
 
 if (F_MGR.fileExists(cacheFile)) {
-  data = F_MGR.readString(cacheFile)
-  data = JSON.parse(data);
-  verifyToken = data.verifyToken
-  myPlate = data.myPlate
-  referer = data.referer
+  data = F_MGR.readString(cacheFile);
+  json = JSON.parse(data);
 }
-
-if (!F_MGR.fileExists(folder) || !verifyToken || !referer || referer) {
-  try {
-    const boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
-    verifyToken = boxjs_data.val
-    const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
-    referer = boxjs_referer.val
-  } catch(e) {
-    if (config.runsInApp) {
-      Safari.open('quantumult-x://');
-      notify('获取boxJs数据失败 ⚠️', '需打开Quantumult-X获取verifyToken');
-    }
-  }
-  if (verifyToken && !referer) {
-    Safari.open(get.details);
-    notify('boxjs_referer ⚠️', '点击车牌号或查询即可更新/获取');
-    return;
-  }
-  if (F_MGR.fileExists(cacheFile)) {
-    await saveSettings();
-  }
-}
-
-
-if (!F_MGR.fileExists(cacheFile)) {
-  if (!verifyToken) {
-    const loginAlert = new Alert();
-    loginAlert.title = '交管 12123';
-    loginAlert.message = `\r\n注 : 自动获取Token以及Referer需要Quantumult-X / Surge 辅助运行，具体方法请查看小组件代码开头注释\n\n⚠️获取Referer方法: 当跳转到支付宝12123时点击【 查机动车违法 】再点击【 查询 】，用于获取检验有效期的日期和累积记分\n\r\n小组件作者: 95度茅台\n获取Token作者: @FoKit`;
-    loginAlert.addAction('获取');
-    loginAlert.addCancelAction('取消');
-    login = await loginAlert.presentAlert();
-    if (login === -1) return;
-    Safari.open(get.alipay);
-    return;
-  } else {
-    notify('交管12123', `boxjs_token 获取成功: ${verifyToken}`);
-    await addLicensePlate();
-  }
-}
-
-async function addLicensePlate() {
-  const alert = new Alert();
-  alert.title = '输入车牌号';
-  alert.message = '显示在小组件左上角'
-  alert.addTextField('输入车牌号', F_MGR.fileExists(cacheFile) ? myPlate : '');
-  alert.addAction('确定');
-  alert.addCancelAction('取消');
-  const input = await alert.presentAlert();
-  myPlate = alert.textFieldValue(0);
-  if (!myPlate || input === -1) {
-    return
-  } else {
-    if (!F_MGR.fileExists(folder)) {
-      F_MGR.createDirectory(folder);
-    }
-    await saveSettings();
-    notify(myPlate, '您的车牌设置成功');
-  }
-}
-
-
-// violation main
-const violation = new Request(url);
-violation.method = 'POST'
-violation.body = `params={
-  "productId": "${get.productId}",
-  "api": "${get.api1}",
-  "version": "${get.version}",
-  "verifyToken": "${verifyToken}"
-}`
-const main = await violation.loadJSON();
-const success = main.success
-
-if (success === true) {
-  vehicle = main.data.list
-  vioList = vehicle[Math.floor(Math.random() * vehicle.length)];
-  nothing = vioList === undefined;
-  if (nothing) {
-    console.log(main.resultMsg)
-  } else {
-    // issueOrganization plate
-    const plate = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z])/)[1];
-    const issueOrganization = new Request(url);
-    issueOrganization.method = 'POST'
-    issueOrganization.body = `params={
-  "productId": "${get.productId}",
-  "api": "${get.api2}", 
-  "version": "${get.version}",
-  "verifyToken": "${verifyToken}",
-  "params": {
-    "internalOrder": "${vioList.internalOrder}",
-    "plateType": "02",
-    "_issueOrganization": "${plate}"
-  }
-}`
-    const issue = await issueOrganization.loadJSON();
-    const issueItems = issue.data.vioCity
-    const issueData = issueItems[Math.floor(Math.random() * issueItems.length)];
-    
-    // get surveils
-    const area = new Request(url);
-    area.method = 'POST'
-    area.body = `params={
-      "productId": "${get.productId}", 
-      "api": "${get.api3}",
-      "version": "${get.version}",
-      "verifyToken": "${verifyToken}", 
-    "params": {
-      "internalOrder": "${vioList.internalOrder}",
-      "plateType": "02",
-      "issueOrganization": "${issueData.issueOrganization}"
-    }
-}`
-    const surveils = await area.loadJSON();
-    const vioItems = surveils.data.surveils
-    const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
-
-    // violation Message
-    if (detail !== undefined) {
-      const violationMsg = new Request(url);
-      violationMsg.method = 'POST'
-      violationMsg.body = `params={
-        "productId": "${get.productId}",
-        "api": "${get.api4}",
-        "version": "${get.version}",
-        "verifyToken": "${verifyToken}", 
-        "params": {
-          "violationSerialNumber": "${detail.violationSerialNumber}", 
-          "issueOrganization": "${detail.issueOrganization}"
-    }
-}`
-      const details = await violationMsg.loadJSON();
-      vio = details.data.detail
-      const imgItems = details.data.photos
-      photos = imgItems[Math.floor(Math.random() * imgItems.length)];
-    }
-  }
-} else {
-  if (main.resultCode === 'SYSTEM_ERROR') {
-    notify(main.resultMsg, '');
-  } else {
-    data = { myPlate: myPlate, referer: referer }
-    F_MGR.writeString(cacheFile, JSON.stringify(data));
-    notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
-  }
-  return;
-}
-  
 
 // Presents the main menu
 async function presentMenu() {
   let alert = new Alert();
-  alert.title = "交管 12123"
-  alert.message = get.Ver
+  alert.title = "Mercedes Maybach"
+  alert.message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
-  alert.addAction('累积记分');
-  alert.addAction('组件下载');
-  alert.addAction('修改车牌')
+  alert.addAction('家人地图');
   alert.addAction('预览组件');
   alert.addAction('退出菜单');
   response = await alert.presentAlert();
-  // menu action 1
   if (response === 1) {
-    if (F_MGR.fileExists(folder)) {
-      await F_MGR.remove(folder);
-      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
-    }
+    F_MGR.remove(path);
     return;
   }
   if (response === 2) {
-    data = { myPlate: myPlate, verifyToken: verifyToken }
-    F_MGR.writeString(cacheFile, JSON.stringify(data));
-    Safari.open(get.details);
-    notify('12123_Referer', '点击车牌号码或查询即可更新/获取');
+    Safari.open('amapuri://WatchFamily/myFamily');
   }
   if (response === 3) {
-    const modulePath = await downloadModule();
-    if (modulePath != null) {
-      const importedModule = importModule(modulePath);
-      await importedModule.main();
-    }
+    widget = await createWidget();
   }
-  if (response === 4) {
-    await addLicensePlate();
-  }
-  if (response === 5) {
-    const widget = await createWidget(main);
-    await widget.presentMedium();
-  }
-  if (response === 6) return;
+  if (response === 4) return;
+  // Update the code
   if (response === 0) {
-    const codeString = await new Request(get.update).loadString();
+    const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
     const finish = new Alert();
-    if (codeString.indexOf("交管12123") == -1) {
+    if (codeString.indexOf("Maybach" || "HONDA") == -1) {
       finish.title = "更新失败"
       finish.addAction('OK');
       await finish.presentAlert();
     } else {
-      F_MGR.writeString(  
-        module.filename,
-        codeString
-      );
-      finish.title = "更新成功"
-      finish.addAction('OK');
-      await finish.presentAlert();
-      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+      const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
+      if (iCloudInUse) {
+        F_MGR.writeString(  
+          module.filename,
+          codeString
+        );
+        finish.title = "更新成功";
+        finish.addAction('OK');
+        await finish.presentAlert();
+        Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
+      }
     }
   }
 }
 
-const isMediumWidget =  config.widgetFamily === 'medium'
-if (!config.runsInWidget) {
-  await presentMenu();
-} else {
-  if (isMediumWidget) {
-    const widget = await createWidget(main);
-    Script.setWidget(widget);
-    Script.complete();
-  } else {
-    await createErrorWidget();
-  }
-}
 
-
-// createWidget
+// Create Widget
 async function createWidget() {
+  // 组件背景渐变
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient();
@@ -292,211 +84,404 @@ async function createWidget() {
     "#BCBBBB"
   ]
   const items = color[Math.floor(Math.random()*color.length)];
-  gradient.locations = [0, 1]
+  gradient.locations = [0, 1];
   gradient.colors = [
     new Color(items, 0.5),
     new Color('#00000000')
   ]
   widget.backgroundGradient = gradient
+    
+  // Data Request
+  const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
+  req.method = 'GET'
+  req.headers = {"Cookie": "sessionid=ggylbvv5klxzm6ahibpfng4ldna2cxsy"}
+  const res = await req.loadJSON();
+  if (res.code != 1) return;
+  const data = res.data
+  const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
+  // Status Data
+  if (data.speed <= 5) {
+    state = "已静止";
+    status = "[ 车辆静止中 ]";
+  } else {
+    state = `${data.speed} km·h`;
+    status = `[ 车速 ${data.speed} km·h ]`;
+  }
+  
+  // Get address (aMap)
+  const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${data.longitude},${data.latitude}`).loadJSON();
+  const address = adr.regeocode.formatted_address  
+  
+  // 计算停车时长(红绿灯图标)
+  const timestamp = Date.parse(new Date());
+  const parkingTime = (timestamp - data.updateTime);
+  const days = Math.floor(parkingTime/(24 * 3600 * 1000));
+  const P1 = parkingTime % (24 * 3600 * 1000);
+  const hours1 = Math.floor(P1 / (3600 * 1000));
+  const P2 = P1 % (3600 * 1000);
+  const minutes1 = Math.floor(P2 / (60 * 1000));
+  
+  // Timestamp Conversion
+  const date = new Date(data.updateTime);
+  const Y = date.getFullYear() + '-';
+  const M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+  const D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate()) + ' ';
+  const h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) + ':';
+  const m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes()); //+ ':';
+  //const s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
+  const GMT = (Y+M+D+h+m);//+s
+  const GMT2 = (M+D+h+m);
+  
+  // Saved Json
+  runObj = {
+    updateTime: data.updateTime, 
+    address: address,
+    run: data.owner,
+    coordinates: `${data.longitude},${data.latitude}`,
+    pushTime: timestamp,
+    parkingTime: GMT2
+  }
+    
+  object = {
+    ...runObj,
+    run: data.speed
+  }
+  // Initial Save
+  if (!F_MGR.fileExists(cacheFile)) {
+    F_MGR.writeString(
+      cacheFile,
+      JSON.stringify(runObj, null, 2)
+    );
+    json = JSON.parse(
+F_MGR.readString(cacheFile)
+    );
+  }
   
   /**
    * 界面显示布局(左到右)
    * @param {image} image
    * @param {string} text
    * Cylindrical Bar Chart
+   * setPadding(10, 17, 10, 15)
    */
-  widget.setPadding(15, 18, 15, 15);
-  widget.addSpacer()
+  widget.setPadding(10, 10, 10, 15);
   const mainStack = widget.addStack();
+  mainStack.addSpacer();
   mainStack.layoutHorizontally();
-  mainStack.centerAlignContent();
-  
-  // Left Stack Violation Data
+    
+  // Left Main Stack
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
   leftStack.addSpacer();
   // plateStack
   const plateStack = leftStack.addStack();
-  textPlate = plateStack.addText(myPlate);
+  const textPlate = plateStack.addText(minutes1 <= 3 ? 'Maybach🚦' : '琼A·849A8');
   textPlate.font = Font.mediumSystemFont(19);
-  textPlate.textColor = Color.black();
-  leftStack.addSpacer(6)
-
-  // Car icon
-  const carIconStack = leftStack.addStack();
-  carIconStack.layoutHorizontally();
-  carIconStack.centerAlignContent();
-  const man = SFSymbol.named('car');
-  const carIcon = carIconStack.addImage(man.image);
-  carIcon.imageSize = new Size(14, 14);
-  carIcon.tintColor = nothing ? Color.blue() : Color.red();
-  carIconStack.addSpacer(5);
-  // vehicleModel
-  const vehicleModel = carIconStack.addStack();
-  vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
-  vehicleModelText.font = Font.mediumSystemFont(12);
-  vehicleModelText.textColor = new Color('#494949');
+  textPlate.textColor =Color.black();
   leftStack.addSpacer(3)
-
-  // violationPoint
-  const vioPointStack = leftStack.addStack();
-  const vioPoint = vioPointStack.addStack();
-  if (!nothing) {
-    vioPointText = vioPoint.addText(`罚款${vio.fine}元、` + `扣${vio.violationPoint}分`);
-    vioPointText.font = Font.mediumSystemFont(12);
-    vioPointText.textColor = new Color('#484848');
-    leftStack.addSpacer(3)
-  }
     
-  // validPeriodEnd icon
+  // Mercedes Logo
+  const benzStack = leftStack.addStack();
+  benzStack.layoutHorizontally();
+  benzStack.centerAlignContent();
+  const iconSymbol = SFSymbol.named('car');
+  const carIcon1 = benzStack.addImage(iconSymbol.image);
+  carIcon1.imageSize = new Size(16, 16);
+  benzStack.addSpacer(4);
+  // mercedes text
+  const vehicleModel = benzStack.addStack();
+  const vehicleModelText = vehicleModel.addText('Mercedes');
+  vehicleModelText.font = Font.mediumSystemFont(14);
+  vehicleModelText.textColor = new Color('#424242');
+  leftStack.addSpacer(3)
+  
+  // update time icon
   const dateStack = leftStack.addStack();
   dateStack.layoutHorizontally();
   dateStack.centerAlignContent();
-  if (nothing) {
-    const iconSymbol2 = SFSymbol.named('timer');
-    const carIcon2 = dateStack.addImage(iconSymbol2.image)
-    carIcon2.imageSize = new Size(14, 14);
-    dateStack.addSpacer(5);
-  }
-    
-  // validPeriodEndDate
+  const iconSymbol2 = SFSymbol.named('timer');
+  const carIcon2 = dateStack.addImage(iconSymbol2.image)
+  carIcon2.imageSize = new Size(16, 16);
+  dateStack.addSpacer(4);
+  // update time text
   const updateTime = dateStack.addStack();
-  const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
-  textUpdateTime.font = Font.mediumSystemFont(12);  
-  textUpdateTime.textColor = new Color('#484848');
-  leftStack.addSpacer(nothing ? 25 : 8)
-    
-
-  // Status barRow
+  const textUpdateTime = updateTime.addText(GMT2);
+  textUpdateTime.font = Font.mediumSystemFont(13);
+  textUpdateTime.textColor = new Color('#424242');
+  leftStack.addSpacer(22)
+  
+  // Left Stack barRow
   const barStack = leftStack.addStack();
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
   barStack.setPadding(3, 10, 3, 10);
-  // violation Early Warning
+  
   barStack.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack.cornerRadius = 10
-  barStack.borderColor = nothing ? Color.green() : new Color('#FF1744', 0.7);
+  barStack.borderColor = new Color(data.speed <= 5 ? '#AB47BC' : '#FF1744', 0.7);
   barStack.borderWidth = 2
-  if (nothing) {
-    // bar icon
-    const barIcon = SFSymbol.named('leaf.fill');
-    const barIconElement = barStack.addImage(barIcon.image);
-    barIconElement.imageSize = new Size(16, 16);
-    barStack.addSpacer(4);
-  }
+  // bar icon
+  const barIcon = SFSymbol.named(data.speed <= 5 ? 'location' : 'location.fill');
+  const barIconElement = barStack.addImage(barIcon.image);
+  barIconElement.imageSize = new Size(16, 16);
+  barIconElement.tintColor = data.speed <= 5 ? Color.purple() : Color.red();
+  barStack.addSpacer(4);
   // bar text
-  const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
+  const totalMonthBar = barStack.addText(state);
   totalMonthBar.font = Font.mediumSystemFont(14);
-  totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000')
+  totalMonthBar.textColor = new Color(data.speed <= 5 ? '#AA00FF' : '#D50000');
   leftStack.addSpacer(8)
 
-
-  // Driver's license bar
+  // Left Stack barRow2
   const barStack2 = leftStack.addStack();
   barStack2.layoutHorizontally();
   barStack2.centerAlignContent();
   barStack2.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack2.setPadding(3, 10, 3, 10);
   barStack2.cornerRadius = 10
-  barStack2.borderColor = new Color('#AB47BC', 0.7);
+  barStack2.borderColor = new Color('#616161', 0.7);
   barStack2.borderWidth = 2
   // bsr icon
-  const barIcon2 = SFSymbol.named('mail.fill');
+  const barIcon2 = SFSymbol.named('lock.shield.fill');
   const barIconElement2 = barStack2.addImage(barIcon2.image);
   barIconElement2.imageSize = new Size(16, 16);
-  barIconElement2.tintColor = Color.purple();
+  barIconElement2.tintColor = Color.green();
   barStack2.addSpacer(4);
-  // cumulativePoint Bar Text
-  const totalMonthBar2 = barStack2.addText(`记${referer.match(/cumulativePoint=(.+)/)[1]}分`);
+  // bar text
+  const totalMonthBar2 = barStack2.addText('已锁车');
   totalMonthBar2.font = Font.mediumSystemFont(14);
-  totalMonthBar2.textColor = new Color('#616161')
+  totalMonthBar2.textColor = new Color('#616161');
   leftStack.addSpacer();
-
-
-  /*
-  * Right Main Stack
-  * Car image
-  * App Logo
-  * Violation Address
-  */
+    
+    
+  /**
+   * right Stack
+   * Car Logo and image
+   * @param {image} image
+   * @param {string} address
+   */
   const rightStack = mainStack.addStack();
   rightStack.layoutVertically();
   rightStack.addSpacer();
   // Car Logo
   const carLogoStack = rightStack.addStack();
   carLogoStack.addSpacer();
-  textPlate2 = carLogoStack.addText('交管12123')
-  textPlate2.font = Font.boldSystemFont(14);
-  textPlate2.rightAlignText();
-  textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length <= 19 ? 17 : 14);
-
+  const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
+  const image = carLogoStack.addImage(carLogo);
+  image.imageSize = new Size(27,27);
+  image.tintColor = Color.black();
+  rightStack.addSpacer(2)
+    
   // Car image
   const carImageStack = rightStack.addStack();
-  carImageStack.setPadding(-20, 6, 0, 0);
-  const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
+  carImageStack.setPadding(-20, 5, 0, 0);
+  const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
+  const resUrl = await imgUrl.loadJSON();
+  const item = resUrl.maybach[Math.floor(Math.random() * resUrl.maybach.length)];
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
-  imageCar.imageSize = new Size(225, 100);
-  rightStack.addSpacer(2);
+  imageCar.imageSize = new Size(225,100);
+  rightStack.addSpacer(2)
 
   // show address
-  const tipsStack = rightStack.addStack();
-  tipsStack.layoutHorizontally();
-  tipsStack.centerAlignContent();
-  tipsStack.size = new Size(230, 30)
-  const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : 11.3);
+  const adrStack = rightStack.addStack();
+  adrStack.layoutHorizontally();
+  adrStack.centerAlignContent();
+  adrStack.size = new Size(230, 30)
+  const jmz = {};
+  jmz.GetLength = function(str) {
+    return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
+  };  
+  str = (jmz.GetLength(address));
+    
+  if (str <= 35) {
+    textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}` + `${adr.regeocode.pois[0].distance}米`)
+  } else if (str < 46) {
+    textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}`);
+  } else {
+    textAddress = adrStack.addText(address);
+  }
+  textAddress.font = Font.mediumSystemFont(11.3);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
-  widget.addSpacer();
-
+  
   // jump content
-  barStack2.url = get.status;
-  textPlate2.url = get.details;
-  if (!nothing) {
-    textAddress.url = `${photos}`;
+  barStack2.url = 'amapuri://WatchFamily/myFamily';
+  textAddress.url = mapUrl;
+  imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
+  
+  if (!config.runsInWidget) {  
+    await widget.presentMedium();
+  } else {
+    Script.setWidget(widget);
+    Script.complete();
+  }
+
+  /**
+   * Electronic Fence
+   * 判断run为HONDA触发电子围栏
+   * 推送信息到微信
+   */
+  const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON(); // accessToken
+  
+  const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
+  
+  if (json.run !== 'HONDA') {
+    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${data.longitude},${data.latitude}`).loadJSON();  
+    const distance = fence.route.paths[0].distance  
+    
+    if (distance > 20) {
+      // push message to WeChat_1
+      const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
+      weChat_1.method = 'POST'
+      weChat_1.body = `{
+  "touser": "DianQiao",
+  "agentid": "1000004",
+  "msgtype": "news",
+  "news": {
+    "articles": [
+      {
+        "title": "${address}",
+        "picurl": "${mapKey},0:${data.longitude},${data.latitude}",
+        "description": "${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米",
+        "url": "${mapUrl}"
+      }
+    ]
+  }
+}`;
+      await weChat_1.loadJSON();
+      notify(status + ' ' + GMT, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(runObj)
+      );
+      return;// pushEnd_1
+    }
+  }
+  
+      
+  /**
+   * 车辆状态触发条件
+   * 驻车时长，行驶中，静止状态
+   * 推送信息到微信
+   */
+  const date1 = (timestamp - json.pushTime);
+  const L1 = date1 % (24 * 3600 * 1000);
+  const hours = Math.floor(L1 / (3600 * 1000));
+  const L2 = L1 % (3600 * 1000);
+  const minutes = Math.floor(L2 / (60 * 1000));
+  const L3 = L2 % (60 * 1000);
+  const seconds = Math.round(L3 / 1000);
+  let moment = (hours * 60 + minutes)
+  
+  if (data.speed <= 5) {
+    const duration = data.updateTime == json.updateTime ? 180 : 10
+    if (moment >= duration) {
+      // push message to WeChat_2
+      const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
+      weChat_2.method = 'POST'
+      weChat_2.body = `{
+  "touser": "DianQiao",
+  "agentid": "1000004",
+  "msgtype": "news",
+  "news": {
+    "articles": [
+      {
+        "title": "${address}",
+        "picurl": "${mapKey},0:${data.longitude},${data.latitude}",
+        "description": "${status} 停车时间 ${GMT}",
+        "url": "${mapUrl}"
+      }
+    ]
+  }
+}`;
+      await weChat_2.loadJSON();
+      notify(status + ' ' + GMT, address, mapUrl);
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(object)
+      );
+    } 
+  } else {
+    if (json.run !== 'HONDA'){
+      // push message to WeChat_3
+      const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
+      weChat_3.method = 'POST'
+      weChat_3.body = `{
+  "touser": "DianQiao",
+  "agentid": "1000004",
+  "msgtype": "news",
+  "news": {
+    "articles": [
+      {
+        "title": "${address}",
+        "picurl": "${mapKey},0:${data.longitude},${data.latitude}",
+        "description": "${status} 启动时间 ${GMT}",
+        "url": "${mapUrl}"
+      }
+    ]
+  }
+}`;
+      await weChat_3.loadJSON();
+      notify(status + ' ' + GMT, address, mapUrl)
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(runObj)
+      );
+    } else {
+      // push message to WeChat_4
+      const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
+      weChat_4.method = 'POST'
+      weChat_4.body = `{
+  "touser": "DianQiao",
+  "agentid": "1000004",
+  "msgtype": "news",
+  "news": {
+    "articles": [
+      {
+        "title": "${address}",
+        "picurl": "${mapKey},0:${data.longitude},${data.latitude}",
+        "description": "${status} 更新时间 ${GMT}",
+        "url": "${mapUrl}"
+      }
+    ]
+  }
+}`;
+      await weChat_4.loadJSON();
+      notify(status + ' ' + GMT, address, mapUrl);
+      F_MGR.writeString(
+        cacheFile,
+        JSON.stringify(runObj)
+      );
+      return;
+    }
   }
   return widget;
 }
 
-async function downloadModule() {
-  const modulePath = F_MGR.joinPath(folder, 'store.js');
-  if (F_MGR.fileExists(modulePath)) {
-    await F_MGR.remove(modulePath)
-  }
-  const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW45NWR1U3RvcmUuanM='));
-  const moduleJs = await req.load().catch(() => {
-    return null;
-  });
-  if (moduleJs) {
-    F_MGR.write(modulePath, moduleJs);
-    return modulePath;
-  }
+const isMediumWidget =  config.widgetFamily === 'medium'
+if (config.runsInWidget) {
+  isMediumWidget ? widget = await createWidget() : await createErrorWidget();
+} else {
+  await presentMenu();
 }
 
 /**
- * 存储当前设置
- * @param { JSON } string
+ * 弹出一个通知
+ * @param {string} title
+ * @param {string} body
+ * @param {string} url
+ * @param {string} sound
  */
-async function saveSettings () {
-  data = {
-    verifyToken: verifyToken,
-    referer: referer,
-    myPlate: myPlate
-  }
-  typeof data === 'object' ?  F_MGR.writeString(cacheFile, JSON.stringify(data)) : null
-  console.log(JSON.stringify(data, null, 2))
-}
-
 async function notify (title, body, url, opts = {}) {
-  let n = new Notification()
+  let n = new Notification();
   n = Object.assign(n, opts);
   n.title = title
   n.body = body
+  n.sound = 'piano_success'
   if (url) n.openURL = url
-  return await n.schedule()
+  return await n.schedule();
 }
 
 async function getImage(url) {
@@ -510,14 +495,4 @@ async function createErrorWidget() {
   text.font = Font.systemFont(17);
   text.centerAlignText();
   Script.setWidget(widget);
-}
-
-async function shadowImage(img) {
-  let ctx = new DrawContext()
-  ctx.size = img.size
-  ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
-  // 图片遮罩颜色、透明度设置
-  ctx.setFillColor(new Color("#000000", 0.2))
-  ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-  return await ctx.getImage()
 }
