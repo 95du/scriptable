@@ -12,9 +12,7 @@ async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duTelecom");
-  if (!F_MGR.fileExists(folder)) {
-    F_MGR.createDirectory(folder)
-  }
+  
   // Background image path  
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
