@@ -309,6 +309,7 @@ async function createWidget() {
   widget.addSpacer()
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
+  mainStack.centerAlignContent();
   
   // Left Stack Violation Data
   const leftStack = mainStack.addStack();
@@ -348,16 +349,18 @@ async function createWidget() {
   }
     
   // validPeriodEnd icon
-  const updateTimeStack = leftStack.addStack();
+  const dateStack = leftStack.addStack();
+  dateStack.layoutHorizontally();
+  dateStack.centerAlignContent();
   if (nothing) {
     const iconSymbol2 = SFSymbol.named('timer');
-    const carIcon2 = updateTimeStack.addImage(iconSymbol2.image);
+    const carIcon2 = dateStack.addImage(iconSymbol2.image)
     carIcon2.imageSize = new Size(14, 14);
-    updateTimeStack.addSpacer(5);
+    dateStack.addSpacer(5);
   }
     
   // validPeriodEndDate
-  const updateTime = updateTimeStack.addStack();
+  const updateTime = dateStack.addStack();
   const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
   textUpdateTime.font = Font.mediumSystemFont(12);  
   textUpdateTime.textColor = new Color('#484848');
