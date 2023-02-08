@@ -304,14 +304,13 @@ async function createWidget() {
    * @param {image} image
    * @param {string} text
    * Cylindrical Bar Chart
-   * setPadding(15, 18, 15, 15)
    */
-  widget.setPadding(15, 14, 15, 10);
+  widget.setPadding(0, 16, 0, 16);
+  widget.addSpacer()
   const mainStack = widget.addStack();
-  mainStack.addSpacer();
   mainStack.layoutHorizontally();
   
-  // Left Main Stack Violation Data
+  // Left Stack Violation Data
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
   leftStack.addSpacer();
@@ -435,7 +434,7 @@ async function createWidget() {
   const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
-  imageCar.imageSize = new Size(228, 100);
+  imageCar.imageSize = new Size(225, 100);
   rightStack.addSpacer(2);
 
   // show address
@@ -448,6 +447,7 @@ async function createWidget() {
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
+  widget.addSpacer();
 
   // jump content
   barStack2.url = get.status;
