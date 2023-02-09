@@ -344,7 +344,7 @@ async function createSmallWidget() {
   ]
   widget.backgroundGradient = gradient
   
-  const width = 135
+  const width = 130
   const height = 10
   
   const logoImage = 
