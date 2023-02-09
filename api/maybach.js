@@ -121,16 +121,13 @@ async function createWidget() {
   const P2 = P1 % (3600 * 1000);
   const minutes1 = Math.floor(P2 / (60 * 1000));
   
-  // Timestamp Conversion
+  // Timestamp Formatter
   const date = new Date(data.updateTime);
-  const Y = date.getFullYear() + '-';
-  const M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-  const D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate()) + ' ';
-  const h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) + ':';
-  const m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes()); //+ ':';
-  //const s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
-  const GMT = (Y+M+D+h+m);//+s
-  const GMT2 = (M+D+h+m);
+  const df = new DateFormatter();
+  df.dateFormat = 'yyyy-MM-dd HH:mm';
+  const GMT = (df.string(date));
+  df.dateFormat = 'MM-dd HH:mm';
+  const GMT2 = (df.string(date));
   
   // Saved Json
   runObj = {
@@ -306,11 +303,9 @@ F_MGR.readString(cacheFile)
   textAddress.centerAlignText();
   rightStack.addSpacer();
   
-  // jump show familyMap
+  // jump content
   barStack2.url = 'amapuri://WatchFamily/myFamily';
-  // jump show map
   textAddress.url = mapUrl;
-  // jump run widget
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
   
   if (!config.runsInWidget) {  
