@@ -11,13 +11,16 @@ https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_95598_token.sgm
 =========Quantumult-X=========
 [MITM]
 hostname = 95598.csg.cn
+
 [rewrite_local]
 ^https:\/\/95598\.csg\.cn\/ucs\/ma\/zt\/eleCustNumber\/queryBindEleUsers url script-request-header https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/SouthernPower.js
+
 ============Surge=============
 [Script]
 南网在线Token = type=http-request,pattern=^https:\/\/95598\.csg\.cn\/ucs\/ma\/zt\/eleCustNumber\/queryBindEleUsers,requires-body=0,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/SouthernPower.js,script-update-interval=0
 [MITM]
 hostname = %APPEND% 95598.csg.cn
+==============================
 
 * 小组件作者: 95度茅台
 * 获取token作者: @Fokit
@@ -38,7 +41,6 @@ if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
   data = JSON.parse(data)
 } else {
-  // quantumult x get token
   try {
     boxjs = await new Request('http://boxjs.com/query/data/token_95598').loadJSON();
     token = Pasteboard.copy(boxjs.val)
@@ -209,7 +211,6 @@ async function createWidget() {
   const widget = new ListWidget();
   const gradient = new LinearGradient()
   color = [
-    "#82B1FF",
     "#99CCCC",
     "#BCBBBB"
   ]
@@ -374,9 +375,9 @@ async function createWidget() {
   //balance Use Text
   const contain = bal.indexOf(".") != -1
   if (contain === false) {
-    balanceUseText = rightStack.addText(bal + '.00 rmb')
+    balanceUseText = rightStack.addText(`￥${bal}.00`)
   } else {
-    balanceUseText = rightStack.addText(bal + ' rmb')
+    balanceUseText = rightStack.addText('￥' + bal)
   }
   balanceUseText.textColor = Color.blue();
   balanceUseText.font = Font.boldSystemFont(14)
@@ -399,7 +400,7 @@ async function createWidget() {
   eleBillText.textOpacity = 0.7;
   rightStack.addSpacer(3)
   // ele Bill Total Text
-  const eleBillTotalText = rightStack.addText(`${arrears} rmb`)
+  const eleBillTotalText = rightStack.addText(`￥${arrears}`)
   eleBillTotalText.textColor = Color.blue();
   eleBillTotalText.font = Font.boldSystemFont(14)
   eleBillTotalText.leftAlignText()
@@ -421,7 +422,7 @@ async function createWidget() {
   arrearsText.textOpacity = 0.7;
   rightStack.addSpacer(3)
   // arrears total text
-  const arrearsTotalText = rightStack.addText(`${pay} rmb`);
+  const arrearsTotalText = rightStack.addText(`￥${pay}`);
   arrearsTotalText.textColor = Color.blue();
   arrearsTotalText.font = Font.boldSystemFont(14)
   arrearsTotalText.leftAlignText()
