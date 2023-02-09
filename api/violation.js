@@ -406,7 +406,7 @@ async function createWidget() {
   barIconElement2.tintColor = Color.purple();
   barStack2.addSpacer(4);
   // cumulativePoint Bar Text
-  const totalMonthBar2 = barStack2.addText(`记${referer.match(/cumulativePoint=(.+)/)[1]}分`);
+  const totalMonthBar2 = barStack2.addText(`记${referer.match(/cumulativePoint=(.+)[&a-z]?/)[1]}分`);
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#616161')
   leftStack.addSpacer();
