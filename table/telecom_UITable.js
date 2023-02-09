@@ -12,7 +12,9 @@ async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duTelecom");
-  
+  if (!F_MGR.fileExists(folder)) {
+    F_MGR.createDirectory(folder)
+  }
   // Background image path  
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
@@ -68,7 +70,7 @@ async function main() {
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-  
+  console.log(dayNumber)
   if (setting.init === false || dayNumber !== setting.dayNumber) {
     setting = {
       ...setting,
@@ -147,7 +149,7 @@ async function main() {
     rightStack.addSpacer();
     let balanceText = rightStack.addText(balanceAvailable);
     balanceText.centerAlignText();
-    balanceText.textColor = new Color(setting.balanceColor);
+    balanceText.textColor = Color.red();
     balanceText.font = new Font('Georgia-Bold', 25);
     rightStack.addSpacer();
     widget.addSpacer(5)
@@ -367,7 +369,7 @@ async function main() {
       widget.backgroundGradient = gradient
     }
     
-    const width = 135
+    const width = 130
     const height = 10
     
     const logoImage = 
