@@ -261,7 +261,7 @@ async function main() {
     leftStack.addSpacer(nothing ? 25 : 8)
       
   
-    // Status barRow
+    // Status Columnar bar
     const barStack = leftStack.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
@@ -285,7 +285,7 @@ async function main() {
     leftStack.addSpacer(8)
   
   
-    // Driver's license bar
+    // cumulativePoint Columnar bar
     const barStack2 = leftStack.addStack();
     barStack2.layoutHorizontally();
     barStack2.centerAlignContent();
