@@ -7,15 +7,20 @@
  * Version 1.2
  * 2022-12-19 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  * 🚫如运行时报错，在iCloud中的Scriptable目录里删除oil文件夹。
- * ⚠️适配机型: 手动修改第9、10行的数字
+ * ⚠️适配机型: 手动修改第12、13行的数字
  */
+
 const value = 6 //小机型改成 4
 const wide = 8 //小机型改成 6
 
+const df = new DateFormatter();
+df.dateFormat = 'HH:mm:ss';
+
 try {
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-  forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+  forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',') + '  ♻️' + (df.string(new Date()));
 } catch(e) { console.log(e) }
 
 const F_MGR = FileManager.iCloud();
