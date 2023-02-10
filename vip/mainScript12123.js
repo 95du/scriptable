@@ -11,25 +11,25 @@
 获取Token重写:
 https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
 
-============ 使用方法 ============
+============使用方法============
 1，配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
 2，Referer (用于获取车辆检验有效期时间及累积记分) 按提示点击12123小程序页面。
 3，使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
 
-================================
+===============================
 一键添加 boxjs 重写到 Quantumult-X https://api.boxjs.app/quanx-install
 
 Boxjs订阅（可选）：http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubusercontent.com%2FFoKit%2FScripts%2Fmain%2Fboxjs%2Ffokit.boxjs.json
 
 手动配置重写规则：
-========= Quantumult-X =========
+=========Quantumult-X=========
 [rewrite_local]
 ^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js
 
 [MITM]
 hostname = miniappcsfw.122.gov.cn
 
-============ Surge =============
+============Surge=============
 [Script]
 12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
 
@@ -151,8 +151,14 @@ async function main() {
     }
   }`
       const issue = await issueOrganization.loadJSON();
-      const issueItems = issue.data.vioCity
-      const issueData = issueItems[Math.floor(Math.random() * issueItems.length)];
+      const issueArr = issue.data.vioCity
+      let newArr = [];
+      for (const item of issueArr) {
+        if (item.vioCount >= 1) {
+          newArr.push(item)
+        }
+      }
+      const issueData = newArr[Math.floor(Math.random() * newArr.length)];
       
       // get surveils
       const area = new Request(url);
@@ -162,16 +168,17 @@ async function main() {
         "api": "${get.api3}",
         "version": "${get.version}",
         "verifyToken": "${verifyToken}", 
-      "params": {
-        "internalOrder": "${vioList.internalOrder}",
-        "plateType": "02",
-        "issueOrganization": "${issueData.issueOrganization}"
-      }
-  }`
+        "params": {
+          "internalOrder": "${vioList.internalOrder}",
+          "plateType": "02",
+          "issueOrganization": "${issueData.issueOrganization}"
+        }
+      }`
       const surveils = await area.loadJSON();
       const vioItems = surveils.data.surveils
-      const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
-  
+      detail = vioItems[Math.floor(Math.random() * vioItems.length)];
+  console.log(detail)
+    
       // violation Message
       if (detail !== undefined) {
         const violationMsg = new Request(url);
@@ -184,22 +191,29 @@ async function main() {
           "params": {
             "violationSerialNumber": "${detail.violationSerialNumber}", 
             "issueOrganization": "${detail.issueOrganization}"
-      }
-  }`
+           }
+        }`
         const details = await violationMsg.loadJSON();
         vio = details.data.detail
         const imgItems = details.data.photos
         photos = imgItems[Math.floor(Math.random() * imgItems.length)];
+      } else {
+        photos = get.alipay
+        vio = {
+          fine: '0',
+          violationPoint: '0',
+          violationAddress: '保持良好的驾驶习惯',
+          violation: '遵守交通规则 🚫'
+        }
       }
     }
-  } else {
-    if (main.resultCode === 'SYSTEM_ERROR') {
-      notify(main.resultMsg, '');
-    } else {
-      data = { myPlate: myPlate, referer: referer }
-      F_MGR.writeString(cacheFile, JSON.stringify(data));
-      notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
+  } else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST') {
+    data = { 
+      myPlate: myPlate,
+      referer: referer
     }
+    F_MGR.writeString(cacheFile, JSON.stringify(data));
+    notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
     return;
   }
     
@@ -352,7 +366,7 @@ async function main() {
     const dateStack = leftStack.addStack();
     dateStack.layoutHorizontally();
     dateStack.centerAlignContent();
-    if (nothing) {
+    if (nothing || detail === undefined) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(14, 14);
@@ -361,10 +375,10 @@ async function main() {
       
     // validPeriodEndDate
     const updateTime = dateStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
-    textUpdateTime.font = Font.mediumSystemFont(12);  
+    const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
+    textUpdateTime.font = Font.mediumSystemFont(12);
     textUpdateTime.textColor = new Color('#484848');
-    leftStack.addSpacer(nothing ? 25 : 8)
+    leftStack.addSpacer(nothing ? 25 : 8);
       
   
     // Status barRow
@@ -407,7 +421,9 @@ async function main() {
     barIconElement2.tintColor = Color.purple();
     barStack2.addSpacer(4);
     // cumulativePoint Bar Text
-    const totalMonthBar2 = barStack2.addText(`记${referer.match(/cumulativePoint=(.+)/)[1]}分`);
+    const cumulativePoint = referer.match(/cumulativePoint=(\d{1,2}|undefined|null)/)[1]
+    console.log('累积记分: ' + cumulativePoint)
+    const totalMonthBar2 = barStack2.addText(`记${cumulativePoint === 'undefined' ? '0' : cumulativePoint}分`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#616161')
     leftStack.addSpacer();
@@ -429,7 +445,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length <= 19 ? 17 : 14);
+    rightStack.addSpacer(nothing ? 16 : vio.violation.length < 9 ? 16 : 14);
   
     // Car image
     const carImageStack = rightStack.addStack();
@@ -446,7 +462,7 @@ async function main() {
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(230, 30)
     const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-    textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : 11.3);
+    textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length <= 19 ? 12 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     rightStack.addSpacer();
