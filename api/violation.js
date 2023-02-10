@@ -174,8 +174,8 @@ if (success === true) {
       }
     }`
     const surveils = await area.loadJSON();
-    vioItems = surveils.data.surveils
-    const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
+    const vioItems = surveils.data.surveils
+    detail = vioItems[Math.floor(Math.random() * vioItems.length)];
 console.log(detail)
   
     // violation Message
@@ -365,7 +365,7 @@ async function createWidget() {
   const dateStack = leftStack.addStack();
   dateStack.layoutHorizontally();
   dateStack.centerAlignContent();
-  if (nothing || vioItems.length === 0) {
+  if (nothing || detail === undefined) {
     const iconSymbol2 = SFSymbol.named('timer');
     const carIcon2 = dateStack.addImage(iconSymbol2.image)
     carIcon2.imageSize = new Size(14, 14);
@@ -444,7 +444,7 @@ async function createWidget() {
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(nothing ? 16 : 14);
+  rightStack.addSpacer(nothing ? 16 : vio.violation.length < 9 ? 16 : 14);
 
   // Car image
   const carImageStack = rightStack.addStack();
@@ -461,7 +461,7 @@ async function createWidget() {
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(230, 30)
   const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length < 18 ? 12 : 11);
+  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length <= 19 ? 12 : 11);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
