@@ -1,12 +1,13 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: pink; icon-glyph: th-large;
+// icon-color: deep-blue; icon-glyph: th-large;
 /**
  * 小组件作者: 95度茅台
  * 随机自动切换多个小组件
  * Version 1.1.0
  * 2022-12-26 15:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  */
 
 const get = await new Request(atob(
