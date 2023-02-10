@@ -3,8 +3,11 @@
 // icon-color: deep-green; icon-glyph: comments;
 /**
 * 小组件作者：95度茅台
-* 小机型修改第 7 行中的[70]⚠️
-* 微信图标修改第 108 行的链接
+* Version 1.1.0
+* 2022-12-25 15:30
+* Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+* 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
+* 小机型修改第 10 行中的数字 65⚠️
 */
 
 const stackSize = new Size(0, 65);
@@ -122,7 +125,7 @@ async function createWidget() {
   const one = await getJson('http://open.iciba.com/dsapi');
   // Next two hours
   await get({"url": "https://ssfc.api.moji.com/sfc/json/nowcast"})
-  const stackBgImage = await getImage(one.fenxiang_img);
+  const stackBgImage = await getImage(one.picture4);
 
   /**
   * Frame Layout
@@ -159,15 +162,13 @@ async function createWidget() {
   eventStack.addSpacer();
   
   // Right timeStack
-  if (result.radarData.content.length <= 18) {
-    const timeStack = eventStack.addStack();
-    timeStack.layoutVertically();
-    const statusText = timeStack.addText('现在');
-    statusText.font = Font.boldSystemFont(12);
-    statusText.textColor = textColor;
-    statusText.textOpacity = 0.4
-    timeStack.addSpacer();
-  }
+  const timeStack = eventStack.addStack();
+  timeStack.layoutVertically();
+  const statusText = timeStack.addText(result.radarData.content.length <= 18 ? '现在' : '');
+  statusText.font = Font.boldSystemFont(12);
+  statusText.textColor = textColor;
+  statusText.textOpacity = 0.4
+  timeStack.addSpacer();
   widget.addSpacer();
   
   /** 
@@ -188,7 +189,7 @@ async function createWidget() {
   const textElement = contentStack.addText(`${one.note}\n${one.content}`);
   textElement.textColor = textColor
   textElement.font = Font.boldSystemFont(14);
-  textElement.textOpacity = 0.7;
+  textElement.textOpacity = 0.9;
   textElement.url = one.fenxiang_img
   contentStack.addSpacer();
   
@@ -250,7 +251,7 @@ async function shadowImage(img) {
   ctx.size = img.size
   ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
   // 图片遮罩颜色、透明度设置
-  ctx.setFillColor(new Color("#000000", 0.4))
+  ctx.setFillColor(new Color("#000000", 0.3))
   ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
   return await ctx.getImage()
 }
