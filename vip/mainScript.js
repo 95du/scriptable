@@ -1,5 +1,4 @@
-async function main() {
-  // Variables used by Scriptable.
+// Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: cloud-download-alt;
 async function main() {
@@ -259,7 +258,4 @@ async function main() {
   })();
   await Run();
 }
-module.exports = { main }
-}
-// async function main()
 module.exports = { main }
