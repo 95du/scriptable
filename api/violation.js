@@ -150,8 +150,14 @@ if (success === true) {
   }
 }`
     const issue = await issueOrganization.loadJSON();
-    const issueItems = issue.data.vioCity
-    const issueData = issueItems[Math.floor(Math.random() * issueItems.length)];
+    const issueArr = issue.data.vioCity
+    let newArr = [];
+    for (const item of issueArr) {
+      if (item.vioCount >= 1) {
+        newArr.push(item)
+      }
+    }
+    const issueData = newArr[Math.floor(Math.random() * newArr.length)];
     
     // get surveils
     const area = new Request(url);
@@ -161,44 +167,53 @@ if (success === true) {
       "api": "${get.api3}",
       "version": "${get.version}",
       "verifyToken": "${verifyToken}", 
-    "params": {
-      "internalOrder": "${vioList.internalOrder}",
-      "plateType": "02",
-      "issueOrganization": "${issueData.issueOrganization}"
-    }
-}`
+      "params": {
+        "internalOrder": "${vioList.internalOrder}",
+        "plateType": "02",
+        "issueOrganization": "${issueData.issueOrganization}"
+      }
+    }`
     const surveils = await area.loadJSON();
-    const vioItems = surveils.data.surveils
-    const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
-
-    // violation Message
-    if (detail !== undefined) {
-      const violationMsg = new Request(url);
-      violationMsg.method = 'POST'
-      violationMsg.body = `params={
-        "productId": "${get.productId}",
-        "api": "${get.api4}",
-        "version": "${get.version}",
-        "verifyToken": "${verifyToken}", 
-        "params": {
-          "violationSerialNumber": "${detail.violationSerialNumber}", 
-          "issueOrganization": "${detail.issueOrganization}"
-    }
-}`
-      const details = await violationMsg.loadJSON();
-      vio = details.data.detail
-      const imgItems = details.data.photos
-      photos = imgItems[Math.floor(Math.random() * imgItems.length)];
+    vioItems = surveils.data.surveils
+    if (vioItems.length > 0) {
+      const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
+  
+      // violation Message
+      if (detail !== undefined) {
+        const violationMsg = new Request(url);
+        violationMsg.method = 'POST'
+        violationMsg.body = `params={
+          "productId": "${get.productId}",
+          "api": "${get.api4}",
+          "version": "${get.version}",
+          "verifyToken": "${verifyToken}", 
+          "params": {
+            "violationSerialNumber": "${detail.violationSerialNumber}", 
+            "issueOrganization": "${detail.issueOrganization}"
+           }
+        }`
+        const details = await violationMsg.loadJSON();
+        vio = details.data.detail
+        const imgItems = details.data.photos
+        photos = imgItems[Math.floor(Math.random() * imgItems.length)];
+      }
+    } else {
+      photos = get.alipay
+      vio = {
+        fine: '0',
+        violationPoint: '0',
+        violationAddress: '请保持良好的驾驶习惯',
+        violation: '务必遵守交通规则'
+      }
     }
   }
-} else {
-  if (main.resultCode === 'SYSTEM_ERROR') {
-    notify(main.resultMsg, '');
-  } else {
-    data = { myPlate: myPlate, referer: referer }
-    F_MGR.writeString(cacheFile, JSON.stringify(data));
-    notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
+} else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST') {
+  data = { 
+    myPlate: myPlate,
+    referer: referer
   }
+  F_MGR.writeString(cacheFile, JSON.stringify(data));
+  notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
   return;
 }
   
@@ -351,7 +366,7 @@ async function createWidget() {
   const dateStack = leftStack.addStack();
   dateStack.layoutHorizontally();
   dateStack.centerAlignContent();
-  if (nothing) {
+  if (nothing || vioItems.length === 0) {
     const iconSymbol2 = SFSymbol.named('timer');
     const carIcon2 = dateStack.addImage(iconSymbol2.image)
     carIcon2.imageSize = new Size(14, 14);
@@ -360,7 +375,7 @@ async function createWidget() {
     
   // validPeriodEndDate
   const updateTime = dateStack.addStack();
-  const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
+  const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
   textUpdateTime.font = Font.mediumSystemFont(12);  
   textUpdateTime.textColor = new Color('#484848');
   leftStack.addSpacer(nothing ? 25 : 8)
@@ -406,7 +421,9 @@ async function createWidget() {
   barIconElement2.tintColor = Color.purple();
   barStack2.addSpacer(4);
   // cumulativePoint Bar Text
-  const totalMonthBar2 = barStack2.addText(`记${referer.match(/cumulativePoint=(\d{1,2})/)[1]}分`);
+  const cumulativePoint = referer.match(/cumulativePoint=(\d{1,2}|undefined|null)/)[1]
+  console.log('累积记分: ' + cumulativePoint)
+  const totalMonthBar2 = barStack2.addText(`记${cumulativePoint === 'undefined' ? '0' : cumulativePoint}分`);
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#616161')
   leftStack.addSpacer();
