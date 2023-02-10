@@ -375,10 +375,10 @@ async function createWidget() {
     
   // validPeriodEndDate
   const updateTime = dateStack.addStack();
-  const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
-  textUpdateTime.font = Font.mediumSystemFont(12);  
+  const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
+  textUpdateTime.font = Font.mediumSystemFont(12);
   textUpdateTime.textColor = new Color('#484848');
-  leftStack.addSpacer(nothing ? 25 : 8)
+  leftStack.addSpacer(nothing ? 25 : 8.2)
     
 
   // Status barRow
@@ -445,7 +445,7 @@ async function createWidget() {
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length <= 19 ? 17 : 14);
+  rightStack.addSpacer(16);
 
   // Car image
   const carImageStack = rightStack.addStack();
@@ -462,7 +462,7 @@ async function createWidget() {
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(230, 30)
   const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : 11.3);
+  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length <= 19 ? 12 : 11);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
