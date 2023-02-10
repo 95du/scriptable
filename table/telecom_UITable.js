@@ -90,7 +90,7 @@ async function main() {
   const voice2nd = setting.voice
   
   const Step1st = 25;
-  const Step2nd = 80;
+  const Step2nd = 82;
   const StepFin = 100;
   const barWidth = 15;
   const barHeigth = 105;
