@@ -327,7 +327,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length <= 19 ? 14);
+    rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length <= 19 ? 14 : 16);
   
     // Car image
     const carImageStack = rightStack.addStack();
