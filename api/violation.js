@@ -419,7 +419,7 @@ async function createWidget() {
   barIconElement2.imageSize = new Size(16, 16);
   barIconElement2.tintColor = Color.purple();
   barStack2.addSpacer(4);
-  // cumulativePoint Bar Text
+  // Bar Text
   const cumulativePoint = referer.match(/cumulativePoint=(\d{1,2}|undefined|null)/)[1]
   console.log('累积记分: ' + cumulativePoint)
   const totalMonthBar2 = barStack2.addText(`记${cumulativePoint === 'undefined' ? '0' : cumulativePoint}分`);
@@ -455,7 +455,7 @@ async function createWidget() {
   imageCar.imageSize = new Size(225, 100);
   rightStack.addSpacer(2);
 
-  // show address
+  // Display Address
   const tipsStack = rightStack.addStack();
   tipsStack.layoutHorizontally();
   tipsStack.centerAlignContent();
