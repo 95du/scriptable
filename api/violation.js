@@ -175,35 +175,34 @@ if (success === true) {
     }`
     const surveils = await area.loadJSON();
     vioItems = surveils.data.surveils
-    if (vioItems.length > 0) {
-      const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
+    const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
+console.log(detail)
   
-      // violation Message
-      if (detail !== undefined) {
-        const violationMsg = new Request(url);
-        violationMsg.method = 'POST'
-        violationMsg.body = `params={
-          "productId": "${get.productId}",
-          "api": "${get.api4}",
-          "version": "${get.version}",
-          "verifyToken": "${verifyToken}", 
-          "params": {
-            "violationSerialNumber": "${detail.violationSerialNumber}", 
-            "issueOrganization": "${detail.issueOrganization}"
-           }
-        }`
-        const details = await violationMsg.loadJSON();
-        vio = details.data.detail
-        const imgItems = details.data.photos
-        photos = imgItems[Math.floor(Math.random() * imgItems.length)];
-      }
+    // violation Message
+    if (detail !== undefined) {
+      const violationMsg = new Request(url);
+      violationMsg.method = 'POST'
+      violationMsg.body = `params={
+        "productId": "${get.productId}",
+        "api": "${get.api4}",
+        "version": "${get.version}",
+        "verifyToken": "${verifyToken}", 
+        "params": {
+          "violationSerialNumber": "${detail.violationSerialNumber}", 
+          "issueOrganization": "${detail.issueOrganization}"
+         }
+      }`
+      const details = await violationMsg.loadJSON();
+      vio = details.data.detail
+      const imgItems = details.data.photos
+      photos = imgItems[Math.floor(Math.random() * imgItems.length)];
     } else {
       photos = get.alipay
       vio = {
         fine: '0',
         violationPoint: '0',
-        violationAddress: '请保持良好的驾驶习惯',
-        violation: '务必遵守交通规则'
+        violationAddress: '保持良好的驾驶习惯',
+        violation: '遵守交通规则🚫'
       }
     }
   }
@@ -378,7 +377,7 @@ async function createWidget() {
   const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
   textUpdateTime.font = Font.mediumSystemFont(12);
   textUpdateTime.textColor = new Color('#484848');
-  leftStack.addSpacer(nothing ? 25 : 8.2)
+  leftStack.addSpacer(nothing ? 25 : 8);
     
 
   // Status barRow
@@ -445,7 +444,7 @@ async function createWidget() {
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(16);
+  rightStack.addSpacer(nothing ? 16 : 14);
 
   // Car image
   const carImageStack = rightStack.addStack();
@@ -462,7 +461,7 @@ async function createWidget() {
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(230, 30)
   const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length <= 19 ? 12 : 11);
+  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length < 18 ? 12 : 11);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
