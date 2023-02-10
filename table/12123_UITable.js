@@ -136,7 +136,7 @@ async function main() {
           fine: '0',
           violationPoint: '0',
           violationAddress: '保持良好的驾驶习惯',
-          violation: '遵守交通规则🚫'
+          violation: '遵守交通规则 🚫'
         }
       }
     }
