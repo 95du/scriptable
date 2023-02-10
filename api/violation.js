@@ -139,16 +139,16 @@ if (success === true) {
     const issueOrganization = new Request(url);
     issueOrganization.method = 'POST'
     issueOrganization.body = `params={
-  "productId": "${get.productId}",
-  "api": "${get.api2}", 
-  "version": "${get.version}",
-  "verifyToken": "${verifyToken}",
-  "params": {
-    "internalOrder": "${vioList.internalOrder}",
-    "plateType": "02",
-    "_issueOrganization": "${plate}"
-  }
-}`
+      "productId": "${get.productId}",
+      "api": "${get.api2}", 
+      "version": "${get.version}",
+      "verifyToken": "${verifyToken}",
+      "params": {
+        "internalOrder": "${vioList.internalOrder}",
+        "plateType": "02",
+        "_issueOrganization": "${plate}"
+      }
+    }`
     const issue = await issueOrganization.loadJSON();
     const issueArr = issue.data.vioCity
     let newArr = [];
