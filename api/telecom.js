@@ -7,7 +7,9 @@
  * Version 1.2.0 增加新样式中号组件
  * 2023-01-18 14:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  */
+
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "telecom");
 if (!F_MGR.fileExists(folder)) {
