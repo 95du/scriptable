@@ -27,7 +27,9 @@ hostname = %APPEND% 95598.csg.cn
 * Version 1.1.0
 * 2022-12-20 20:15
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+* 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
 */
+
 const timestamp = Date.parse(new Date());
 
 const F_MGR = FileManager.iCloud();
