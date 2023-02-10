@@ -260,7 +260,7 @@ async function main() {
     const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
-    leftStack.addSpacer(nothing ? 25 : 8)
+    leftStack.addSpacer(nothing ? 25 : 8.2)
       
   
     // Status barRow
@@ -303,7 +303,7 @@ async function main() {
     barIconElement2.tintColor = Color.purple();
     barStack2.addSpacer(4);
     // cumulativePoint Bar Text
-    const cumulativePoint = referer.match(/cumulativePoint=(\d{1,2}|undefined|null)/)[1]
+    const cumulativePoint = referer.match(/cumulativePoint=(\d{1,2}|undefined|null)/)[1];
     console.log('累积记分: ' + cumulativePoint)
     const totalMonthBar2 = barStack2.addText(`记${cumulativePoint === 'undefined' ? '0' : cumulativePoint}分`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
@@ -349,7 +349,7 @@ async function main() {
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(Number(setting.layout), 30)
     const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-    textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length <= 19 ? 11.5 : 11.3);
+    textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length <= 19 ? 12 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     rightStack.addSpacer();
