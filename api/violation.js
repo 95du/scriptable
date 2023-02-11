@@ -314,7 +314,6 @@ async function createWidget() {
   widget.backgroundGradient = gradient
   
   /**
-   * 界面显示布局(左到右)
    * @param {image} image
    * @param {string} text
    * Cylindrical Bar Chart
@@ -376,7 +375,7 @@ async function createWidget() {
   const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
   textUpdateTime.font = Font.mediumSystemFont(12);
   textUpdateTime.textColor = new Color('#484848');
-  leftStack.addSpacer(nothing ? 25 : 8);
+  leftStack.addSpacer(nothing ? 26 : 9);
     
 
   // Status Columnar bar
@@ -399,8 +398,8 @@ async function createWidget() {
   // bar text
   const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
   totalMonthBar.font = Font.mediumSystemFont(14);
-  totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000')
-  leftStack.addSpacer(8)
+  totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000');
+  leftStack.addSpacer(8);
 
 
   // cumulativePoint Columnar bar
@@ -439,11 +438,11 @@ async function createWidget() {
   // Car Logo
   const carLogoStack = rightStack.addStack();
   carLogoStack.addSpacer();
-  textPlate2 = carLogoStack.addText('交管12123')
+  textPlate2 = carLogoStack.addText('交管12123');
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(nothing ? 17 : detail === undefined ? 17 : 12);
+  rightStack.addSpacer(nothing ? 18 : detail === undefined ? 18 : 13);
 
   // Car image
   const carImageStack = rightStack.addStack();
@@ -458,7 +457,7 @@ async function createWidget() {
   const tipsStack = rightStack.addStack();
   tipsStack.layoutHorizontally();
   tipsStack.centerAlignContent();
-  tipsStack.size = new Size(230, 30)
+  tipsStack.size = new Size(230, 30);
   const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
   textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : detail === undefined ? 12 : 11);
   textAddress.textColor = new Color('#484848');
