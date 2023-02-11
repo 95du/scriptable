@@ -16,7 +16,7 @@ async function main() {
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95du12123");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
-  // Background image path  
+  // Background image path
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
   
@@ -109,8 +109,8 @@ async function main() {
         }
       }`
       const surveils = await area.loadJSON();
-      vioItems = surveils.data.surveils;
-      const detail = vioItems[Math.floor(Math.random() * vioItems.length)];
+      const vioItems = surveils.data.surveils;
+      detail = vioItems[Math.floor(Math.random() * vioItems.length)];
     
       // violation Message
       if (detail !== undefined) {
@@ -280,8 +280,7 @@ async function main() {
     totalMonthBar.font = Font.mediumSystemFont(14);
     totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000');
     leftStack.addSpacer(8);
-  
-  
+    
     // cumulativePoint Columnar bar
     const barStack2 = leftStack.addStack();
     barStack2.layoutHorizontally();
