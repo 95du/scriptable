@@ -319,8 +319,7 @@ async function createWidget() {
    * @param {string} text
    * Cylindrical Bar Chart
    */
-  widget.setPadding(15, 18, 15, 15);
-  widget.addSpacer()
+  widget.setPadding(18, 18, 15, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
   
@@ -465,7 +464,7 @@ async function createWidget() {
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
-  widget.addSpacer();
+  
 
   // jump content
   barStack2.url = get.status;
