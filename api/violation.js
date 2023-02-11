@@ -176,7 +176,6 @@ if (success === true) {
     const surveils = await area.loadJSON();
     const vioItems = surveils.data.surveils
     detail = vioItems[Math.floor(Math.random() * vioItems.length)];
-console.log(detail)
   
     // violation Message
     if (detail !== undefined) {
@@ -400,7 +399,6 @@ async function createWidget() {
   totalMonthBar.font = Font.mediumSystemFont(14);
   totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000');
   leftStack.addSpacer(8);
-
 
   // cumulativePoint Columnar bar
   const barStack2 = leftStack.addStack();
