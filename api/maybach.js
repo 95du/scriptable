@@ -45,7 +45,6 @@ async function presentMenu() {
     widget = await createWidget();
   }
   if (response === 4) return;
-  // Update the code
   if (response === 0) {
     const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
     const finish = new Alert();
@@ -72,7 +71,6 @@ async function presentMenu() {
 
 // Create Widget
 async function createWidget() {
-  // 组件背景渐变
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient();
@@ -90,8 +88,7 @@ async function createWidget() {
     new Color('#00000000')
   ]
   widget.backgroundGradient = gradient
-    
-  // Data Request
+  
   const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
   req.method = 'GET'
   req.headers = {"Cookie": "sessionid=ggylbvv5klxzm6ahibpfng4ldna2cxsy"}
@@ -99,7 +96,7 @@ async function createWidget() {
   if (res.code != 1) return;
   const data = res.data
   const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${data.latitude},${data.longitude}&t=m`;
-  // Status Data
+
   if (data.speed <= 5) {
     state = "已静止";
     status = "[ 车辆静止中 ]";
@@ -464,13 +461,6 @@ if (config.runsInWidget) {
   await presentMenu();
 }
 
-/**
- * 弹出一个通知
- * @param {string} title
- * @param {string} body
- * @param {string} url
- * @param {string} sound
- */
 async function notify (title, body, url, opts = {}) {
   let n = new Notification();
   n = Object.assign(n, opts);
