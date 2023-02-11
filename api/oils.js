@@ -73,7 +73,7 @@ async function createWidget(oil) {
       "#99CCCC",
       "#BCBBBB"
     ]
-  const items = color[Math.floor(Math.random()*color.length)];
+  const items = color[parseInt(Math.random() * color.length)];
   gradient.locations = [0, 1]
   gradient.colors = [
     new Color(items, 0.5),
