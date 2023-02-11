@@ -131,7 +131,7 @@ async function main() {
         const imgItems = details.data.photos
         photos = imgItems[Math.floor(Math.random() * imgItems.length)];
       } else {
-        photos = get.alipay
+        photos = get.details;
         vio = {
           fine: '0',
           violationPoint: '0',
@@ -352,7 +352,7 @@ async function main() {
     
     // jump show status
     barStack2.url = get.status;
-    textPlate2.url = get.details;
+    textPlate2.url = 'tmri12123://'
     if (!nothing) {
       textAddress.url = `${photos}`;
     }
