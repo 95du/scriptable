@@ -324,7 +324,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length < 10 ? 16 : 12);
+    rightStack.addSpacer(nothing ? 17 : detail === undefined ? 17 : 12);
   
     // Car image
     const carImageStack = rightStack.addStack();
@@ -346,7 +346,7 @@ async function main() {
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(Number(setting.layout), 30)
     const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-    textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : vio.violationAddress.length < 10 ? 12 : 11);
+    textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : detail === undefined ? 12 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     rightStack.addSpacer();
