@@ -436,7 +436,7 @@ async function createWidget() {
   */
   const rightStack = mainStack.addStack();
   rightStack.layoutVertically();
-  rightStack.addSpacer();
+  rightStack.addSpacer(10);
   // Car Logo
   const carLogoStack = rightStack.addStack();
   carLogoStack.addSpacer();
@@ -444,7 +444,7 @@ async function createWidget() {
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length < 10 ? 16 : 13);
+  rightStack.addSpacer(nothing ? 16 : vio.violationAddress.length < 10 ? 16 : 12);
 
   // Car image
   const carImageStack = rightStack.addStack();
@@ -461,7 +461,7 @@ async function createWidget() {
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(230, 30)
   const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : (vio.violationAddress + vio.violation).length <= 19 ? 12 : 11);
+  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : vio.violationAddress.length < 10 ? 12 : 11);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
