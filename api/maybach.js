@@ -246,7 +246,7 @@ F_MGR.readString(cacheFile)
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#616161');
   leftStack.addSpacer();
-    
+  
     
   /**
    * right Stack
@@ -281,7 +281,7 @@ F_MGR.readString(cacheFile)
   const adrStack = rightStack.addStack();
   adrStack.layoutHorizontally();
   adrStack.centerAlignContent();
-  adrStack.size = new Size(230, 30)
+  adrStack.size = new Size(226, 30)
   const jmz = {};
   jmz.GetLength = function(str) {
     return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
