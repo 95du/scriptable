@@ -197,7 +197,7 @@ console.log(detail)
       const imgItems = details.data.photos
       photos = imgItems[Math.floor(Math.random() * imgItems.length)];
     } else {
-      photos = get.alipay
+      photos = get.details;
       vio = {
         fine: '0',
         violationPoint: '0',
@@ -467,9 +467,9 @@ async function createWidget() {
 
   // jump content
   barStack2.url = get.status;
-  textPlate2.url = get.details;
+  textPlate2.url = 'tmri12123://'
   if (!nothing) {
-    textAddress.url = `${photos}`;
+    textAddress.url = `${photos}`
   }
   return widget;
 }
