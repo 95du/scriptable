@@ -243,7 +243,7 @@ async function main() {
     const dateStack = leftStack.addStack();
     dateStack.layoutHorizontally();
     dateStack.centerAlignContent();
-    if (nothing || vioItems.length === 0) {
+    if (nothing || detail === undefined) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(14, 14);
