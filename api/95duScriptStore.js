@@ -6,32 +6,31 @@
 * DmYY订阅地址：https://raw.githubusercontent.com/dompling/Scriptable/master/install.json
 * 感谢 @LSP 的帮助
 * LSP订阅地址：https://gitcode.net/enoyee/scriptable/-/raw/master/install/package.json
-* 订阅作者 95度茅台
+* 95度茅台订阅地址 : https://gitcode.net/4qiao/framework/raw/master/scriptable/install.json
 ⚠️ 如运行报错，在 iCloud 里的 Scriptable 文件夹删除 95duSub
 */
 
 const scriptName = '95duSub';
 const scriptUrl = atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5TY3JpcHQuanM=');
 
+const fm = FileManager.iCloud();
+const moduleDir = fm.joinPath(fm.documentsDirectory(), scriptName);
+if (!fm.fileExists(moduleDir)) {
+  fm.createDirectory(moduleDir);
+}
+
 const modulePath = await downloadModule(scriptName, scriptUrl);
 if (modulePath != null) {
-  try {
-    const importedModule = importModule(modulePath);
-    await importedModule.main();
-  } catch(e) {
-    Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
-  }
+  const importedModule = importModule(modulePath);
+  await importedModule.main();
 }
 
 
 async function downloadModule(scriptName, scriptUrl) {
-  const fm = FileManager.local();
-  const scriptPath = module.filename;
-  const moduleDir = scriptPath.replace(fm.fileName(scriptPath, true), scriptName);
-  if (fm.fileExists(moduleDir) && !fm.isDirectory(moduleDir)) fm.remove(moduleDir);
-  if (!fm.fileExists(moduleDir)) fm.createDirectory(moduleDir);
-  const timeStamp = Date.parse(new Date());
-  const moduleFilename = timeStamp.toString() + '.js';
+  const date = new Date();
+  const df = new DateFormatter();
+  df.dateFormat = 'yyyyMMddHHmm';
+  const moduleFilename = df.string(date).toString() + '.js';
   const modulePath = fm.joinPath(moduleDir, moduleFilename);
   if (fm.fileExists(modulePath)) {
     return modulePath;
@@ -45,26 +44,17 @@ async function downloadModule(scriptName, scriptUrl) {
       fm.write(modulePath, moduleJs);
       if (moduleFiles != null) {
         moduleFiles.map(x => {
-          try {
-fm.remove(fm.joinPath(moduleDir, x));  
-          } catch(e) {
-            fm.remove(moduleDir)
-          }
+          fm.remove(fm.joinPath(moduleDir, x));
         });
       }
       return modulePath;
     } else {
-      console.log('Failed to download new module. Using latest local version: ' + moduleLatestFile);
       return (moduleLatestFile != null) ? fm.joinPath(moduleDir, moduleLatestFile) : null;
     }
   }
 }
 
-
 function getModuleVersions(scriptName) {
-  const fm = FileManager.local();
-  const scriptPath = module.filename
-  const moduleDir = scriptPath.replace(fm.fileName(scriptPath, true), scriptName);
   const dirContents = fm.listContents(moduleDir);
   if (dirContents.length > 0) {
     const versions = dirContents.map(x => {
