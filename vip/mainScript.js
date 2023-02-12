@@ -173,7 +173,6 @@ async function main() {
           subscriptionList = JSON.parse(Keychain.get(cacheKey));
         }
         const _actions = [];
-        console.log(subscriptionList);
         subscriptionList.forEach((item) => {
           const { author } = item;
           mainAlert.addAction(author);
