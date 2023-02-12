@@ -317,7 +317,7 @@ async function createWidget() {
    * @param {string} text
    * Cylindrical Bar Chart
    */
-  widget.setPadding(18, 18, 15, 14);
+  widget.setPadding(19, 18, 15, 14);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
   
