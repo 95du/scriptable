@@ -13,7 +13,7 @@
 */
 
 const houseImageUrl = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/house/houseLogo.png').loadImage();
-const imageSize = 150;
+const imageSize = 150
 
 const uri = Script.name();
 const F_MGR = FileManager.local();
@@ -107,10 +107,13 @@ async function createWidget(result) {
   * @param {string} string
   */
   widget.setPadding(15, 15, 15, 15);
-  widget.addSpacer(30);
+  const mainStack = widget.addStack();
+  mainStack.layoutVertically();
+  mainStack.centerAlignContent();
+  mainStack.addSpacer(32);
   
   // Top Stack
-  const topStack = widget.addStack();
+  const topStack = mainStack.addStack();
   topStack.layoutHorizontally();
   topStack.centerAlignContent();
   topStack.addSpacer();
@@ -131,21 +134,17 @@ async function createWidget(result) {
   )
   topStack.addSpacer();
   
-  // Main Stack
-  const mainStack = widget.addStack();
-  mainStack.layoutHorizontally();
-  mainStack.addSpacer();
-  
-  // Left Stack
-  const leftStack = mainStack.addStack();
-  leftStack.layoutVertically();
-  const logoStack = leftStack.addStack();
+  // bottomStack
+  const bottomStack = mainStack.addStack();
+  bottomStack.layoutHorizontally();
+  bottomStack.addSpacer();
+  const logoStack = bottomStack.addStack();
   const houseImage = logoStack.addImage(houseImageUrl);
   houseImage.imageSize = new Size(imageSize, imageSize);
-  mainStack.addSpacer(35);
+  bottomStack.addSpacer(30)
   
   // Right Stack
-  const rightStack = mainStack.addStack();
+  const rightStack = bottomStack.addStack();
   rightStack.layoutVertically();
   rightStack.addSpacer();
   const priceStack = rightStack.addStack();
@@ -168,8 +167,8 @@ async function createWidget(result) {
   cityPriceText.textColor = Color.green();
   cityPriceText.font = Font.boldSystemFont(12);
   rightStack.addSpacer();
+  bottomStack.addSpacer()
   mainStack.addSpacer();
-  widget.addSpacer();
   return widget
 }
 
