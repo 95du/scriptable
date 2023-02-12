@@ -97,8 +97,8 @@ if (!F_MGR.fileExists(cacheFile)) {
 async function addLicensePlate() {
   const alert = new Alert();
   alert.title = '输入车牌号';
-  alert.message = '显示在小组件左上角'
-  alert.addTextField('输入车牌号', F_MGR.fileExists(cacheFile) ? myPlate : '');
+  alert.message = '用于违章时获取数据'
+  alert.addTextField('输入正确的车牌号', F_MGR.fileExists(cacheFile) ? myPlate : '');
   alert.addAction('确定');
   alert.addCancelAction('取消');
   const input = await alert.presentAlert();
