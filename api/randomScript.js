@@ -88,7 +88,6 @@ async function presentMenu() {
     await importedModule.main();
   }
   if (response === 4) return;
-  // Update the code
   if (response === 0) {
     const codeString = await new Request(get.update).loadString();
     if (codeString.indexOf('95度茅台') == -1) {
@@ -111,6 +110,7 @@ async function shortcutsTutorial() {
   tutorial.title = '使用教程';
   tutorial.message = get.msg
   tutorial.addDestructiveAction('重置所有数据');
+  tutorial.addAction('获取仓库Cookie');
   tutorial.addAction('GitCode 捷径');
   tutorial.addAction('上传代码捷径');
   tutorial.addAction('返回上页');
@@ -122,12 +122,14 @@ async function shortcutsTutorial() {
     }
   }
   if (index === 1) {
+    const script = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/boxjs/GitCode.js').loadString();
+    const fm = FileManager.iCloud();
+    fm.writeString(fm.documentsDirectory() + '/GitCode.js', script);
+  } else if (index === 2) {
     Safari.open(get.shortcuts1);
-  }
-  if (index === 2) {
+  } else if (index === 3) {
     Safari.open(get.shortcuts2);
-  }
-  if (index === 3) {
+  } else if (index === 4) {
     await presentMenu();
   }
 }
