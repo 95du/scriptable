@@ -255,7 +255,7 @@ async function main() {
     const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
-    leftStack.addSpacer(nothing ? 26 : 9);
+    leftStack.addSpacer(nothing ? setting.leftGap1 : setting.leftGap2);
       
   
     // Status Columnar bar
@@ -321,7 +321,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing ? 18 : detail === undefined ? 18 : 13);
+    rightStack.addSpacer(nothing ? setting.rightGap1 : detail === undefined ? setting.rightGap1 : setting.rightGap2);
   
     // Car image
     const carImageStack = rightStack.addStack();
@@ -334,15 +334,15 @@ async function main() {
     }
     const carImage = await getImage(item);
     const imageCar = carImageStack.addImage(carImage);
-    imageCar.imageSize = new Size(setting.width, setting.height);
+    imageCar.imageSize = new Size(setting.carWidth, setting.carHeight);
     rightStack.addSpacer(2);
   
     // Display Address
     const tipsStack = rightStack.addStack();
     tipsStack.layoutHorizontally();
     tipsStack.centerAlignContent();
-    tipsStack.size = new Size(Number(setting.layout), 30);
-    const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
+    tipsStack.size = new Size(setting.bottomSize, 30);
+    const textAddress = tipsStack.addText(nothing ? setting.bottomStr : `${vio.violationAddress}，` + `${vio.violation}`);
     textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : detail === undefined ? 12 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
