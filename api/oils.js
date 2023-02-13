@@ -20,7 +20,7 @@ df.dateFormat = 'HH:mm'
 
 try {
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-  forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',') + '  🌀' + (df.string(new Date()));
+  forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
 } catch(e) { console.log(e) }
 
 const F_MGR = FileManager.iCloud();
@@ -125,7 +125,7 @@ async function createWidget(oil) {
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
-  const oilTipsText = barStack1.addText(!forecast ? data.alert : forecast);
+  const oilTipsText = barStack1.addText(!forecast ? data.alert : forecast + '  🌀' + df.string(new Date()));
   oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
