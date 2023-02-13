@@ -114,6 +114,26 @@ async function addLicensePlate() {
   }
 }
 
+const phone = Device.screenSize().height
+if (phone < 926) {
+  size = {
+    leftGap1: 22,
+    leftGap2: 5,
+    rightGap1: 14,
+    rightGap2: 9,
+    carSize: 208,
+    bottomSize: 212
+  }
+} else {
+  size = {
+    leftGap1: 26,
+    leftGap2: 9,
+    rightGap1: 18,
+    rightGap2: 13,
+    carSize: 225,
+    bottomSize: 230
+  }
+}
 
 // violation main
 const violation = new Request(url);
@@ -201,7 +221,7 @@ if (success === true) {
         fine: '0',
         violationPoint: '0',
         violationAddress: '保持良好的驾驶习惯',
-        violation: '遵守交通规则 🚫'
+        violation: '请遵守交通规则🚫'
       }
     }
   }
@@ -362,7 +382,7 @@ async function createWidget() {
   const dateStack = leftStack.addStack();
   dateStack.layoutHorizontally();
   dateStack.centerAlignContent();
-  if (nothing || detail === undefined) {
+  if (nothing || !detail) {
     const iconSymbol2 = SFSymbol.named('timer');
     const carIcon2 = dateStack.addImage(iconSymbol2.image)
     carIcon2.imageSize = new Size(14, 14);
@@ -374,7 +394,7 @@ async function createWidget() {
   const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
   textUpdateTime.font = Font.mediumSystemFont(12);
   textUpdateTime.textColor = new Color('#484848');
-  leftStack.addSpacer(nothing ? 26 : 9);
+  leftStack.addSpacer(nothing ? size.leftGap1 : size.leftGap2);
     
 
   // Status Columnar bar
@@ -440,7 +460,7 @@ async function createWidget() {
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(nothing ? 18 : detail === undefined ? 18 : 13);
+  rightStack.addSpacer(nothing ? size.rightGap1 : !detail ? size.rightGap1 : size.rightGap2);
 
   // Car image
   const carImageStack = rightStack.addStack();
@@ -448,16 +468,16 @@ async function createWidget() {
   const item = get.maybach[Math.floor(Math.random()*get.maybach.length)];
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
-  imageCar.imageSize = new Size(225, 100);
+  imageCar.imageSize = new Size(size.carSize, 100);
   rightStack.addSpacer(2);
 
   // Display Address
   const tipsStack = rightStack.addStack();
   tipsStack.layoutHorizontally();
   tipsStack.centerAlignContent();
-  tipsStack.size = new Size(230, 30);
-  const textAddress = tipsStack.addText(nothing ? '请保持良好的驾驶习惯，务必遵守交通规则' : `${vio.violationAddress}，` + `${vio.violation}`);
-  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : detail === undefined ? 12 : 11);
+  tipsStack.size = new Size(size.bottomSize, 30);
+  const textAddress = tipsStack.addText(nothing ? `${phone < 926 ? '' : '请'}保持良好的驾驶习惯，务必遵守交通规则` : `${vio.violationAddress}，` + `${vio.violation}`);
+  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : !detail ? 12 : 11);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
