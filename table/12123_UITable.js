@@ -342,7 +342,7 @@ async function main() {
     tipsStack.layoutHorizontally();
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(setting.bottomSize, 30);
-    const textAddress = tipsStack.addText(nothing ? setting.bottomStr : `${vio.violationAddress}，` + `${vio.violation}`);
+    const textAddress = tipsStack.addText(nothing ? setting.botStr : `${vio.violationAddress}，` + `${vio.violation}`);
     textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : detail === undefined ? 12 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
