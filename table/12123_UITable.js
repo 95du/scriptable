@@ -134,7 +134,9 @@ async function main() {
         photos = get.details;
         vio = {
           fine: '0',
-          violationPoint: '0'
+          violationPoint: '0',
+          violationAddress: '保持良好的驾驶习惯',
+          violation: '请遵守交通规则🚫'
         }
       }
     }
@@ -250,7 +252,7 @@ async function main() {
       
     // validPeriodEndDate
     const updateTime = dateStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing ? || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
+    const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
     leftStack.addSpacer(nothing ? setting.leftGap1 : setting.leftGap2);
@@ -319,7 +321,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing ? || !detail ? setting.rightGap1 : setting.rightGap2);
+    rightStack.addSpacer(nothing ? setting.rightGap1 : detail === undefined ? setting.rightGap1 : setting.rightGap2);
   
     // Car image
     const carImageStack = rightStack.addStack();
