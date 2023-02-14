@@ -66,7 +66,7 @@ async function main() {
   }`);
   const main = await violation.loadJSON();
   const success = main.success
-  console.log(main)
+  
   if (success === true) {
     vehicle = main.data.list
     vioList = vehicle[Math.floor(Math.random() * vehicle.length)];
