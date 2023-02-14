@@ -134,7 +134,9 @@ async function main() {
         photos = get.details;
         vio = {
           fine: '0',
-          violationPoint: '0'
+          violationPoint: '0',
+          violationAddress: '保持良好的驾驶习惯',
+          violation: '请遵守交通规则🚫'
         }
       }
     }
@@ -241,7 +243,7 @@ async function main() {
     const dateStack = leftStack.addStack();
     dateStack.layoutHorizontally();
     dateStack.centerAlignContent();
-    if (nothing || !detail) {
+    if (nothing || detail === undefined) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(14, 14);
@@ -250,7 +252,7 @@ async function main() {
       
     // validPeriodEndDate
     const updateTime = dateStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
+    const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
     leftStack.addSpacer(nothing ? setting.leftGap1 : setting.leftGap2);
@@ -319,7 +321,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing || !detail ? setting.rightGap1 : setting.rightGap2);
+    rightStack.addSpacer(nothing ? setting.rightGap1 : detail === undefined ? setting.rightGap1 : setting.rightGap2);
   
     // Car image
     const carImageStack = rightStack.addStack();
@@ -341,7 +343,7 @@ async function main() {
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(setting.bottomSize, 30);
     const textAddress = tipsStack.addText(nothing ? setting.botStr : `${vio.violationAddress}，` + `${vio.violation}`);
-    textAddress.font = Font.mediumSystemFont(nothing ? || !detail ? 11.5 : 11);
+    textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : detail === undefined ? 12 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     rightStack.addSpacer();
