@@ -36,10 +36,10 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
-      $.rest_body = $request.body
+      $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
       if ($.rest_body !== $.token) {
-        $.token = $.rest_body
+        $.token = $.rest_body;
         debug($.token);
         $.setdata($.token, $.token_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
