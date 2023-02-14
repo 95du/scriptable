@@ -41,9 +41,10 @@ $.is_debug = $.getdata('is_debug');
       $.rest_body = JSON.parse($.rest_body);
       if ($.rest_body.verifyToken !== $.token.split(",")[0]) {
         $.token = $.rest_body.verifyToken;
-        $.sign = $.rest_body.sign
+        $.sign = $.rest_body.sign;
+        $.authToken = $.rest_body.authToken;
         debug($.token);
-        $.setdata($.token + ',' + $.sign, $.token_key);
+        $.setdata($.token + ',' + $.sign + ',' + $.authToken, $.token_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
         console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
