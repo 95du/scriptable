@@ -39,7 +39,7 @@ $.is_debug = $.getdata('is_debug');
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
       $.rest_body = JSON.parse($.rest_body);
-      if ($.rest_body.verifyToken !== $.token) {
+      if ($.rest_body.verifyToken !== $.token.split("@")[0]) {
         $.token = $.rest_body.verifyToken;
         $.sign = $.rest_body.sign
         debug($.token);
