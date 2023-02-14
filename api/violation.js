@@ -68,7 +68,7 @@ if (!F_MGR.fileExists(folder) || !verifyToken || !referer || referer) {
   }
   if (verifyToken && !referer) {
     Safari.open(get.details);
-    notify('boxjs_referer ⚠️', '点击车牌号或查询即可更新/获取');
+    notify('Boxjs_Referer ⚠️', '点击车牌号或查询即可更新/获取');
     return;
   }
   if (F_MGR.fileExists(cacheFile)) {
@@ -81,12 +81,13 @@ if (!F_MGR.fileExists(cacheFile)) {
   if (!verifyToken) {
     const loginAlert = new Alert();
     loginAlert.title = '交管 12123';
-    loginAlert.message = `\r\n注 : 自动获取Token以及Referer需要Quantumult-X / Surge 辅助运行，具体方法请查看小组件代码开头注释\n\n⚠️获取Referer方法: 当跳转到支付宝12123时点击【 查机动车违法 】再点击【 查询 】，用于获取检验有效期的日期和累积记分\n\r\n小组件作者: 95度茅台\n获取Token作者: @FoKit`;
+    loginAlert.message = `\r\n注 : 自动获取Token以及Referer需要Quantumult-X / Surge 辅助运行，具体方法请查看小组件代码开头注释\n\n⚠️获取Referer方法: 当跳转到支付宝12123【 查机动车违法 】时，点击【 车牌号或查询 】，用于获取检验有效期的日期和累积记分\n\r\n小组件作者: 95度茅台\n获取Token作者: @FoKit`;
     loginAlert.addAction('获取');
     loginAlert.addCancelAction('取消');
     login = await loginAlert.presentAlert();
     if (login === -1) return;
-    Safari.open(get.alipay);
+    Safari.open(get.details);
+    notify('12123_Referer', '点击车牌号或查询即可更新/获取');
     return;
   } else {
     notify('交管12123', `boxjs_token 获取成功: ${verifyToken}`);
@@ -98,7 +99,7 @@ async function addLicensePlate() {
   const alert = new Alert();
   alert.title = '输入车牌号';
   alert.message = '用于违章时获取数据'
-  alert.addTextField('输入正确的车牌号', F_MGR.fileExists(cacheFile) ? myPlate : '');
+  alert.addTextField('输入正确的车牌号', F_MGR.fileExists(cacheFile) ? myPlate : '琼A·99999');
   alert.addAction('确定');
   alert.addCancelAction('取消');
   const input = await alert.presentAlert();
@@ -219,9 +220,7 @@ if (success === true) {
       photos = get.details;
       vio = {
         fine: '0',
-        violationPoint: '0',
-        violationAddress: '保持良好的驾驶习惯',
-        violation: '请遵守交通规则🚫'
+        violationPoint: '0'
       }
     }
   }
@@ -231,7 +230,7 @@ if (success === true) {
     referer: referer
   }
   F_MGR.writeString(cacheFile, JSON.stringify(data));
-  notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
+  notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.details);
   return;
 }
   
@@ -391,7 +390,7 @@ async function createWidget() {
     
   // validPeriodEndDate
   const updateTime = dateStack.addStack();
-  const textUpdateTime = updateTime.addText(nothing ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
+  const textUpdateTime = updateTime.addText(nothing || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
   textUpdateTime.font = Font.mediumSystemFont(12);
   textUpdateTime.textColor = new Color('#484848');
   leftStack.addSpacer(nothing ? size.leftGap1 : size.leftGap2);
@@ -460,7 +459,7 @@ async function createWidget() {
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(nothing ? size.rightGap1 : !detail ? size.rightGap1 : size.rightGap2);
+  rightStack.addSpacer(nothing || !detail ? size.rightGap1 : size.rightGap2);
 
   // Car image
   const carImageStack = rightStack.addStack();
@@ -476,8 +475,8 @@ async function createWidget() {
   tipsStack.layoutHorizontally();
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(size.bottomSize, 30);
-  const textAddress = tipsStack.addText(nothing ? `${phone < 926 ? '' : '请'}保持良好的驾驶习惯，务必遵守交通规则` : `${vio.violationAddress}，` + `${vio.violation}`);
-  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : !detail ? 12 : 11);
+  const textAddress = tipsStack.addText(nothing || !detail ? `${phone < 926 ? '' : '请'}保持良好的驾驶习惯，务必遵守交通规则` : `${vio.violationAddress}，` + `${vio.violation}`);
+  textAddress.font = Font.mediumSystemFont(nothing || !detail ? 11.5 : 11);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
