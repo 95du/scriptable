@@ -39,10 +39,10 @@ $.is_debug = $.getdata('is_debug');
       $.rest_Body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_Body);
       $.rest_body = JSON.parse($.rest_Body);
-      if ($.rest_body.verifyToken !== JSON.parse($.token).verifyToken) {
+      if ($.rest_body.verifyToken !== $.token.verifyToken) {
         $.token = $.rest_Body
         debug($.token);
-        $.setdata($.token, $.token_key);
+        $.setdata(JSON.parse($.token), $.token_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
         console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
