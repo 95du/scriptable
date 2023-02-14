@@ -26,6 +26,7 @@ async function main() {
     verifyToken = setting.verifyToken
     myPlate = setting.myPlate
     referer = setting.referer
+    sign = setting.sign
   }
   
   if (verifyToken && !referer) {
@@ -42,6 +43,7 @@ async function main() {
       referer = boxjs_referer.val
       data = {
         ...setting,
+        sign: sign,
         verifyToken: verifyToken,
         referer: referer
       }
