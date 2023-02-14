@@ -40,7 +40,6 @@ $.is_debug = $.getdata('is_debug');
       debug($.rest_Body);
       $.rest_body = JSON.parse($.rest_Body);
       $.token = JSON.parse($.token);
-      debug($.token)
       if ($.rest_body.verifyToken !== $.token.verifyToken) {
         $.token = $.rest_Body
         debug($.token);
