@@ -39,7 +39,8 @@ $.is_debug = $.getdata('is_debug');
       $.rest_Body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_Body);
       $.rest_body = JSON.parse($.rest_Body);
-      if ($.rest_body.verifyToken !== $.token.verifyToken) {
+      $.token_2 = JSON.parse($.token)
+      if ($.rest_body.verifyToken !== $.token_2.verifyToken) {
         $.token = $.rest_Body
         debug($.token);
         $.setdata($.token, $.token_key);
