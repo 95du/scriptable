@@ -36,10 +36,9 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
-      $.rest_body = decodeURIComponent($request.body).replace("params=", "");
+      $.rest_body = $request.body
       debug($.rest_body);
-      $.rest_body = JSON.parse($.rest_body);
-      if ($.rest_body.verifyToken !== $.token.verifyToken) {
+      if ($.rest_body !== $.token) {
         $.token = $.rest_body
         debug($.token);
         $.setdata($.token, $.token_key);
