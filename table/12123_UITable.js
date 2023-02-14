@@ -215,7 +215,7 @@ async function main() {
     // plateStack
     const plateStack = leftStack.addStack();
     textPlate = plateStack.addText(myPlate);
-    textPlate.font = Font.mediumSystemFont(19);
+    textPlate.font = Font.mediumSystemFont(myPlate.length > 8 ? 16.5 : 19);
     textPlate.textColor = Color.black();
     leftStack.addSpacer(6)
   
