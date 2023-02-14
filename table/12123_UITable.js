@@ -35,7 +35,9 @@ async function main() {
   if (verifyToken === null) {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
-      verifyToken = boxjs_data.val
+      const boxjs = boxjs_data.val.split('@')
+      verifyToken = boxjs[0];
+      sign = boxjs[1];
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
       referer = boxjs_referer.val
       data = {
@@ -57,6 +59,7 @@ async function main() {
     "productId": "${get.productId}",
     "api": "${get.api1}",
     "version": "${get.version}",
+    "sign": "${sign}",
     "verifyToken": "${verifyToken}"
   }`
   const main = await violation.loadJSON();
@@ -77,6 +80,7 @@ async function main() {
         "productId": "${get.productId}",
         "api": "${get.api2}",
         "version": "${get.version}",
+        "sign": "${sign}",
         "verifyToken": "${verifyToken}",
         "params": {
           "internalOrder": "${vioList.internalOrder}",
@@ -101,6 +105,7 @@ async function main() {
         "productId": "${get.productId}", 
         "api": "${get.api3}",
         "version": "${get.version}",
+        "sign": "${sign}",
         "verifyToken": "${verifyToken}", 
         "params": {
           "internalOrder": "${vioList.internalOrder}",
@@ -120,6 +125,7 @@ async function main() {
           "productId": "${get.productId}",
           "api": "${get.api4}",
           "version": "${get.version}",
+          "sign": "${sign}",
           "verifyToken": "${verifyToken}", 
           "params": {
             "violationSerialNumber": "${detail.violationSerialNumber}", 
