@@ -224,7 +224,7 @@ async function main() {
     const vehicleModel = carIconStack.addStack();
     vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
     vehicleModelText.font = Font.mediumSystemFont(12);
-    vehicleModelText.textColor = new Color('#494949');
+    vehicleModelText.textColor = new Color('#484848');
     leftStack.addSpacer(3)
   
     // violationPoint
