@@ -39,12 +39,11 @@ $.is_debug = $.getdata('is_debug');
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
       $.rest_body = JSON.parse($.rest_body);
-      if ($.rest_body.verifyToken !== $.token.split(",")[0]) {
-        $.token = $.rest_body.verifyToken;
-        $.sign = $.rest_body.sign;
-        $.authToken = $.rest_body.authToken;
+      $.token = JSON.parse($.token);
+      if ($.rest_body.verifyToken !== $.token.verifyToken) {
+        $.token = $.rest_body
         debug($.token);
-        $.setdata($.token + ',' + $.sign + ',' + $.authToken, $.token_key);
+        $.setdata($.token, $.token_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
         console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
