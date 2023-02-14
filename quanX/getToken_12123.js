@@ -36,13 +36,15 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
-      $.rest_Body = decodeURIComponent($request.body).replace("params=", "");
-      debug($.rest_Body);
-      $.rest_body = JSON.parse($.rest_Body);
-      if ($.rest_body.verifyToken !== JSON.parse($.token).verifyToken) {
-        $.token = $.rest_Body
+      $.rest_body = decodeURIComponent($request.body).replace("params=", "");
+      debug($.rest_body);
+      $.rest_body = JSON.parse($.rest_body);
+      if ($.rest_body.verifyToken !== $.token.split(",")[0]) {
+        $.token = $.rest_body.verifyToken;
+        $.sign = $.rest_body.sign;
+        $.authToken = $.rest_body.authToken;
         debug($.token);
-        $.setdata($.token, $.token_key);
+        $.setdata($.token + ',' + $.sign + ',' + $.authToken, $.token_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
         console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
