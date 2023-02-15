@@ -25,8 +25,8 @@
           "id": "body_12123",
           "name": "body",
           "val": "",
-          "type": "text",
-          "rows": 10,
+          "type": "textarea",
+          "rows": 5,
           "desc": ""
         },
         {
