@@ -1,26 +1,11 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-brown; icon-glyph: magic;
-/*
-脚本名称：获取12123_token
-更新时间：2023-01-30
-====================================================================================================
-配置 (QuanX)
-[rewrite_local]
-^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js
-
-[MITM]
-hostname = miniappcsfw.122.gov.cn
-====================================================================================================
-配置 (Surge)
-[Script]
-12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
-
-[MITM]
-hostname = %APPEND% miniappcsfw.122.gov.cn:8443
-====================================================================================================
-*/
-
+// icon-color: green; icon-glyph: car;
+/**
+ * 脚本名称: 支付宝交管12123_token
+ * author: @Fokit
+ * 更新日期: 2023-02-14
+ */
 const $ = new Env('交管12123');
 $.body_key = 'body_12123';
 $.referer_key = 'referer_12123';
@@ -34,16 +19,20 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.body && $request.body.indexOf("sign") > -1 && $request.body.indexOf("verifyToken") > -1) {
+    if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
+      $.body = JSON.parse($.body);
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
-      if ($.rest_body !== $.body) {
-        $.setdata($.rest_body, $.body_key);
-        console.log(`🎉 12123数据获取成功:\n${$.token}`);
-        $.msg($.name, ``, `🎉 12123数据获取成功。`);
+      $.rest_body = JSON.parse($.rest_body);
+      if ($.rest_body.verifyToken !== $.body.verifyToken) {
+        $.body = $.rest_body
+        debug($.body);
+        $.setdata($.body, $.body_key);
+        $.msg($.name, ``, `12123_verifyToken 获取成功。`);
+        console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
-        console.log(`‼️ 数据未变动，跳过更新。\n${$.token}`);
+        console.log(`verifyToken未变动‼️ 跳过更新。\n${$.token}`);
       }
 
       if ($request.headers.Referer.indexOf("cumulativePoint") > -1 ) {
@@ -52,10 +41,10 @@ $.is_debug = $.getdata('is_debug');
         debug($.new_referer);
         if ($.new_referer !== $.referer) {
           $.setdata($.new_referer, $.referer_key);
-          console.log(`🎉 12123_Referer获取成功:\n${$.new_referer}`);
-          $.msg($.name, ``, `🎉 12123_Referer获取成功。`);
+          $.msg($.name, ``, `12123_Referer获取成功。`);
+          console.log(`12123_Referer获取成功:\n${$.new_referer}`);
         } else {
-          console.log(`‼️ Referer未变动，跳过更新。\n${$.new_referer}`);
+          console.log(`Referer未变动‼️跳过更新。\n${$.new_referer}`);
         }
       }
     }
@@ -63,11 +52,7 @@ $.is_debug = $.getdata('is_debug');
 
   function debug(text) {
     if ($.is_debug === 'true') {
-      if (typeof text == "string") {
-        console.log(text);
-      } else if (typeof text == "object") {
-        console.log($.toStr(text));
-      }
+      console.log(text);
     }
   }
 
