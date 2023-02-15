@@ -39,7 +39,8 @@ $.is_debug = $.getdata('is_debug');
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
       if ($.rest_body !== $.body) {
-        $.setdata($.rest.body, $.body_key);
+        $.body = $.rest.body
+        $.setdata($.body, $.body_key);
         console.log(`🎉 12123数据获取成功:\n${$.token}`);
         $.msg($.name, ``, `🎉 12123数据获取成功。`);
       } else {
