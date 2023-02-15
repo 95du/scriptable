@@ -23,7 +23,7 @@ $.is_debug = $.getdata('is_debug');
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
       $.rest_Body = decodeURIComponent($request.body).replace("params=", "");
-      debug($.rest_body);
+      debug($.rest_Body);
       $.rest_body = JSON.parse($.rest_Body);
       if ($.rest_body.verifyToken !== $.body_json.verifyToken) {
         $.setdata($.rest_Body, $.body_key);
