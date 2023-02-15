@@ -26,6 +26,7 @@
           "name": "body",
           "val": "",
           "type": "text",
+          "rows": 5,
           "desc": ""
         },
         {
