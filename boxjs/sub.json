@@ -26,6 +26,13 @@
           "val": "",
           "type": "text",
           "desc": ""
+        },
+        {
+          "id": "referer_12123",
+          "name": "referer",
+          "val": "",
+          "type": "text",
+          "desc": ""
         }
       ]
     },
