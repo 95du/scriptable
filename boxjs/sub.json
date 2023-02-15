@@ -17,7 +17,8 @@
         "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png"
       ],
       "keys": [
-        "body_12123"
+        "body_12123",
+        "referer_12123"
       ],
       "settings": [
         {
