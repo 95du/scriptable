@@ -19,16 +19,21 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.body && $request.body.indexOf("verifyToken") > -1 && $request.body.indexOf("thirdPartyUid") == -1) {
+    if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
-      if ($.rest_body !== $.body) {
-        $.setdata($.rest_body, $.body_key);
+      $.rest_body = JSON.parse($.rest_body);
+      if ($.rest_body.verifyToken !== $.body.split(",")[0]) {
+        $.token = $.rest_body.verifyToken;
+        $.sign = $.rest_body.sign;
+        $.authToken = $.rest_body.authToken;
+        debug($.body);
+        $.setdata($.token + ',' + $.sign + ',' + $.authToken, $.body_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
-        console.log(`12123_verifyToken获取成功:\n${$.rest_body}`);
+        console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
-        console.log(`verifyToken未变动‼️ 跳过更新。\n${$.rest_body}`);
+        console.log(`verifyToken未变动‼️ 跳过更新。\n${$.token}`);
       }
 
       if ($request.headers.Referer.indexOf("cumulativePoint") > -1 ) {
