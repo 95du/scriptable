@@ -6,23 +6,23 @@
   "repo": "https://gitcode.net/4qiao/scriptable",
   "apps": [
     {
-      "id": "token_12123",
+      "id": "body_12123",
       "name": "交管12123",
       "author": "@FoKit",
       "descs_html": [
-        "交管12123 Token"
+        "交管12123 Request body"
       ],
       "icons": [
         "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png",
         "https://raw.githubusercontent.com/FoKit/Scripts/main/images/12123.png"
       ],
       "keys": [
-        "token_12123"
+        "body_12123"
       ],
       "settings": [
         {
-          "id": "token_12123",
-          "name": "Token",
+          "id": "body_12123",
+          "name": "body",
           "val": "",
           "type": "text",
           "desc": ""
