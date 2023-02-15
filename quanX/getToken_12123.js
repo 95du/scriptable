@@ -7,7 +7,7 @@
  * 更新日期: 2023-02-14
  */
 const $ = new Env('交管12123');
-$.token_key = 'token_12123';
+$.token_key = 'body_12123';
 $.referer_key = 'referer_12123';
 $.token = $.getdata($.token_key);
 $.referer = $.getdata($.referer_key);
