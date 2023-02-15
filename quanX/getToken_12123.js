@@ -23,8 +23,8 @@ $.is_debug = $.getdata('is_debug');
       debug($request.body);
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
-      $.rest_body = JSON.parse($.rest_body);
-      if ($.rest_body.verifyToken !== $.body) {
+      $.token = JSON.parse($.rest_body);
+      if ($.token.verifyToken !== $.body) {
         $.setdata($.rest_body, $.body_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
         console.log(`12123_verifyToken获取成功:\n${$.token}`);
