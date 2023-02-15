@@ -49,7 +49,7 @@ async function main() {
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));
     } catch(e) {
-      notify('获取boxJs数据失败 ⚠️', '需打开Quantumult-X获取verifyToken');
+      notify('获取boxJs数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具');
     }
   }
   
