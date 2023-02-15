@@ -27,7 +27,8 @@ $.is_debug = $.getdata('is_debug');
       debug($.token);
       $.body2 = JSON.parse($.body);
       if ($.token.verifyToken !== $.body2.verifyToken) {
-        $.setdata($.rest_body, $.body_key);
+        $.body2 = $.rest_body
+        $.setdata($.body2, $.body_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
         console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
