@@ -23,7 +23,7 @@
       "settings": [
         {
           "id": "body_12123",
-          "name": "body",
+          "name": "request_body",
           "val": "",
           "type": "textarea",
           "rows": 5,
