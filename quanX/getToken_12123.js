@@ -22,6 +22,7 @@ $.is_debug = $.getdata('is_debug');
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
       $.body = JSON.parse($.body);
+      debug($.body);
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
       $.rest_body = JSON.parse($.rest_body);
