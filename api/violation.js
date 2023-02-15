@@ -5,11 +5,11 @@
  * 支付宝小程序 交管12123
  * 小组件作者：95度茅台
  * 获取Token作者: @FoKit
- * 版本: Version 1.2.0
+ * 版本: Version 1.2.5
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
 
 获取Token重写:
-https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule
+https://gitcode.net/4qiao/scriptable/raw/master/quanX/getToken_12123.sgmodule
 
 ============使用方法============
 1，配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
@@ -19,19 +19,20 @@ https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgm
 ===============================
 一键添加 boxjs 重写到 Quantumult-X https://api.boxjs.app/quanx-install
 
-Boxjs订阅（可选）：http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubusercontent.com%2FFoKit%2FScripts%2Fmain%2Fboxjs%2Ffokit.boxjs.json
+Boxjs订阅（可选）：
+https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
 
 手动配置重写规则：
 =========Quantumult-X=========
 [rewrite_local]
-^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js
+^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://gitcode.net/4qiao/scriptable/raw/master/quanX/getToken_12123.js
 
 [MITM]
 hostname = miniappcsfw.122.gov.cn
 
 ============Surge=============
 [Script]
-12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_12123_token.js,script-update-interval=0
+12123_Token = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/getToken_12123.js,script-update-interval=0
 
 [MITM]
 hostname = %APPEND% miniappcsfw.122.gov.cn
@@ -52,12 +53,15 @@ if (F_MGR.fileExists(cacheFile)) {
   verifyToken = data.verifyToken
   myPlate = data.myPlate
   referer = data.referer
+  sign = data.sign
 }
 
 if (!F_MGR.fileExists(folder) || !verifyToken || !referer || referer) {
   try {
-    const boxjs_data = await new Request('http://boxjs.com/query/data/token_12123').loadJSON();
-    verifyToken = boxjs_data.val
+    const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
+    const boxjs = JSON.parse(boxjs_data.val);
+    verifyToken = boxjs.verifyToken;
+    sign = boxjs.sign;
     const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
     referer = boxjs_referer.val
   } catch(e) {
@@ -111,7 +115,7 @@ async function addLicensePlate() {
       F_MGR.createDirectory(folder);
     }
     await saveSettings();
-    notify(myPlate, '您的车牌设置成功');
+    notify(myPlate, '车牌设置成功，桌面组件刷新后可见');
   }
 }
 
@@ -139,12 +143,13 @@ if (phone < 926) {
 // violation main
 const violation = new Request(url);
 violation.method = 'POST'
-violation.body = `params={
+violation.body = 'params=' + encodeURIComponent(`{
   "productId": "${get.productId}",
   "api": "${get.api1}",
   "version": "${get.version}",
+  "sign": "${sign}",
   "verifyToken": "${verifyToken}"
-}`
+}`)
 const main = await violation.loadJSON();
 const success = main.success
 
@@ -159,17 +164,18 @@ if (success === true) {
     const plate = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z])/)[1];
     const issueOrganization = new Request(url);
     issueOrganization.method = 'POST'
-    issueOrganization.body = `params={
+    issueOrganization.body = 'params=' + encodeURIComponent(`{
       "productId": "${get.productId}",
       "api": "${get.api2}", 
       "version": "${get.version}",
+      "sign": "${sign}",
       "verifyToken": "${verifyToken}",
       "params": {
         "internalOrder": "${vioList.internalOrder}",
         "plateType": "02",
         "_issueOrganization": "${plate}"
       }
-    }`
+    }`);
     const issue = await issueOrganization.loadJSON();
     const issueArr = issue.data.vioCity
     let newArr = [];
@@ -183,17 +189,18 @@ if (success === true) {
     // get surveils
     const area = new Request(url);
     area.method = 'POST'
-    area.body = `params={
+    area.body = 'params=' + encodeURIComponent(`{
       "productId": "${get.productId}", 
       "api": "${get.api3}",
       "version": "${get.version}",
+      "sign": "${sign}",
       "verifyToken": "${verifyToken}", 
       "params": {
         "internalOrder": "${vioList.internalOrder}",
         "plateType": "02",
         "issueOrganization": "${issueData.issueOrganization}"
       }
-    }`
+    }`);
     const surveils = await area.loadJSON();
     const vioItems = surveils.data.surveils
     detail = vioItems[Math.floor(Math.random() * vioItems.length)];
@@ -202,16 +209,17 @@ if (success === true) {
     if (detail !== undefined) {
       const violationMsg = new Request(url);
       violationMsg.method = 'POST'
-      violationMsg.body = `params={
+      violationMsg.body = 'params=' + encodeURIComponent(`{
         "productId": "${get.productId}",
         "api": "${get.api4}",
         "version": "${get.version}",
+        "sign": "${sign}",
         "verifyToken": "${verifyToken}", 
         "params": {
           "violationSerialNumber": "${detail.violationSerialNumber}", 
           "issueOrganization": "${detail.issueOrganization}"
         }
-      }`
+      }`);
       const details = await violationMsg.loadJSON();
       vio = details.data.detail
       const imgItems = details.data.photos
@@ -347,7 +355,7 @@ async function createWidget() {
   // plateStack
   const plateStack = leftStack.addStack();
   textPlate = plateStack.addText(myPlate);
-  textPlate.font = Font.mediumSystemFont(19);
+  textPlate.font = Font.mediumSystemFont(myPlate.length > 8 ? 16.5 : 19);
   textPlate.textColor = Color.black();
   leftStack.addSpacer(6)
 
@@ -512,6 +520,7 @@ async function downloadModule() {
  */
 async function saveSettings () {
   data = {
+    sign: sign,
     verifyToken: verifyToken,
     referer: referer,
     myPlate: myPlate
