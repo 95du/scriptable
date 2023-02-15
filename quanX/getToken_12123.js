@@ -19,7 +19,7 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.body && $request.body.indexOf("thirdPartyUid") != -1) {
+    if ($request && $request.body && $request.body.indexOf("verifyToken") > -1 && $request.body.indexOf("thirdPartyUid") == -1) {
       debug($request.body);
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
