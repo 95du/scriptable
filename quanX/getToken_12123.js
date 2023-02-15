@@ -21,15 +21,13 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
+      $.rest_Body = decodeURIComponent($request.body).replace("params=", "");
+      debug($.rest_Body);
       $.body = JSON.parse($.body);
       debug($.body);
-      $.rest_body = decodeURIComponent($request.body).replace("params=", "");
-      debug($.rest_body);
-      $.rest_body = JSON.parse($.rest_body);
+      $.rest_body = JSON.parse($.rest_Body);
       if ($.rest_body.verifyToken !== $.body.verifyToken) {
-        $.body = $.rest_body
-        debug($.body);
-        $.setdata($.body, $.body_key);
+        $.setdata($.rest_Body, $.body_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
         console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
