@@ -11,7 +11,7 @@
 获取Token重写:
 https://gitcode.net/4qiao/scriptable/raw/master/quanX/getToken_12123.sgmodule
 
-🔥95度茅台 Boxjs 订阅:
+95度茅台 Boxjs 订阅:
 https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
 
 ===============================
