@@ -10,6 +10,7 @@ const $ = new Env('交管12123');
 $.body_key = 'body_12123';
 $.referer_key = 'referer_12123';
 $.body = $.getdata($.body_key);
+$.body_json = JSON.parse($.body);
 $.referer = $.getdata($.referer_key);
 $.is_debug = $.getdata('is_debug');
 
@@ -21,18 +22,15 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
-      $.rest_body = decodeURIComponent($request.body).replace("params=", "");
+      $.rest_Body = decodeURIComponent($request.body).replace("params=", "");
       debug($.rest_body);
-      $.token = JSON.parse($.rest_body);
-      debug($.token);
-      $.body2 = JSON.parse($.body);
-      if ($.token.verifyToken !== $.body2.verifyToken) {
-        $.body2 = $.rest_body
-        $.setdata($.body2, $.body_key);
+      $.rest_body = JSON.parse($.rest_Body);
+      if ($.rest_body.verifyToken !== $.body_json.verifyToken) {
+        $.setdata($.rest_Body, $.body_key);
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
-        console.log(`12123_verifyToken获取成功:\n${$.token}`);
+        console.log(`12123_verifyToken获取成功:\n${$.rest_body}`);
       } else {
-        console.log(`verifyToken未变动‼️ 跳过更新。\n${$.token}`);
+        console.log(`verifyToken未变动‼️ 跳过更新。\n${$.rest_body}`);
       }
 
       if ($request.headers.Referer.indexOf("cumulativePoint") > -1 ) {
