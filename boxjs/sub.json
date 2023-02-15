@@ -26,7 +26,7 @@
           "name": "request_body",
           "val": "",
           "type": "textarea",
-          "rows": 5,
+          "rows": 3,
           "desc": ""
         },
         {
