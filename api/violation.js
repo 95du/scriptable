@@ -11,18 +11,20 @@
 获取Token重写:
 https://gitcode.net/4qiao/scriptable/raw/master/quanX/getToken_12123.sgmodule
 
-============使用方法============
-1，配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。
-2，Referer (用于获取车辆检验有效期时间及累积记分) 按提示点击12123小程序页面。
-3，使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
+🔥95度茅台 Boxjs 订阅:
+https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
 
 ===============================
 一键添加 boxjs 重写到 Quantumult-X https://api.boxjs.app/quanx-install
 
-Boxjs订阅（可选）：
-https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
+@Fokit Boxjs订阅（可选）：
+http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubusercontent.com%2FFoKit%2FScripts%2Fmain%2Fboxjs%2Ffokit.boxjs.json
 
-手动配置重写规则：
+============使用方法============
+1，配置重写规则，手动运行小组件，点击【 GetToken 】或【 累积记分 】跳转到支付宝12123小程序 登录即可自动抓取/更新Token。
+2，Referer (用于获取车辆检验有效期时间及累积记分) 按提示点击12123小程序页面。
+3，使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/
+
 =========Quantumult-X=========
 [rewrite_local]
 ^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz url script-request-body https://gitcode.net/4qiao/scriptable/raw/master/quanX/getToken_12123.js
@@ -59,9 +61,9 @@ if (F_MGR.fileExists(cacheFile)) {
 if (!F_MGR.fileExists(folder) || !verifyToken || !referer || referer) {
   try {
     const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
-    const boxjs = JSON.parse(boxjs_data.val);
-    verifyToken = boxjs.verifyToken;
-    sign = boxjs.sign;
+    const boxjs = boxjs_data.val.split(',');
+    verifyToken = boxjs[0];
+    sign = boxjs[1];
     const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
     referer = boxjs_referer.val
   } catch(e) {
