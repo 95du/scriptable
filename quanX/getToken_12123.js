@@ -31,7 +31,7 @@ $.is_debug = $.getdata('is_debug');
         $.msg($.name, ``, `12123_verifyToken 获取成功。`);
         console.log(`12123_verifyToken获取成功:\n${$.token}`);
       } else {
-        console.log(`verifyToken未变动‼️ 跳过更新。\n${$.token}`);
+        console.log(`verifyToken未变动，跳过更新🚫\n${$.token}`);
       }
 
       if ($request.headers.Referer.indexOf("cumulativePoint") > -1 ) {
