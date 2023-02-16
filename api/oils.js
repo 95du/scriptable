@@ -14,7 +14,6 @@
 
 const value = 6 //小机型改成 4
 const wide = 8 //小机型改成 6
-
 const df = new DateFormatter();
 df.dateFormat = 'HH:mm'
 
@@ -98,7 +97,7 @@ async function createWidget(oil) {
   barStack.borderWidth = 3
   //Text Color
   const titleText = barStack.addText(`${data.province}油价`);
-  dynamic = ['#FFB300', '#34C759'];
+  dynamic = ['#FFBF00', '#34C759'];
   titleText.textColor = new Color(dynamic[parseInt(Math.random() * dynamic.length)]);
   titleText.font = Font.boldSystemFont(16);
   titleText.centerAlignText();
