@@ -275,7 +275,7 @@ F_MGR.readString(cacheFile)
   const carImage = await getImage(item);
   const imageCar = carImageStack.addImage(carImage);
   imageCar.imageSize = new Size(225,100);
-  rightStack.addSpacer(2)
+  rightStack.addSpacer(1)
 
   // show address
   const adrStack = rightStack.addStack();
