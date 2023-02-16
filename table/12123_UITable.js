@@ -225,7 +225,7 @@ async function main() {
     const man = SFSymbol.named('car');
     const carIcon = carIconStack.addImage(man.image);
     carIcon.imageSize = new Size(14, 14);
-    carIcon.tintColor = nothing ? Color.blue() : Color.red();
+    carIcon.tintColor = nothing || !success ? Color.blue() : Color.red();
     carIconStack.addSpacer(5);
     // vehicleModel
     const vehicleModel = carIconStack.addStack();
