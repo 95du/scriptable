@@ -343,19 +343,23 @@ async function main() {
     tipsStack.layoutHorizontally();
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(setting.bottomSize, 30);
-    const textAddress = tipsStack.addText(nothing || !detail ? setting.botStr : `${vio.violationAddress}，` + `${vio.violation}`);
+    if (nothing || !detail) {
+      textAddress = tipsStack.addText(`${phone < 926 ? '' : '请'}保持良好的驾驶习惯，务必遵守交通规则`);
+    } else {
+      textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
+      if (success === true) {
+        textAddress.url = `${photos}`
+      }
+    }
     textAddress.font = Font.mediumSystemFont(nothing || !detail ? 11.5 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     rightStack.addSpacer();
     
-    
     // jump show status
     barStack2.url = get.status;
     textPlate2.url = 'tmri12123://'
-    if (!nothing) {
-      textAddress.url = `${photos}`;
-    }
+    imageCar.url = get.details;
     return widget;
   }
   
