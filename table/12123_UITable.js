@@ -248,7 +248,7 @@ async function main() {
     const dateStack = leftStack.addStack();
     dateStack.layoutHorizontally();
     dateStack.centerAlignContent();
-    if (nothing) {
+    if (nothing || !success || !detail) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(14, 14);
@@ -271,7 +271,7 @@ async function main() {
     // violation Early Warning
     barStack.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack.cornerRadius = 10
-    barStack.borderColor = nothing ? Color.green() : new Color('#FF1688', 0.7);
+    barStack.borderColor = nothing ? Color.green() : !success ? Color.orange() : new Color('#FF1688', 0.7);
     barStack.borderWidth = 2
     if (nothing) {
       // bar icon
@@ -284,7 +284,7 @@ async function main() {
     // bar text
     const totalMonthBar = barStack.addText(nothing ? '无违章' : !success ? 'Sign 过期' : `${vioList.plateNumber}`);
     totalMonthBar.font = Font.mediumSystemFont(14);
-    totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000');
+    totalMonthBar.textColor = new Color(nothing ? '#00b100' : !success ? 'FF9500' : '#D50000');
     leftStack.addSpacer(8);
     
     // cumulativePoint Columnar bar
