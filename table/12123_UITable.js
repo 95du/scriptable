@@ -149,6 +149,9 @@ async function main() {
     F_MGR.writeString(cacheFile, JSON.stringify(data));
     nothing = undefined;
     notify(main.resultMsg + ' ⚠️', '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取 ( 请确保已打开辅助工具 )', get.details);
+  } else {
+    nothing = undefined;
+    notify(main.resultCode + ' ⚠️', main.resultMsg, get.details);
   }
 
   const isMediumWidget =  config.widgetFamily === 'medium'
