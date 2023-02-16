@@ -149,7 +149,7 @@ violation.body = `params={
   "productId": "${get.productId}",
   "api": "${get.api1}",
   "version": "${get.version}",
-  "sign": "${sign}1",
+  "sign": "${sign}",
   "verifyToken": "${verifyToken}"
 }`
 const main = await violation.loadJSON();
