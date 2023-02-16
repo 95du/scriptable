@@ -33,7 +33,7 @@ async function main() {
     notify('12123_Referer ⚠️', '点击菜单中的累积记分获取');
   }
   
-  if (verifyToken === null) {
+  if (verifyToken === null || sign === null) {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
       const boxjs = boxjs_data.val.split(',');
@@ -141,6 +141,7 @@ async function main() {
   } else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || main.resultCode === 'SECURITY_INFO_ABNORMAL') {
     data = {
       ...setting,
+      sign: null,
       verifyToken: null
     }
     F_MGR.writeString(cacheFile, JSON.stringify(data));
