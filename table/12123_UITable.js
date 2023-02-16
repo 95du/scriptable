@@ -344,10 +344,10 @@ async function main() {
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(setting.bottomSize, 30);
     if (nothing || !detail) {
-      textAddress = tipsStack.addText(`${phone < 926 ? '' : '请'}保持良好的驾驶习惯，务必遵守交通规则`);
+      textAddress = tipsStack.addText(setting.botStr);
     } else {
       textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
-      if (success === true) {
+      if (success && detail) {
         textAddress.url = `${photos}`
       }
     }
