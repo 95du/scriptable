@@ -65,15 +65,13 @@ async function main() {
     "verifyToken": "${verifyToken}"
   }`);
   const main = await violation.loadJSON();
-  const success = main.success
+  const success = main.success === true;
   
-  if (success === true) {
+  if (success) {
     vehicle = main.data.list
     vioList = vehicle[Math.floor(Math.random() * vehicle.length)];
     nothing = vioList === undefined;
-    if (nothing) {
-      console.log(main.resultMsg)
-    } else {
+    if (!nothing) {
       // issueOrganization plate
       const plate = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z])/)[1];
       const issueOrganization = new Request(url);
@@ -146,15 +144,15 @@ async function main() {
         }
       }
     }
-  } else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST') {
+  } else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || main.resultCode === 'SECURITY_INFO_ABNORMAL') {
     data = {
       ...setting,
       verifyToken: null
     }
     F_MGR.writeString(cacheFile, JSON.stringify(data));
-    notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
-  } else {
-    notify(main.resultCode, main.resultMsg);
+    nothing = undefined;
+    detail = undefined;
+    notify(main.resultMsg + ' ⚠️', '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取 ( 请确保已打开辅助工具 )', get.details);
   }
 
   const isMediumWidget =  config.widgetFamily === 'medium'
@@ -228,7 +226,7 @@ async function main() {
     const man = SFSymbol.named('car');
     const carIcon = carIconStack.addImage(man.image);
     carIcon.imageSize = new Size(14, 14);
-    carIcon.tintColor = nothing ? Color.blue() : Color.red();
+    carIcon.tintColor = nothing || !success ? Color.blue() : Color.red();
     carIconStack.addSpacer(5);
     // vehicleModel
     const vehicleModel = carIconStack.addStack();
@@ -240,7 +238,7 @@ async function main() {
     // violationPoint
     const vioPointStack = leftStack.addStack();
     const vioPoint = vioPointStack.addStack();
-    if (!nothing) {
+    if (!nothing && success && !detail) {
       vioPointText = vioPoint.addText(`罚款${vio.fine}元、` + `扣${vio.violationPoint}分`);
       vioPointText.font = Font.mediumSystemFont(12);
       vioPointText.textColor = new Color('#484848');
@@ -251,7 +249,7 @@ async function main() {
     const dateStack = leftStack.addStack();
     dateStack.layoutHorizontally();
     dateStack.centerAlignContent();
-    if (nothing || !detail) {
+    if (!nothing || !detail) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(14, 14);
@@ -260,10 +258,10 @@ async function main() {
       
     // validPeriodEndDate
     const updateTime = dateStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
+    const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(12);  
     textUpdateTime.textColor = new Color('#484848');
-    leftStack.addSpacer(nothing ? setting.leftGap1 : setting.leftGap2);
+    leftStack.addSpacer(nothing || !success ? setting.leftGap1 : setting.leftGap2);
       
   
     // Status Columnar bar
@@ -285,7 +283,7 @@ async function main() {
       barStack.addSpacer(4);
     }
     // bar text
-    const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
+    const totalMonthBar = barStack.addText(nothing ? '无违章' : !success ? 'Sign 过期' : `${vioList.plateNumber}`);
     totalMonthBar.font = Font.mediumSystemFont(14);
     totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000');
     leftStack.addSpacer(8);
