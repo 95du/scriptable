@@ -58,7 +58,7 @@ if (F_MGR.fileExists(cacheFile)) {
   sign = data.sign
 }
 
-if (!F_MGR.fileExists(folder) || !verifyToken || !referer || referer) {
+if (!F_MGR.fileExists(folder) || !verifyToken || !referer || sign) {
   try {
     const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
     const boxjs = boxjs_data.val.split(',');
@@ -96,7 +96,6 @@ if (!F_MGR.fileExists(cacheFile)) {
     notify('12123_Referer', '点击车牌号或查询即可更新/获取');
     return;
   } else {
-    notify('交管12123', `boxjs_token 获取成功: ${verifyToken}`);
     await addLicensePlate();
   }
 }
@@ -117,7 +116,7 @@ async function addLicensePlate() {
       F_MGR.createDirectory(folder);
     }
     await saveSettings();
-    notify(myPlate, '车牌设置成功，桌面组件刷新后可见');
+    notify(myPlate, '车牌设置成功，桌面小组件刷新后可见');
   }
 }
 
@@ -153,15 +152,14 @@ violation.body = 'params=' + encodeURIComponent(`{
   "verifyToken": "${verifyToken}"
 }`)
 const main = await violation.loadJSON();
-const success = main.success
+console.log(main)
+const success = main.success === true;
 
-if (success === true) {
+if (success) {
   vehicle = main.data.list
   vioList = vehicle[Math.floor(Math.random() * vehicle.length)];
   nothing = vioList === undefined;
-  if (nothing) {
-    console.log(main.resultMsg)
-  } else {
+  if (!nothing) {
     // issueOrganization plate
     const plate = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z])/)[1];
     const issueOrganization = new Request(url);
@@ -226,24 +224,17 @@ if (success === true) {
       vio = details.data.detail
       const imgItems = details.data.photos
       photos = imgItems[Math.floor(Math.random() * imgItems.length)];
-    } else {
-      photos = get.details;
-      vio = {
-        fine: '0',
-        violationPoint: '0'
-      }
     }
   }
-} else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST') {
+} else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || main.resultCode === 'SECURITY_INFO_ABNORMAL') {
   data = { 
     myPlate: myPlate,
     referer: referer
   }
   F_MGR.writeString(cacheFile, JSON.stringify(data));
-  notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.details);
-  return;
-} else {
-  notify(main.resultCode, main.resultMsg);
+  nothing = undefined;
+  detail = undefined;
+  notify(main.resultMsg + ' ⚠️', '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取 ( 请确保已打开辅助工具 )', get.details);
 }
   
 
@@ -370,11 +361,11 @@ async function createWidget() {
   const man = SFSymbol.named('car');
   const carIcon = carIconStack.addImage(man.image);
   carIcon.imageSize = new Size(14, 14);
-  carIcon.tintColor = nothing ? Color.blue() : Color.red();
+  carIcon.tintColor = nothing || !success ? Color.blue() : Color.red();
   carIconStack.addSpacer(5);
   // vehicleModel
   const vehicleModel = carIconStack.addStack();
-  vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
+  vehicleModelText = vehicleModel.addText(nothing || !success ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
   vehicleModelText.font = Font.mediumSystemFont(12);
   vehicleModelText.textColor = new Color('#484848');
   leftStack.addSpacer(3)
@@ -382,7 +373,7 @@ async function createWidget() {
   // violationPoint
   const vioPointStack = leftStack.addStack();
   const vioPoint = vioPointStack.addStack();
-  if (!nothing) {
+  if (!nothing && success && detail) {
     vioPointText = vioPoint.addText(`罚款${vio.fine}元、` + `扣${vio.violationPoint}分`);
     vioPointText.font = Font.mediumSystemFont(12);
     vioPointText.textColor = new Color('#484848');
@@ -402,10 +393,10 @@ async function createWidget() {
     
   // validPeriodEndDate
   const updateTime = dateStack.addStack();
-  const textUpdateTime = updateTime.addText(nothing || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
+  const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
   textUpdateTime.font = Font.mediumSystemFont(12);
   textUpdateTime.textColor = new Color('#484848');
-  leftStack.addSpacer(nothing ? size.leftGap1 : size.leftGap2);
+  leftStack.addSpacer(nothing || !success ? size.leftGap1 : size.leftGap2);
     
 
   // Status Columnar bar
@@ -426,7 +417,7 @@ async function createWidget() {
     barStack.addSpacer(4);
   }
   // bar text
-  const totalMonthBar = barStack.addText(nothing ? '无违章' : `${vioList.plateNumber}`);
+  const totalMonthBar = barStack.addText(nothing ? '无违章' : !success ? 'Sign 过期' : `${vioList.plateNumber}`);
   totalMonthBar.font = Font.mediumSystemFont(14);
   totalMonthBar.textColor = new Color(nothing ? '#00b100' : '#D50000');
   leftStack.addSpacer(8);
@@ -448,7 +439,6 @@ async function createWidget() {
   barStack2.addSpacer(4);
   // Bar Text
   const cumulativePoint = referer.match(/cumulativePoint=(\d{1,2}|undefined|null)/)[1]
-  console.log('累积记分: ' + cumulativePoint)
   const totalMonthBar2 = barStack2.addText(`记${cumulativePoint === 'undefined' ? '0' : cumulativePoint}分`);
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#616161')
@@ -487,19 +477,23 @@ async function createWidget() {
   tipsStack.layoutHorizontally();
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(size.bottomSize, 30);
-  const textAddress = tipsStack.addText(nothing || !detail ? `${phone < 926 ? '' : '请'}保持良好的驾驶习惯，务必遵守交通规则` : `${vio.violationAddress}，` + `${vio.violation}`);
+  if (nothing || !detail) {
+    textAddress = tipsStack.addText(`${phone < 926 ? '' : '请'}保持良好的驾驶习惯，务必遵守交通规则`);
+  } else {
+    textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
+    if (success === true) {
+      textAddress.url = `${photos}`
+    }
+  }
   textAddress.font = Font.mediumSystemFont(nothing || !detail ? 11.5 : 11);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
   
-
   // jump content
-  barStack2.url = get.status;
   textPlate2.url = 'tmri12123://'
-  if (!nothing) {
-    textAddress.url = `${photos}`
-  }
+  barStack2.url = get.status;
+  imageCar.url = get.details
   return widget;
 }
 
