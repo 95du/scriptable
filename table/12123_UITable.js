@@ -153,9 +153,6 @@ async function main() {
     }
     F_MGR.writeString(cacheFile, JSON.stringify(data));
     notify('Token已过期 ⚠️', '点击通知框自动跳转到支付宝12123小程序页面重新获取 ( 请确保已打开辅助工具 )', get.alipay);
-  } else {
-    nothing = undefined;
-    notify(main.resultCode, main.resultMsg);
   }
 
   const isMediumWidget =  config.widgetFamily === 'medium'
