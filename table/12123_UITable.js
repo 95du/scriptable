@@ -136,6 +136,8 @@ async function main() {
         vio = details.data.detail
         const imgItems = details.data.photos
         photos = imgItems[Math.floor(Math.random() * imgItems.length)];
+      } else {
+        nothing = undefined;
       }
     }
   } else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || main.resultCode === 'SECURITY_INFO_ABNORMAL') {
@@ -146,7 +148,6 @@ async function main() {
     }
     F_MGR.writeString(cacheFile, JSON.stringify(data));
     nothing = undefined;
-    detail = undefined;
     notify(main.resultMsg + ' ⚠️', '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取 ( 请确保已打开辅助工具 )', get.details);
   }
 
@@ -221,7 +222,7 @@ async function main() {
     const man = SFSymbol.named('car');
     const carIcon = carIconStack.addImage(man.image);
     carIcon.imageSize = new Size(14, 14);
-    carIcon.tintColor = nothing || !success ? Color.blue() : Color.red();
+    carIcon.tintColor = nothing ? Color.blue() : Color.red();
     carIconStack.addSpacer(5);
     // vehicleModel
     const vehicleModel = carIconStack.addStack();
@@ -244,7 +245,7 @@ async function main() {
     const dateStack = leftStack.addStack();
     dateStack.layoutHorizontally();
     dateStack.centerAlignContent();
-    if (nothing || !detail) {
+    if (nothing) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(14, 14);
