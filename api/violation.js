@@ -224,6 +224,8 @@ if (success) {
       vio = details.data.detail
       const imgItems = details.data.photos
       photos = imgItems[Math.floor(Math.random() * imgItems.length)];
+    } else {
+      nothing = undefined;
     }
   }
 } else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || main.resultCode === 'SECURITY_INFO_ABNORMAL') {
@@ -233,8 +235,10 @@ if (success) {
   }
   F_MGR.writeString(cacheFile, JSON.stringify(data));
   nothing = undefined;
-  detail = undefined;
   notify(main.resultMsg + ' ⚠️', '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取 ( 请确保已打开辅助工具 )', get.details);
+} else {
+  nothing = undefined;
+  notify(main.resultCode + ' ⚠️', main.resultMsg, get.details);
 }
   
 
@@ -361,7 +365,7 @@ async function createWidget() {
   const man = SFSymbol.named('car');
   const carIcon = carIconStack.addImage(man.image);
   carIcon.imageSize = new Size(14, 14);
-  carIcon.tintColor = nothing || !success ? Color.blue() : Color.red();
+  carIcon.tintColor = nothing || !success? Color.blue() : Color.red();
   carIconStack.addSpacer(5);
   // vehicleModel
   const vehicleModel = carIconStack.addStack();
@@ -384,7 +388,7 @@ async function createWidget() {
   const dateStack = leftStack.addStack();
   dateStack.layoutHorizontally();
   dateStack.centerAlignContent();
-  if (nothing || !detail) {
+  if (nothing) {
     const iconSymbol2 = SFSymbol.named('timer');
     const carIcon2 = dateStack.addImage(iconSymbol2.image)
     carIcon2.imageSize = new Size(14, 14);
@@ -461,7 +465,7 @@ async function createWidget() {
   textPlate2.font = Font.boldSystemFont(14);
   textPlate2.rightAlignText();
   textPlate2.textColor = new Color('#0061FF');
-  rightStack.addSpacer(nothing || !detail ? size.rightGap1 : size.rightGap2);
+  rightStack.addSpacer(nothing || !success ? size.rightGap1 : size.rightGap2);
 
   // Car image
   const carImageStack = rightStack.addStack();
@@ -477,7 +481,7 @@ async function createWidget() {
   tipsStack.layoutHorizontally();
   tipsStack.centerAlignContent();
   tipsStack.size = new Size(size.bottomSize, 30);
-  if (nothing || !detail) {
+  if (nothing || !success) {
     textAddress = tipsStack.addText(`${phone < 926 ? '' : '请'}保持良好的驾驶习惯，务必遵守交通规则`);
   } else {
     textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
@@ -485,7 +489,7 @@ async function createWidget() {
       textAddress.url = `${photos}`
     }
   }
-  textAddress.font = Font.mediumSystemFont(nothing || !detail ? 11.5 : 11);
+  textAddress.font = Font.mediumSystemFont(nothing ? 11.5 : 11);
   textAddress.textColor = new Color('#484848');
   textAddress.centerAlignText();
   rightStack.addSpacer();
