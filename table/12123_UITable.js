@@ -233,7 +233,7 @@ async function main() {
     // violationPoint
     const vioPointStack = leftStack.addStack();
     const vioPoint = vioPointStack.addStack();
-    if (!nothing && success && !detail) {
+    if (!nothing && success && detail) {
       vioPointText = vioPoint.addText(`罚款${vio.fine}元、` + `扣${vio.violationPoint}分`);
       vioPointText.font = Font.mediumSystemFont(12);
       vioPointText.textColor = new Color('#484848');
