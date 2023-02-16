@@ -136,12 +136,6 @@ async function main() {
         vio = details.data.detail
         const imgItems = details.data.photos
         photos = imgItems[Math.floor(Math.random() * imgItems.length)];
-      } else {
-        photos = get.details;
-        vio = {
-          fine: '0',
-          violationPoint: '0'
-        }
       }
     }
   } else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || main.resultCode === 'SECURITY_INFO_ABNORMAL') {
@@ -230,7 +224,7 @@ async function main() {
     carIconStack.addSpacer(5);
     // vehicleModel
     const vehicleModel = carIconStack.addStack();
-    vehicleModelText = vehicleModel.addText(nothing ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
+    vehicleModelText = vehicleModel.addText(nothing || !success ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
     vehicleModelText.font = Font.mediumSystemFont(12);
     vehicleModelText.textColor = new Color('#484848');
     leftStack.addSpacer(3)
