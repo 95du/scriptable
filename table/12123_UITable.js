@@ -327,7 +327,7 @@ async function main() {
     textPlate2.font = Font.boldSystemFont(14);
     textPlate2.rightAlignText();
     textPlate2.textColor = new Color('#0061FF');
-    rightStack.addSpacer(nothing || !detail ? setting.rightGap1 : setting.rightGap2);
+    rightStack.addSpacer(nothing || !success ? setting.rightGap1 : setting.rightGap2);
   
     // Car image
     const carImageStack = rightStack.addStack();
@@ -348,7 +348,7 @@ async function main() {
     tipsStack.layoutHorizontally();
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(setting.bottomSize, 30);
-    if (nothing || !detail) {
+    if (nothing || !success) {
       textAddress = tipsStack.addText(setting.botStr);
     } else {
       textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
