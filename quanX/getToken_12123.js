@@ -31,7 +31,7 @@ $.is_debug = $.getdata('is_debug');
         if ($.rest_body.verifyToken !== $.body.split(",")[0]) {
           $.msg($.name, ``, `12123_verifyToken/Sign 获取成功。`);
           console.log(
-`12123_verifyToken获取成功:\n${$.token}`);
+            `12123_verifyToken获取成功:\n${$.token}`);
         }
       } else {
         console.log(`verifyToken未变动，跳过更新🚫\n${$.token}`);
@@ -46,7 +46,7 @@ $.is_debug = $.getdata('is_debug');
           $.msg($.name, ``, `12123_Referer获取成功。`);
           console.log(`12123_Referer获取成功:\n${$.new_referer}`);
         } else {
-          console.log(`Referer未变动‼️跳过更新。\n${$.new_referer}`);
+          console.log(`Referer未变动，跳过更新🚫\n${$.new_referer}`);
         }
       }
     }
