@@ -142,16 +142,15 @@ if (phone < 926) {
 }
 
 // violation main
-// 'params=' + encodeURIComponent()
 const violation = new Request(url);
 violation.method = 'POST'
-violation.body = `params={
+violation.body = 'params=' + encodeURIComponent(`{
   "productId": "${get.productId}",
   "api": "${get.api1}",
   "version": "${get.version}",
   "sign": "${sign}",
   "verifyToken": "${verifyToken}"
-}`
+}`);
 const main = await violation.loadJSON();
 console.log(main.resultMsg)
 const success = main.success === true;
@@ -165,7 +164,7 @@ if (success) {
     const plate = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z])/)[1];
     const issueOrganization = new Request(url);
     issueOrganization.method = 'POST'
-    issueOrganization.body = `params={
+    issueOrganization.body = 'params=' + encodeURIComponent(`{
       "productId": "${get.productId}",
       "api": "${get.api2}", 
       "version": "${get.version}",
@@ -176,7 +175,7 @@ if (success) {
         "plateType": "02",
         "_issueOrganization": "${plate}"
       }
-    }`
+    }`);
     const issue = await issueOrganization.loadJSON();
     const issueArr = issue.data.vioCity
     let newArr = [];
@@ -190,7 +189,7 @@ if (success) {
     // get surveils
     const area = new Request(url);
     area.method = 'POST'
-    area.body = `params={
+    area.body = 'params=' + encodeURIComponent(`{
       "productId": "${get.productId}", 
       "api": "${get.api3}",
       "version": "${get.version}",
@@ -201,7 +200,7 @@ if (success) {
         "plateType": "02",
         "issueOrganization": "${issueData.issueOrganization}"
       }
-    }`
+    }`);
     const surveils = await area.loadJSON();
     const vioItems = surveils.data.surveils
     detail = vioItems[Math.floor(Math.random() * vioItems.length)];
@@ -210,7 +209,7 @@ if (success) {
     if (detail !== undefined) {
       const violationMsg = new Request(url);
       violationMsg.method = 'POST'
-      violationMsg.body = `params={
+      violationMsg.body = 'params=' + encodeURIComponent(`{
         "productId": "${get.productId}",
         "api": "${get.api4}",
         "version": "${get.version}",
@@ -220,7 +219,7 @@ if (success) {
           "violationSerialNumber": "${detail.violationSerialNumber}", 
           "issueOrganization": "${detail.issueOrganization}"
         }
-      }`
+      }`);
       const details = await violationMsg.loadJSON();
       vio = details.data.detail
       const imgItems = details.data.photos
