@@ -270,11 +270,7 @@ async function presentMenu() {
     notify('12123_Referer', '点击车牌号码或查询即可更新/获取');
   }
   if (response === 3) {
-    const modulePath = await downloadModule();
-    if (modulePath != null) {
-      const importedModule = importModule(modulePath);
-      await importedModule.main();
-    }
+    await importModule(await downloadModule()).main();
   }
   if (response === 4) {
     await addLicensePlate();
