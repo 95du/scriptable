@@ -85,11 +85,7 @@ async function presentMenu() {
     await F_MGR.remove(bgImage)
   }
   if (mainMenu === 2) {
-    const modulePath = await downloadModule();
-    if (modulePath != null) {
-      const importedModule = importModule(modulePath);
-      await importedModule.main();
-    }
+    await importModule(await downloadModule()).main();
   }
   if (mainMenu === 3) {
     await widget.presentMedium();
@@ -189,7 +185,7 @@ async function createWidget() {
   const textElement = contentStack.addText(`${one.note}\n${one.content}`);
   textElement.textColor = textColor
   textElement.font = Font.boldSystemFont(14);
-  textElement.textOpacity = 0.9;
+  textElement.textOpacity = 0.8;
   textElement.url = one.fenxiang_img
   contentStack.addSpacer();
   
