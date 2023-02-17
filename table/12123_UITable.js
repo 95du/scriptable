@@ -356,7 +356,7 @@ async function main() {
         textAddress.url = `${photos}`
       }
     }
-    textAddress.font = Font.mediumSystemFont(nothing || !detail ? 11.5 : 11);
+    textAddress.font = Font.mediumSystemFont(nothing || !success ? 11.5 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
     rightStack.addSpacer();
