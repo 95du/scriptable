@@ -42,7 +42,7 @@ if (F_MGR.fileExists(cacheFile)) {
       location = await Location.current();
       obj = {
         ...location,
-        "updateTime": timeStamp
+        updateTime: timeStamp
       }
       F_MGR.writeString(cacheFile, JSON.stringify(obj));  
     } catch (error) {
@@ -64,7 +64,7 @@ if (!F_MGR.fileExists(folder)) {
   const location = await Location.current();
   obj = {
     ...location,
-    "updateTime": timeStamp
+    updateTime: timeStamp
   }
   F_MGR.writeString(cacheFile, JSON.stringify(obj));
   Safari.open('scriptable:///run/' + encodeURIComponent(uri));
