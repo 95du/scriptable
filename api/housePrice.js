@@ -47,11 +47,7 @@ async function presentMenu() {
   }
   if (F_MGR.fileExists(cacheFile)) {
     if (mainMenu === 2) {
-      const modulePath = await downloadModule();
-      if (modulePath != null) {
-        const importedModule = importModule(modulePath);
-        await importedModule.main();
-      }
+      await importModule(await downloadModule()).main();
     }
     if (mainMenu === 3) {
       await addHouseMsg();
