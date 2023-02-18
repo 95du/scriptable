@@ -50,7 +50,7 @@ $.boxjs_data_1 = $.getdata($.boxjs_key_1);
     if ($request && $request.url.indexOf("https://m5.amap.com/ws/shield/frogserver/aocs/updatable/") > -1 && $request.headers) {
       if ($request['headers']['Cookie'] || $request['headers']['cookie']) {
         $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
-        $.amap_cookie = $.cookie.match(/(LT=.+?;)/)[1];
+        $.amap_cookie = $.cookie;
         if ($.amap_cookie !== $.boxjs_data_1) {
           $.setdata($.amap_cookie, $.boxjs_key_1);
           $.msg(`高德地图Cookie 获取成功。\n${$.amap_cookie}`);
