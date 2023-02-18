@@ -37,17 +37,7 @@ async function main() {
       sign = boxjs[1];
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
       referer = boxjs_referer.val;
-      
-      if (!verifyToken) {
-        const login = await generateAlert(  
-          title = '交管 12123',
-          message = `\r\n自动获取Token以及Referer需要Quantumult-X / Surge 辅助运行，具体方法请查看小组件代码开头注释\n\n⚠️获取Referer方法: 当跳转到支付宝12123【 查机动车违法 】时，点击【 车牌号或查询 】，用于获取检验有效期日期和累积记分`,
-          options = ['取消', '获取']
-        );
-        if (login === 0) return;
-        Safari.open('alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Fvehicle-illegal-query%2Findex');
-      }
-      
+      // Save Setting.json
       data = {
         ...setting,
         sign: sign,
