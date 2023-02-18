@@ -45,15 +45,9 @@ async function main() {
           options = ['取消', '获取']
         );
         if (login === 0) return;
-      } else {
-        let open = await generateAlert(
-          title = '交管12123_Referer',
-          message = '跳转到支付宝页面后，点击车牌号码或查询即可更新/获取',
-          options = ['取消', '获取']
-        );
-        if (open === 0) return;
+        Safari.open('alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Fvehicle-illegal-query%2Findex');
       }
-      Safari.open('alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Fvehicle-illegal-query%2Findex');
+      
       data = {
         ...setting,
         sign: sign,
