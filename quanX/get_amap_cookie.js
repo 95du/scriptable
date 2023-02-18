@@ -4,33 +4,35 @@
 /*
 脚本名称：高德地图 Cookie
 更新时间：2023-02-19
+Author: 95度茅台
 
-重写订阅（QX）：
-https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_10000_cookie.conf
+重写订阅 Quantumult X
+https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.conf
 
-重写订阅（Surge）：
+重写订阅 Surge
 https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_10000_cookie.sgmodule
 
-BoxJs 订阅：
-https://raw.githubusercontent.com/FoKit/Scripts/main/boxjs/fokit.boxjs.json
+95度茅台 Boxjs 订阅:
+https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
+
 
 ========== Quantumult X ===========
 [rewrite_local]
-^https:\/\/(e\.189\.cn\/store\/user|open\.e\.189\.cn\/api\/logbox\/oauth2\/loginSubmit\.do) url script-request-header https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_10000_cookie.js
+^^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/ url script-request-header https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.js
 [MITM]
-hostname = e.189.cn, open.e.189.cn
+hostname = m5.amap.com
 
 ============== Surge ==============
 [Script]
-中国电信 Cookie = type=http-request,pattern=^https:\/\/(e\.189\.cn\/store\/user|open\.e\.189\.cn\/api\/logbox\/oauth2\/loginSubmit\.do),requires-body=0,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_10000_cookie.js,script-update-interval=0
+高德地图 Cookie = type=http-request,pattern=^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/ ,requires-body=0,max-size=0,timeout=1000,script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.js,script-update-interval=0
 [MITM]
-hostname = %APPEND% e.189.cn, open.e.189.cn
+hostname = %APPEND% m5.amap.com
 
 ============== Loon ===============
 [Script]
-http-request ^https:\/\/(e\.189\.cn\/store\/user|open\.e\.189\.cn\/api\/logbox\/oauth2\/loginSubmit\.do) tag=中国电信 Cookie, script-path=https://raw.githubusercontent.com/FoKit/Scripts/main/scripts/get_10000_cookie.js,requires-body=1
+http-request ^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/ tag=高德地图 Cookie, script-path=https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.js,requires-body=1
 [MITM]
-hostname = e.189.cn, open.e.189.cn
+hostname = m5.amap.com
 */
 
 const $ = new Env('高德地图');
