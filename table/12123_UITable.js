@@ -30,9 +30,6 @@ async function main() {
   }
   
   if (verifyToken === null || sign === null) {
-    if (verifyToken && !referer) {
-      notify('12123_Referer ⚠️', '点击菜单中的累积记分获取');
-    }
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
       const boxjs = boxjs_data.val.split(',');
