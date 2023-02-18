@@ -37,15 +37,17 @@ async function main() {
       sign = boxjs[1];
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
       referer = boxjs_referer.val;
-      // Save Setting.json
-      data = {
-        ...setting,
-        sign: sign,
-        verifyToken: verifyToken,
-        referer: referer
+      // Save boxjs_val
+      if (verifyToken || referer) {
+         data = {
+          ...setting,
+          sign: sign,
+          verifyToken: verifyToken,
+          referer: referer
+        }
+        F_MGR.writeString(cacheFile, JSON.stringify(data));  
+        notify('boxjs_12123', '数据获取成功，已储存到iCloud');
       }
-      F_MGR.writeString(cacheFile, JSON.stringify(data));  
-      notify('boxjs_12123', '数据获取成功，已储存到iCloud');
     } catch(e) {
       notify('获取 boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
     }
