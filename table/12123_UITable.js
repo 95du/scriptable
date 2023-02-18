@@ -38,16 +38,16 @@ async function main() {
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
       referer = boxjs_referer.val;
       // Save boxjs_val
-      if (verifyToken || referer) {
-         data = {
-          ...setting,
-          sign: sign,
-          verifyToken: verifyToken,
-          referer: referer
-        }
-        F_MGR.writeString(cacheFile, JSON.stringify(data));  
+      if (verifyToken && referer) {
         notify('Boxjs_12123', '参数储存成功，重新运行/桌面组件刷新可见');
       }
+      data = {
+        ...setting,
+        sign: sign,
+        verifyToken: verifyToken,
+        referer: referer
+      }
+      F_MGR.writeString(cacheFile, JSON.stringify(data));  
     } catch(e) {
       notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
     }
