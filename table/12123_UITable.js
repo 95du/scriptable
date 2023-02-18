@@ -44,7 +44,6 @@ async function main() {
         referer: !referer ? null : referer
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));  
-      notify('数据储存成功, '')
     } catch(e) {
       notify('获取boxJs数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具');
     }
