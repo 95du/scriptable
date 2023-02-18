@@ -149,6 +149,30 @@
           "desc": ""
         }
       ]
+    },
+    {
+      "id": "amap_cookie",
+      "name": "高德地图",
+      "author": "@95du",
+      "descs_html": [
+        "高德地图 Cookie"
+      ],
+      "icons": [
+        "https://raw.githubusercontent.com/FoKit/Scripts/main/images/95598.png",
+        "https://raw.githubusercontent.com/FoKit/Scripts/main/images/95598.png"
+      ],
+      "keys": [
+        "amap_cookie"
+      ],
+      "settings": [
+        {
+          "id": "amap_cookie",
+          "name": "Cookie",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        }
+      ]
     }
   ]
 }
