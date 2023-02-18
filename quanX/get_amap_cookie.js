@@ -2,9 +2,8 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-brown; icon-glyph: cog;
 /*
-脚本名称：中国电信 Cookie
-更新时间：2022-11-11
-登录入口：http://u3v.cn/5uwtIP
+脚本名称：高德地图 Cookie
+更新时间：2023-02-19
 
 重写订阅（QX）：
 https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_10000_cookie.conf
@@ -34,9 +33,7 @@ http-request ^https:\/\/(e\.189\.cn\/store\/user|open\.e\.189\.cn\/api\/logbox\/
 hostname = e.189.cn, open.e.189.cn
 */
 
-// https://m5.amap.com/ws/shield/frogserver/aocs/updatable/1?ent=2&csid=60814005-9FEF-402E-B215-8F9FEDBD5867
-
-const $ = new Env('高德地图 Cookie');
+const $ = new Env('高德地图');
 $.boxjs_key_1 = 'amap_cookie';
 $.boxjs_data_1 = $.getdata($.boxjs_key_1);
 
@@ -53,7 +50,7 @@ $.boxjs_data_1 = $.getdata($.boxjs_key_1);
         $.amap_cookie = $.cookie;
         if ($.amap_cookie !== $.boxjs_data_1) {
           $.setdata($.amap_cookie, $.boxjs_key_1);
-          $.msg(`高德地图Cookie 获取成功。\n${$.amap_cookie}`);
+          $.msg($.name + '_Cookie 获取成功', ``, $.amap_cookie);
         } else {
           console.log(`无需更新 Cookie‼️\n${$.amap_cookie}`);
         }
