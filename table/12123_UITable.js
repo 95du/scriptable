@@ -29,7 +29,7 @@ async function main() {
     sign = setting.sign
   }
   
-  if (verifyToken === null || sign === null || referer === null) {
+  if (verifyToken === null || sign === null || !referer) {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
       const boxjs = boxjs_data.val.split(',');
@@ -41,7 +41,7 @@ async function main() {
         ...setting,
         sign: sign,
         verifyToken: verifyToken,
-        referer: !referer ? null : referer
+        referer: referer
       }
       F_MGR.writeString(cacheFile, JSON.stringify(data));  
     } catch(e) {
