@@ -46,10 +46,10 @@ async function main() {
           referer: referer
         }
         F_MGR.writeString(cacheFile, JSON.stringify(data));  
-        notify('boxjs_12123', '参数获取成功，重新运行/桌面组件刷新可见');
+        notify('Boxjs_12123', '参数储存成功，重新运行/桌面组件刷新可见');
       }
     } catch(e) {
-      notify('获取 boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
+      notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
     }
   }
   
