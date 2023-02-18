@@ -53,7 +53,7 @@ async function main() {
         );
         if (open === 0) return;
       }
-      
+      Safari.open('alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Fvehicle-illegal-query%2Findex');
       data = {
         ...setting,
         sign: sign,
