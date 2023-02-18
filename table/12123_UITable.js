@@ -377,16 +377,6 @@ async function main() {
     return await n.schedule()
   }
   
-  async function generateAlert(title, message, options) {
-    let alert = new Alert();
-    alert.title = title
-    alert.message = message
-    for (const option of options) {
-      alert.addAction(option)
-    }
-    return await alert.presentAlert();
-  }
-  
   async function getImage(url) {
     const r = await new Request(url);
     return await r.loadImage();
