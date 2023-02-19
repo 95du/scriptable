@@ -49,11 +49,9 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("https://m5.amap.com/ws/shield/frogserver/aocs/updatable/") > -1 && $request.headers) {
       if ($request['headers']['Cookie'] || $request['headers']['cookie']) {
-        $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
-        $.amap_cookie = $.cookie;
-        if ($.amap_cookie !== $.boxjs_data_1) {
-          debug($.cookie);
-          $.setdata($.amap_cookie, $.cookie);
+        $.amap_cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
+        if ($.amap_cookie !== $.cookie) {
+          $.setdata($.amap_cookie, $.cookie_key);
           $.msg($.name + '_Cookie 获取成功', ``, $.amap_cookie);
         } else {
           console.log(`无需更新 Cookie‼️\n${$.amap_cookie}`);
