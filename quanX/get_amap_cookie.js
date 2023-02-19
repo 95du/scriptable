@@ -48,6 +48,7 @@ $.is_debug = $.getdata('is_debug');
   // 获取 Cookie
   function GetCookie() {
     if ($request && $request.url.indexOf("https://m5.amap.com/ws/shield/frogserver/aocs/updatable/") > -1 && $request.headers) {
+      debug($request.headers);
       if ($request['headers']['Cookie'] || $request['headers']['cookie']) {
         $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
         $.amap_cookie = $.cookie;
