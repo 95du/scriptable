@@ -36,8 +36,8 @@ hostname = m5.amap.com
 */
 
 const $ = new Env('高德地图');
-$.boxjs_key = 'amap_cookie';
-$.cookie = $.getdata($.boxjs_key);
+$.cookie_key = 'amap_cookie';
+$.cookie = $.getdata($.cookie_key);
 $.is_debug = $.getdata('is_debug');
 
 !(async () => {
