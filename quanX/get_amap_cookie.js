@@ -36,8 +36,9 @@ hostname = m5.amap.com
 */
 
 const $ = new Env('高德地图');
-$.boxjs_key_1 = 'amap_cookie';
-$.boxjs_data_1 = $.getdata($.boxjs_key_1);
+$.boxjs_key = 'amap_cookie';
+$.cookie = $.getdata($.boxjs_key);
+$.is_debug = $.getdata('is_debug');
 
 !(async () => {
   if (isGetCookie = typeof $request !== `undefined`) {
@@ -51,6 +52,7 @@ $.boxjs_data_1 = $.getdata($.boxjs_key_1);
         $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
         $.amap_cookie = $.cookie;
         if ($.amap_cookie !== $.boxjs_data_1) {
+          debug($.cookie);
           $.setdata($.amap_cookie, $.boxjs_key_1);
           $.msg($.name + '_Cookie 获取成功', ``, $.amap_cookie);
         } else {
