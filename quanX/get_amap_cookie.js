@@ -37,31 +37,26 @@ hostname = m5.amap.com
 
 const $ = new Env('高德地图');
 $.cookie_key = 'amap_cookie';
-$.cookie = $.getdata($.cookie_key);
+$.boxjs_cookie = $.getdata($.cookie_key);
 $.is_debug = $.getdata('is_debug');
 
 !(async () => {
   if (isGetCookie = typeof $request !== `undefined`) {
     GetCookie();
   }
-
-  // 获取 Cookie
+  
   function GetCookie() {
     if ($request && $request.url.indexOf("https://m5.amap.com/ws/shield/frogserver/aocs/updatable/") > -1 && $request.headers) {
-      if ($request['headers']['Cookie'] || $request['headers']['cookie']) {
-        $.amap_cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
-        if ($.amap_cookie !== $.cookie) {
-          $.setdata($.amap_cookie, $.cookie_key);
-          $.msg($.name + '_Cookie 获取成功', ``, $.amap_cookie);
-        } else {
-          console.log(`无需更新 Cookie‼️\n${$.amap_cookie}`);
-        }
+      $.amap_cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
+      if ($.amap_cookie !== $.boxjs_cookie) {
+        $.setdata($.amap_cookie, $.cookie_key);
+        $.msg($.name + '_Cookie 获取成功', ``, $.amap_cookie);
       } else {
-        $.msg(`${$.name} 获取失败，未找到 Cookie ⚠️`);
+        console.log(`无需更新 Cookie 🚫\n${$.amap_cookie}`);
       }
     }
   }
-
+  
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done());
