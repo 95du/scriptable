@@ -49,7 +49,7 @@ $.is_debug = $.getdata('is_debug');
     if ($request && $request.url === "https://perf.m.jd.com/app_monitor/v2/getRule" && $request.headers) {
       $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
       $.jd_cookie = $.cookie.match(/(pt_key=.+);\spwdt/)[1];
-      console.log($.cookie)
+      console.log($.jd_cookie)
       if ($.jd_cookie !== $.boxjs_cookie) {
         $.setdata($.jd_cookie, $.cookie_key);
         $.msg($.name + '_Cookie 获取成功', ``, $.jd_cookie);
