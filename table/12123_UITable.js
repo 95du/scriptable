@@ -39,7 +39,7 @@ async function main() {
       referer = boxjs_referer.val;
       // Save boxjs_val
       if (sign !== setting.sign) {
-        notify('Boxjs_12123', '参数储存成功，重新运行/桌面组件刷新可见');
+        notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功');
       }
       data = {
         ...setting,
