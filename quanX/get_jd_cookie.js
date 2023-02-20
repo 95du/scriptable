@@ -48,7 +48,7 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("https://policy.jd.com/m/log/v2/") > -1 && $request.headers) {
       $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
-      $.jd_cookie = cookie.match(/(pt_key=.+);\spwdt/)[1];
+      $.jd_cookie = $.cookie.match(/(pt_key=.+);\spwdt/)[1];
       if ($.jd_cookie !== $.boxjs_cookie) {
         $.setdata($.jd_cookie, $.cookie_key);
         $.msg($.name + '_Cookie 获取成功', ``, $.jd_cookie);
