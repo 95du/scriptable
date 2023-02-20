@@ -28,7 +28,7 @@ $.is_debug = $.getdata('is_debug');
         $.token = $.rest_body.verifyToken;
         debug($.token);
         $.setdata($.token + ',' + $.rest_body.sign + ',' + $.rest_body.authToken, $.body_key);
-        if ($.rest_body.sign !== $.body.split(",")[1]) {
+        if ($.rest_body.verifyToken !== $.body.split(",")[0]) {
           $.msg($.name, ``, `12123_verifyToken/Sign 获取成功。`);
           console.log(
             `12123_verifyToken获取成功:\n${$.token}`);
