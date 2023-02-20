@@ -29,8 +29,7 @@ $.is_debug = $.getdata('is_debug');
         $.setdata($.token + ',' + $.rest_body.sign + ',' + $.rest_body.authToken, $.body_key);
         $.msg($.name, ``, `12123_verifyToken/Sign 获取成功。`);
         console.log(
-          `12123_verifyToken获取成功:\n${$.token}`);  
-        debug($.msg);
+          `12123_verifyToken获取成功:\n${$.token}`);
       } else {
         console.log(`verifyToken未变动，跳过更新🚫\n${$.token}`);
       }
