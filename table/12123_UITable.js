@@ -39,7 +39,9 @@ async function main() {
       referer = boxjs_referer.val;
       // Save boxjs_val
       if (sign !== setting.sign) {
-        notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功');
+        Timer.schedule(2000, false, () => {
+          notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功');
+        })
       }
       data = {
         ...setting,
