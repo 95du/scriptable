@@ -48,7 +48,7 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.url.indexOf("https://homepage-gw.jd.com/datastream/") > -1 && $request.headers) {
       $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
-      $.jd_cookie = cookie.match(/pt_key=[^;]+;/)[0] + CookieV.match(/pt_pin=[^;]+;/)[0];
+      $.jd_cookie = cookie.match(/pt_key=[^;]+;/)[0] + cookie.match(/pt_pin=[^;]+;/)[0];
       if ($.jd_cookie !== $.boxjs_cookie) {
         $.setdata($.jd_cookie, $.cookie_key);
         $.msg($.name + '_Cookie 获取成功', ``, $.jd_cookie);
