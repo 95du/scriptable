@@ -173,6 +173,31 @@
           "desc": ""
         }
       ]
+    },
+    {
+      "id": "jd_cookie",
+      "name": "京东",
+      "author": "@95du",
+      "descs_html": [
+        "京东 Cookie"
+      ],
+      "icons": [
+        "http://mtw.so/5RxAta",
+        "http://mtw.so/5RxAta"
+      ],
+      "keys": [
+        "jd_cookie"
+      ],
+      "settings": [
+        {
+          "id": "jd_cookie",
+          "name": "Cookie",
+          "val": "",
+          "type": "textarea",
+          "rows": 3,
+          "desc": ""
+        }
+      ]
     }
   ]
 }
