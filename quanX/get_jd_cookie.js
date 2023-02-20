@@ -46,7 +46,7 @@ $.is_debug = $.getdata('is_debug');
   }
   
   function GetCookie() {
-    if ($request && $request.url.indexOf("https://perf.m.jd.com/app_monitor/v2/getRule") > -1 && $request.headers) {
+    if ($request && $request.url === "https://perf.m.jd.com/app_monitor/v2/getRule" && $request.headers) {
       $.cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
       $.jd_cookie = $.cookie.match(/(pt_key=.+);\spwdt/)[1];
       if ($.jd_cookie !== $.boxjs_cookie) {
