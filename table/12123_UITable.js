@@ -38,7 +38,7 @@ async function main() {
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
       referer = boxjs_referer.val;
       // Save boxjs_val
-      if (boxjs) {
+      if (verifyToken) {
         data = {
           ...setting,
           sign: sign,
