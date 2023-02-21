@@ -22,16 +22,12 @@ $.is_debug = $.getdata('is_debug');
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
       $.rest_body = decodeURIComponent($request.body).replace("params=", "");
-      debug($.rest_body);
-      $.rest_body = JSON.parse($.rest_body);
-      if ($.rest_body.sign !== $.body.split(",")[1]) {
-        $.token = $.rest_body.verifyToken;
-        if ($.token) {
-          $.setdata($.token + ',' + $.rest_body.sign + ',' + $.rest_body.authToken, $.body_key);
-          if ($.token !== $.body.split(",")[0]) {
-            $.msg($.name, ``, `12123_verifyToken/Sign 获取成功。`);
-            console.log(`12123_verifyToken/Sign 获取成功:\n${$.token}`);
-          }
+      $.rest_Body = JSON.parse($.rest_body);
+      if ($.rest_Body.sign !== JSON.parse($.body).sign) {
+        $.setdata($.rest_body, $.body_key);
+        if ($.rest_Body.verifyToken !== JSON.parse($.body).verifyToken) {
+          $.msg($.name, ``, `12123_verifyToken/Sign 获取成功。`);
+          console.log(`12123_verifyToken/Sign 获取成功:\n${$.token}`);
         }
       } else {
         console.log(`verifyToken未变动，跳过更新🚫\n${$.token}`);
