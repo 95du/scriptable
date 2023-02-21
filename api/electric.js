@@ -89,7 +89,8 @@ req.headers = {
 }
 const res = await req.loadJSON();
 if (res.sta == 00) {
-  ele = res.data[0] //User
+  const user = res.data[parseInt(Math.random() * res.data.length)];
+  ele = user //User res.data[0]
   name = ele.userName
   code = ele.areaCode
   id = ele.bindingId
