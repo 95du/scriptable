@@ -47,9 +47,7 @@ async function main() {
         }
         F_MGR.writeString(cacheFile, JSON.stringify(data));  
         if (sign !== setting.sign) {
-          Timer.schedule(2000, false, () => {
-            notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功');
-          })
+          Timer.schedule(2000, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功')})
         }
       }
     } catch(e) {
