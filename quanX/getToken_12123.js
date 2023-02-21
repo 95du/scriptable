@@ -21,16 +21,18 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
-      $.rest_body = decodeURIComponent($request.body).replace("params=", "");
-      $.rest_Body = JSON.parse($.rest_body);
-      if ($.rest_Body.sign !== JSON.parse($.body).sign) {
-        $.setdata($.rest_body, $.body_key);
-        if ($.rest_Body.verifyToken !== JSON.parse($.body).verifyToken) {
-          $.msg($.name, ``, `12123_verifyToken/Sign 获取成功。`);
-          console.log(`12123_verifyToken/Sign 获取成功:\n${$.token}`);
+      $.rest_body = JSON.parse(decodeURIComponent($request.body).replace("params=", ""));
+      if ($.rest_body.sign !== $.body.split(",")[1]) {
+        $.token = $.rest_body.verifyToken;
+        if ($.token) {
+          $.setdata($.token + ',' + $.rest_body.sign + ',' + $.rest_body.authToken, $.body_key);
+          if ($.token !== $.body.split(",")[0]) {
+            $.msg($.name, ``, `12123_verifyToken/Sign 获取成功。`);
+            console.log(`12123_verifyToken/Sign 获取成功:\n${$.token}`);
+          }
         }
       } else {
-        console.log(`verifyToken未变动，跳过更新🚫\n${$.token}`);
+        console.log(`verifyToken 未变动，跳过更新🚫\n${$.token}`);
       }
 
       if ($request.headers.Referer.indexOf("cumulativePoint") > -1 ) {
@@ -42,7 +44,7 @@ $.is_debug = $.getdata('is_debug');
           $.msg($.name, ``, `12123_Referer获取成功。`);
           console.log(`12123_Referer获取成功:\n${$.new_referer}`);
         } else {
-          console.log(`Referer未变动，跳过更新🚫\n${$.new_referer}`);
+          console.log(`Referer 未变动，跳过更新🚫\n${$.new_referer}`);
         }
       }
     }
