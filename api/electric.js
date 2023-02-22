@@ -292,12 +292,12 @@ async function createWidget() {
   const payIcon = SFSymbol.named('leaf.fill');
   const payIconElement = payStack.addImage(payIcon.image);
   payIconElement.imageSize = new Size(15, 15);
-  payIconElement.tintColor = pay < 1 ? Color.green() : Color.red()
+  payIconElement.tintColor = pay > 0 ? Color.red() : Color.green();
   payStack.addSpacer(4);
   // pay bar text
-  const payText = payStack.addText(pay < 1 ? '已缴费' : pay);
+  const payText = payStack.addText(pay > 0 ? pay : '已缴费');
   payText.font = Font.mediumSystemFont(14);
-  payText.textColor = pay < 1 ? Color.green() : new Color('#D50000')
+  payText.textColor = pay > 0 ? new Color('#D50000') : Color.green();
   leftStack.addSpacer(6)
     
     
