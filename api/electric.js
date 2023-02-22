@@ -286,7 +286,7 @@ async function createWidget() {
   payStack.backgroundColor = new Color('#EEEEEE', 0.1);
   payStack.setPadding(3, 10, 3, 10);
   payStack.cornerRadius = 10
-  payStack.borderColor = pay < 1 ? Color.green() : new Color('#FF1744', 0.7)
+  payStack.borderColor = pay > 0 ? new Color('#FF1744', 0.7) : Color.green();
   payStack.borderWidth = 2
   // pay bar icon
   const payIcon = SFSymbol.named('leaf.fill');
