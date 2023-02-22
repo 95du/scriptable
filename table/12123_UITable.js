@@ -46,7 +46,7 @@ async function main() {
           referer: referer
         }
         F_MGR.writeString(cacheFile, JSON.stringify(data));  
-        if (sign !== setting.sign) {
+        if (sign !== setting.sign && setting.sign !== null) {
           Timer.schedule(2000, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功')})
         }
       }
