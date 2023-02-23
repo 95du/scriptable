@@ -38,10 +38,6 @@ hostname = m5.amap.com
 const $ = new Env('高德地图');
 $.cookie_key = 'amap_cookie';
 $.boxjs_cookie = $.getdata($.cookie_key);
-$.infoUrl_key = 'familyInfo_url';
-$.boxjs_family = $.getdata($.$.infoUrl_key);
-$.infoBody_key = 'familyInfo_body';
-$.boxjs.body = $.getdata($.infoBody_key);
 $.is_debug = $.getdata('is_debug');
 
 !(async () => {
@@ -50,12 +46,10 @@ $.is_debug = $.getdata('is_debug');
   }
   
   function GetCookie() {
-    if ($request && $request.url.indexOf("https://ts.amap.com/ws/tservice/team/family/info") > -1 && $request.headers && $request.body) {
+    if ($request && $request.url.indexOf("https://m5.amap.com/ws/shield/frogserver/aocs/updatable/") > -1 && $request.headers) {
       $.amap_cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
       if ($.amap_cookie !== $.boxjs_cookie) {
         $.setdata($.amap_cookie, $.cookie_key);
-        $.setdata($.$request.url, $.infoUrl_key);
-        $.setdata($.$request.body, $.infoBody_key);
         $.msg($.name + '_Cookie 获取成功', ``, $.amap_cookie);
       } else {
         console.log(`无需更新 Cookie 🚫\n${$.amap_cookie}`);
