@@ -151,23 +151,39 @@
       ]
     },
     {
-      "id": "amap_cookie",
+      "id": "amap_familyInfo",
       "name": "高德地图",
       "author": "@95du",
       "descs_html": [
-        "高德地图 Cookie"
+        "高德地图 familyInfo"
       ],
       "icons": [
         "http://mtw.so/67jE9d",
         "http://mtw.so/67jE9d"
       ],
       "keys": [
-        "amap_cookie"
+        "amap_cookie",
+        "familyInfo_url",
+        "familyInfo_body"
       ],
       "settings": [
         {
           "id": "amap_cookie",
           "name": "Cookie",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        },
+        {
+          "id": "familyInfo_url",
+          "name": "infoUrl",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        },
+        {
+          "id": "familyInfo_body",
+          "name": "infoBody",
           "val": "",
           "type": "text",
           "desc": ""
