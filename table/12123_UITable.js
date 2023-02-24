@@ -254,7 +254,7 @@ async function main() {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(15, 15);
-      dateStack.addSpacer(5);
+      dateStack.addSpacer(3);
     }
       
     // validPeriodEndDate
