@@ -123,7 +123,7 @@ async function addLicensePlate() {
 const phone = Device.screenSize().height
 if (phone < 926) {
   size = {
-    leftGap1: 22,
+    leftGap1: 20,
     leftGap2: 5,
     rightGap1: 14,
     rightGap2: 9,
@@ -132,7 +132,7 @@ if (phone < 926) {
   }
 } else {
   size = {
-    leftGap1: 26,
+    leftGap1: 24,
     leftGap2: 9,
     rightGap1: 18,
     rightGap2: 13,
@@ -360,7 +360,7 @@ async function createWidget() {
   carIconStack.centerAlignContent();
   const man = SFSymbol.named('car');
   const carIcon = carIconStack.addImage(man.image);
-  carIcon.imageSize = new Size(14, 14);
+  carIcon.imageSize = new Size(15, 15);
   carIcon.tintColor = nothing || !success? Color.blue() : Color.red();
   carIconStack.addSpacer(5);
   // vehicleModel
@@ -387,14 +387,14 @@ async function createWidget() {
   if (nothing || !success || !detail) {
     const iconSymbol2 = SFSymbol.named('timer');
     const carIcon2 = dateStack.addImage(iconSymbol2.image)
-    carIcon2.imageSize = new Size(14, 14);
-    dateStack.addSpacer(5);
+    carIcon2.imageSize = new Size(15, 15);
+    dateStack.addSpacer(3);
   }
     
   // validPeriodEndDate
   const updateTime = dateStack.addStack();
   const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
-  textUpdateTime.font = Font.mediumSystemFont(12);
+  textUpdateTime.font = Font.mediumSystemFont(13);
   textUpdateTime.textColor = new Color('#484848');
   leftStack.addSpacer(nothing || !success ? size.leftGap1 : size.leftGap2);
     
