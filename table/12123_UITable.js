@@ -226,7 +226,7 @@ async function main() {
     carIconStack.centerAlignContent();
     const man = SFSymbol.named('car');
     const carIcon = carIconStack.addImage(man.image);
-    carIcon.imageSize = new Size(14, 14);
+    carIcon.imageSize = new Size(15, 15);
     carIcon.tintColor = nothing || !success ? Color.blue() : Color.red();
     carIconStack.addSpacer(5);
     // vehicleModel
@@ -253,14 +253,14 @@ async function main() {
     if (nothing || !success || !detail) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
-      carIcon2.imageSize = new Size(14, 14);
+      carIcon2.imageSize = new Size(15, 15);
       dateStack.addSpacer(5);
     }
       
     // validPeriodEndDate
     const updateTime = dateStack.addStack();
     const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
-    textUpdateTime.font = Font.mediumSystemFont(12);  
+    textUpdateTime.font = Font.mediumSystemFont(13);
     textUpdateTime.textColor = new Color('#484848');
     leftStack.addSpacer(nothing || !success ? setting.leftGap1 : setting.leftGap2);
       
