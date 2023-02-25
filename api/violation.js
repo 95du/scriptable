@@ -124,7 +124,7 @@ const phone = Device.screenSize().height
 if (phone < 926) {
   size = {
     leftGap1: 20,
-    leftGap2: 5,
+    leftGap2: 3,
     rightGap1: 14,
     rightGap2: 9,
     carSize: 208,
@@ -133,7 +133,7 @@ if (phone < 926) {
 } else {
   size = {
     leftGap1: 24,
-    leftGap2: 9,
+    leftGap2: 7,
     rightGap1: 18,
     rightGap2: 13,
     carSize: 225,
@@ -388,7 +388,7 @@ async function createWidget() {
     const iconSymbol2 = SFSymbol.named('timer');
     const carIcon2 = dateStack.addImage(iconSymbol2.image)
     carIcon2.imageSize = new Size(15, 15);
-    dateStack.addSpacer(3);
+    dateStack.addSpacer(5);
   }
     
   // validPeriodEndDate
