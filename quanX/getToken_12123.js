@@ -27,8 +27,8 @@ $.is_debug = $.getdata('is_debug');
         if ($.token && $.rest_body.sign) {
           $.setdata($.token + ',' + $.rest_body.sign, $.body_key);
           if ($.token !== $.body.split(",")[0]) {
-            $.msg($.name, ``, `12123_verifyToken/Sign 获取成功。`);
-            console.log(`12123_verifyToken/Sign 获取成功:\n${$.token}`);
+            $.msg($.name, ``, `12123_verifyToken/Sign获取成功。`);
+            console.log(`12123_Sign/verifyToken获取成功:\n${$.token}`);
           }
         }
       } else {
