@@ -394,7 +394,7 @@ async function createWidget() {
   // validPeriodEndDate
   const updateTime = dateStack.addStack();
   const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(.+)&vehPhoneNumber/)[1] : `${vio.violationTime}`);
-  textUpdateTime.font = Font.mediumSystemFont(13);
+  textUpdateTime.font = Font.mediumSystemFont(nothing ? 13 : 12);
   textUpdateTime.textColor = new Color('#484848');
   leftStack.addSpacer(nothing || !success ? size.leftGap1 : size.leftGap2);
     
