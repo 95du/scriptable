@@ -277,7 +277,7 @@ async function main() {
     barStack.borderWidth = 2
     if (nothing) {
       // bar icon
-      const barIcon = SFSymbol.named('steeringwheel');
+      const barIcon = SFSymbol.named('leaf.fill');
       const barIconElement = barStack.addImage(barIcon.image);
       barIconElement.tintColor = Color.green();
       barIconElement.imageSize = new Size(16, 16);
