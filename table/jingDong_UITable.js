@@ -9,21 +9,6 @@
  */
 
 async function main() {
-  const stackSize = new Size(0, 64);
-  const stackBackground = Color.dynamic(
-    new Color('#EFEBE9', 0.6),
-    new Color('#161D2A', 0.5)
-  );
-  const textColor = Color.dynamic(
-    new Color('#1E1E1E'),
-    new Color('#FEFEFE')
-  );
-  const jNumColor = Color.dynamic(
-    new Color('#FF0000'),
-    new Color('#FFBF00')
-  );
-  
-  
   const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong");
@@ -36,6 +21,20 @@ async function main() {
     setting = JSON.parse(data);
     cookie = setting.cookie;
   }
+  
+  const stackSize = new Size(0, 64);
+  const stackBackground = Color.dynamic(
+    new Color('#EFEBE9', Number(setting.light)),
+    new Color('#161D2A', Number(setting.dark))
+  );
+  const textColor = Color.dynamic(
+    new Color('#1E1E1E'),
+    new Color('#FEFEFE')
+  );
+  const jNumColor = Color.dynamic(
+    new Color('#FF0000'),
+    new Color('#FFBF00')
+  );
   
   // Request(json)
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
@@ -74,7 +73,7 @@ async function main() {
     const iconStack = topStack.addStack();
     const imageElement = iconStack.addImage(headImage);
     imageElement.imageSize = new Size(45, 45);
-    iconStack.cornerRadius = 30
+    iconStack.cornerRadius = Number(setting.radian);
     iconStack.borderWidth = 2;
     iconStack.borderColor = new Color('#FFBF00');
     topStack.addSpacer(10);
