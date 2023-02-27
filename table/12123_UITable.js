@@ -23,20 +23,20 @@ async function main() {
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile)
     setting = JSON.parse(data);
-    verifyToken = 'e04dfc217f247ae4b101183653e84448'
+    verifyToken = setting.verifyToken
     myPlate = setting.myPlate
-    referer = 'appxPageId=3&forceScrapTime=2099-12-31&internalOrder=1&issueOrganization=%E5%B7%9DA&name=*%E4%B8%80%E5%BC%98&plateNumber=%E5%B7%9DA4**7J&plateType=02&registrationNumber=510028782203&status=G&validPeriodEnd=2024-10-31&vehPhoneNumber=133****3357&vehicleSerialNumber=51012220944895&statusArr=G&cumulativePoint=3'
-    sign = 'tzrSN9LStnm+AeLG1t6afg==#cDwLQbwQSUc='
+    referer = setting.referer
+    sign = setting.sign
   }
   
   if (verifyToken === null || sign === null || !referer) {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
       const boxjs = boxjs_data.val.split(',');
-      verifyToken = 'e04dfc217f247ae4b101183653e84448'
-      sign = 'tzrSN9LStnm+AeLG1t6afg==#cDwLQbwQSUc='
+      verifyToken = boxjs[0];
+      sign = boxjs[1];
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
-      referer = 'appxPageId=3&forceScrapTime=2099-12-31&internalOrder=1&issueOrganization=%E5%B7%9DA&name=*%E4%B8%80%E5%BC%98&plateNumber=%E5%B7%9DA4**7J&plateType=02&registrationNumber=510028782203&status=G&validPeriodEnd=2024-10-31&vehPhoneNumber=133****3357&vehicleSerialNumber=51012220944895&statusArr=G&cumulativePoint=3'
+      referer = boxjs_referer.val;
       // Save boxjs_val
       if (verifyToken) {
         data = {
