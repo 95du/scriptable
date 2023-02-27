@@ -24,7 +24,7 @@ async function main() {
     data = F_MGR.readString(cacheFile)
     setting = JSON.parse(data);
     verifyToken = 'e04dfc217f247ae4b101183653e84448'
-    myPlate = data.myPlate
+    myPlate = setting.myPlate
     referer = 'appxPageId=3&forceScrapTime=2099-12-31&internalOrder=1&issueOrganization=%E5%B7%9DA&name=*%E4%B8%80%E5%BC%98&plateNumber=%E5%B7%9DA4**7J&plateType=02&registrationNumber=510028782203&status=G&validPeriodEnd=2024-10-31&vehPhoneNumber=133****3357&vehicleSerialNumber=51012220944895&statusArr=G&cumulativePoint=3'
     sign = 'tzrSN9LStnm+AeLG1t6afg==#cDwLQbwQSUc='
   }
