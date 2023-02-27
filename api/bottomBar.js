@@ -82,7 +82,9 @@ async function presentMenu() {
   mainMenu = await alert.presentAlert();
   if (mainMenu === 1) {
     await F_MGR.remove(folder);
-    await F_MGR.remove(bgImage)
+    if (F_MGR.fileExists(bgImage)) {
+      await F_MGR.remove(bgImage);
+    }
   }
   if (mainMenu === 2) {
     await importModule(await downloadModule()).main();
