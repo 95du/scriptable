@@ -22,16 +22,17 @@ async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong");
-  const cacheFile = F_MGR.joinPath(folder, 'data.json');
+  const cacheFile = F_MGR.joinPath(folder, 'setting.json');
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
   
   if (F_MGR.fileExists(cacheFile)) {
-    data = F_MGR.readString(cacheFile)
-    data = JSON.parse(data)
+    data = F_MGR.readString(cacheFile);
+    setting = JSON.parse(data);
+    cookie = setting.cookie;
   }
   
-  
+  // Request(json)
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const headImage = await getImage(info.headImageUrl);
   const logoImage = await getImage('https://sweixinfile.hisense.com/media/M00/74/2D/Ch4FyWP792qAQN5lAAB6TzEuKi4387.png');
@@ -44,7 +45,11 @@ async function main() {
   
   async function createWidget() {
     const widget = new ListWidget();
-    widget.backgroundImage = F_MGR.readImage(bgImage);
+    if (F_MGR.fileExists(bgImage)) {
+      widget.backgroundImage = F_MGR.readImage(bgImage);
+    } else {
+      widget.backgroundColor = Color.dynamic(new Color('#967969'), new Color('#555555'));
+    }
     
     /**
     * Frame Layout
@@ -158,8 +163,6 @@ async function main() {
     }
   }
   
-  
-  
   async function getImage(url) {
     const r = await new Request(url);
     return await r.loadImage();
@@ -171,7 +174,7 @@ async function main() {
     req.headers = {
       "Content-Type": "application/x-www-form-urlencoded",
       Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-      Cookie: "pt_key=AAJj-5lXADC3MHZCNaP-c-H_Ukfv3E2yVU9X_DQC78TQ76gS3zJWZXZtZdnskv4LOp_SHsbpcKs;pt_pin=jd_PDipcnWgEEWX"
+      Cookie: cookie
     }
     const res = await req.loadJSON();
     return res.base;
@@ -182,7 +185,7 @@ async function main() {
     request.method = 'POST'
     request.headers = {
       Referer: "https://mallwallet.jd.com/",
-      Cookie: "pt_key=AAJj-5lXADC3MHZCNaP-c-H_Ukfv3E2yVU9X_DQC78TQ76gS3zJWZXZtZdnskv4LOp_SHsbpcKs;pt_pin=jd_PDipcnWgEEWX"
+      Cookie: cookie
     }
     request.body = `reqData={
       "clientType": "ios"
@@ -196,7 +199,7 @@ async function main() {
     req.method = 'POST'
     req.headers = {
       Referer: "https://mallwallet.jd.com/",
-      Cookie: "pt_key=AAJj-5lXADC3MHZCNaP-c-H_Ukfv3E2yVU9X_DQC78TQ76gS3zJWZXZtZdnskv4LOp_SHsbpcKs;pt_pin=jd_PDipcnWgEEWX"
+      Cookie: cookie
     }
     req.body = `reqData={
       "channel": "024"
