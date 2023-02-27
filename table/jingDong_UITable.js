@@ -46,7 +46,7 @@ async function main() {
   async function createWidget() {
     const widget = new ListWidget();
     if (F_MGR.fileExists(bgImage)) {
-      widget.backgroundImage = F_MGR.readImage(bgImage);
+      widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
     } else {
       widget.backgroundColor = Color.dynamic(new Color('#967969'), new Color('#555555'));
     }
@@ -166,6 +166,15 @@ async function main() {
   async function getImage(url) {
     const r = await new Request(url);
     return await r.loadImage();
+  }
+  
+  async function shadowImage(img) {
+    let ctx = new DrawContext()
+    ctx.size = img.size
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+    return await ctx.getImage()
   }
   
   async function getJson(url) {
