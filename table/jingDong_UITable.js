@@ -19,8 +19,8 @@ async function main() {
     new Color('#FEFEFE')
   );
   const jNumColor = Color.dynamic(
-    new Color('#FFBF00'),
-    new Color('#FF0000')
+    new Color('#FF0000'),
+    new Color('#FFBF00')
   );
   
   
