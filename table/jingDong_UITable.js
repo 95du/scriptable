@@ -125,7 +125,7 @@ async function main() {
     contentStack.size = stackSize;
     // Logo
     const logoStack = contentStack.addStack();
-    const logoImage = await getImage('http://mtw.so/6eShDy');
+    const logoImage = await getImage('http://mtw.so/67mqz3');
     const logoIcon = logoStack.addImage(logoImage);
     logoIcon.imageSize = new Size(45, 45);
     contentStack.addSpacer(7);
