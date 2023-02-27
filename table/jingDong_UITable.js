@@ -38,9 +38,6 @@ async function main() {
   
   // Request(json)
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
-  const headImage = await getImage(info.headImageUrl);
-  const logoImage = await getImage('https://sweixinfile.hisense.com/media/M00/74/2D/Ch4FyWP792qAQN5lAAB6TzEuKi4387.png');
-  const jdou = await getImage('http://mtw.so/67lqbD');
   const bill = await billDateJson('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCard');
   const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCreditManage');
   
@@ -71,6 +68,7 @@ async function main() {
     
     // User icon
     const iconStack = topStack.addStack();
+    const headImage = await getImage(info.headImageUrl);
     const imageElement = iconStack.addImage(headImage);
     imageElement.imageSize = new Size(45, 45);
     iconStack.cornerRadius = Number(setting.radian);
@@ -92,6 +90,7 @@ async function main() {
     jdNumStack.layoutHorizontally();
     jdNumStack.centerAlignContent();
     // http://mtw.so/67lqbD
+    const jdou = await getImage('http://mtw.so/67lqbD');
     const jdouIcon = jdNumStack.addImage(jdou);
     jdouIcon.imageSize = new Size(18, 18);
     jdNumStack.addSpacer(3);
@@ -117,8 +116,8 @@ async function main() {
     * jvalue
     */
     const contentStack = widget.addStack();
-    contentStack.layoutHorizontally();
-    contentStack.centerAlignContent();
+    contentStack.layoutHorizontally()
+    contentStack.centerAlignContent()
     contentStack.addSpacer();
     contentStack.backgroundColor = stackBackground
     contentStack.setPadding(10, 5, 10, 5);
@@ -126,6 +125,7 @@ async function main() {
     contentStack.size = stackSize;
     // Logo
     const logoStack = contentStack.addStack();
+    const logoImage = await getImage('http://mtw.so/67mqz3');
     const logoIcon = logoStack.addImage(logoImage);
     logoIcon.imageSize = new Size(45, 45);
     contentStack.addSpacer(7);
