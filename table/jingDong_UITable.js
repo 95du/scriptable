@@ -97,7 +97,7 @@ async function main() {
     jdouIcon.imageSize = new Size(18, 18);
     jdNumStack.addSpacer(3);
     const contentText = jdNumStack.addText(info.jdNum.toString());
-    contentText.font = Font.boldSystemFont(18);
+    contentText.font = Font.boldSystemFont(17);
     contentText.textColor = jNumColor
     contentText.textOpacity = 0.7;
     topStack.addSpacer();
