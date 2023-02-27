@@ -1,6 +1,13 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: tags;
+/**
+ * 小组件作者：95度茅台
+ * UITable 版本: Version 1.0.0
+ * 2023-02-27 11:30
+ * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ */
+
 async function main() {
   const stackSize = new Size(0, 64);
   const stackBackground = Color.dynamic(
