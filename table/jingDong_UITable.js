@@ -15,9 +15,14 @@ async function main() {
     new Color('#161D2A', 0.5)
   );
   const textColor = Color.dynamic(
-    new Color('#1E1E1E'), 
+    new Color('#1E1E1E'),
     new Color('#FEFEFE')
   );
+  const jNumColor = Color.dynamic(
+    new Color('#FFBF00'),
+    new Color('#FF0000')
+  );
+  
   
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -93,7 +98,7 @@ async function main() {
     jdNumStack.addSpacer(3);
     const contentText = jdNumStack.addText(info.jdNum.toString());
     contentText.font = Font.boldSystemFont(15);
-    contentText.textColor = new Color('#FF0000');
+    contentText.textColor = jNumColor
     contentText.textOpacity = 0.7;
     topStack.addSpacer();
     widget.addSpacer(5);
