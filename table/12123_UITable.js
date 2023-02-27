@@ -12,7 +12,7 @@ async function main() {
 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON()
   const url = get.infoURL
   
-  const uri = Script.name()
+  const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95du12123");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
@@ -23,20 +23,20 @@ async function main() {
   if (F_MGR.fileExists(cacheFile)) {
     data = F_MGR.readString(cacheFile)
     setting = JSON.parse(data);
-    verifyToken = setting.verifyToken
-    myPlate = setting.myPlate
-    referer = setting.referer
-    sign = setting.sign
+    verifyToken = 'e04dfc217f247ae4b101183653e84448'
+    myPlate = data.myPlate
+    referer = 'appxPageId=3&forceScrapTime=2099-12-31&internalOrder=1&issueOrganization=%E5%B7%9DA&name=*%E4%B8%80%E5%BC%98&plateNumber=%E5%B7%9DA4**7J&plateType=02&registrationNumber=510028782203&status=G&validPeriodEnd=2024-10-31&vehPhoneNumber=133****3357&vehicleSerialNumber=51012220944895&statusArr=G&cumulativePoint=3'
+    sign = 'tzrSN9LStnm+AeLG1t6afg==#cDwLQbwQSUc='
   }
   
   if (verifyToken === null || sign === null || !referer) {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
       const boxjs = boxjs_data.val.split(',');
-      verifyToken = boxjs[0];
-      sign = boxjs[1];
+      verifyToken = 'e04dfc217f247ae4b101183653e84448'
+      sign = 'tzrSN9LStnm+AeLG1t6afg==#cDwLQbwQSUc='
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
-      referer = boxjs_referer.val;
+      referer = 'appxPageId=3&forceScrapTime=2099-12-31&internalOrder=1&issueOrganization=%E5%B7%9DA&name=*%E4%B8%80%E5%BC%98&plateNumber=%E5%B7%9DA4**7J&plateType=02&registrationNumber=510028782203&status=G&validPeriodEnd=2024-10-31&vehPhoneNumber=133****3357&vehicleSerialNumber=51012220944895&statusArr=G&cumulativePoint=3'
       // Save boxjs_val
       if (verifyToken) {
         data = {
