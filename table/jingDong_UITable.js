@@ -165,9 +165,9 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     contentStack.addSpacer();
     
     if (index === 0) {
-      setting.randomindex = 1
+      setting.randomIndex = 1
     } else if (index === 1) {
-      setting.randomindex = 0
+      setting.randomIndex = 0
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
 
