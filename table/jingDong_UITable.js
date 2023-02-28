@@ -38,8 +38,8 @@ async function main() {
   
   // Request(json)
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
-  const bill = await billDateJson('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCard');
-  const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCreditManage');
+  //const bill = await billDateJson('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCard');
+  const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
   console.log(bill)
   widget = await createWidget();
   await widget.presentSmall();
@@ -134,13 +134,13 @@ async function main() {
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(`总额度 ${Math.round(asset.replace(',', ''))} `);
+    const totalAsset = threeStack.addText(`总额度 ${Math.round(asset.quota.quotaAll.replace(',', ''))} `);
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(12);
     totalAsset.textOpacity = 0.8;
     threeStack.addSpacer(2);
   
-    const billDate = threeStack.addText(`账单日 ${bill.billDateStr}`);
+    const billDate = threeStack.addText(`${asset.bill.buttonName} ${asset.bill.amount}`);
     billDate.textColor = textColor;
     billDate.font = Font.boldSystemFont(12);
     billDate.textOpacity = 0.8;
@@ -204,7 +204,7 @@ async function main() {
       "clientType": "ios"
     }`
     const res = await request.loadJSON();
-    return res.resultData.data.totalAssetInfo.totalAsset
+    return res.resultData.data
   }
   
   async function billDateJson(url) {
