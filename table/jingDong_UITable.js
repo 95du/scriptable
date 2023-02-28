@@ -151,7 +151,7 @@ async function main() {
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(13);
     totalAsset.textOpacity = 0.8;
-    threeStack.addSpacer(3);
+    threeStack.addSpacer(2.5);
   
     const billDate = threeStack.addText(`待还 ${asset.bill.amount}`);
     billDate.textColor = textColor;
