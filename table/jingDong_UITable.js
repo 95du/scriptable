@@ -135,13 +135,13 @@ async function main() {
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(`可用额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} `);
+    const totalAsset = threeStack.addText(`可用 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} `);
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(12);
     totalAsset.textOpacity = 0.8;
     threeStack.addSpacer(2);
   
-    const billDate = threeStack.addText(`${asset.bill.title} ${asset.bill.amount}`);
+    const billDate = threeStack.addText(`待还 ${asset.bill.amount}`);
     billDate.textColor = textColor;
     billDate.font = Font.boldSystemFont(12);
     billDate.textOpacity = 0.8;
