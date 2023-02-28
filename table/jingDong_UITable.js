@@ -164,6 +164,13 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     billDate.textOpacity = 0.8;
     contentStack.addSpacer();
     
+    if (index === 0) {
+      setting.randomIndex = 1;
+    } else {
+      setting.randomIndex = 0;
+    }
+    F_MGR.writeString(cacheFile, JSON.stringify(setting);
+
     Script.setWidget(widget);
     Script.complete();
     return widget;
