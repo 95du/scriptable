@@ -148,19 +148,28 @@ const seventeen = df.string(new Date());
     logoIcon.imageSize = new Size(45, 45);
     contentStack.addSpacer(1);
     
-    const threeStack = contentStack.addStack();
+    const weekStack = contentStack.addStack();
+    const threeStack = weekStack.addStack();
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
     const totalAsset = threeStack.addText(sendBean.splitBeans);
     totalAsset.textColor = textColor;
-    totalAsset.font = Font.boldSystemFont(12);
+    totalAsset.font = Font.boldSystemFont(13);
     totalAsset.textOpacity = 0.8;
     threeStack.addSpacer(2);
-  
+    
+    const barStack = weekStack.addStack();
+    barStack.setPadding(3, 8, 3, 8);
+    barStack.backgroundColor = new Color('#FF0000');
+    barStack.cornerRadius = 10;
+    const weekText = barStack.addText(sendBean.splitBeansDesc);
+    weekText.font = Font.mediumSystemFont(10);
+    weekText.textColor = Color.white();
+    
     const billDate = threeStack.addText(`豆苗成长值 ${sendBean.growth}`);
     billDate.textColor = textColor;
-    billDate.font = Font.boldSystemFont(12);
+    billDate.font = Font.boldSystemFont(13);
     billDate.textOpacity = 0.8;
     contentStack.addSpacer();
     
