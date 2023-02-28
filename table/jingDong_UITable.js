@@ -54,7 +54,8 @@ async function main() {
     
     /**
     * Frame Layout
-    * Top Row Events
+    * @param {image} image
+    * @param {string} text
     */
     widget.setPadding(0, 0, 0, 0);
     const topStack = widget.addStack();
@@ -112,8 +113,8 @@ async function main() {
     
     /** 
     * Bottom Content
-    * image
-    * jvalue
+    * @param {image} image
+    * @param {string} jvalue
     */
     const contentStack = widget.addStack();
     contentStack.layoutHorizontally()
@@ -134,13 +135,13 @@ async function main() {
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(`总额度 ${Math.round(asset.quota.quotaAll.replace(',', ''))} `);
+    const totalAsset = threeStack.addText(`可用额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} `);
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(12);
     totalAsset.textOpacity = 0.8;
     threeStack.addSpacer(2);
   
-    const billDate = threeStack.addText(`${asset.bill.buttonName} ${asset.bill.amount}`);
+    const billDate = threeStack.addText(`${asset.bill.title} ${asset.bill.amount}`);
     billDate.textColor = textColor;
     billDate.font = Font.boldSystemFont(12);
     billDate.textOpacity = 0.8;
