@@ -152,11 +152,11 @@ const seventeen = df.string(new Date());
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(sendBean.splitBeans + `(${sendBean.splitBeansDesc})`);
+    const totalAsset = threeStack.addText(sendBean.splitBeans);
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(13);
     totalAsset.textOpacity = 0.8;
-    threeStack.addSpacer(2);
+    threeStack.addSpacer(3);
   
     const billDate = threeStack.addText(`豆苗成长值 ${sendBean.growth}`);
     billDate.textColor = textColor;
