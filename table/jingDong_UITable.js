@@ -20,6 +20,7 @@ async function main() {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
     cookie = setting.cookie;
+    index = setting.randomIndex;
   }
   
   const stackSize = new Size(0, 64);
@@ -48,6 +49,10 @@ async function main() {
   // Request(json)
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
+  const df = new DateFormatter();
+df.dateFormat = 'yyyyMMddHHmmssSSS'
+  const seventeen = df.string(new Date());
+  const sendBean = await splitBeans(`https://api.m.jd.com/client.action?functionId=plantBeanIndex&appid=signed_wh5&body=%7B%22monitor_source%22%3A%22plant_m_plant_index%22%2C%22monitor_refer%22%3A%22%22%2C%22version%22%3A%229.2.4.2%22%7D&h5st=${seventeen}%3B1811576433289285%3Bd246a%3Btk02w9ca81c1118n02isGDQ1pUhP9nwAtUQLeseYBxpBC1AbHd0KLKWxfQscxLmZ6Nv2p5%2BUPBPtcFGbsllDiD11qpWg%3B0fb0513f732c6d3eaeda15a15e512e302bbc829a598d270eb641b63c104582e4%3B3.1%3B1677608091130%3B7414c4e56278580a133b60b72a30beb2764d2e61c66a5620e8e838e06644d1bf76a78f278d7cc94670cbd432044eb06a77095e37140112b5a17b40b38d068743aa0853058d2ea75e3128f8593a2099fd3bfa9bcfa5390129202e52e8e16b29d2900ae1acd3c87e40f86323d92a5c4f539528eab8cc981fbaf031ba1cd64e0b61c68d4aaf29f2858c61c41da4c5fb52e4`);
   // signBean & Notification
   const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&body=%7B%22fp%22%3A%22-1%22%2C%22shshshfp%22%3A%22-1%22%2C%22shshshfpa%22%3A%22-1%22%2C%22referUrl%22%3A%22-1%22%2C%22userAgent%22%3A%22-1%22%2C%22jda%22%3A%22-1%22%2C%22rnVersion%22%3A%223.9%22%7D&appid=ld');
   if (signBean.status === '1') {
@@ -133,27 +138,27 @@ async function main() {
     contentStack.centerAlignContent()
     contentStack.addSpacer();
     contentStack.backgroundColor = stackBackground
-    contentStack.setPadding(10, 5, 10, 5);
+    contentStack.setPadding(10, index == 0 ? 5 : -3, 10, 5);
     contentStack.cornerRadius = 23;
     contentStack.size = stackSize;
     // Logo
     const logoStack = contentStack.addStack();
-    const logoImage = await getImage('http://mtw.so/67mqz3');
+    const logoImage = await getImage(index === 0 ? 'http://mtw.so/67mqz3' : 'http://mtw.so/5ZaG1N');
     const logoIcon = logoStack.addImage(logoImage);
-    logoIcon.imageSize = new Size(48, 48);
-    contentStack.addSpacer(10);
+    logoIcon.imageSize = new Size(index === 0 ? 48 : 42, index === 0 ? 48 : 42);
+    contentStack.addSpacer(index === 0 ? 10 : 1);
     
     const threeStack = contentStack.addStack();
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(`额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} `);
+    const totalAsset = threeStack.addText(index === 0 ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} ` : sendBean.splitBeans);
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(13);
     totalAsset.textOpacity = 0.8;
     threeStack.addSpacer(2.5);
   
-    const billDate = threeStack.addText(`待还 ${asset.bill.amount}`);
+    const billDate = threeStack.addText(index === 0 ? `待还 ${asset.bill.amount}` : `豆苗成长值 ${sendBean.growth}`);
     billDate.textColor = textColor;
     billDate.font = Font.boldSystemFont(13);
     billDate.textOpacity = 0.8;
@@ -229,6 +234,17 @@ async function main() {
     }`
     const res = await request.loadJSON();
     return res.resultData.data
+  }
+  
+  async function splitBeans(url) {
+    const req = new Request(url)
+    req.method = 'GET'
+    req.headers = {
+      Referer: 'https://plantearth.m.jd.com/',
+      Cookie: cookie
+    }
+    const res = await req.loadJSON();
+    return res.data.roundList[1];
   }
 }
 module.exports = { main }
