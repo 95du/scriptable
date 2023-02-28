@@ -140,7 +140,7 @@ async function main() {
     const logoStack = contentStack.addStack();
     const logoImage = await getImage('http://mtw.so/67mqz3');
     const logoIcon = logoStack.addImage(logoImage);
-    logoIcon.imageSize = new Size(45, 45);
+    logoIcon.imageSize = new Size(48, 48);
     contentStack.addSpacer(10);
     
     const threeStack = contentStack.addStack();
@@ -149,13 +149,13 @@ async function main() {
     
     const totalAsset = threeStack.addText(`额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} `);
     totalAsset.textColor = textColor;
-    totalAsset.font = Font.boldSystemFont(12);
+    totalAsset.font = Font.boldSystemFont(13);
     totalAsset.textOpacity = 0.8;
-    threeStack.addSpacer(2);
+    threeStack.addSpacer(3);
   
     const billDate = threeStack.addText(`待还 ${asset.bill.amount}`);
     billDate.textColor = textColor;
-    billDate.font = Font.boldSystemFont(12);
+    billDate.font = Font.boldSystemFont(13);
     billDate.textOpacity = 0.8;
     contentStack.addSpacer();
     
