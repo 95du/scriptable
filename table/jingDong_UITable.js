@@ -154,10 +154,11 @@ async function main() {
     billDate.font = Font.boldSystemFont(12);
     billDate.textOpacity = 0.8;
     contentStack.addSpacer();
-    
-    if (signBean.status === '2') {
-      notify(`${signBean.continuityAward.title} 获得${signBean.continuityAward.beanAward.beanCount}京豆`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`)
+    // signBean Notification
+    if (signBean.status === '1') {
+      notify(`${signBean.continuityAward.title}${signBean.continuityAward.beanAward.beanCount}京豆，当前京豆${signBean.totalUserBean}`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`)
     }
+    
     Script.setWidget(widget);
     Script.complete();
     return widget;
