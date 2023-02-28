@@ -166,7 +166,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     
     if (index === 0) {
       setting.randomindex = 1
-    } else {
+    } else if (index === 1) {
       setting.randomindex = 0
     }
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
