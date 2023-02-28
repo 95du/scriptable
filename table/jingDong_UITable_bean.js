@@ -146,7 +146,7 @@ const seventeen = df.string(new Date());
     const logoImage = await getImage('http://mtw.so/5ZaG1N');
     const logoIcon = logoStack.addImage(logoImage);
     logoIcon.imageSize = new Size(45, 45);
-    contentStack.addSpacer(10);
+    contentStack.addSpacer(1);
     
     const threeStack = contentStack.addStack();
     threeStack.layoutVertically();
