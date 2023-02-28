@@ -40,7 +40,7 @@ async function main() {
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const bill = await billDateJson('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCard');
   const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCreditManage');
-  
+  console.log(bill)
   widget = await createWidget();
   await widget.presentSmall();
   
