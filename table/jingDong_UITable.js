@@ -36,10 +36,19 @@ async function main() {
     new Color('#FFBF00')
   );
   
+  const notify = async (title, body, url) => {
+    let n = new Notification();
+    n.title = title
+    n.body = body
+    n.sound = 'alert'
+    if (url) {n.openURL = url}
+    return await n.schedule();
+  }
+  
   // Request(json)
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
-  console.log(asset)
+  const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&body=%7B%22fp%22%3A%22-1%22%2C%22shshshfp%22%3A%22-1%22%2C%22shshshfpa%22%3A%22-1%22%2C%22referUrl%22%3A%22-1%22%2C%22userAgent%22%3A%22-1%22%2C%22jda%22%3A%22-1%22%2C%22rnVersion%22%3A%223.9%22%7D&appid=ld');
   widget = await createWidget();
   await widget.presentSmall();
   
@@ -146,6 +155,9 @@ async function main() {
     billDate.textOpacity = 0.8;
     contentStack.addSpacer();
     
+    if (signBean.status === '2') {
+      notify(`${signBean.continuityAward.title} 获得${signBean.continuityAward.beanAward.beanCount}京豆`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`)
+    }
     Script.setWidget(widget);
     Script.complete();
     return widget;
@@ -181,6 +193,17 @@ async function main() {
     return await ctx.getImage()
   }
   
+  async function signBeanAct(url) {
+    const req = new Request(url)
+    req.method = 'POST'
+    req.headers = {
+      Referer: 'https://h5.m.jd.com/',
+      Cookie: cookie
+    }
+    const res = await req.loadJSON();
+    return res.data
+  }
+    
   async function getJson(url) {
     const req = new Request(url)
     req.method = 'POST'
