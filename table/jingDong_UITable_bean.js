@@ -138,37 +138,26 @@ const seventeen = df.string(new Date());
     contentStack.centerAlignContent()
     contentStack.addSpacer();
     contentStack.backgroundColor = stackBackground
-    contentStack.setPadding(10, -5, 10, 5);
+    contentStack.setPadding(10, 5, 10, 5);
     contentStack.cornerRadius = 23;
     contentStack.size = stackSize;
     // Logo image
     const logoStack = contentStack.addStack();
     const logoImage = await getImage('http://mtw.so/5ZaG1N');
     const logoIcon = logoStack.addImage(logoImage);
-    logoIcon.imageSize = new Size(42, 42);
+    logoIcon.imageSize = new Size(45, 45);
     contentStack.addSpacer(1);
     
-    const weekStack = contentStack.addStack();
-    weekStack.layoutHorizontally();
-    weekStack.centerAlignContent();
-    const threeStack = weekStack.addStack();
+    const threeStack = contentStack.addStack();
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(sendBean.splitBeans);
+    const totalAsset = threeStack.addText(sendBean.splitBeans + `(${sendBean.splitBeansDesc})`);
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(13);
     totalAsset.textOpacity = 0.8;
     threeStack.addSpacer(2);
-    
-    const barStack = weekStack.addStack();
-    barStack.setPadding(3, 5, 3, 5);
-    barStack.backgroundColor = new Color('#FF0000');
-    barStack.cornerRadius = 10;
-    const weekText = barStack.addText(sendBean.splitBeansDesc);
-    weekText.font = Font.mediumSystemFont(8);
-    weekText.textColor = Color.white();
-    
+  
     const billDate = threeStack.addText(`豆苗成长值 ${sendBean.growth}`);
     billDate.textColor = textColor;
     billDate.font = Font.boldSystemFont(13);
