@@ -138,7 +138,7 @@ const seventeen = df.string(new Date());
     contentStack.centerAlignContent()
     contentStack.addSpacer();
     contentStack.backgroundColor = stackBackground
-    contentStack.setPadding(10, -5, 10, 5);
+    contentStack.setPadding(10, -3, 10, 5);
     contentStack.cornerRadius = 23;
     contentStack.size = stackSize;
     // Logo image
