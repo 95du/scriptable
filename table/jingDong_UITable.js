@@ -165,11 +165,11 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     contentStack.addSpacer();
     
     if (index === 0) {
-      setting.randomIndex = 1;
+      setting.randomindex = 1
     } else {
-      setting.randomIndex = 0;
+      setting.randomindex = 0
     }
-    F_MGR.writeString(cacheFile, JSON.stringify(setting);
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
 
     Script.setWidget(widget);
     Script.complete();
