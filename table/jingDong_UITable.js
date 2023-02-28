@@ -38,7 +38,6 @@ async function main() {
   
   // Request(json)
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
-  //const bill = await billDateJson('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCard');
   const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
   console.log(asset)
   widget = await createWidget();
@@ -129,13 +128,13 @@ async function main() {
     const logoImage = await getImage('http://mtw.so/67mqz3');
     const logoIcon = logoStack.addImage(logoImage);
     logoIcon.imageSize = new Size(45, 45);
-    contentStack.addSpacer(7);
+    contentStack.addSpacer(10);
     
     const threeStack = contentStack.addStack();
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(`可用 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} `);
+    const totalAsset = threeStack.addText(`额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} `);
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(12);
     totalAsset.textOpacity = 0.8;
@@ -206,20 +205,6 @@ async function main() {
     }`
     const res = await request.loadJSON();
     return res.resultData.data
-  }
-  
-  async function billDateJson(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Referer: "https://mallwallet.jd.com/",
-      Cookie: cookie
-    }
-    req.body = `reqData={
-      "channel": "024"
-    }`
-    const res = await req.loadJSON();
-    return res.resultData.data;
   }
 }
 module.exports = { main }
