@@ -93,8 +93,8 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     }
   } else if (index === 3) {
     const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
-    if (farm.treeState == 1 || farm.treeState == 3) {
-      notify('东东农场', `⊱${farm.name}⊰可以兑换啦~`);  
+    if (farm.treeState == 2 || farm.treeState == 3) {
+      notify('东东农场', `${farm.name}，可以兑换啦~`);  
     }
     setting.randomIndex = 0;
     val = {
