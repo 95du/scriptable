@@ -92,7 +92,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance}`,
       text2: `即将过期 ${redEnvelope.expiredBalance}`,  
-      color: 'FF0000'
+      color: '#FF0000'
     }
   } else if (index === 3) {
     const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
@@ -212,7 +212,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     threeStack.addSpacer(2.5);
   
     const randomText2 = threeStack.addText(val.text2);
-    randomText2.textColor = new Color(val.Color);
+    randomText2.textColor = new Color(val.color);
     randomText2.font = Font.boldSystemFont(13);
     randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
