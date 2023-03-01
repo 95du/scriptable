@@ -64,7 +64,8 @@ async function main() {
       spac: 10,
       logoImage: 'http://mtw.so/67mqz3',
       text1: `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}`,
-      text2: `待还 ${asset.bill.amount}`,
+      text2: `待还 ${asset.bill.amount}`,  
+      color: new Color.red();
     }
   } else if (index === 1) {
     const df = new DateFormatter();
@@ -78,7 +79,8 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       spac: 1,
       logoImage: 'http://mtw.so/5ZaG1N',
       text1: sendBean.splitBeans,
-      text2: `豆苗成长值 ${sendBean.growth}`
+      text2: `豆苗成长值 ${sendBean.growth}`,  
+      color: new Color.green();
     }
   } else if (index === 2) {
     const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
@@ -89,7 +91,8 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       spac: 1,
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance}`,
-      text2: `即将过期 ${redEnvelope.expiredBalance}`
+      text2: `即将过期 ${redEnvelope.expiredBalance}`,  
+      color: new Color.orange();
     }
   } else if (index === 3) {
     const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
@@ -103,7 +106,8 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       spac: 5,
       logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
       text1: `已种植『 ${farm.simpleName} 』`,
-      text2: '果树进度 ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%'
+      text2: '果树进度 ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
+      color: new Color.green();
     }
   }
   
@@ -201,16 +205,16 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(val.text1);
-    totalAsset.textColor = textColor;
-    totalAsset.font = Font.boldSystemFont(13);
-    totalAsset.textOpacity = 0.8;
+    const randomText1 = threeStack.addText(val.text1);
+    randomText1.textColor = textColor;
+    randomText1.font = Font.boldSystemFont(13);
+    randomText1.textOpacity = 0.8;
     threeStack.addSpacer(2.5);
   
-    const billDate = threeStack.addText(val.text2);
-    billDate.textColor = textColor;
-    billDate.font = Font.boldSystemFont(13);
-    billDate.textOpacity = 0.8;
+    const randomText2 = threeStack.addText(val.text2);
+    randomText2.textColor = val.Color;
+    randomText2.font = Font.boldSystemFont(13);
+    randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
       
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
