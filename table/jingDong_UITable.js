@@ -70,8 +70,8 @@ async function main() {
     }
   } else if (index === 1) {
     const df = new DateFormatter();
-df.dateFormat = 'yyyyMMddHHmmssSSS'
-    const seventeen = df.string(new Date());
+df.dateFormat = 'yyyy-MM-dd'
+    const date = df.string(new Date());
     const expireBean = await splitBeans('https://api.m.jd.com?appid=jd-cphdeveloper-m&functionId=myBean&body=%7B%22tenantCode%22:%22jgm%22,%22bizModelCode%22:%226%22,%22bizModeClientType%22:%22M%22,%22externalLoginType%22:%221%22%7D&g_login_type=0&g_tk=997104177&g_ty=ajax&appCode=ms0ca95114');
     setting.randomIndex = 2;
     val = {
