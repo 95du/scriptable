@@ -79,7 +79,7 @@ df.dateFormat = 'yyyy-MM-dd'
       imageSize: 42,
       spac: 1,
       logoImage: 'http://mtw.so/5ZaG1N',
-      text1: `今日京东 ${String(posi - mega)}`,
+      text1: '今日京东 ' + String(posi - mega),
       text2: `即将过期 ${expireBean}`,  
       lightColor: '#FF0000',
       darkColor: '#FFBF00'
