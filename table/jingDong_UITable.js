@@ -58,6 +58,39 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
   if (signBean.status === '1') {
     notify(`${signBean.continuityAward.title}${signBean.continuityAward.beanAward.beanCount}京豆，当前京豆${signBean.totalUserBean}`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`)
   }
+  // randomIndex
+  if (index === 0) {
+    setting.randomIndex = 1
+    val = {
+      leading: 5,
+      imageSize: 48,
+      spacer: 10,
+      logoImage: 'http://mtw.so/67mqz3',
+      text1: `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}`,
+      text2: `待还 ${asset.bill.amount}`,
+    }
+  } else if (index === 1) {
+    setting.randomIndex = 2
+    val = {
+      leading: -3,
+      imageSize: 42,
+      spacer: 1,
+      logoImage: 'http://mtw.so/5ZaG1N',
+      text1: sendBean.splitBeans,
+      text2: `豆苗成长值 ${sendBean.growth}`
+    }
+  } else if (index === 2) {
+    setting.randomIndex = 0
+    val = {
+      leading: -3,
+      imageSize: 42,
+      spacer: 1,
+      logoImage: 'http://mtw.so/5ZaG1N',
+      text1: sendBean.splitBeans,
+      text2: `豆苗成长值 ${sendBean.growth}`
+    }
+  }
+  
   widget = await createWidget();
   await widget.presentSmall();
   
@@ -138,39 +171,33 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     contentStack.centerAlignContent()
     contentStack.addSpacer();
     contentStack.backgroundColor = stackBackground
-    contentStack.setPadding(10, index == 0 ? 5 : -3, 10, 5);
+    contentStack.setPadding(10, val.leading, 10, 5);
     contentStack.cornerRadius = 23;
     contentStack.size = stackSize;
     // Logo
     const logoStack = contentStack.addStack();
-    const logoImage = await getImage(index === 0 ? 'http://mtw.so/67mqz3' : 'http://mtw.so/5ZaG1N');
+    const logoImage = await getImage(val.logoImage);
     const logoIcon = logoStack.addImage(logoImage);
-    logoIcon.imageSize = new Size(index === 0 ? 48 : 42, index === 0 ? 48 : 42);
-    contentStack.addSpacer(index === 0 ? 10 : 1);
+    logoIcon.imageSize = new Size(val.imageSize, val.imageSize);
+    contentStack.addSpacer(val.spacer);
     
     const threeStack = contentStack.addStack();
     threeStack.layoutVertically();
     threeStack.centerAlignContent();
     
-    const totalAsset = threeStack.addText(index === 0 ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))} ` : sendBean.splitBeans);
+    const totalAsset = threeStack.addText(val.text1);
     totalAsset.textColor = textColor;
     totalAsset.font = Font.boldSystemFont(13);
     totalAsset.textOpacity = 0.8;
     threeStack.addSpacer(2.5);
   
-    const billDate = threeStack.addText(index === 0 ? `待还 ${asset.bill.amount}` : `豆苗成长值 ${sendBean.growth}`);
+    const billDate = threeStack.addText(val.text2);
     billDate.textColor = textColor;
     billDate.font = Font.boldSystemFont(13);
     billDate.textOpacity = 0.8;
     contentStack.addSpacer();
-    
-    if (index === 0) {
-      setting.randomIndex = 1
-    } else if (index === 1) {
-      setting.randomIndex = 0
-    }
+      
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
-
     Script.setWidget(widget);
     Script.complete();
     return widget;
