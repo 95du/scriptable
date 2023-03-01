@@ -89,7 +89,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       spacer: 1,
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance} 元`,
-      text2: `即将过期 ${redEnvelope.expiredBalance} 元`
+      text2: `即将过期 ${redEnvelope.expiredBalance}`
     }
   }
   
