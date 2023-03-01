@@ -226,22 +226,10 @@ async function main() {
     return widget;
   }
   
-  async function downloadModule() {
-    const modulePath = F_MGR.joinPath(folder, 'image.js');
-    if (F_MGR.fileExists(modulePath)) {
-      return modulePath;
-    } else {
-      const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM='));
-      const moduleJs = await req.load().catch(() => {
-        return null;
-      });
-      if (moduleJs) {
-        F_MGR.write(modulePath, moduleJs);
-        return modulePath;
-      }
-    }
-  }
   
+  /**---------------------------
+   * Request(url) json & image
+   */
   async function getImage(url) {
     const r = await new Request(url);
     return await r.loadImage();
