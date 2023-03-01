@@ -84,11 +84,11 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
     setting.randomIndex = 0
     val = {
-      leading: 5,
+      leading: -3,
       imageSize: 45,
       spacer: 1,
       logoImage: 'http://mtw.so/5ZaunR',
-      text1: `红包 ${redEnvelope.balance} 元`,
+      text1: `红包 ${redEnvelope.balance}`,
       text2: `即将过期 ${redEnvelope.expiredBalance}`
     }
   }
