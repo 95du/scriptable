@@ -79,7 +79,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       imageSize: 42,
       spac: 1,
       logoImage: 'http://mtw.so/5ZaG1N',
-      text1: '瓜分1亿京豆',
+      text1: `今日京东 ${String(posi - mega)}`,
       text2: `即将过期 ${expireBean}`,  
       lightColor: '#FF0000',
       darkColor: '#FFBF00'
@@ -304,6 +304,27 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       Cookie: cookie
     }
     const res = await req.loadJSON();
+    let positive = [];
+    let megative = [];
+    for (const item of res.list) {
+      if (item.amount > 0 && item.createDate.indexOf(date) > -1) {
+        positive.push(item.amount);
+      } else if (item.amount > 0 && item.createDate.indexOf(date) > -1) {
+        megative.push(item.amount);
+      }
+    }
+    
+    if (positive.length === 0) {
+      posi = 0;
+    } else {
+      posi = positive.reduce((accumulator, currentValue) => accumulator + currentValue);
+    }
+    
+    if (megative.length === 0) {
+      mega = 0;
+    } else {
+      mega = Math.abs(megative.reduce((accumulator, currentValue) => accumulator + currentValue));
+    }
     return res.willExpireNum;
   }
   
