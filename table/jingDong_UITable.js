@@ -80,7 +80,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       logoImage: 'http://mtw.so/5ZaG1N',
       text1: sendBean.splitBeans,
       text2: `豆苗成长值 ${sendBean.growth}`,  
-      color: '#32CD32'
+      color: '#4CBB17'
     }
   } else if (index === 2) {
     const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
