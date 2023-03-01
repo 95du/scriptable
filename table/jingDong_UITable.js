@@ -57,7 +57,7 @@ async function main() {
   // randomIndex
   if (index === 0) {
     const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
-    setting.randomIndex = 1
+    setting.randomIndex = 1;
     val = {
       leading: 3,
       imageSize: 48,
@@ -71,7 +71,7 @@ async function main() {
 df.dateFormat = 'yyyyMMddHHmmssSSS'
     const seventeen = df.string(new Date());
     const sendBean = await splitBeans(`https://api.m.jd.com/client.action?functionId=plantBeanIndex&appid=signed_wh5&body=%7B%22monitor_source%22%3A%22plant_m_plant_index%22%2C%22monitor_refer%22%3A%22%22%2C%22version%22%3A%229.2.4.2%22%7D&h5st=${seventeen}%3B1811576433289285%3Bd246a%3Btk02w9ca81c1118n02isGDQ1pUhP9nwAtUQLeseYBxpBC1AbHd0KLKWxfQscxLmZ6Nv2p5%2BUPBPtcFGbsllDiD11qpWg%3B0fb0513f732c6d3eaeda15a15e512e302bbc829a598d270eb641b63c104582e4%3B3.1%3B1677608091130%3B7414c4e56278580a133b60b72a30beb2764d2e61c66a5620e8e838e06644d1bf76a78f278d7cc94670cbd432044eb06a77095e37140112b5a17b40b38d068743aa0853058d2ea75e3128f8593a2099fd3bfa9bcfa5390129202e52e8e16b29d2900ae1acd3c87e40f86323d92a5c4f539528eab8cc981fbaf031ba1cd64e0b61c68d4aaf29f2858c61c41da4c5fb52e4`);
-    setting.randomIndex = 2
+    setting.randomIndex = 2;
     val = {
       leading: -3,
       imageSize: 42,
@@ -82,7 +82,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     }
   } else if (index === 2) {
     const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
-    setting.randomIndex = 0
+    setting.randomIndex = 3;
     val = {
       leading: -3,
       imageSize: 42,
@@ -90,6 +90,17 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance}`,
       text2: `即将过期 ${redEnvelope.expiredBalance}`
+    }
+  } else if (index === 3) {
+    const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
+    setting.randomIndex = 0;
+    val = {
+      leading: -3,
+      imageSize: 42,
+      spac: 1,
+      logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
+      text1: farm.name,
+      text2: '农场进度 ' + (farm.treeEnergy / farm.treeTotalEnergy) * 100 + '%'
     }
   }
   
@@ -292,6 +303,20 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     }
     const res = await req.loadJSON();
     return res.data;
+  }
+  
+  async function farmProgress(url) {
+    const req = new Request(url)
+    req.method = 'POST'
+    req.headers = {
+      Referer: 'https://h5.m.jd.com/',  
+      Cookie: cookie
+    }
+    req.body = 'body=version:4&appid=wh5&clientVersion=9.1.0'
+    const res = await req.loadJSON();
+    const { farmUserPro } = res;
+    const { treeState, name, treeTotalEnergy, treeEnergy, simpleName } = farmUserPro;
+    return farmUserPro;
   }
 }
 module.exports = { main }
