@@ -213,8 +213,8 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
   
     const randomText2 = threeStack.addText(val.text2);
     randomText2.textColor = new Color(val.color);
-    randomText2.font = Font.boldSystemFont(13);
-    randomText2.textOpacity = 0.8;
+    randomText2.font = Font.mediumSystemFont(13);
+    randomText2.textOpacity = 0.7;
     contentStack.addSpacer();
       
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
