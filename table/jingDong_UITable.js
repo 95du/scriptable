@@ -72,17 +72,17 @@ async function main() {
     const df = new DateFormatter();
 df.dateFormat = 'yyyyMMddHHmmssSSS'
     const seventeen = df.string(new Date());
-    const sendBean = await splitBeans(`https://api.m.jd.com/client.action?functionId=plantBeanIndex&appid=signed_wh5&body=%7B%22monitor_source%22%3A%22plant_m_plant_index%22%2C%22monitor_refer%22%3A%22%22%2C%22version%22%3A%229.2.4.2%22%7D&client=apple&clientVersion=11.6.3&networkType=3g&osVersion=16.3.1&uuid=5805217d9bec56036efb09672f08758b63766ff6&partner=&d_brand=iPhone&d_model=iPhone13,4&screen=926*428&h5st=20230301223630066%3B1811576433289285%3Bd246a%3Btk02wa3de1bde18n9kLb9HXG736wSQx0TqjBavif9xlKypTrRhAlkeL7GNaTSKQMroiJZR09Xo9PY8o4wPSG3%2FApTtr0%3B3193209ecf4c556a3de0041e12573e74bbce8ce733eec9f67307955cc3a1f2c7%3B3.1%3B1677681390066%3B7414c4e56278580a133b60b72a30beb2764d2e61c66a5620e8e838e06644d1bf76a78f278d7cc94670cbd432044eb06a77095e37140112b5a17b40b38d068743aa0853058d2ea75e3128f8593a2099fd3bfa9bcfa5390129202e52e8e16b29d2900ae1acd3c87e40f86323d92a5c4f539528eab8cc981fbaf031ba1cd64e0b61c68d4aaf29f2858c61c41da4c5fb52e4`);
+    const expireBean = await splitBeans('https://api.m.jd.com?appid=jd-cphdeveloper-m&functionId=myBean&body=%7B%22tenantCode%22:%22jgm%22,%22bizModelCode%22:%226%22,%22bizModeClientType%22:%22M%22,%22externalLoginType%22:%221%22%7D&g_login_type=0&g_tk=997104177&g_ty=ajax&appCode=ms0ca95114');
     setting.randomIndex = 2;
     val = {
       leading: -3,
       imageSize: 42,
       spac: 1,
       logoImage: 'http://mtw.so/5ZaG1N',
-      text1: sendBean.splitBeans,
-      text2: `豆苗成长值 ${sendBean.growth}`,  
-      lightColor: '#1ea532',
-      darkColor: '#32CD32'
+      text1: '瓜分1亿京豆',
+      text2: `即将过期 ${expireBean}`,  
+      lightColor: '#FF0000',
+      darkColor: '#FFBF00'
     }
   } else if (index === 2) {
     const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
@@ -304,7 +304,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       Cookie: cookie
     }
     const res = await req.loadJSON();
-    return res.data.roundList[1];
+    return res.willExpireNum;
   }
   
   async function redPackage(url) {
