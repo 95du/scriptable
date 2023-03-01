@@ -111,7 +111,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     */
     widget.setPadding(0, 0, 0, 0);
     const topStack = widget.addStack();
-    topStack.setPadding(10, 5, 10, 5)
+    topStack.setPadding(10, 3, 10, 3)
     topStack.layoutHorizontally();
     topStack.centerAlignContent();
     topStack.addSpacer();
