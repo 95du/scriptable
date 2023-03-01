@@ -4,8 +4,9 @@
 /**
  * 小组件作者: 95度茅台
  * 小组件名称: 中国电信余量
- * Version 1.2.0 增加新样式中号组件
- * 2023-01-18 14:30
+ * Version 1.2.5 
+修复每日用量错误问题 ( 每月1日自动清零 )
+ * 2023-03-01 14:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  */
