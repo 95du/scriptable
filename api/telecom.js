@@ -13,7 +13,7 @@
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "telecom");
 if (!F_MGR.fileExists(folder)) {
-  F_MGR.createDirectory(folder)
+  F_MGR.createDirectory(folder);
 }
 
 const cacheFile = F_MGR.joinPath(folder, 'setting.json');
@@ -72,6 +72,9 @@ const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
 const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
+const df = new DateFormatter();
+df.dateFormat = 'ddHHmm'
+const day1st = df.string(new Date());
 
 if (!F_MGR.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
   setting = {
@@ -86,7 +89,7 @@ if (!F_MGR.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
 }
 
 const Step1st = 25;
-const Step2nd = 82;
+const Step2nd = 83;
 const StepFin = 100;
 const barWidth = 15;
 const barHeigth = 105;
@@ -166,7 +169,11 @@ async function createWidget() {
   
   const usedFlowStack = Stack1.addStack();
   usedFlowStack.addSpacer();
-  let usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
+  if (day1st > '010000' && day1st < '010030') {
+    usedFlowText = usedFlowStack.addText(`- ${(flowBalance - flowBalance).toFixed(2)}`);
+  } else {
+    usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
+  }
   usedFlowText.textColor  = SubTextColor
   usedFlowText.font = Font.systemFont(12);
   usedFlowStack.addSpacer();
@@ -225,7 +232,11 @@ async function createWidget() {
   
   const voiceUsedStack = Stack2.addStack();
   voiceUsedStack.addSpacer();
-  let voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
+  if (day1st > '010000' && day1st < '010030') {
+    voiceUsedText = voiceUsedStack.addText(`- ${voiceBalance - voiceBalance}`);
+  } else {
+    voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
+  }
   voiceUsedText.textColor  = SubTextColor
   voiceUsedText.font = Font.systemFont(12);
   voiceUsedStack.addSpacer();
