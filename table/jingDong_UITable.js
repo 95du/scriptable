@@ -85,7 +85,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     setting.randomIndex = 0
     val = {
       leading: -3,
-      imageSize: 45,
+      imageSize: 42,
       spacer: 1,
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance}`,
