@@ -61,7 +61,7 @@ async function main() {
     val = {
       leading: 3,
       imageSize: 48,
-      spacer: 10,
+      spac: 10,
       logoImage: 'http://mtw.so/67mqz3',
       text1: `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}`,
       text2: `待还 ${asset.bill.amount}`,
@@ -75,7 +75,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     val = {
       leading: -3,
       imageSize: 42,
-      spacer: 1,
+      spac: 1,
       logoImage: 'http://mtw.so/5ZaG1N',
       text1: sendBean.splitBeans,
       text2: `豆苗成长值 ${sendBean.growth}`
@@ -86,7 +86,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     val = {
       leading: -3,
       imageSize: 42,
-      spacer: 1,
+      spac: 1,
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance}`,
       text2: `即将过期 ${redEnvelope.expiredBalance}`
@@ -181,7 +181,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     const logoImage = await getImage(val.logoImage);
     const logoIcon = logoStack.addImage(logoImage);
     logoIcon.imageSize = new Size(val.imageSize, val.imageSize);
-    contentStack.addSpacer(val.spacer);
+    contentStack.addSpacer(val.spac);
     
     const threeStack = contentStack.addStack();
     threeStack.layoutVertically();
