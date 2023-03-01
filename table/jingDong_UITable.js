@@ -219,7 +219,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     randomText2.textColor = Color.dynamic(new Color(val.lightColor), new Color(val.darkColor));
     new Color(val.color);
     randomText2.font = Font.mediumSystemFont(13);
-    randomText2.textOpacity = 0.9;
+    randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
       
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
