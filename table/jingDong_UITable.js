@@ -99,7 +99,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     }
   } else if (index === 3) {
     const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
-    if (farm.treeState == 2 || farm.treeState == 3) {
+    if (farm.treeState === 2 || farm.treeState === 3) {
       notify('东东农场', `${farm.name}，可以兑换啦~`);  
     }
     setting.randomIndex = 0;
@@ -115,9 +115,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     }
   }
   
-  widget = await createWidget();
-  await widget.presentSmall();
-  
+  await createWidget();
   async function createWidget() {
     const widget = new ListWidget();
     if (F_MGR.fileExists(bgImage)) {
@@ -222,8 +220,12 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     contentStack.addSpacer();
       
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
-    Script.setWidget(widget);
-    Script.complete();
+    if (config.runsInApp) {
+      await widget.presentSmall();
+    } else {
+      Script.setWidget(widget);
+      Script.complete();
+    }
     return widget;
   }
   
