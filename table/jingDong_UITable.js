@@ -59,7 +59,7 @@ async function main() {
     const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
     setting.randomIndex = 1
     val = {
-      leading: 5,
+      leading: 3,
       imageSize: 48,
       spacer: 10,
       logoImage: 'http://mtw.so/67mqz3',
@@ -173,7 +173,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     contentStack.centerAlignContent()
     contentStack.addSpacer();
     contentStack.backgroundColor = stackBackground
-    contentStack.setPadding(10, val.leading, 10, 5);
+    contentStack.setPadding(10, val.leading, 10, 3);
     contentStack.cornerRadius = 23;
     contentStack.size = stackSize;
     // Logo
