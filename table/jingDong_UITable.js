@@ -217,7 +217,6 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
   
     const randomText2 = threeStack.addText(val.text2);
     randomText2.textColor = Color.dynamic(new Color(val.lightColor), new Color(val.darkColor));
-    new Color(val.color);
     randomText2.font = Font.mediumSystemFont(13);
     randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
