@@ -81,7 +81,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       logoImage: 'http://mtw.so/5ZaG1N',
       text1: sendBean.splitBeans,
       text2: `豆苗成长值 ${sendBean.growth}`,  
-      lightColor: '#4CBB17',
+      lightColor: '#1ea532',
       darkColor: '#32CD32'
     }
   } else if (index === 2) {
@@ -110,7 +110,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
       text1: `已种植『 ${farm.simpleName} 』`,
       text2: '果树进度 ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
-      lightColor: '#4CBB17',
+      lightColor: '#1ea532',
       darkColor: '#32CD32'
     }
   }
