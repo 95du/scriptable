@@ -65,7 +65,7 @@ async function main() {
       logoImage: 'http://mtw.so/67mqz3',
       text1: `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}`,
       text2: `待还 ${asset.bill.amount}`,  
-      color: new Color.red();
+      color: Color.red()
     }
   } else if (index === 1) {
     const df = new DateFormatter();
@@ -80,7 +80,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       logoImage: 'http://mtw.so/5ZaG1N',
       text1: sendBean.splitBeans,
       text2: `豆苗成长值 ${sendBean.growth}`,  
-      color: new Color.green();
+      color: Color.green()
     }
   } else if (index === 2) {
     const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
@@ -92,7 +92,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance}`,
       text2: `即将过期 ${redEnvelope.expiredBalance}`,  
-      color: new Color.orange();
+      color: Color.orange()
     }
   } else if (index === 3) {
     const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
@@ -107,7 +107,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
       text1: `已种植『 ${farm.simpleName} 』`,
       text2: '果树进度 ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
-      color: new Color.green();
+      color: Color.green()
     }
   }
   
