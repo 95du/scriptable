@@ -71,6 +71,10 @@ async function main() {
   
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   console.log(dayNumber)
+  const df = new DateFormatter();
+df.dateFormat = 'ddHHmm'
+  const day1st = df.string(new Date());
+
   if (setting.init === false || dayNumber !== setting.dayNumber) {
     setting = {
       ...setting,
@@ -185,8 +189,12 @@ async function main() {
     
     const usedFlowStack = Stack1.addStack();
     usedFlowStack.addSpacer();
-    let usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
-    usedFlowText.textColor  = SubTextColor
+    if (day1st > '010000' && day1st < '010030') {
+      usedFlowText = usedFlowStack.addText(`- ${(flowBalance - flowBalance).toFixed(2)}`);
+    } else {
+      usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
+    }
+    usedFlowText.textColor  = SubTextColor;
     usedFlowText.font = Font.systemFont(12);
     usedFlowStack.addSpacer();
     Stack1.addSpacer(5);
@@ -244,7 +252,11 @@ async function main() {
     
     const voiceUsedStack = Stack2.addStack();
     voiceUsedStack.addSpacer();
-    let voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
+    if (day1st > '010000' && day1st < '010030') {
+      voiceUsedText = voiceUsedStack.addText(`- ${voiceBalance - voiceBalance}`);
+    } else {
+      voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
+    }
     voiceUsedText.textColor  = SubTextColor
     voiceUsedText.font = Font.systemFont(12);
     voiceUsedStack.addSpacer();
