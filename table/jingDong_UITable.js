@@ -102,7 +102,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
       imageSize: 35,
       spac: 5,
       logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
-      text1: `已种植 『 ${farm.simpleName} 』`,
+      text1: `已种植『 ${farm.simpleName} 』`,
       text2: '果树进度 ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%'
     }
   }
