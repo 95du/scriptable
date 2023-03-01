@@ -86,7 +86,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     val = {
       leading: 5,
       imageSize: 45,
-      spacer: 10,
+      spacer: 1,
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance} 元`,
       text2: `即将过期 ${redEnvelope.expiredBalance} 元`
