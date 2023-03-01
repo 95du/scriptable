@@ -98,7 +98,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     }
     setting.randomIndex = 0;
     val = {
-      leading: 3,
+      leading: 5,
       imageSize: 35,
       spac: 5,
       logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
