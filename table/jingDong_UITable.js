@@ -134,7 +134,7 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     topStack.centerAlignContent();
     topStack.addSpacer();
     topStack.backgroundColor = stackBackground;
-    topStack.cornerRadius = 23;
+    topStack.cornerRadius = 20;
     topStack.size = stackSize;
     
     // User icon
