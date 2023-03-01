@@ -95,9 +95,9 @@ df.dateFormat = 'yyyyMMddHHmmssSSS'
     const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
     setting.randomIndex = 0;
     val = {
-      leading: -3,
-      imageSize: 40,
-      spac: 1,
+      leading: 3,
+      imageSize: 35,
+      spac: 5,
       logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
       text1: farm.name,
       text2: '农场进度 ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%'
