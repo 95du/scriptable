@@ -149,7 +149,6 @@ async function main() {
    * @param {image} image
    * @param {string} text
    */
-  await createWidget();
   async function createWidget() {
     const widget = new ListWidget();
     if (F_MGR.fileExists(bgImage)) {
@@ -385,5 +384,6 @@ async function main() {
     const res = await req.loadJSON();
     return res.resultData.data;
   }
+  await createWidget();
 }
 module.exports = { main }
