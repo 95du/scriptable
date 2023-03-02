@@ -115,7 +115,7 @@ async function main() {
     setting.randomIndex = 0;
     val = {
       leading: 3,
-      imageSize: 35,
+      imageSize: 33,
       spac: 8,
       logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
       text1: `守约值 ${promise.xbScore}`,
