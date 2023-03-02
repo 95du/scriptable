@@ -131,7 +131,7 @@ async function main() {
       imageSize: 35,
       spac: 8,
       logoImage: 'https://m.360buyimg.com/njmobilecms/jfs/t23452/19/1797778090/8622/14e40996/5b69974eN9880f531.png',
-      text1: `守约值 ${promise.xbScore}`,
+      text1: `守约值 ${(promise.xbScore).toString()}`,
       text2: `更新时间 ${promise.recentDate}`,
       lightColor: '#000000',
       darkColor: '#FFFFFF'
