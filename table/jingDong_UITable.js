@@ -64,8 +64,8 @@ async function main() {
       imageSize: 48,
       spac: 10,
       logoImage: 'http://mtw.so/67mqz3',
-      text1: asset.quota ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
-      text2: asset.quota ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
+      text1: asset.quota.quotaLeft ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
+      text2: asset.quota.quotaLeft ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
       lightColor: '#FF0000',
       darkColor: '#FFBF00'
     }
