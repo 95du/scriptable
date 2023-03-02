@@ -36,10 +36,10 @@ async function main() {
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');  
   
   const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
-  if (signBean.status === '1') {
+  if (status === '1') {
     setting.signData = signBean
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
-    notify(`${signBean.dailyAward.title}，${signBean.dailyAward.subTitle} ${signBean.dailyAward.beanAward.beanCount} 京豆，当前京豆 ${signBean.totalUserBean}`, `已签到 ${signBean.continuousDays} 天，明天签到加${signBean.tomorrowSendBeans}京豆`);
+    notify(`${signBean.title}，${signBean.subTitle} ${signBean.beanAward.beanCount} 京豆，当前京豆 ${signBean.totalUserBean}`, `已签到 ${signBean.continuousDays} 天，明天签到加${signBean.tomorrowSendBeans}京豆`);
   }
   
   // Sequential Index
@@ -292,7 +292,8 @@ async function main() {
       rnVersion: "3.9"
     }`
     const res = await req.loadJSON();
-    return res.data.signData;
+    status = res.data.status;
+    return res.data.dailyAward;
   }
     
   async function getJson(url) {
