@@ -47,9 +47,9 @@ async function main() {
   }
   
   // User Information
-  const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
-  // signBean & Notification
-  const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&body=%7B%22fp%22%3A%22-1%22%2C%22shshshfp%22%3A%22-1%22%2C%22shshshfpa%22%3A%22-1%22%2C%22referUrl%22%3A%22-1%22%2C%22userAgent%22%3A%22-1%22%2C%22jda%22%3A%22-1%22%2C%22rnVersion%22%3A%223.9%22%7D&appid=ld');
+  const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');  
+  
+  const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
   if (signBean.status === '1') {
     notify(`${signBean.continuityAward.title}${signBean.continuityAward.beanAward.beanCount}京豆，当前京豆${signBean.totalUserBean}`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`);
     return;
@@ -276,6 +276,15 @@ async function main() {
       Referer: 'https://h5.m.jd.com/',
       Cookie: cookie
     }
+    req.body = `body={
+      fp: "-1",
+      shshshfp: "-1",
+      shshshfpa: "-1",
+      referUrl: "-1",
+      userAgent: "-1",
+      jda: "-1",
+      rnVersion: "3.9"
+    }`
     const res = await req.loadJSON();
     return res.data
   }
