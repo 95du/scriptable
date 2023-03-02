@@ -120,7 +120,7 @@ async function main() {
       logoImage: 'https://m.360buyimg.com/njmobilecms/jfs/t23452/19/1797778090/8622/14e40996/5b69974eN9880f531.png',
       text1: `已连签 ${signBean.continuousDays} 天`,
       text2: `获得 ${signBean.dailyAward.beanAward.beanCount} 京豆`,
-      lightColor: '#F28C28',
+      lightColor: '#000000',
       darkColor: '#FFFFFF'
     }
   }
