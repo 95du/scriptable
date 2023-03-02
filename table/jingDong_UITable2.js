@@ -53,8 +53,8 @@ async function main() {
       logoImage: 'http://mtw.so/67mqz3',
       text1: asset.quota.state === '1' ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
       text2: asset.quota.state === '1' ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
-      lightColor: '#FF0000',
-      darkColor: '#FFBF00'
+      lightColor: '#FFBF00',
+      darkColor: '#FF0000'
     }
   } else if (index === 1) {
     const expireBean = await splitBeans('https://api.m.jd.com?appid=jd-cphdeveloper-m&functionId=myBean&body=%7B%22tenantCode%22:%22jgm%22,%22bizModelCode%22:%226%22,%22bizModeClientType%22:%22M%22,%22externalLoginType%22:%221%22%7D&g_login_type=0&g_tk=997104177&g_ty=ajax&appCode=ms0ca95114');
@@ -66,8 +66,8 @@ async function main() {
       logoImage: 'http://mtw.so/5ZaG1N',
       text1: '今日京东 ' + String(posi - mega),
       text2: `即将过期 ${expireBean}`,  
-      lightColor: '#FF0000',
-      darkColor: '#FFBF00'
+      lightColor: '#FFBF00',
+      darkColor: '#FF0000'
     }
   } else if (index === 2) {
     const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
@@ -79,8 +79,8 @@ async function main() {
       logoImage: 'http://mtw.so/5ZaunR',
       text1: `红包 ${redEnvelope.balance}`,
       text2: `即将过期 ${redEnvelope.expiredBalance}`,  
-      lightColor: '#FF0000',
-      darkColor: '#FFBF00'
+      lightColor: '#FFBF00',
+      darkColor: '#FF0000'
     }
   } else if (index === 3) {
     const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
@@ -95,8 +95,8 @@ async function main() {
       logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
       text1: `已种植『 ${farm.simpleName} 』`,
       text2: '果树进度  ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
-      lightColor: '#1ea532',
-      darkColor: '#32CD32'
+      lightColor: '#32CD32',
+      darkColor: '#1ea532'
     }
   } else if (index === 4) {
     setting.randomIndex = 5;
@@ -107,8 +107,8 @@ async function main() {
       logoImage: 'https://img14.360buyimg.com/imagetools/jfs/t1/103452/37/32197/16412/63455551E3c6f4386/e12d9a6dab6ea1ff.png',
       text1: `已连签 ${sign.continuousDays} 天`,
       text2: `获得 ${signBean.beanAward.beanCount} 京豆`,
-      lightColor: '#000000',
-      darkColor: '#FFFFFF'
+      lightColor: '#FFFFFF',
+      darkColor: '#000000'
     }
   } else if (index === 5) {
     const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
@@ -120,8 +120,8 @@ async function main() {
       logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
       text1: `守约值 ${promise.xbScore}`,
       text2: `${promise.recentDate}`,
-      lightColor: '#000000',
-      darkColor: '#FFFFFF'
+      lightColor: '#FFFFFF',
+      darkColor: '#000000'
     }
   }
   
@@ -131,12 +131,12 @@ async function main() {
     new Color('#EFEBE9', Number(setting.dark))
   );
   const textColor = Color.dynamic(
-    new Color('#1E1E1E'),
-    new Color('#FEFEFE')
+    new Color('#FEFEFE'),
+    new Color('#1E1E1E')
   );
   const jNumColor = Color.dynamic(
-    new Color('#FF0000'),
-    new Color('#FFBF00')
+    new Color('#FFBF00'),
+    new Color('#FF0000')
   );
   const botTextColor = Color.dynamic(
     new Color(val.lightColor),
