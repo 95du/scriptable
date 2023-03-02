@@ -114,10 +114,10 @@ async function main() {
   } else if (index === 4) {
     setting.randomIndex = 0;
     val = {
-      leading: -3,
+      leading: 3,
       imageSize: 42,
-      spac: 1,
-      logoImage: 'https://img11.360buyimg.com/pop/jfs/t1/114422/3/30272/1137/63fd7f45Fd2068491/7fccfb6d9eea9a2e.png',
+      spac: 10,
+      logoImage: 'https://m.360buyimg.com/njmobilecms/jfs/t23452/19/1797778090/8622/14e40996/5b69974eN9880f531.png',
       text1: `已连签 ${signBean.continuousDays} 天`,
       text2: `获得 ${signBean.dailyAward.beanAward.beanCount} 京豆`,
       lightColor: '#000000',
