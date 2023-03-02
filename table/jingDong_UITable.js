@@ -23,20 +23,6 @@ async function main() {
     index = setting.randomIndex;
   }
   
-  const stackSize = new Size(0, 64);
-  const stackBackground = Color.dynamic(
-    new Color('#EFEBE9', Number(setting.light)),
-    new Color('#161D2A', Number(setting.dark))
-  );
-  const textColor = Color.dynamic(
-    new Color('#1E1E1E'),
-    new Color('#FEFEFE')
-  );
-  const jNumColor = Color.dynamic(
-    new Color('#FF0000'),
-    new Color('#FFBF00')
-  );
-  
   const notify = async (title, body, url) => {
     let n = new Notification();
     n.title = title
@@ -140,6 +126,30 @@ async function main() {
     }
   }
   
+  const stackSize = new Size(0, 64);
+  const stackBackground = Color.dynamic(
+    new Color('#EFEBE9', Number(setting.light)),
+    new Color('#161D2A', Number(setting.dark))
+  );
+  const textColor = Color.dynamic(
+    new Color('#1E1E1E'),
+    new Color('#FEFEFE')
+  );
+  const jNumColor = Color.dynamic(
+    new Color('#FF0000'),
+    new Color('#FFBF00')
+  );
+  const botTextColor = Color.dynamic(
+    new Color(val.lightColor),
+    new Color(val.darkColor)
+  );
+  
+  
+  /**
+   * Frame Layout
+   * @param {image} image
+   * @param {string} text
+   */
   await createWidget();
   async function createWidget() {
     const widget = new ListWidget();
@@ -149,11 +159,7 @@ async function main() {
       widget.backgroundColor = Color.dynamic(new Color('#967969'), new Color('#555555'));
     }
     
-    /**
-    * Frame Layout
-    * @param {image} image
-    * @param {string} text
-    */
+    /* Top Content */
     widget.setPadding(0, 0, 0, 0);
     const topStack = widget.addStack();
     topStack.setPadding(10, 3, 10, 3)
@@ -164,7 +170,6 @@ async function main() {
     topStack.cornerRadius = 22;
     topStack.size = stackSize;
     
-    // User icon
     const iconStack = topStack.addStack();
     const headImage = await getImage(info.headImageUrl);
     const imageElement = iconStack.addImage(headImage);
@@ -174,7 +179,6 @@ async function main() {
     iconStack.borderColor = new Color('#FFBF00');
     topStack.addSpacer(10);
     
-    // Nickname
     const nameStack = topStack.addStack();
     nameStack.layoutVertically();
     nameStack.centerAlignContent();
@@ -198,6 +202,7 @@ async function main() {
     topStack.addSpacer();
     widget.addSpacer(5);
     
+    // middleStack
     const middleStack = widget.addStack();
     middleStack.addSpacer();
     const middleText = middleStack.addText(`京享值 ${info.jvalue.toString()}`);
@@ -227,18 +232,18 @@ async function main() {
     logoIcon.imageSize = new Size(val.imageSize, val.imageSize);
     contentStack.addSpacer(val.spac);
     
-    const threeStack = contentStack.addStack();
-    threeStack.layoutVertically();
-    threeStack.centerAlignContent();
+    const bottStack = contentStack.addStack();
+    bottStack.layoutVertically();
+    bottStack.centerAlignContent();
     
-    const randomText1 = threeStack.addText(val.text1);
+    const randomText1 = bottStack.addText(val.text1);
     randomText1.textColor = textColor;
     randomText1.font = Font.boldSystemFont(13);
     randomText1.textOpacity = 0.8;
-    threeStack.addSpacer(2.5);
+    bottStack.addSpacer(2.5);
   
-    const randomText2 = threeStack.addText(val.text2);
-    randomText2.textColor = Color.dynamic(new Color(val.lightColor), new Color(val.darkColor));
+    const randomText2 = bottStack.addText(val.text2);
+    randomText2.textColor = botTextColor;
     randomText2.font = Font.mediumSystemFont(13);
     randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
