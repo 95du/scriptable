@@ -51,10 +51,11 @@ async function main() {
   // signBean & Notification
   const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&body=%7B%22fp%22%3A%22-1%22%2C%22shshshfp%22%3A%22-1%22%2C%22shshshfpa%22%3A%22-1%22%2C%22referUrl%22%3A%22-1%22%2C%22userAgent%22%3A%22-1%22%2C%22jda%22%3A%22-1%22%2C%22rnVersion%22%3A%223.9%22%7D&appid=ld');
   if (signBean.status === '1') {
-    notify(`${signBean.continuityAward.title}${signBean.continuityAward.beanAward.beanCount}京豆，当前京豆${signBean.totalUserBean}`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`)
+    notify(`${signBean.continuityAward.title}${signBean.continuityAward.beanAward.beanCount}京豆，当前京豆${signBean.totalUserBean}`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`);
+    return;
   }
   
-  // randomIndex
+  // Sequential Index
   if (index === 0) {
     const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
     setting.randomIndex = 1;
@@ -99,7 +100,7 @@ async function main() {
     if (farm.treeState === 2 || farm.treeState === 3) {
       notify('东东农场', `${farm.name}，可以兑换啦~`);  
     }
-    setting.randomIndex = 0;
+    setting.randomIndex = 4;
     val = {
       leading: 5,
       imageSize: 35,
@@ -109,6 +110,18 @@ async function main() {
       text2: '果树进度  ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
       lightColor: '#1ea532',
       darkColor: '#32CD32'
+    }
+  } else if (index === 4) {
+    setting.randomIndex = 0;
+    val = {
+      leading: -3,
+      imageSize: 42,
+      spac: 1,
+      logoImage: 'https://img11.360buyimg.com/pop/jfs/t1/114422/3/30272/1137/63fd7f45Fd2068491/7fccfb6d9eea9a2e.png',
+      text1: `已连签 ${signBean.continuousDays} 天`,
+      text2: `获得 ${signBean.dailyAward.beanAward.beanCount} 京豆`,
+      lightColor: '#000000',
+      darkColor: '#FFFFFF'
     }
   }
   
@@ -159,7 +172,6 @@ async function main() {
     const jdNumStack = nameStack.addStack();
     jdNumStack.layoutHorizontally();
     jdNumStack.centerAlignContent();
-    // http://mtw.so/67lqbD
     const jdou = await getImage('http://mtw.so/67lqbD');
     const jdouIcon = jdNumStack.addImage(jdou);
     jdouIcon.imageSize = new Size(18, 18);
@@ -189,11 +201,11 @@ async function main() {
     contentStack.layoutHorizontally()
     contentStack.centerAlignContent()
     contentStack.addSpacer();
-    contentStack.backgroundColor = stackBackground
+    contentStack.backgroundColor = stackBackground;
     contentStack.setPadding(10, val.leading, 10, 3);
     contentStack.cornerRadius = 23;
     contentStack.size = stackSize;
-    // Logo
+    // Logo icon
     const logoStack = contentStack.addStack();
     const logoImage = await getImage(val.logoImage);
     const logoIcon = logoStack.addImage(logoImage);
