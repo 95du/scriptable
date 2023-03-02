@@ -127,8 +127,8 @@ async function main() {
   
   const stackSize = new Size(0, 64);
   const stackBackground = Color.dynamic(
-    new Color('#EFEBE9', Number(setting.light)),
-    new Color('#161D2A', Number(setting.dark))
+    new Color('#161D2A', Number(setting.light)),
+    new Color('#EFEBE9', Number(setting.dark))
   );
   const textColor = Color.dynamic(
     new Color('#1E1E1E'),
