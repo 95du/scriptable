@@ -224,7 +224,7 @@ async function main() {
       const barStack = contentStack.addStack();
       barStack.setPadding(3, 5, 3, 5);
       barStack.backgroundColor = new Color('#FB8C00');
-      barStack0.cornerRadius = 10;
+      barStack.cornerRadius = 10;
       // bar text
       const promiseText = barStack.addText('守约值 675');
       promiseText.font = Font.mediumSystemFont(12);
