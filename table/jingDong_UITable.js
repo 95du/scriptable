@@ -290,7 +290,7 @@ async function main() {
     }
     const res = await req.loadJSON();
     const df = new DateFormatter();
-df.dateFormat = 'yyyy-MM-dd'
+    df.dateFormat = 'yyyy-MM-dd'
     const date = df.string(new Date());
     let positive = [];
     let megative = [];
