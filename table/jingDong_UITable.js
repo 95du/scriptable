@@ -128,9 +128,9 @@ async function main() {
     setting.randomIndex = 0;
     val = {
       leading: 3,
-      imageSize: 35,
+      imageSize: 32,
       spac: 8,
-      logoImage: 'https://m.360buyimg.com/njmobilecms/jfs/t23452/19/1797778090/8622/14e40996/5b69974eN9880f531.png',
+      logoImage: 'http://mtw.so/5K92pr',
       text1: `守约值 ${promise.xbScore}`,
       text2: `${promise.recentDate}`,
       lightColor: '#000000',
