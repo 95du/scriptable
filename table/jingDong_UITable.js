@@ -50,7 +50,6 @@ async function main() {
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');  
   
   const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
-  console.log(signBean)
   if (signBean.status === '1') {
     notify(`${signBean.continuityAward.title}${signBean.continuityAward.beanAward.beanCount}京豆，当前京豆${signBean.totalUserBean}`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`);
     return;
@@ -65,8 +64,8 @@ async function main() {
       imageSize: 48,
       spac: 10,
       logoImage: 'http://mtw.so/67mqz3',
-      text1: asset.quota.quotaLeft ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
-      text2: asset.quota.quotaLeft ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
+      text1: asset.quota.state === '1' ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
+      text2: asset.quota.state === '1' ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
       lightColor: '#FF0000',
       darkColor: '#FFBF00'
     }
