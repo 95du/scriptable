@@ -128,9 +128,9 @@ async function main() {
     setting.randomIndex = 0;
     val = {
       leading: 3,
-      imageSize: 32,
+      imageSize: 35,
       spac: 8,
-      logoImage: 'http://mtw.so/5K92pr',
+      logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
       text1: `守约值 ${promise.xbScore}`,
       text2: `${promise.recentDate}`,
       lightColor: '#000000',
