@@ -223,7 +223,7 @@ async function main() {
     contentStack.addSpacer();
     contentStack.backgroundColor = stackBackground;
     contentStack.setPadding(10, val.leading, 10, 3);
-    contentStack.cornerRadius = 23;
+    contentStack.cornerRadius = 22;
     contentStack.size = stackSize;
     // Logo icon
     const logoStack = contentStack.addStack();
