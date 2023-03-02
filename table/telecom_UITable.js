@@ -64,8 +64,18 @@ async function main() {
     voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
   }
   
-  const flowTotal = res.total / 1024000
-  const bal = res.balance / 1024000
+  let newArr = [];  
+  let balArr = [];
+  const arr = res.items[0].items;
+  for (const item of arr) {
+    if (item.unitTypeId === '3' && item.ratableAmount !== '999999999999') {
+      newArr.push(item.ratableAmount)
+      balArr.push(item.balanceAmount)
+    }
+  }
+  
+  const flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1024 / 1024
+  const bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1024 / 1024
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
