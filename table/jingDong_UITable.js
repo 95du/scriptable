@@ -227,7 +227,7 @@ async function main() {
   }
   
   
-  /**---------------------------
+  /**-------------------------**
    * Request(url) json & image
    */
   async function getImage(url) {
