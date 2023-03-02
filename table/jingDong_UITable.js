@@ -297,13 +297,13 @@ df.dateFormat = 'yyyy-MM-dd'
     for (const item of res.list) {
       if (item.amount > 0 && item.createDate.indexOf(date) > -1) {
         positive.push(item.amount);
-      } else if (item.amount > 0 && item.createDate.indexOf(date) > -1) {
+      } else if (item.amount < 0 && item.createDate.indexOf(date) > -1) {
         megative.push(item.amount);
       }
     }
     
-    posi = positive.length === 0 ? 0 : positive.reduce((accumulator, currentValue) => accumulator + currentValue);
-    mega = megative.length === 0 ? 0 : Math.abs(megative.reduce((accumulator, currentValue) => accumulator + currentValue));
+    posi = positive.length == 0 ? 0 : positive.reduce((accumulator, currentValue) => accumulator + currentValue);
+    mega = megative.length == 0 ? 0 : Math.abs(megative.reduce((accumulator, currentValue) => accumulator + currentValue));
 
     return res.willExpireNum;
   }
