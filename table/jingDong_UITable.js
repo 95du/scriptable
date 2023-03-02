@@ -124,21 +124,20 @@ async function main() {
       darkColor: '#FFFFFF'
     }
   } else if (index === 5) {
-    const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');  
+    const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
     setting.randomIndex = 0;
     val = {
       leading: 3,
       imageSize: 35,
       spac: 8,
       logoImage: 'https://m.360buyimg.com/njmobilecms/jfs/t23452/19/1797778090/8622/14e40996/5b69974eN9880f531.png',
-      text1: 'hhhh',
-      text2: 'hhhhhhh',
+      text1: `守约值 ${(promise.xbScore).toString()}`,
+      text2: `更新时间 ${promise.recentDate}`,
       lightColor: '#000000',
       darkColor: '#FFFFFF'
     }
   }
-  //text1: `守约值 ${(promise.xbScore).toString()}`,
-      //text2: `更新时间 ${promise.recentDate}`,
+  
   await createWidget();
   async function createWidget() {
     const widget = new ListWidget();
@@ -363,12 +362,12 @@ async function main() {
     const req = new Request(url)
     req.method = 'POST'
     req.headers = {
-      Referer: 'https://agree.jd.com/'  
+      Referer: 'https://agree.jd.com/',
       Cookie: cookie
     }
     req.body = `reqData={}`
     const res = await req.loadJSON();
-    return res.resultData.data
+    return res.resultData.data;
   }
 }
 module.exports = { main }
