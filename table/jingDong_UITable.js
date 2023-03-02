@@ -58,15 +58,14 @@ async function main() {
   // Sequential Index
   if (index === 0) {
     const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
-    console.log(asset)
     setting.randomIndex = 1;
     val = {
       leading: 3,
       imageSize: 48,
       spac: 10,
       logoImage: 'http://mtw.so/67mqz3',
-      text1: `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}`,
-      text2: `待还 ${asset.bill.amount}`,  
+      text1: asset.quota ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
+      text2: asset.quota ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
       lightColor: '#FF0000',
       darkColor: '#FFBF00'
     }
