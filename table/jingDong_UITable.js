@@ -159,7 +159,7 @@ async function main() {
     topStack.centerAlignContent();
     topStack.addSpacer();
     topStack.backgroundColor = stackBackground;
-    topStack.cornerRadius = 20;
+    topStack.cornerRadius = 22;
     topStack.size = stackSize;
     
     // User icon
