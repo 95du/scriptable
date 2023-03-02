@@ -302,17 +302,9 @@ df.dateFormat = 'yyyy-MM-dd'
       }
     }
     
-    if (positive.length === 0) {
-      posi = 0;
-    } else {
-      posi = positive.reduce((accumulator, currentValue) => accumulator + currentValue);
-    }
-    
-    if (megative.length === 0) {
-      mega = 0;
-    } else {
-      mega = Math.abs(megative.reduce((accumulator, currentValue) => accumulator + currentValue));
-    }
+    posi = positive.length === 0 ? 0 : positive.reduce((accumulator, currentValue) => accumulator + currentValue);
+    mega = megative.length === 0 ? 0 : Math.abs(megative.reduce((accumulator, currentValue) => accumulator + currentValue));
+
     return res.willExpireNum;
   }
   
