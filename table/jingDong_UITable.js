@@ -218,27 +218,41 @@ async function main() {
     contentStack.setPadding(10, val.leading, 10, 3);
     contentStack.cornerRadius = 23;
     contentStack.size = stackSize;
+    
     // Logo icon
-    const logoStack = contentStack.addStack();
-    const logoImage = await getImage(val.logoImage);
-    const logoIcon = logoStack.addImage(logoImage);
-    logoIcon.imageSize = new Size(val.imageSize, val.imageSize);
-    contentStack.addSpacer(val.spac);
+    if (index === 5) {
+      const barStack = contentStack.addStack();
+      barStack.setPadding(3, 5, 3, 5);
+      barStack.backgroundColor = new Color('#FB8C00');
+      barStack0.cornerRadius = 10;
+      // bar text
+      const promiseText = barStack.addText('守约值 675');
+      promiseText.font = Font.mediumSystemFont(12);
+      promiseText.textColor = Color.white();  
+      
+      
+    } else {
+      const logoStack = contentStack.addStack();
+      const logoImage = await getImage(val.logoImage);
+      const logoIcon = logoStack.addImage(logoImage);
+      logoIcon.imageSize = new Size(val.imageSize, val.imageSize);
+      contentStack.addSpacer(val.spac);
+      
+      const threeStack = contentStack.addStack();
+      threeStack.layoutVertically();
+      threeStack.centerAlignContent()
+      
+      const randomText1 = threeStack.addText(val.text1);
+      randomText1.textColor = textColor;
+      randomText1.font = Font.boldSystemFont(13);
+      randomText1.textOpacity = 0.8;
+      threeStack.addSpacer(2.5);
     
-    const threeStack = contentStack.addStack();
-    threeStack.layoutVertically();
-    threeStack.centerAlignContent();
-    
-    const randomText1 = threeStack.addText(val.text1);
-    randomText1.textColor = textColor;
-    randomText1.font = Font.boldSystemFont(13);
-    randomText1.textOpacity = 0.8;
-    threeStack.addSpacer(2.5);
-  
-    const randomText2 = threeStack.addText(val.text2);
-    randomText2.textColor = Color.dynamic(new Color(val.lightColor), new Color(val.darkColor));
-    randomText2.font = Font.mediumSystemFont(13);
-    randomText2.textOpacity = 0.8;
+      const randomText2 = threeStack.addText(val.text2);
+      randomText2.textColor = Color.dynamic(new Color(val.lightColor), new Color(val.darkColor));
+      randomText2.font = Font.mediumSystemFont(13);
+      randomText2.textOpacity = 0.8;
+    }
     contentStack.addSpacer();
       
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
