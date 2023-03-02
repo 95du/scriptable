@@ -74,7 +74,7 @@ async function main() {
     setting.randomIndex = 2;
     val = {
       leading: -3,
-      imageSize: 42,
+      imageSize: 38,
       spac: 1,
       logoImage: 'http://mtw.so/5ZaG1N',
       text1: '今日京东 ' + String(posi - mega),
