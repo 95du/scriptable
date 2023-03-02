@@ -58,6 +58,7 @@ async function main() {
   // Sequential Index
   if (index === 0) {
     const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
+    console.log(asset)
     setting.randomIndex = 1;
     val = {
       leading: 3,
