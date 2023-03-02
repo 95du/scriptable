@@ -119,7 +119,7 @@ async function main() {
       leading: 3,
       imageSize: 35,
       spac: 8,
-      logoImage: 'https://m.360buyimg.com/njmobilecms/jfs/t23452/19/1797778090/8622/14e40996/5b69974eN9880f531.png',
+      logoImage: 'http://mtw.so/67lqbD',
       text1: `已连签 ${signBean.continuousDays} 天`,
       text2: `获得 ${signBean.dailyAward.beanAward.beanCount} 京豆`,
       lightColor: '#000000',
@@ -187,7 +187,7 @@ async function main() {
     const jdNumStack = nameStack.addStack();
     jdNumStack.layoutHorizontally();
     jdNumStack.centerAlignContent();
-    const jdou = await getImage('http://mtw.so/67lqbD');
+    const jdou = await getImage('https://m.360buyimg.com/njmobilecms/jfs/t23452/19/1797778090/8622/14e40996/5b69974eN9880f531.png');
     const jdouIcon = jdNumStack.addImage(jdou);
     jdouIcon.imageSize = new Size(18, 18);
     jdNumStack.addSpacer(3);
