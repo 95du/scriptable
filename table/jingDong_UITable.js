@@ -36,10 +36,10 @@ async function main() {
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');  
   
   const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
-  if (status === '1') {
+  if (sign.status === '1') {
     setting.signData = signBean
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
-    notify(`${signBean.title}，${signBean.subTitle} ${signBean.beanAward.beanCount} 京豆，当前京豆 ${signBean.totalUserBean}`, `已签到 ${signBean.continuousDays} 天，明天签到加${signBean.tomorrowSendBeans}京豆`);
+    notify(`${signBean.title}，${signBean.subTitle} ${signBean.beanAward.beanCount} 京豆，当前京豆 ${sign.totalUserBean}`, `已签到 ${sign.continuousDays} 天，明天签到加 ${sign.tomorrowSendBeans} 京豆`);
   }
   
   // Sequential Index
@@ -105,8 +105,8 @@ async function main() {
       imageSize: 40,
       spac: 8,
       logoImage: 'https://img14.360buyimg.com/imagetools/jfs/t1/103452/37/32197/16412/63455551E3c6f4386/e12d9a6dab6ea1ff.png',
-      text1: `已连签 ${signBean.continuousDays} 天`,
-      text2: `获得 ${signBean.dailyAward.beanAward.beanCount} 京豆`,
+      text1: `已连签 ${sign.continuousDays} 天`,
+      text2: `获得 ${signBean.beanAward.beanCount} 京豆`,
       lightColor: '#000000',
       darkColor: '#FFFFFF'
     }
@@ -292,7 +292,7 @@ async function main() {
       rnVersion: "3.9"
     }`
     const res = await req.loadJSON();
-    status = res.data.status;
+    sign = res.data;
     return res.data.dailyAward;
   }
     
