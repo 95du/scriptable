@@ -50,7 +50,9 @@ async function main() {
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');  
   
   const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
-  if (signBean.status === '1') {
+  if (signBean.status !== '1') {
+    setting.signData = signBean
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
     notify(`${signBean.continuityAward.title}${signBean.continuityAward.beanAward.beanCount}京豆，当前京豆${signBean.totalUserBean}`, `已签到${signBean.continuousDays}天，明天签到加${signBean.tomorrowSendBeans}京豆`);
     return;
   }
