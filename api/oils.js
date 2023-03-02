@@ -14,8 +14,6 @@
 
 const value = 6 //小机型改成 4
 const wide = 8 //小机型改成 6
-const df = new DateFormatter();
-df.dateFormat = 'HH:mm'
 
 try {
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
@@ -125,7 +123,7 @@ async function createWidget(oil) {
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
-  const oilTipsText = barStack1.addText(!forecast ? data.alert : forecast + '  🌀' + df.string(new Date()));
+  const oilTipsText = barStack1.addText(!forecast ? data.alert : forecast);
   oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
