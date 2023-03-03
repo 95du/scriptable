@@ -19,13 +19,12 @@ $.url = $.getdata($.url_key);
     if ($request && $request.url && $request.url.indexOf("https://api.m.jd.com/client.action") > -1) {
       $.rest_url = $request.url.match(/h5st=(.+)&jsonp=jsonp/)[1];
       if ($.rest_url !== $.url) {
-          $.setdata($.rest_url, $.url_key);
-          $.msg($.name, ``, 'jingDong_Request_url 获取成功。');
-          console.log(`jd_Request_url 获取成功:\n${$.rest_url}`);  
-          $.done();
-      } else {
-        console.log(`jd_Request_url 未变动，跳过更新🚫\n${$.rest_url}`);
+        $.setdata($.rest_url, $.url_key);
+        $.msg($.name, ``, 'jingDong_Request_url 获取成功。');
+        console.log(`jd_Request_url 获取成功:\n${$.rest_url}`);
       }
+    } else {
+      console.log(`jd_Request_url 未变动，跳过更新🚫\n${$.rest_url}`);
     }
   }
 
