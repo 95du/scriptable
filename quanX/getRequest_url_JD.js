@@ -20,7 +20,7 @@ $.url = $.getdata($.url_key);
       $.rest_url = $request.url.match(/h5st=(.+)&jsonp=jsonp/)[1];
       if ($.rest_url) {
         $.setdata($.rest_url, $.url_key);
-        if ($.rest_url.match(/[0-9]{10}/)[0] !== $.url.match(/[0-9]{10}/)[0]) {
+        if ($.rest_url.match(/[0-9]{12}/)[0] !== $.url.match(/[0-9]{12}/)[0]) {
           $.msg($.name, ``, 'jingDong_Request_url 获取成功。');
           console.log(`jd_Request_url 获取成功:\n${$.rest_url}`);
         }
