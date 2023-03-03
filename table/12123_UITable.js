@@ -273,7 +273,7 @@ async function main() {
     // violation Early Warning
     barStack.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack.cornerRadius = 10
-    barStack.borderColor = nothing ? Color.green() : !success ? Color.orange() : new Color('#FF1688', 0.7);
+    barStack.borderColor = nothing ? Color.green() : !success ? Color.orange() : new Color('#FF0000', 0.7);
     barStack.borderWidth = 2
     if (nothing) {
       // bar icon
