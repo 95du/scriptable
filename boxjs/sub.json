@@ -191,7 +191,7 @@
       "settings": [
         {
           "id": "request_url",
-          "name": "request_url",
+          "name": "Url",
           "val": "",
           "type": "textarea",
           "rows": 10,
