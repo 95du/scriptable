@@ -105,7 +105,7 @@ async function main() {
       spac: 8,
       logoImage: 'https://m.360buyimg.com/babel/jfs/t1/163192/9/7798/5516/6037526eE6df71306/1504fb66a0aa1a8e.png',
       text1: `已连签 ${sign.continuousDays} 天`,
-      text2: `获得 ${signBean.beanAward.beanCount} 京豆`,
+      text2: `明天签到加 ${sign.tomorrowSendBeans} 京豆`,
       lightColor: '#000000',
       darkColor: '#FFA500'
     }
