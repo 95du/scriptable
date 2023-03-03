@@ -99,12 +99,13 @@ async function main() {
       darkColor: '#32CD32'
     }
   } else if (index === 4) {
+    // https://img14.360buyimg.com/imagetools/jfs/t1/103452/37/32197/16412/63455551E3c6f4386/e12d9a6dab6ea1ff.png
     setting.randomIndex = 5;
     val = {
       leading: 3,
       imageSize: 40,
       spac: 8,
-      logoImage: 'https://img14.360buyimg.com/imagetools/jfs/t1/103452/37/32197/16412/63455551E3c6f4386/e12d9a6dab6ea1ff.png',
+      logoImage: 'https://m.360buyimg.com/babel/jfs/t1/163192/9/7798/5516/6037526eE6df71306/1504fb66a0aa1a8e.png',
       text1: `已连签 ${sign.continuousDays} 天`,
       text2: `获得 ${signBean.beanAward.beanCount} 京豆`,
       lightColor: '#000000',
