@@ -6,7 +6,7 @@
  * author: 95度茅台
  * 更新日期: 2023-03-03
  */
-const $ = new Env('豆苗成长值');
+const $ = new Env('JD_豆苗成长值');
 $.url_key = 'request_url';
 $.url = $.getdata($.url_key);
 
@@ -17,11 +17,12 @@ $.url = $.getdata($.url_key);
 
   function GetCookie() {
     if ($request && $request.url && $request.url.indexOf("https://api.m.jd.com/client.action") > -1) {
-      $.rest_url = $request.url.match(/(https.+)&jsonp=jsonp/)[1];
+      $.rest_url = $request.url.match(/h5st=(.+)&jsonp=jsonp/)[1];
       if ($.rest_url !== $.url) {
           $.setdata($.rest_url, $.url_key);
           $.msg($.name, ``, 'jingDong_Request_url 获取成功。');
-          console.log(`jd_Request_url 获取成功:\n${$.rest_url}`);
+          console.log(`jd_Request_url 获取成功:\n${$.rest_url}`);  
+          $.done();
       } else {
         console.log(`jd_Request_url 未变动，跳过更新🚫\n${$.rest_url}`);
       }
