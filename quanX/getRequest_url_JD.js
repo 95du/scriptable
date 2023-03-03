@@ -17,7 +17,7 @@ $.url = $.getdata($.url_key);
 
   function GetCookie() {
     if ($request && $request.url && $request.url.indexOf("https://api.m.jd.com/client.action") > -1) {
-      $.rest_url = $request.url
+      $.rest_url = $request.url.match(/h5st=(.+)&jsonp=jsonp/)[1];
       if ($.rest_url !== $.url) {
           $.setdata($.rest_url, $.url_key);
           $.msg($.name, ``, 'jingDong_Request_url 获取成功。');
