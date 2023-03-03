@@ -118,7 +118,7 @@ async function main() {
       imageSize: 33,
       spac: 8,
       logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
-      text1: `守约值 ${promise.xbScore}`,
+      text1: `守约分 ${promise.xbScore}`,
       text2: `${promise.recentDate}`,
       lightColor: '#000000',
       darkColor: '#FFFFFF'
