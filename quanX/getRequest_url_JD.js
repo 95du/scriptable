@@ -9,7 +9,6 @@
 const $ = new Env('豆苗成长值');
 $.url_key = 'request_url';
 $.url = $.getdata($.url_key);
-$.is_debug = $.getdata('is_debug');
 
 !(async () => {
   if (isGetCookie = typeof $request !== `undefined`) {
@@ -17,8 +16,7 @@ $.is_debug = $.getdata('is_debug');
   }
 
   function GetCookie() {
-    if ($request && $request.url && $request.url.indexOf("https://api.m.jd.com/client.action?functionId=plantBeanIndex") > -1) {
-      debug($request.url);
+    if ($request && $request.url && $request.url.indexOf("https://api.m.jd.com/client.action") > -1) {
       $.rest_url = $request.url.match(/(https.+)&jsonp=jsonp/)[1];
       if ($.rest_url !== $.url) {
           $.setdata($.rest_url, $.url_key);
@@ -27,12 +25,6 @@ $.is_debug = $.getdata('is_debug');
       } else {
         console.log(`jd_Request_url 未变动，跳过更新🚫\n${$.rest_url}`);
       }
-    }
-  }
-
-  function debug(text) {
-    if ($.is_debug === 'true') {
-      console.log(text);
     }
   }
 
