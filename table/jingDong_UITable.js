@@ -300,7 +300,6 @@ async function main() {
     const req = new Request(url)
     req.method = 'POST'
     req.headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
       Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
       Cookie: cookie
     }
