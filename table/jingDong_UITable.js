@@ -107,7 +107,7 @@ async function main() {
       logoImage: 'https://img14.360buyimg.com/imagetools/jfs/t1/103452/37/32197/16412/63455551E3c6f4386/e12d9a6dab6ea1ff.png',
       text1: `已连签 ${sign.continuousDays} 天`,
       text2: `获得 ${signBean.beanAward.beanCount} 京豆`,
-      lightColor: '#FFA500',
+      lightColor: '#000000',
       darkColor: '#FFA500'
     }
   } else if (index === 5) {
