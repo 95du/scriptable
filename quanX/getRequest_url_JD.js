@@ -26,7 +26,7 @@ $.url = $.getdata($.url_key);
         }
       }
     } else {
-      console.log(`jd_Request_url 未变动，跳过更新🚫\n${$.rest_url}`);
+      console.log('jd_Request_url 获取失败 🚫');
     }
   }
 
