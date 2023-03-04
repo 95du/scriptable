@@ -74,8 +74,8 @@ async function main() {
     }
   }
   
-  const flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1024 / 1024
-  const bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1024 / 1024
+  const flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
+  const bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
