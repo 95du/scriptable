@@ -37,6 +37,8 @@ async function main() {
   
   const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
   if (sign.status === '1') {
+    setting.signData = signBean
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
     notify(`${signBean.title}${signBean.subTitle} ${signBean.beanAward.beanCount} 京豆`, `已签到 ${sign.continuousDays} 天，明天签到加 ${sign.tomorrowSendBeans} 京豆，当前京豆 ${sign.totalUserBean}`);
   }
   
