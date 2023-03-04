@@ -24,11 +24,9 @@ $.is_debug = $.getdata('is_debug');
       $.rest_body = JSON.parse(decodeURIComponent($request.body).replace("params=", ""));  
       $.token = $.rest_body.verifyToken;  
       if ($.token && $.rest_body.sign) {
-      $.df = new DateFormatter();
-      $.df.dateFormat = 'mm';
-      $.GMT = $.df.string(new Date());
-        $.setdata($.token + ',' + $.rest_body.sign + ',' + $.GMT, $.body_key);
-        if ($.GMT - $.body.split(",")[2] >= 1 || $.token !== $.body.split(",")[0]) {
+      $.timestamp = Date.parse(new Date());
+        $.setdata($.token + ',' + $.rest_body.sign + ',' + $.timestamp, $.body_key);
+        if ($.timestamp - $.body.split(",")[2] >= 10000 || $.token !== $.body.split(",")[0]) {
           $.msg($.name, ``, `12123_verifyToken/Sign获取成功。`);
           console.log(`12123_Sign/verifyToken获取成功:\n${$.token}`);
         } else {
