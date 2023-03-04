@@ -72,13 +72,13 @@ let balArr = [];
 const arr = res.items[0].items;
 for (const item of arr) {
   if (item.unitTypeId === '3' && item.ratableAmount !== '999999999999') {
-    newArr.push(item.ratableAmount)
-    balArr.push(item.balanceAmount)
+    newArr.push(item.ratableAmount);
+    balArr.push(item.balanceAmount);
   }
 }
 
-const flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1024 / 1024
-const bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1024 / 1024
+const flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
+const bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
 const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
