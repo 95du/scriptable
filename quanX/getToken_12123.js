@@ -24,16 +24,16 @@ $.is_debug = $.getdata('is_debug');
       $.rest_body = JSON.parse(decodeURIComponent($request.body).replace("params=", ""));  
       $.token = $.rest_body.verifyToken;  
       if ($.token && $.rest_body.sign) {
-        $.setdata($.token + ',' + $.rest_body.sign + ',' + $.GMT, $.body_key);  
-      }
       $.df = new DateFormatter();
       $.df.dateFormat = 'mm';
-      $.GTM = $.df.string(new Date());
-      if ($.GMT - $.body.split(",")[2] >= 1 || $.token !== $.body.split(",")[0]) {
-        $.msg($.name, ``, `12123_verifyToken/Sign获取成功。`);
-        console.log(`12123_Sign/verifyToken获取成功:\n${$.token}`);
-      } else {
-        console.log(`verifyToken 未变动，跳过更新🚫\n${$.token}`);
+      $.GMT = $.df.string(new Date());
+        $.setdata($.token + ',' + $.rest_body.sign + ',' + $.GMT, $.body_key);
+        if ($.GMT - $.body.split(",")[2] >= 1 || $.token !== $.body.split(",")[0]) {
+          $.msg($.name, ``, `12123_verifyToken/Sign获取成功。`);
+          console.log(`12123_Sign/verifyToken获取成功:\n${$.token}`);
+        } else {
+          console.log(`verifyToken 未变动，跳过更新🚫\n${$.token}`);
+        }
       }
 
       if ($request.headers.Referer.indexOf("cumulativePoint") > -1 ) {
