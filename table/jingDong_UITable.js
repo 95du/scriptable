@@ -36,7 +36,7 @@ async function main() {
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
   
-  if (setting.code === 0) {
+  const Run = async () => {
     if (index === 0) {
       const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
       setting.randomIndex = 1;
@@ -405,6 +405,7 @@ async function main() {
   }
   
   if (setting.code === 0) {
+    await Run();
     await createWidget();
   } else {
     await createErrWidget();
