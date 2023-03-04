@@ -3,7 +3,7 @@
 // icon-color: red; icon-glyph: tags;
 /**
  * 小组件作者：95度茅台
- * UITable 版本: Version 1.0.0
+ * UITable 版本: Version 1.0.2
  * 2023-02-27 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
@@ -33,122 +33,112 @@ async function main() {
   }
   
   // User Information
-  const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');  
+  const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
+  const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
   
-  const signBean = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
-  if (sign.status === '1') {
-    console.log(signBean)
-    setting.signData = signBean
-    F_MGR.writeString(cacheFile, JSON.stringify(setting));
-    if (signBean.title) {
-      notify(`${signBean.title}${signBean.subTitle} ${signBean.beanAward.beanCount} 京豆`, `已签到 ${sign.continuousDays} 天，明天签到加 ${sign.tomorrowSendBeans} 京豆，( ${sign.totalUserBean} )`);
-    } else {
-      notify('签到成功', `已签到 ${sign.continuousDays} 天，明天签到加 ${sign.tomorrowSendBeans} 京豆，( ${sign.totalUserBean} )`);
+  if (setting.code === 0) {
+    if (index === 0) {
+      const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
+      setting.randomIndex = 1;
+      val = {
+        leading: 3,
+        imageSize: 48,
+        spac: 10,
+        logoImage: 'http://mtw.so/67mqz3',
+        text1: asset.quota.state === '1' ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
+        text2: asset.quota.state === '1' ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
+        lightColor: '#FF0000',
+        darkColor: '#FFBF00'
+      }
+    } else if (index === 1) {
+      const expireBean = await splitBeans('https://api.m.jd.com?appid=jd-cphdeveloper-m&functionId=myBean&body=%7B%22tenantCode%22:%22jgm%22,%22bizModelCode%22:%226%22,%22bizModeClientType%22:%22M%22,%22externalLoginType%22:%221%22%7D&g_login_type=0&g_tk=997104177&g_ty=ajax&appCode=ms0ca95114');
+      setting.randomIndex = 2;
+      val = {
+        leading: -3,
+        imageSize: 38,
+        spac: 1,
+        logoImage: 'http://mtw.so/5ZaG1N',
+        text1: '今日京东 ' + String(posi - mega),
+        text2: `即将过期 ${expireBean}`,  
+        lightColor: '#FF0000',
+        darkColor: '#FFBF00'
+      }
+    } else if (index === 2) {
+      const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
+      setting.randomIndex = 3;
+      val = {
+        leading: -3,
+        imageSize: 42,
+        spac: 1,
+        logoImage: 'http://mtw.so/5ZaunR',
+        text1: `红包 ${redEnvelope.balance}`,
+        text2: `即将过期 ${redEnvelope.expiredBalance}`,  
+        lightColor: '#FF0000',
+        darkColor: '#FFBF00'
+      }
+    } else if (index === 3) {
+      const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
+      if (farm.treeState === 2 || farm.treeState === 3) {
+        notify('东东农场', `${farm.name}，可以兑换啦~`);  
+      }
+      setting.randomIndex = 4;
+      val = {
+        leading: 5,
+        imageSize: 35,
+        spac: 5,
+        logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
+        text1: `已种植『 ${farm.simpleName} 』`,
+        text2: '果树进度  ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
+        lightColor: '#1ea532',
+        darkColor: '#32CD32'
+      }
+    } else if (index === 4) {
+      // http://mtw.so/66Fl0K
+      setting.randomIndex = 5;
+      val = {
+        leading: 3,
+        imageSize: 40,
+        spac: 8,
+        logoImage: 'https://m.360buyimg.com/babel/jfs/t1/163192/9/7798/5516/6037526eE6df71306/1504fb66a0aa1a8e.png',
+        text1: `已连签 ${sign.continuousDays} 天`,
+        text2: `明天加 ${sign.tomorrowSendBeans} 京豆`,
+        lightColor: '#000000',
+        darkColor: '#FFA500'
+      }
+    } else if (index === 5) {
+      const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
+      setting.randomIndex = 0;
+      val = {
+        leading: 3,
+        imageSize: 33,
+        spac: 8,
+        logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
+        text1: `守约分 ${promise.xbScore}`,
+        text2: promise.recentDate,
+        lightColor: '#000000',
+        darkColor: '#FFFFFF'
+      }
     }
+    // Stack & Text Color
+    stackSize = new Size(0, 64);
+    stackBackground = Color.dynamic(
+      new Color('#EFEBE9', Number(setting.light)),
+      new Color('#161D2A', Number(setting.dark))
+    );
+    textColor = Color.dynamic(
+      new Color('#1E1E1E'),
+      new Color('#FEFEFE')
+    );
+    jNumColor = Color.dynamic(
+      new Color('#FF0000'),
+      new Color('#FFBF00')
+    );
+    botTextColor = Color.dynamic(
+      new Color(val.lightColor),
+      new Color(val.darkColor)
+    );
   }
-  
-  // Sequential Index
-  if (index === 0) {
-    const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
-    setting.randomIndex = 1;
-    val = {
-      leading: 3,
-      imageSize: 48,
-      spac: 10,
-      logoImage: 'http://mtw.so/67mqz3',
-      text1: asset.quota.state === '1' ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
-      text2: asset.quota.state === '1' ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
-      lightColor: '#FF0000',
-      darkColor: '#FFBF00'
-    }
-  } else if (index === 1) {
-    const expireBean = await splitBeans('https://api.m.jd.com?appid=jd-cphdeveloper-m&functionId=myBean&body=%7B%22tenantCode%22:%22jgm%22,%22bizModelCode%22:%226%22,%22bizModeClientType%22:%22M%22,%22externalLoginType%22:%221%22%7D&g_login_type=0&g_tk=997104177&g_ty=ajax&appCode=ms0ca95114');
-    setting.randomIndex = 2;
-    val = {
-      leading: -3,
-      imageSize: 38,
-      spac: 1,
-      logoImage: 'http://mtw.so/5ZaG1N',
-      text1: '今日京东 ' + String(posi - mega),
-      text2: `即将过期 ${expireBean}`,  
-      lightColor: '#FF0000',
-      darkColor: '#FFBF00'
-    }
-  } else if (index === 2) {
-    const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
-    setting.randomIndex = 3;
-    val = {
-      leading: -3,
-      imageSize: 42,
-      spac: 1,
-      logoImage: 'http://mtw.so/5ZaunR',
-      text1: `红包 ${redEnvelope.balance}`,
-      text2: `即将过期 ${redEnvelope.expiredBalance}`,  
-      lightColor: '#FF0000',
-      darkColor: '#FFBF00'
-    }
-  } else if (index === 3) {
-    const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
-    if (farm.treeState === 2 || farm.treeState === 3) {
-      notify('东东农场', `${farm.name}，可以兑换啦~`);  
-    }
-    setting.randomIndex = 4;
-    val = {
-      leading: 5,
-      imageSize: 35,
-      spac: 5,
-      logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
-      text1: `已种植『 ${farm.simpleName} 』`,
-      text2: '果树进度  ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
-      lightColor: '#1ea532',
-      darkColor: '#32CD32'
-    }
-  } else if (index === 4) {
-    // https://img14.360buyimg.com/imagetools/jfs/t1/103452/37/32197/16412/63455551E3c6f4386/e12d9a6dab6ea1ff.png
-    setting.randomIndex = 5;
-    val = {
-      leading: 3,
-      imageSize: 40,
-      spac: 8,
-      logoImage: 'https://m.360buyimg.com/babel/jfs/t1/163192/9/7798/5516/6037526eE6df71306/1504fb66a0aa1a8e.png',
-      text1: `已连签 ${sign.continuousDays} 天`,
-      text2: `明天加 ${sign.tomorrowSendBeans} 京豆`,
-      lightColor: '#000000',
-      darkColor: '#FFA500'
-    }
-  } else if (index === 5) {
-    const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
-    setting.randomIndex = 0;
-    val = {
-      leading: 3,
-      imageSize: 33,
-      spac: 8,
-      logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
-      text1: `守约分 ${promise.xbScore}`,
-      text2: `${promise.recentDate}`,
-      lightColor: '#000000',
-      darkColor: '#FFFFFF'
-    }
-  }
-  
-  const stackSize = new Size(0, 64);
-  const stackBackground = Color.dynamic(
-    new Color('#EFEBE9', Number(setting.light)),
-    new Color('#161D2A', Number(setting.dark))
-  );
-  const textColor = Color.dynamic(
-    new Color('#1E1E1E'),
-    new Color('#FEFEFE')
-  );
-  const jNumColor = Color.dynamic(
-    new Color('#FF0000'),
-    new Color('#FFBF00')
-  );
-  const botTextColor = Color.dynamic(
-    new Color(val.lightColor),
-    new Color(val.darkColor)
-  );
-  
+
   
   /**
    * Frame Layout
@@ -297,8 +287,24 @@ async function main() {
       rnVersion: "3.9"
     }`
     const res = await req.loadJSON();
-    sign = res.data;
-    return res.data.dailyAward;
+    if (res.code === '0') {
+      const { data } = res;
+      const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean } = data;
+      if (status === '1') {
+        setting.signData = res.data
+        F_MGR.writeString(cacheFile, JSON.stringify(setting));
+        if (dailyAward) {
+          notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆，( ${totalUserBean} )`);
+        } else {
+          notify('签到成功', `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆，( ${totalUserBean} )`);
+        }
+      }
+      return res.data;
+    } else {
+      setting.code = 3;
+      F_MGR.writeString(cacheFile, JSON.stringify(setting));
+      notify(res.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
+    }
   }
     
   async function getJson(url) {
@@ -389,6 +395,19 @@ async function main() {
     const res = await req.loadJSON();
     return res.resultData.data;
   }
-  await createWidget();
+  
+  async function createErrWidget() {
+    const widget = new ListWidget();
+    const text = widget.addText('用户未登录');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
+  }
+  
+  if (setting.code === 0) {
+    await createWidget();
+  } else {
+    await createErrWidget();
+  }
 }
 module.exports = { main }
