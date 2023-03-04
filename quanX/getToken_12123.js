@@ -28,8 +28,8 @@ $.is_debug = $.getdata('is_debug');
       }
       $.df = new DateFormatter();
       $.df.dateFormat = 'mm';
-      $.GTM = $.df.string(date);
-      if ($.GMT - $.body.split(",")[2] >= 1) {
+      $.GTM = $.df.string(new Date());
+      if ($.GMT - $.body.split(",")[2] >= 1 || $.token !== $.body.split(",")[0]) {
         $.msg($.name, ``, `12123_verifyToken/Sign获取成功。`);
         console.log(`12123_Sign/verifyToken获取成功:\n${$.token}`);
       } else {
