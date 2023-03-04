@@ -21,17 +21,17 @@ $.is_debug = $.getdata('is_debug');
   function GetCookie() {
     if ($request && $request.body && $request.body.indexOf("verifyToken") > -1) {
       debug($request.body);
-      $.rest_body = JSON.parse(decodeURIComponent($request.body).replace("params=", ""));
+      $.rest_body = JSON.parse(decodeURIComponent($request.body).replace("params=", ""));  
+      $.token = $.rest_body.verifyToken;  
+      if ($.token && $.rest_body.sign) {
+        $.setdata($.token + ',' + $.rest_body.sign + ',' + $.GMT, $.body_key);  
+      }
       $.df = new DateFormatter();
       $.df.dateFormat = 'mm';
       $.GTM = $.df.string(date);
       if ($.GMT - $.body.split(",")[2] >= 1) {
-        $.token = $.rest_body.verifyToken;
-        if ($.token && $.rest_body.sign) {
-          $.setdata($.token + ',' + $.rest_body.sign + ',' + $.GMT, $.body_key);
-          $.msg($.name, ``, `12123_verifyToken/Sign获取成功。`);
-          console.log(`12123_Sign/verifyToken获取成功:\n${$.token}`);
-        }
+        $.msg($.name, ``, `12123_verifyToken/Sign获取成功。`);
+        console.log(`12123_Sign/verifyToken获取成功:\n${$.token}`);
       } else {
         console.log(`verifyToken 未变动，跳过更新🚫\n${$.token}`);
       }
