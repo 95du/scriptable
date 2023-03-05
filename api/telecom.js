@@ -104,8 +104,7 @@ const Step2nd = 83;
 const StepFin = 100;
 const barWidth = 15;
 const barHeigth = 105;
-
-const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
+const phone = Device.screenSize().height;
 
 const isSmallWidget =  config.widgetFamily === 'small'
 if (config.runsInWidget && isSmallWidget) {
@@ -123,17 +122,17 @@ async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundColor = widgetBgColor;
   widget.setPadding(15, 15, 15, 15);
-  
   const top = widget.addStack();
   top.layoutHorizontally();
-  top.size = new Size(0, 30);
+  top.size = new Size(0, phone < 926 ? 25 : 30);
   
   const leftStack = top.addStack();
   leftStack.centerAlignContent();
   leftStack.addSpacer();
+  const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
   const logoImage = 
   leftStack.addImage(image);
-  logoImage.imageSize = new Size(100, 30);
+  logoImage.imageSize = new Size(phone < 926 ? 90 : 100, phone < 926 ? 25 : 30);
   logoImage.tintColor = logoColor
   logoImage.centerAlignImage();
   leftStack.addSpacer();
@@ -145,9 +144,9 @@ async function createWidget() {
   let balanceText = rightStack.addText(balanceAvailable);
   balanceText.centerAlignText();
   balanceText.textColor = Color.red()
-  balanceText.font = new Font('Georgia-Bold', 25);
+  balanceText.font = new Font('Georgia-Bold', phone < 926 ? 20 : 25);
   rightStack.addSpacer();
-  widget.addSpacer(5);
+  widget.addSpacer(phone < 926 ? 3 : 5);
   
   /** 
    * Stacks and Bar
