@@ -110,6 +110,8 @@ df.dateFormat = 'ddHHmm'
   const barHeigth = 105;
   
   const phone = Device.screenSize().height;
+  const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
+
   const isSmallWidget =  config.widgetFamily === 'small'
   if (config.runsInWidget && isSmallWidget) {
     await createSmallWidget();
@@ -149,7 +151,6 @@ df.dateFormat = 'ddHHmm'
     const leftStack = top.addStack();
     leftStack.centerAlignContent();
     leftStack.addSpacer();
-    const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
     const logoImage = 
     leftStack.addImage(image);
     logoImage.imageSize = new Size(phone < 926 ? 95 : 100, phone < 926 ? 25 : 30);
