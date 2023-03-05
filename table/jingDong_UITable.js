@@ -398,6 +398,11 @@ async function main() {
   
   async function createErrWidget() {
     const widget = new ListWidget();
+    const image = await getImage('http://mtw.so/5Zca3L');
+    const widgetImage = widget.addImage(image);
+    widgetImage.imageSize = new Size(50, 50);
+    widgetImage.centerAlignImage();
+    widget.addSpacer(10);
     const text = widget.addText('用户未登录');
     text.font = Font.systemFont(17);
     text.centerAlignText();
