@@ -74,9 +74,11 @@ async function main() {
     widget.setPadding(7, 7, 7, 7);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
-    
+    mainStack.centerAlignContent();
     // Dynamic Island bar
     const Stack = mainStack.addStack();
+    Stack.layoutHorizontally();
+    Stack.centerAlignContent();
     Stack.addSpacer();
     const barStack = Stack.addStack();
     barStack.backgroundColor = Color.black();
@@ -86,7 +88,7 @@ async function main() {
     barStack.borderWidth = 3
     //Text Color
     const titleText = barStack.addText(`${setting.province}油价`);
-    dynamic = ['#FFBF00', '#34C759'];
+    dynamic = ['#FF9500', '#34C759'];
     titleText.textColor = new Color(dynamic[parseInt(Math.random() * dynamic.length)]);
     titleText.font = Font.boldSystemFont(16);
     titleText.centerAlignText();
