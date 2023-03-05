@@ -83,9 +83,12 @@ async function createWidget(oil) {
   widget.setPadding(7, 7, 7, 7);
   const mainStack = widget.addStack();
   mainStack.layoutVertically();
+  mainStack.centerAlignContent();
   
   // Dynamic Island bar
   const Stack = mainStack.addStack();
+  Stack.layoutHorizontally();
+  Stack.centerAlignContent();
   Stack.addSpacer();
   const barStack = Stack.addStack();
   barStack.backgroundColor = Color.black();
@@ -113,7 +116,6 @@ async function createWidget(oil) {
   
   // oilPrice Alert
   const dataStack2 = mainStack.addStack();
-  dataStack2.layoutHorizontally();
   dataStack2.addSpacer();
   // bar
   const barStack1 = dataStack2.addStack();
