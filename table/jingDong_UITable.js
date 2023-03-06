@@ -243,8 +243,8 @@ async function main() {
     randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
     
-    if (schemeUrl) 
-    widget.url = schemeUrl
+    if (val.schemeUrl) 
+    widget.url = val.schemeUrl
       
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
     if (config.runsInApp) {
