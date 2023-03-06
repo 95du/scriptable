@@ -241,7 +241,7 @@ async function main() {
     randomText2.font = Font.mediumSystemFont(13);
     randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
-      
+    
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
     if (config.runsInApp) {
       await widget.presentSmall();
@@ -296,7 +296,7 @@ async function main() {
         if (dailyAward) {
           notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
         } else {
-          notify('签到成功', `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆，( ${totalUserBean} )`);
+          notify('签到成功', `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
         }
       }
       return res.data;
