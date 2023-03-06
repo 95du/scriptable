@@ -90,7 +90,8 @@ async function main() {
         text1: `已种植『 ${farm.simpleName} 』`,
         text2: '果树进度  ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
         lightColor: '#1ea532',
-        darkColor: '#32CD32'
+        darkColor: '#32CD32',
+        schemeUrl: 'openapp.jdmobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fcarry.m.jd.com%2FbabelDiy%2FZeus%2F3KSjXqQabiTuD1cJ28QskrpWoBKT%2Findex.html%3FbabelChannel%3D94%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
       }
     } else if (index === 4) {
       // http://mtw.so/66Fl0K
@@ -242,6 +243,9 @@ async function main() {
     randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
     
+    if (schemeUrl) 
+    widget.url = schemeUrl
+      
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
     if (config.runsInApp) {
       await widget.presentSmall();
