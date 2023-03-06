@@ -45,7 +45,7 @@ if (F_MGR.fileExists(cacheFile)) {
 } else {
   try {
     boxjs = await new Request('http://boxjs.com/query/data/token_95598').loadJSON();
-    token = Pasteboard.copy(boxjs.val)
+    token = boxjs.val;
   } catch (e) {
     console.log(e)
     notify('获取Token失败 ⚠️', '需打开 Quantumult-X 或手动抓包获取');
@@ -62,7 +62,7 @@ if (F_MGR.fileExists(cacheFile)) {
   } else {
     const alert = new Alert();
     alert.title = '输入 Token';
-    alert.addTextField('输入Token', Pasteboard.paste());
+    alert.addTextField('输入Token', token);
     alert.addAction('确定');
     alert.addCancelAction('取消');
     const input = await alert.presentAlert();
