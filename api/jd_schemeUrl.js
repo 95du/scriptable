@@ -58,7 +58,7 @@ const notify = async (title, body, url) => {
 async function presentMenu() {
   let alert = new Alert();
   alert.title = '京东 SchemeURL'
-  alert.message = '\n脚本功能:\n1，运行制作生成跳转链接\n2，桌面小组件点击跳转到指定App页面\n3，具体方法请查看小组件代码开头注释\n\n小组件作者:95度茅台'
+  alert.message = '\n1，运行制作生成跳转链接\n2，桌面组件点击跳转到指定App页面\n3，具体方法请查看脚本代码开头注释\n\n小组件作者:95度茅台'
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
   alert.addAction('更多组件');
