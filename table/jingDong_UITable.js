@@ -316,7 +316,7 @@ async function main() {
     
   async function getJson(url) {
     const req = new Request(url)
-    req.method = 'POST'
+    req.method = 'GET'
     req.headers = {
       Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
       Cookie: cookie
