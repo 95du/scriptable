@@ -135,9 +135,9 @@ async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundImage = F_MGR.readImage(bgImage);
   const image = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/openUrl.png');
-  const widgetImage = widget.addImage(image);
-  widgetImage.centerAlignImage();
-  widget.url = setting.schemeUrl;
+  const jdImage = widget.addImage(image);
+  jdImage.centerAlignImage();
+  jdImage.url = setting.schemeUrl;
   return widget;
 }
 
