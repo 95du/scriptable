@@ -127,7 +127,7 @@ async function generateLink() {
     Pasteboard.copy(schemeUrl);
     Safari.open(schemeUrl);
   } else {
-    notify('生成失败 ⚠️', '请输入正确且以http开头的链接。')
+    notify('生成失败 ⚠️', '请输入正确的链接。')
   }
 }
 
@@ -139,12 +139,6 @@ async function createWidget() {
   widgetImage.centerAlignImage();
   widget.url = setting.schemeUrl;
   return widget;
-}
-  
-async function getImage(url) {
-  const r = await new Request(url);
-  return await 
-  r.loadImage();
 }
 
 async function downloadModule() {
@@ -163,6 +157,11 @@ async function downloadModule() {
   }
 }
 
+async function getImage(url) {
+  const r = await new Request(url);
+  return await 
+  r.loadImage();
+}
 
 if (config.runsInApp) {
   await presentMenu();
