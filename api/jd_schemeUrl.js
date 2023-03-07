@@ -70,7 +70,7 @@ async function presentMenu() {
   }
   if (mainMenu === 4) return;
   if (mainMenu === 0) {
-    const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
+    const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2pkX3NjaGVtZVVybC5qcw=='));
     const codeString = await reqUpdate.loadString();
     const finish = new Alert();
     if (codeString.indexOf("95度茅台") == -1) {
@@ -82,9 +82,6 @@ async function presentMenu() {
         module.filename,
         codeString
       );
-      finish.title = "更新成功"
-      finish.addAction('OK')
-      await finish.presentAlert();
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
