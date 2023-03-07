@@ -14,7 +14,7 @@
 
  * 脚本使用方法:
  1，拷贝链接，运行脚本。
- 2，脚本自动拷贝已生成的SchemeURL
+ 2，脚本自动拷贝已生成的SchemeURL并储存链接到iCloud (用于桌面小组件跳转)
 
 ==============================
  * 领京豆 https://h5.m.jd.com/rn/42yjy8na6pFsq1cx9MJQ5aTgu3kX/index.html?has_native=0
@@ -33,7 +33,7 @@
 
 const uri = Script.name();
 const F_MGR = FileManager.local();
-const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "jd_schemeUrl");
+const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "JD_SchemeUrl");
 if (!F_MGR.fileExists(folder)) {
   F_MGR.createDirectory(folder);
 }
@@ -46,12 +46,22 @@ if (F_MGR.fileExists(cacheFile)) {
   setting = JSON.parse(data);
 }
 
+const notify = async (title, body, url) => {
+  let n = new Notification()
+  n.title = title
+  n.body = body
+  n.sound = 'piano_success'
+  if (url) {n.openURL = url}
+  return await n.schedule()
+}
+
 async function presentMenu() {
   let alert = new Alert();
   alert.title = '京东 SchemeURL'
-  alert.message = "\n脚本功能:\n1，运行制作生成跳转链接\n2，桌面小组件点击跳转到指定App页面\n\n获取网页链接方法:\n1，网页版中页面的链接。\n2，App里右上角分享的链接。\n\n脚本使用方法:\n1，拷贝链接，运行脚本。\n2，脚本自动拷贝已生成的SchemeURL并储存链接到iCloud(桌面小组件点击)";
+  alert.message = '\n脚本功能:\n1，运行制作生成跳转链接\n2，桌面小组件点击跳转到指定App页面\n3，具体方法请查看小组件代码开头注释\n\n小组件作者:95度茅台'
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
+  alert.addAction('更多组件');
   alert.addAction('透明背景');
   alert.addAction('生成链接');
   alert.addAction('退出菜单');
@@ -61,14 +71,26 @@ async function presentMenu() {
     if (F_MGR.fileExists(bgImage)) {
       await F_MGR.remove(bgImage);
     }
+    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
   if (mainMenu === 2) {
+    script = {
+      name: 'store.js',
+      code: 'https://gitcode.net/4qiao/scriptable/raw/master/vip/main95duStore.js'
+    }
     await importModule(await downloadModule()).main();
   }
   if (mainMenu === 3) {
+    script = {
+      name: 'image.js',
+      code: 'https://gitcode.net/4qiao/scriptable/raw/master/vip/mainTableBackground.js'
+    }
+    await importModule(await downloadModule()).main();
+  }
+  if (mainMenu === 4) {
     await generateLink();
   }
-  if (mainMenu === 4) return;
+  if (mainMenu === 5) return;
   if (mainMenu === 0) {
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2pkX3NjaGVtZVVybC5qcw=='));
     const codeString = await reqUpdate.loadString();
@@ -88,16 +110,24 @@ async function presentMenu() {
 }
 
 async function generateLink() {
-  const openUrl = encodeURIComponent(  
-    Pasteboard.paste()
-  )
-  if (openUrl.indexOf('jd.com') > -1 || openUrl.indexOf('3.cn') > -1) {
+  const alert = new Alert();
+  alert.title = '输入链接';
+  alert.addTextField('输入正确的链接', Pasteboard.paste());
+  alert.addAction('确定');
+  alert.addCancelAction('取消');
+  const input = await alert.presentAlert();
+  const value = alert.textFieldValue(0);
+  if (input === -1) return;
+    const openUrl = encodeURIComponent(value);
+  if ((openUrl.indexOf('jd.com') > -1 || openUrl.indexOf('3.cn') > -1) && value.indexOf('openApp') === -1) {
     const schemeUrl = `openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22${openUrl}%22%7D`
     setting = {schemeUrl: schemeUrl}
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
     console.log(schemeUrl);
     Pasteboard.copy(schemeUrl);
     Safari.open(schemeUrl);
+  } else {
+    notify('生成失败 ⚠️', '请输入正确且以http开头的链接。')
   }
 }
 
@@ -118,11 +148,11 @@ async function getImage(url) {
 }
 
 async function downloadModule() {
-  const modulePath = F_MGR.joinPath(folder, 'image.js');
+  const modulePath = F_MGR.joinPath(folder, script.name);
   if (F_MGR.fileExists(modulePath)) {
     return modulePath;
   } else {
-    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM='));
+    const req = new Request(script.code);
     const moduleJs = await req.load().catch(() => {
       return null;
     });
@@ -132,6 +162,7 @@ async function downloadModule() {
     }
   }
 }
+
 
 if (config.runsInApp) {
   await presentMenu();
