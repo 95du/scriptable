@@ -104,7 +104,7 @@ df.dateFormat = 'ddHHmm'
   const voice2nd = setting.voice
   
   const Step1st = 25;
-  const Step2nd = 83;
+  const Step2nd = 85;
   const StepFin = 100;
   const barWidth = 15;
   const barHeigth = 105;
