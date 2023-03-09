@@ -123,7 +123,7 @@ async function main() {
       }
     } // 月收支排行榜
 
-    nothing = setting.allData === 1 && setting.allData === 2
+    nothing = setting.allData === 1 || setting.allData === 2;
     if (nothing) {
       const allBill = await getMListData('https://bill.jd.com/bill/getMListData.html');
       if (allBill.responseCode === '00000') {
