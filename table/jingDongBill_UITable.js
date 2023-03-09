@@ -311,8 +311,7 @@ async function main() {
     * @param {string} string
     */
     const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
-    const phoneSize = Device.screenSize().height;
-    const width = phoneSize < 926 ? 215 : 245
+    const width = progressWidth;
     const height = 10;
     
     getwidget(outTotal, outPercent, '支出', `${outPer} %`, progressColor = new Color(setting.progressColor1));
