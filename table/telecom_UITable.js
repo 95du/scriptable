@@ -69,16 +69,13 @@ async function main() {
   let balArr = [];
   const arr = res.items
   for (let i in arr) {
-    const type = arr[i].offerType;
-    if (type === 11 || type === 12 || type === 19) {
-      pacArr.push(...arr[i].items)
-    }
+    pacArr.push(...arr[i].items);
   }
   
   for (const item of pacArr) {
     if (item.ratableAmount !== '999999999999' && item.ratableResourcename.indexOf('流量') > -1  && item.ratableResourcename.indexOf('定向') === -1) {
-      newArr.push(item.ratableAmount);
-      balArr.push(item.balanceAmount);
+      newArr.push(item.ratableAmount)
+      balArr.push(item.balanceAmount)
     }
   }
   
