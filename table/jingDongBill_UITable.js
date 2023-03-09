@@ -243,7 +243,7 @@ async function main() {
     const jdImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const jdIcon = logoStack.addImage(jdImage);
     jdIcon.imageSize = new Size(36, 36);
-    rightStack.addSpacer();
+    //rightStack.addSpacer();
     mainStack.addSpacer();
     
     
@@ -252,10 +252,10 @@ async function main() {
     */
     const middleStack = rightStack.addStack();
     middleStack.layoutHorizontally();
+    middleStack.setPadding(6, 0, 6, 0)
+    
     const midLeftStack = middleStack.addStack();
     midLeftStack.layoutVertically();
-    midLeftStack.centerAlignContent()
-
     const inText = midLeftStack.addText(inCode ? income.compareLastTotalAmount : '收入(月)');
     inText.font = Font.mediumSystemFont(13);
     inText.textOpacity = 0.7;
@@ -266,17 +266,15 @@ async function main() {
     inAmountText.leftAlignText();
     inAmountText.textOpacity = 0.7;
     
+    
     middleStack.addSpacer();
     const assetIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png');
     const assetIconElement = middleStack.addImage(assetIcon);
     assetIconElement.imageSize = new Size(48, 48);
     middleStack.addSpacer();
     
-    
     const midRightStack = middleStack.addStack();
     midRightStack.layoutVertically();
-    midRightStack.addSpacer();
-    
     const outText = midRightStack.addText(outCode ? expend.compareLastTotalAmount : '支出(月)');
     outText.font = Font.mediumSystemFont(13);
     outText.textOpacity = 0.7;
@@ -286,8 +284,6 @@ async function main() {
     outAmountText.font = Font.boldSystemFont(20);
     outAmountText.rightAlignText();
     outAmountText.textOpacity = 0.7;
-    midRightStack.addSpacer();
-    
     
     const lowerStack = rightStack.addStack();
     lowerStack.size = new Size(0, 15)
