@@ -135,7 +135,7 @@ if (phone < 926) {
     leftGap1: 24,
     leftGap2: 7,
     rightGap1: 18,
-    rightGap2: 13,
+    rightGap2: 12,
     carSize: 225,
     bottomSize: 230
   }
@@ -339,7 +339,7 @@ async function createWidget() {
    * @param {string} text
    * Cylindrical Bar Chart
    */
-  widget.setPadding(19, 18, 15, 14);
+  widget.setPadding(nothing ? 19 : 15, 18, 15, 14);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
   
