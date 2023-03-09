@@ -132,8 +132,6 @@ async function main() {
           amount: payMoney,
           date: tradePayDateStr.match(/(.+):/)[1]
         }
-      } else {
-        nothing = 0;
       }
     } // 全部账单
   }
@@ -299,7 +297,7 @@ async function main() {
     billIcon.imageSize = new Size(15, 15);
     lowerStack.addSpacer(8);
     
-    const billText = lowerStack.addText(nothing ? '没有收入/支付交易记录' : `${val.showText} ${val.amount}，${val.date}`);
+    const billText = lowerStack.addText(!val ? '没有收入/支付交易记录' : `${val.showText} ${val.amount}，${val.date}`);
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
