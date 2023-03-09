@@ -293,7 +293,7 @@ async function main() {
     lowerStack.size = new Size(0, 15)
     lowerStack.layoutHorizontally();
     lowerStack.centerAlignContent();
-    const billImage = await circleImage('https://storage.360buyimg.com/bill/icon/new/weixin2x.png');
+    const billImage = await circleImage('http://mtw.so/5KV6Eh');
     const billIcon = lowerStack.addImage(billImage);
     billIcon.imageSize = new Size(15, 15);
     lowerStack.addSpacer(8);
