@@ -229,7 +229,7 @@ async function main() {
     const logoStack = rightStack.addStack();
     logoStack.layoutHorizontally();
     logoStack.centerAlignContent();
-    const logoImage = await getImage('http://mtw.so/67mqz3');
+    const logoImage = await getImage('http://mtw.so/5DoSua');
     const logoIcon = logoStack.addImage(logoImage);
     logoIcon.imageSize = new Size(32, 32);
     logoStack.addSpacer();
