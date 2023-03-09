@@ -275,7 +275,7 @@ async function main() {
     
     const midRightStack = middleStack.addStack();
     midRightStack.layoutVertically();
-    midLeftStack.addSpacer();
+    midRightStack.addSpacer();
     
     const outText = midRightStack.addText(outCode ? expend.compareLastTotalAmount : '支出(月)');
     outText.font = Font.mediumSystemFont(13);
