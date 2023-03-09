@@ -32,7 +32,7 @@ async function main() {
     return await n.schedule();
   }
   
-  // User Information https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2
+  // https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2
   const info = await getJson('https://api.m.jd.com?functionId=queryJDUserInfo&appid=jd-cphdeveloper-m');
   const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
   
