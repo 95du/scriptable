@@ -57,6 +57,7 @@ const package = new Request('https://e.189.cn/store/user/package_detail.do?t=189
 package.method = 'GET'
 package.headers = { Cookie: cookie }
 const res = await package.loadJSON();
+console.log(res)
 if (!res.voiceAmount) {
   voiceAmount = '1';
   voiceBalance = '0';
@@ -67,18 +68,32 @@ if (!res.voiceAmount) {
   voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
 }
 
+let pacArr = [];
 let newArr = [];
 let balArr = [];
-const arr = res.items[0].items;
-for (const item of arr) {
-  if (item.unitTypeId === '3' && item.ratableAmount !== '999999999999') {
+const arr = res.items
+for (let i in arr) {
+  const type = arr[i].offerType;
+  if (type === 11 || type === 12 || type === 19) {
+    pacArr.push(...arr[i].items)
+  }
+}
+
+for (const item of pacArr) {
+  if (item.ratableAmount !== '999999999999' && item.ratableResourcename.indexOf('流量') > -1  && item.ratableResourcename.indexOf('定向') === -1) {
     newArr.push(item.ratableAmount);
     balArr.push(item.balanceAmount);
   }
 }
 
-const flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
-const bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
+if (newArr.length > 0) {
+  flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
+  bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
+} else {
+  flowTotal = res.total / 1048576
+  bal = res.balance / 1048576
+}
+
 const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
