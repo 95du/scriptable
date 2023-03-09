@@ -343,7 +343,8 @@ async function main() {
       percentText.font = Font.boldSystemFont(12);
       
       percStack.addSpacer();
-      widget.addSpacer(2.5)
+      const phoneSize = Device.screenSize().height
+      widget.addSpacer(phoneSize < 926 ? 1 : 2.5)
     }
     
     function creatProgress(inTotal, havegone) {
