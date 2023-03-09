@@ -112,20 +112,18 @@ async function main() {
       setting.statistics = 0;
       const outRank = await monthBillRank('OUT', yearMonth);
       if (outRank.responseCode === '00000') {
-        console.log(outRank.list[0])
         const { showText, amount, date } = outRank.list[0];
         val = {
           showText: '消费',
           amount: amount,
           date: date,
         }
-        console.log(val)
       } else {
-        setting.allData = 1;
+        setting.allData = 2;
       }
     } // 月收支排行榜
 
-    if (setting.allData === 1) {
+    if (setting.allData === 1 && setting.allData = 2) {
       const allBill = await getMListData('https://bill.jd.com/bill/getMListData.html');
       if (allBill.responseCode === '00000') {
         const { customCategoryName, payMoney, date, tradePayDateStr } = allBill.list[0];
@@ -135,7 +133,7 @@ async function main() {
           date: tradePayDateStr.match(/(.+):/)[1]
         }
       } else {
-        setting.allData = 2;
+        nothing = 0;
       }
     } // 全部账单
   }
@@ -301,7 +299,7 @@ async function main() {
     billIcon.imageSize = new Size(15, 15);
     lowerStack.addSpacer(8);
     
-    const billText = lowerStack.addText(setting.allData === 1 ? `${val.showText} ${val.amount}，${val.date}` : '没有收入/支付交易记录');
+    const billText = lowerStack.addText(nothing === 0 ? '没有收入/支付交易记录' : `${val.showText} ${val.amount}，${val.date}`);
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
