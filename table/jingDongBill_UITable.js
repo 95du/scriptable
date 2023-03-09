@@ -51,7 +51,7 @@ async function main() {
     if (inCode) {
       inTotal = income.totalAmount;
       inPercent = income.list[0].amount;
-      inPer = income.list[0].percent;
+      inPer = Math.floor(income.list[0].percent);
     } else {
       inTotal = '1'
       inPercent = '0'
@@ -63,7 +63,7 @@ async function main() {
     if (outCode) {
       outTotal = expend.totalAmount;
       outPercent = expend.list[0].amount
-      outPer = expend.list[0].percent;
+      outPer = Math.floor(expend.list[0].percent);
     } else {
       outTotal = '1'
       outPercent = '0'
