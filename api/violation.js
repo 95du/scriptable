@@ -126,7 +126,7 @@ if (phone < 926) {
     leftGap1: 20,
     leftGap2: 3,
     rightGap1: 14,
-    rightGap2: 9,
+    rightGap2: 8,
     carSize: 208,
     bottomSize: 212
   }
