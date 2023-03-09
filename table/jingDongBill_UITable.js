@@ -98,6 +98,7 @@ async function main() {
     if (statistics === 0) {
       setting.statistics = 1;
       const inRank = await monthBillRank('IN', yearMonth);
+      console.log(inRank)
       if (inRank.responseCode === '00000') {
         const { showText, amount, date } = inRank.list[0];
         val = {
@@ -111,6 +112,7 @@ async function main() {
     } else if (statistics === 1) {
       setting.statistics = 0;
       const outRank = await monthBillRank('OUT', yearMonth);
+      console.log(outRank)
       if (outRank.responseCode === '00000') {
         const { showText, amount, date } = outRank.list[0];
         val = {
