@@ -123,7 +123,8 @@ async function main() {
       }
     } // 月收支排行榜
 
-    if (setting.allData === 1 && setting.allData = 2) {
+    nothing = setting.allData === 1 && setting.allData === 2
+    if (nothing) {
       const allBill = await getMListData('https://bill.jd.com/bill/getMListData.html');
       if (allBill.responseCode === '00000') {
         const { customCategoryName, payMoney, date, tradePayDateStr } = allBill.list[0];
@@ -297,7 +298,7 @@ async function main() {
     billIcon.imageSize = new Size(15, 15);
     lowerStack.addSpacer(8);
     
-    const billText = lowerStack.addText(!val ? '没有收入/支付交易记录' : `${val.showText} ${val.amount}，${val.date}`);
+    const billText = lowerStack.addText(!nothing ? '没有收入/支付交易记录' : `${val.showText} ${val.amount}，${val.date}`);
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
