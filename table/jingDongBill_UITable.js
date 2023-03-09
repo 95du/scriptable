@@ -311,7 +311,7 @@ async function main() {
     * @param {string} string
     */
     const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
-    const width = progressWidth;
+    const width = Number(setting.progressWidth);
     const height = 10;
     
     getwidget(outTotal, outPercent, '支出', `${outPer} %`, progressColor = new Color(setting.progressColor1));
