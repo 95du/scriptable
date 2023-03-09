@@ -99,9 +99,10 @@ async function main() {
       setting.statistics = 1;
       const inRank = await monthBillRank('IN', yearMonth);
       if (inRank.responseCode === '00000') {
-        const { showText, amount, date } = inRank.list[0];
+        const { showText, amount, date, icon } = inRank.list[0];
         val = {
           showText: showText.match(/[\w\W]{2}/)[0],
+          icon: icon,
           amount: amount,
           date: date
         }
@@ -112,9 +113,10 @@ async function main() {
       setting.statistics = 0;
       const outRank = await monthBillRank('OUT', yearMonth);
       if (outRank.responseCode === '00000') {
-        const { showText, amount, date } = outRank.list[0];
+        const { showText, amount, date, icon} = outRank.list[0];
         val = {
           showText: '消费',
+          icon: icon,
           amount: amount,
           date: date,
         }
@@ -127,9 +129,10 @@ async function main() {
     if (nothing) {
       const allBill = await getMListData('https://bill.jd.com/bill/getMListData.html');
       if (allBill.responseCode === '00000') {
-        const { customCategoryName, payMoney, date, tradePayDateStr } = allBill.list[0];
+        const { customCategoryName, payMoney, date, tradePayDateStr, iconUrl } = allBill.list[0];
         val = {
           showText: customCategoryName,
+          icon: iconUrl,
           amount: payMoney,
           date: tradePayDateStr.match(/(.+):/)[1]
         }
@@ -278,6 +281,7 @@ async function main() {
     const outText = midRightStack.addText(outCode ? expend.compareLastTotalAmount : '支出(月)');
     outText.font = Font.mediumSystemFont(13);
     outText.textOpacity = 0.7;
+    outText.rightAlignText();
     midRightStack.addSpacer(7);
 
     const outAmountText = midRightStack.addText(expend.totalAmount);
@@ -289,7 +293,7 @@ async function main() {
     lowerStack.size = new Size(0, 15)
     lowerStack.layoutHorizontally();
     lowerStack.centerAlignContent();
-    const billImage = await circleImage('http://mtw.so/5KV6Eh');
+    const billImage = await circleImage(setting.allData === 2 ? 'http://mtw.so/5KV6Eh' : val.icon);
     const billIcon = lowerStack.addImage(billImage);
     billIcon.imageSize = new Size(15, 15);
     lowerStack.addSpacer(8);
