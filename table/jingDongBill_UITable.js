@@ -179,8 +179,8 @@ async function main() {
     const avatarStack1 = avatarStack.addStack();
     
     const iconSymbol = await getImage(info.headImageUrl);
-    const crownIcon = avatarStack1.addImage(iconSymbol);
-    crownIcon.imageSize = new Size(60, 60);
+    const avatarIcon = avatarStack1.addImage(iconSymbol);
+    avatarIcon.imageSize = new Size(setting.avatarSize, setting.avatarSize);
     avatarStack1.cornerRadius = 50
     avatarStack1.borderWidth = 3;
     avatarStack1.borderColor = new Color('#FFBF00');
