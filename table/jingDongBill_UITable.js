@@ -105,7 +105,7 @@ async function main() {
         const { showText, amount, date, icon } = inRank.list[0];
         obj = {
           icon: icon,
-          loop: `${showText.match(/[\w\W]{2}/)[0]} ${amount}，${date}`
+          det: `${showText.match(/[\w\W]{2}/)[0]} ${amount}，${date}`
         }
       }
     } else if (statistics === 1) {
@@ -116,7 +116,7 @@ async function main() {
         const { showText, amount, date, icon} = outRank.list[0];
         obj = {
           icon: icon,
-          loop: `支出 ${amount},${date}`
+          det: `支出 ${amount},${date}`
         }
       }
     } // 月收支排行榜
@@ -128,12 +128,12 @@ async function main() {
         const { customCategoryName, payMoney, date, tradePayDateStr, iconUrl } = allBill.list[0];
         obj = {
           icon: iconUrl,
-          loop: `${customCategoryName} ${payMoney}，${tradePayDateStr.match(/(.+):/)[1]}`  
+          det: `${customCategoryName} ${payMoney}，${date}`  
         }
       } else {
         obj = {
           icon: 'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/cf/ac/cc/cfaccca9-b522-3ffd-1780-7414507efcdb/AppIcon-0-1x_U007emarketing-0-4-0-sRGB-0-85-220.png/512x512bb.png',
-          loop: '没有收入/支付交易记录'
+          det: '没有收入/支付交易记录'
         }
       }
     } // 全部账单
@@ -298,7 +298,7 @@ async function main() {
     billIcon.imageSize = new Size(15, 15);
     lowerStack.addSpacer(8);
     
-    const billText = lowerStack.addText(obj.loop);
+    const billText = lowerStack.addText(obj.det);
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
