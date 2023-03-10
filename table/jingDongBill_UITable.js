@@ -232,8 +232,10 @@ async function main() {
     const logoStack = rightStack.addStack();
     logoStack.layoutHorizontally();
     logoStack.centerAlignContent();
-    const logoImage = await getImage('http://mtw.so/67mqz3');
-    const logoIcon = logoStack.addImage(logoImage);
+    
+    const topImg = ['http://mtw.so/67mqz3', 'https://gitcode.net/enoyee/scriptable/-/raw/master/img/jd/ic_jd_logo.png']
+    const logoImage = topImg[Math.floor(Math.random() * topImg.length)];
+    const logoIcon = logoStack.addImage(await getImage(logoImage));
     logoIcon.imageSize = new Size(32, 32);
     logoStack.addSpacer();
     
