@@ -176,8 +176,8 @@ async function main() {
     const avatarStack = leftStack.addStack();
     avatarStack.layoutHorizontally();
     avatarStack.addSpacer(7);
-    const avatarStack1 = avatarStack.addStack();
     
+    const avatarStack1 = avatarStack.addStack();
     const iconSymbol = await getImage(info.headImageUrl);
     const avatarIcon = avatarStack1.addImage(iconSymbol);
     avatarIcon.imageSize = new Size(setting.avatarSize, setting.avatarSize);
@@ -292,12 +292,12 @@ async function main() {
     outAmountText.textOpacity = 0.7;
     
     const lowerStack = rightStack.addStack();
-    lowerStack.size = new Size(0, 15)
+    lowerStack.size = new Size(0, 16)
     lowerStack.layoutHorizontally();
     lowerStack.centerAlignContent();
     const billImage = await circleImage(obj.icon);
     const billIcon = lowerStack.addImage(billImage);
-    billIcon.imageSize = new Size(15, 15);
+    billIcon.imageSize = new Size(16, 16);
     lowerStack.addSpacer(8);
     
     const billText = lowerStack.addText(obj.det);
