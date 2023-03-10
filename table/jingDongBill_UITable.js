@@ -381,16 +381,9 @@ async function main() {
      /** Request(url) json **/
   /**-------------------------**/
   
-  const isMediumWidget =  config.widgetFamily === 'medium';
-  if (setting.code === 0) {
-    await Run();
-    if (isMediumWidget) {
-      await createWidget();
-    } else {
-      await smallrWidget();
-    }
-  } else {
-    await createErrWidget();
+  const isSmallWidget =  config.widgetFamily === 'small';
+  if (isSmallWidget && config.runsInWidget) {
+    await smallrWidget();
   }
   
   async function smallrWidget() {
@@ -399,6 +392,14 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
+    return;
+  }
+  
+  if (setting.code === 0) {
+    await Run();
+    await createWidget();
+  } else {
+    await createErrWidget();
   }
   
   /**-------------------------**/
