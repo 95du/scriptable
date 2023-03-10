@@ -7,7 +7,7 @@
  * 2023-02-27 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -32,8 +32,8 @@ async function main() {
     return await n.schedule();
   }
   
-  // https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2
-  const info = await getJson('https://api.m.jd.com?functionId=queryJDUserInfo&appid=jd-cphdeveloper-m');
+  // User Information
+  const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
   
   const Run = async () => {
@@ -316,7 +316,7 @@ async function main() {
     
   async function getJson(url) {
     const req = new Request(url)
-    req.method = 'GET'
+    req.method = 'POST'
     req.headers = {
       Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
       Cookie: cookie
@@ -387,7 +387,7 @@ async function main() {
     req.body = 'body=version:4&appid=wh5&clientVersion=9.1.0'
     const res = await req.loadJSON();
     const { farmUserPro } = res;
-    const { treeState, name, treeTotalEnergy, treeEnergy, simpleName } = farmUserPro;
+    //const { treeState, name, treeTotalEnergy, treeEnergy, simpleName } = farmUserPro;
     return farmUserPro;
   }
   
