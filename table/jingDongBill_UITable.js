@@ -377,17 +377,42 @@ async function main() {
     return widget;
   }
   
+  /**-------------------------**/
+     /** Request(url) json **/
+  /**-------------------------**/
   
+  const isMediumWidget =  config.widgetFamily === 'medium';
   if (setting.code === 0) {
     await Run();
-    await createWidget();
+    if (isMediumWidget) {
+      await createWidget();
+    } else {
+      await importModule(await downloadModule()).main();
+    }
   } else {
     await createErrWidget();
+  }
+  
+  async function downloadModule() {
+    const modulePath = F_MGR.joinPath(path, 'jingDong.js');
+    if (setting.update === 'false' && F_MGR.fileExists(modulePath)) {
+      return modulePath;
+    } else {
+      const req = new Request('https://gitcode.net/4qiao/scriptable/raw/master/table/jingDong_UITable.js');
+      const moduleJs = await req.load().catch(() => {
+        return null;
+      });
+      if (moduleJs) {
+        F_MGR.write(modulePath, moduleJs);
+        return modulePath;
+      }
+    }
   }
   
   /**-------------------------**/
      /** Request(url) json **/
   /**-------------------------**/
+  
   async function getImage(url) {
     const r = await new Request(url);
     return await r.loadImage();
