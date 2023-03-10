@@ -7,7 +7,7 @@
  * 2023-03-10 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -100,43 +100,40 @@ async function main() {
     if (statistics === 0) {
       setting.statistics = 1;
       const inRank = await monthBillRank('IN', yearMonth);
-      if (inRank.responseCode === '00000') {
+      const inCode = inRank.responseCode === '00000';
+      if (inCode) {
         const { showText, amount, date, icon } = inRank.list[0];
-        val = {
-          showText: showText.match(/[\w\W]{2}/)[0],
+        obj = {
           icon: icon,
-          amount: amount,
-          date: date
+          loop: `${showText.match(/[\w\W]{2}/)[0]} ${amount}，${date}`
         }
-      } else {
-        setting.allData = 1;
       }
     } else if (statistics === 1) {
       setting.statistics = 0;
       const outRank = await monthBillRank('OUT', yearMonth);
-      if (outRank.responseCode === '00000') {
+      const outCode = outRank.responseCode === '00000';
+      if (outCode) {
         const { showText, amount, date, icon} = outRank.list[0];
-        val = {
-          showText: '消费',
+        obj = {
           icon: icon,
-          amount: amount,
-          date: date,
+          loop: `支出 ${amount},${date}`
         }
-      } else {
-        setting.allData = 2;
       }
     } // 月收支排行榜
 
-    nothing = setting.allData === 1 || setting.allData === 2;
-    if (nothing) {
+    nothing = inCode && outCode;
+    if (!nothing) {
       const allBill = await getMListData('https://bill.jd.com/bill/getMListData.html');
       if (allBill.responseCode === '00000') {
         const { customCategoryName, payMoney, date, tradePayDateStr, iconUrl } = allBill.list[0];
-        val = {
-          showText: customCategoryName,
+        obj = {
           icon: iconUrl,
-          amount: payMoney,
-          date: tradePayDateStr.match(/(.+):/)[1]
+          loop: `${customCategoryName} ${payMoney}，${tradePayDateStr.match(/(.+):/)[1]}`  
+        }
+      } else {
+        obj = {
+          icon: 'http://mtw.so/5KV6Eh',
+          loop: '没有收入/支付交易记录'
         }
       }
     } // 全部账单
@@ -295,12 +292,12 @@ async function main() {
     lowerStack.size = new Size(0, 15)
     lowerStack.layoutHorizontally();
     lowerStack.centerAlignContent();
-    const billImage = await circleImage(setting.allData === 2 ? 'http://mtw.so/5KV6Eh' : val.icon);
+    const billImage = await circleImage(obj.icon);
     const billIcon = lowerStack.addImage(billImage);
     billIcon.imageSize = new Size(15, 15);
     lowerStack.addSpacer(8);
     
-    const billText = lowerStack.addText(!nothing ? '没有收入/支付交易记录' : `${val.showText} ${val.amount}，${val.date}`);
+    const billText = lowerStack.addText(obj.loop);
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
