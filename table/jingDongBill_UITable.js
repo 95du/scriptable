@@ -4,7 +4,7 @@
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
- * 2023-03-09 11:30
+ * 2023-03-10 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
@@ -148,7 +148,7 @@ async function main() {
     } else if (setting.gradient.length !== 0) {
       const gradient = new LinearGradient();
       color = setting.gradient
-      const items = color[Math.floor(Math.random()*color.length)];
+      const items = color[Math.floor(Math.random() * color.length)];
       gradient.locations = [0, 1]
       gradient.colors = [
         new Color(items, Number(setting.transparency)),
