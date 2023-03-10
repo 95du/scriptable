@@ -132,7 +132,7 @@ async function main() {
         }
       } else {
         obj = {
-          icon: 'http://mtw.so/5KV6Eh',
+          icon: 'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/cf/ac/cc/cfaccca9-b522-3ffd-1780-7414507efcdb/AppIcon-0-1x_U007emarketing-0-4-0-sRGB-0-85-220.png/512x512bb.png',
           loop: '没有收入/支付交易记录'
         }
       }
