@@ -399,8 +399,6 @@ async function main() {
     Script.setWidget(widget);
   }
   
-  
-  
   /**-------------------------**/
      /** Request(url) json **/
   /**-------------------------**/
