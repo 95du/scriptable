@@ -51,11 +51,12 @@ async function main() {
     if (inCode) {
       inTotal = income.totalAmount;
       inPercent = income.list[0].amount;
-      inPer = Math.floor(income.list[0].percent);
+      inP = income.list[0].percent;
+      inPer = inP === '100.00' ? inP - 0.1 : inP < 10 ? inP.toFixed(2) : inP.toFixed(1);
     } else {
       inTotal = '1'
       inPercent = '0'
-      inPer = '0'
+      inPer = '0.00'
     }
     
     expend = await incomeData('OUT', yearMonth);
@@ -63,11 +64,12 @@ async function main() {
     if (outCode) {
       outTotal = expend.totalAmount;
       outPercent = expend.list[0].amount
-      outPer = Math.floor(expend.list[0].percent);
+      outP = expend.list[0].percent;
+      outPer = inPer = outP === '100.00' ? outP - 0.1 : outP < 10 ? outP.toFixed(2) : outP.toFixed(1);
     } else {
       outTotal = '1'
       outPercent = '0'
-      outPer = '0'
+      outPer = '0.00'
     }
   }
 
@@ -310,8 +312,7 @@ async function main() {
     * @param {string} string
     */
     const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
-    const wid = Number(setting.progressWidth);  
-    const width = (inPer || outPer) > 99 ? wid - 3 : wid;
+    const width = Number(setting.progressWidth);
     const height = 10;
     
     getwidget(outTotal, outPercent, '支出', `${outPer} %`, progressColor = new Color(setting.progressColor1));
