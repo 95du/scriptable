@@ -384,6 +384,11 @@ async function main() {
   const isSmallWidget =  config.widgetFamily === 'small';
   if (isSmallWidget && config.runsInWidget) {
     await smallrWidget();
+  } else if (setting.code === 0) {
+    await Run();
+    await createWidget();
+  } else {
+    await createErrWidget();
   }
   
   async function smallrWidget() {
@@ -392,15 +397,9 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
-    return;
   }
   
-  if (setting.code === 0) {
-    await Run();
-    await createWidget();
-  } else {
-    await createErrWidget();
-  }
+  
   
   /**-------------------------**/
      /** Request(url) json **/
