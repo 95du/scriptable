@@ -105,7 +105,7 @@ async function main() {
         const { showText, amount, date, icon } = inRank.list[0];
         obj = {
           icon: icon,
-          det: `${showText.match(/[\w\W]{2}/)[0]} ${amount}，${date}`
+          det: `${showText.match(/[\w\W]{2}/)[0]}  ${amount}，${date}`
         }
       }
     } else if (statistics === 1) {
@@ -116,19 +116,19 @@ async function main() {
         const { showText, amount, date, icon} = outRank.list[0];
         obj = {
           icon: icon,
-          det: `支出 ${amount},${date}`
+          det: `支出  ${amount},${date}`
         }
       }
     } // 月收支排行榜
 
     nothing = inCode && outCode;
     if (!nothing) {
-      const allBill = await getMListData('https://bill.jd.com/bill/getMListData.html');
-      if (allBill.responseCode === '00000') {
-        const { customCategoryName, payMoney, date, tradePayDateStr, iconUrl } = allBill.list[0];
+      const billDetail = await allBillDetail('https://bill.jd.com/bill/getMListData.html');
+      if (billDetail.responseCode === '00000') {
+        const { customCategoryName, payMoney, date, iconUrl } = billDetail.list[0];
         obj = {
           icon: iconUrl,
-          det: `${customCategoryName} ${payMoney}，${date}`  
+          det: `${customCategoryName}  ${payMoney}，${date}`
         }
       } else {
         obj = {
@@ -519,7 +519,7 @@ async function main() {
     return await req.loadJSON();
   }
   
-  async function getMListData(url) {
+  async function allBillDetail(url) {
     const req = new Request(url)
     req.method = 'POST'
     req.headers = {
