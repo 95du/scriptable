@@ -387,26 +387,18 @@ async function main() {
     if (isMediumWidget) {
       await createWidget();
     } else {
-      await importModule(await downloadModule()).main();
+      await smallrWidget();
     }
   } else {
     await createErrWidget();
   }
   
-  async function downloadModule() {
-    const modulePath = F_MGR.joinPath(path, 'jingDong.js');
-    if (setting.update === 'false' && F_MGR.fileExists(modulePath)) {
-      return modulePath;
-    } else {
-      const req = new Request('https://gitcode.net/4qiao/scriptable/raw/master/table/jingDong_UITable.js');
-      const moduleJs = await req.load().catch(() => {
-        return null;
-      });
-      if (moduleJs) {
-        F_MGR.write(modulePath, moduleJs);
-        return modulePath;
-      }
-    }
+  async function smallrWidget() {
+    const widget = new ListWidget();
+    const text = widget.addText('仅支持中尺寸');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
   }
   
   /**-------------------------**/
