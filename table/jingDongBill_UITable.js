@@ -212,8 +212,9 @@ async function main() {
     baitiaoIcon.imageSize = new Size(25, 18);
     btStack.addSpacer(6);
     
-    const amount = asset.bill.amount;
-    const baitiaoText = btStack.addText(asset.quota.state === '1' ? amount : amount > '999.99' ? amount.toPrecision(5) : amount > '9999.99' ? Math.floor(amount) : '未开通');
+    const state = asset.quota.state;
+    const amount = state === '1' ? asset.bill.amount : '未开通';
+    const baitiaoText = btStack.addText(state === '1' ? amount : amount > '999.99' ? amount.toPrecision(5) : amount > '9999.99' ? Math.floor(amount) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
     leftStack.addSpacer(2);
     mainStack.addSpacer()
