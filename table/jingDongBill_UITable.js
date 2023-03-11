@@ -400,6 +400,7 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
+    Script.complete();
   }
   
   /**-------------------------**/
