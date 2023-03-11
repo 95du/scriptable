@@ -41,13 +41,14 @@ async function main() {
       const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmbt.jd.com%2Fbill%2Fmonthlybill%2Fmonthbillcore%2Fmonth-bill-index.html%3Fchannelcode%3D024%22%7D'
       setting.randomIndex = 1;
+      const state = asset.quota.state === '1';
       val = {
         leading: 3,
         imageSize: 48,
         spac: 10,
         logoImage: 'http://mtw.so/67mqz3',
-        text1: asset.quota.state === '1' ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : '0.00',
-        text2: asset.quota.state === '1' ? `待还 ${asset.bill.amount}` : '0.00',
+        text1: state ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : '0.00',
+        text2: state ? `待还 ${asset.bill.amount}` : '0.00',
         lightColor: '#FF0000',
         darkColor: '#FFBF00'
       }
