@@ -7,7 +7,7 @@
  * 2023-03-10 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -217,7 +217,7 @@ async function main() {
     const baitiaoText = btStack.addText(state === '1' && amount > '1000' ? Math.floor(amount) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
     leftStack.addSpacer(2);
-    mainStack.addSpacer()
+    mainStack.addSpacer(5)
     
     
     /** 
@@ -248,7 +248,6 @@ async function main() {
     const jdImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const jdIcon = logoStack.addImage(jdImage);
     jdIcon.imageSize = new Size(36, 36);
-    //rightStack.addSpacer();
     mainStack.addSpacer();
     
     
