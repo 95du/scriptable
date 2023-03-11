@@ -327,7 +327,7 @@ async function main() {
       title.centerAlignText();
       title.textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
       title.font = Font.boldSystemFont(12);
-      percStack.addSpacer(7);
+      percStack.addSpacer(8);
       
       const imgProgress = percStack.addImage(creatProgress(inTotal, haveGone));
       imgProgress.centerAlignImage();
