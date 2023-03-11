@@ -7,7 +7,7 @@
  * 2023-03-10 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -214,7 +214,7 @@ async function main() {
     
     const state = asset.quota.state;
     const amount = state === '1' ? asset.bill.amount : '0.00';
-    const baitiaoText = btStack.addText(state === '1' ? amount : amount > '999.99' ? amount.toPrecision(5) : amount > '9999.99' ? Math.floor(amount) : amount);
+    const baitiaoText = btStack.addText(state === '1' && amount > '999.99' ? amount.toPrecision(5) : amount > '9999.99' ? Math.floor(amount) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
     leftStack.addSpacer(2);
     mainStack.addSpacer()
