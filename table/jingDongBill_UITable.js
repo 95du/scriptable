@@ -51,8 +51,7 @@ async function main() {
     if (inCode) {
       inTotal = income.totalAmount;
       inPercent = income.list[0].amount;
-      inP = income.list[0].percent;
-      inPer = inP === '100.00' ? inP - 0.1 : inP < 10 ? inP.toFixed(2) : inP.toFixed(1);
+      inPer = income.list[0].percent;
     } else {
       inTotal = '1'
       inPercent = '0'
@@ -64,8 +63,7 @@ async function main() {
     if (outCode) {
       outTotal = expend.totalAmount;
       outPercent = expend.list[0].amount
-      outP = expend.list[0].percent;
-      outPer = inPer = outP === '100.00' ? outP - 0.1 : outP < 10 ? outP.toFixed(2) : outP.toFixed(1);
+      outPer = expend.list[0].percent
     } else {
       outTotal = '1'
       outPercent = '0'
@@ -214,7 +212,6 @@ async function main() {
     
     const state = asset.quota.state;
     const amount = state === '1' ? asset.bill.amount.replace(',', '') : '0.00';
-    console.log(amount)
     const baitiaoText = btStack.addText(amount > '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
     leftStack.addSpacer(2);
@@ -320,29 +317,27 @@ async function main() {
     
     function getwidget(inTotal, haveGone, str, percent, progressColor) {
       const percStack = widget.addStack();
-      percStack.setPadding(0, 2.5, 0, 0);
+      percStack.setPadding(0, 10, 0, 10);
       percStack.layoutHorizontally();
       percStack.centerAlignContent();
-      percStack.addSpacer();
       
       const title = percStack.addText(str);
       title.centerAlignText();
       title.textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
       title.font = Font.boldSystemFont(12);
-      percStack.addSpacer(10);
+      percStack.addSpacer(7);
       
       const imgProgress = percStack.addImage(creatProgress(inTotal, haveGone));
       imgProgress.centerAlignImage();
       imgProgress.cornerRadius = 5.2
       imgProgress.imageSize = new Size(width, height);
-      percStack.addSpacer(10);
+      percStack.addSpacer();
       
       const percentText = percStack.addText(percent);
       percentText.centerAlignText();
       percentText.textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
       percentText.font = Font.boldSystemFont(12);
       
-      percStack.addSpacer();
       const phoneSize = Device.screenSize().height
       widget.addSpacer(phoneSize < 926 ? 1 : 2.5)
     }
