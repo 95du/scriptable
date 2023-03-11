@@ -51,7 +51,8 @@ async function main() {
     if (inCode) {
       inTotal = income.totalAmount;
       inPercent = income.list[0].amount;
-      inPer = income.list[0].percent;
+      inP = income.list[0].percent;
+      inPer = inP === '100.00' ? String(Math.floor(inP)) : inP
     } else {
       inTotal = '1'
       inPercent = '0'
@@ -63,7 +64,8 @@ async function main() {
     if (outCode) {
       outTotal = expend.totalAmount;
       outPercent = expend.list[0].amount
-      outPer = expend.list[0].percent
+      outP = expend.list[0].percent;
+      outPer = outP === '100.00' ? String(Math.floor(outP)) : outP
     } else {
       outTotal = '1'
       outPercent = '0'
@@ -194,7 +196,7 @@ async function main() {
     nameIconElement.imageSize = new Size(17, 17);
     nameStack.addSpacer(4);
     
-    const nameText = nameStack.addText(info.nickname);
+    const nameText = nameStack.addText(!setting.userName ? info.nickname : setting.userName);
     nameText.font = Font.mediumSystemFont(13);
     nameText.textOpacity = 0.8;
     leftStack.addSpacer(2)
