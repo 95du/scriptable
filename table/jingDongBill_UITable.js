@@ -213,9 +213,9 @@ async function main() {
     btStack.addSpacer(6);
     
     const state = asset.quota.state;
-    const amount = state === '1' ? String(asset.bill.amount.replace(',', '')) : '0.00';
+    const amount = state === '1' ? asset.bill.amount.replace(',', '') : '0.00';
     console.log(amount)
-    const baitiaoText = btStack.addText(amount > '1000' ? Math.floor(amount) : amount);
+    const baitiaoText = btStack.addText(amount > '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
     leftStack.addSpacer(2);
     mainStack.addSpacer(5)
