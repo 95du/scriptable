@@ -436,14 +436,14 @@ async function main() {
     const res = await req.loadJSON();
     if (res.code === '0') {
       const { data } = res;
-      const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean } = data;
+      const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
       if (status === '1') {
         setting.signData = res.data
         F_MGR.writeString(cacheFile, JSON.stringify(setting));
         if (dailyAward) {
           notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
         } else {
-          notify('签到成功', `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
+          notify(continuityAward.title, `获得 ${continuityAward.beanAward.beanCount} 京豆，已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
         }
       }
       return res.data;
