@@ -121,8 +121,7 @@ async function main() {
       }
     } // 月收支排行榜
 
-    nothing = inCode && outCode;
-    if (!nothing) {
+    if (!inCode && !outCode) {
       const billDetail = await allBillDetail('https://bill.jd.com/bill/getMListData.html');
       if (billDetail.responseCode === '00000') {
         const { customCategoryName, payMoney, date, iconUrl } = billDetail.list[0];
