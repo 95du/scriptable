@@ -44,7 +44,7 @@ if (F_MGR.fileExists(cacheFile)) {
         ...location,
         updateTime: timeStamp
       }
-      F_MGR.writeString(cacheFile, JSON.stringify(obj));  
+      F_MGR.writeString(cacheFile, JSON.stringify(obj));
     } catch (error) {
       location = data
     }
@@ -117,8 +117,11 @@ async function presentMenu() {
 async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundImage = F_MGR.readImage(bgImage);
-  const picture = await getJson(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL2JvdHRvbUJhci5qc29u'));
-  const items = picture.noticeApp[Math.floor(Math.random() * picture.noticeApp.length)];
+  const picture = [
+    'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png',
+    'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weather.png'
+  ]
+  const items = picture[Math.floor(Math.random() * picture.length)];
   weChat = await getImage(items);
   const one = await getJson('http://open.iciba.com/dsapi');
   // Next two hours
@@ -184,7 +187,7 @@ async function createWidget() {
   contentStack.cornerRadius = 23
   contentStack.size = new Size(0, 80);
   
-  const textElement = contentStack.addText(`${one.note}\n${one.content}`);
+  const textElement = contentStack.addText(one.note.length >= 21 ? one.note : `${one.note}\n${one.content}`);
   textElement.textColor = textColor
   textElement.font = Font.boldSystemFont(14);
   textElement.textOpacity = 0.8;
