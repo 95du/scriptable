@@ -318,7 +318,7 @@ async function main() {
     
     function getwidget(inTotal, haveGone, str, percent, progressColor) {
       const percStack = widget.addStack();
-      percStack.setPadding(0, 10, 0, 10);
+      percStack.setPadding(0, 10, 0, 8);
       percStack.layoutHorizontally();
       percStack.centerAlignContent();
       
