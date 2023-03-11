@@ -232,7 +232,10 @@ async function main() {
     logoStack.layoutHorizontally();
     logoStack.centerAlignContent();
     
-    const topImg = ['http://mtw.so/67mqz3', 'https://gitcode.net/enoyee/scriptable/-/raw/master/img/jd/ic_jd_logo.png']
+    const topImg = [
+      'http://mtw.so/67mqz3',  
+      'https://gitcode.net/enoyee/scriptable/-/raw/master/img/jd/ic_jd_logo.png'  
+    ];
     const logoImage = topImg[Math.floor(Math.random() * topImg.length)];
     const logoIcon = logoStack.addImage(await getImage(logoImage));
     logoIcon.imageSize = new Size(32, 32);
@@ -271,9 +274,15 @@ async function main() {
     
     
     middleStack.addSpacer();
-    const assetIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png');
+    const moneyBagUrl = [
+      'https://img30.360buyimg.com/jdmonitor/jfs/t1/191158/3/10079/3167/60d4547bEee00ce33/dc8d2287590e39af.png',
+      'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png'
+    ];
+    const moneyBag = moneyBagUrl[Math.floor(Math.random() * moneyBagUrl.length)];
+    const assetIcon = await getImage(moneyBag);
     const assetIconElement = middleStack.addImage(assetIcon);
-    assetIconElement.imageSize = new Size(48, 48);
+    const bag = moneyBag.indexOf('gitcode') > -1 ? 48 : 41;
+    assetIconElement.imageSize = new Size(bag, bag);
     middleStack.addSpacer();
     
     const midRightStack = middleStack.addStack();
