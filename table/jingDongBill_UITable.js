@@ -216,7 +216,7 @@ async function main() {
     const baitiaoText = btStack.addText(amount >= '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
     leftStack.addSpacer(2);
-    mainStack.addSpacer(8);
+    mainStack.addSpacer()
     
     
     /** 
