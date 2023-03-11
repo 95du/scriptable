@@ -116,7 +116,7 @@ async function main() {
         const { showText, amount, date, icon} = outRank.list[0];
         obj = {
           icon: icon,
-          det: `支出  ${amount},${date}`
+          det: `支出  ${amount}，${date}`
         }
       }
     } // 月收支排行榜
