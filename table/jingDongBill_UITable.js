@@ -54,9 +54,9 @@ async function main() {
       inP = income.list[0].percent;
       inPer = inP === '100.00' ? String(Math.floor(inP)) : inP.toFixed(1);
     } else {
-      inTotal = '1'
-      inPercent = '0'
-      inPer = '0.00'
+      inTotal = '1';
+      inPercent = '0';
+      inPer = '0.00';
     }
     
     expend = await incomeData('OUT', yearMonth);
@@ -67,9 +67,9 @@ async function main() {
       outP = expend.list[0].percent;
       outPer = outP === '100.00' ? String(Math.floor(outP)) : outP.toFixed(1);
     } else {
-      outTotal = '1'
-      outPercent = '0'
-      outPer = '0.00'
+      outTotal = '1';
+      outPercent = '0';
+      outPer = '0.00';
     }
   }
 
@@ -198,13 +198,13 @@ async function main() {
     const nameText = nameStack.addText(!setting.userName ? info.nickname : setting.userName);
     nameText.font = Font.mediumSystemFont(13);
     nameText.textOpacity = 0.8;
-    leftStack.addSpacer(2)
+    leftStack.addSpacer(2);
   
     // Baitiao Stack
     const btStack = leftStack.addStack();
     btStack.layoutHorizontally();
     btStack.centerAlignContent();
-    btStack.addSpacer(3)
+    btStack.addSpacer(3);
     
     const baitiaoImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baitiao.png');
     const baitiaoIcon = btStack.addImage(baitiaoImage);
@@ -216,7 +216,7 @@ async function main() {
     const baitiaoText = btStack.addText(amount >= '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
     leftStack.addSpacer(2);
-    mainStack.addSpacer(5)
+    mainStack.addSpacer(8);
     
     
     /** 
