@@ -46,8 +46,8 @@ async function main() {
         imageSize: 48,
         spac: 10,
         logoImage: 'http://mtw.so/67mqz3',
-        text1: asset.quota.state === '1' ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : `${asset.topAccountInfo.data.BtnTxt},${asset.topAccountInfo.data.benefitPoint1txt}`,
-        text2: asset.quota.state === '1' ? `待还 ${asset.bill.amount}` : `${asset.topAccountInfo.data.SHL}`,
+        text1: asset.quota.state === '1' ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : '0.00',
+        text2: asset.quota.state === '1' ? `待还 ${asset.bill.amount}` : '0.00',
         lightColor: '#FF0000',
         darkColor: '#FFBF00'
       }
@@ -80,7 +80,7 @@ async function main() {
         darkColor: '#FFBF00'
       }
     } else if (index === 3) {
-      const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');  
+      const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');
       if (farm.treeState === 2 || farm.treeState === 3) {
         notify('东东农场', `${farm.name}，可以兑换啦~`);  
       }
