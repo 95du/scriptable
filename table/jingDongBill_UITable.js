@@ -514,7 +514,7 @@ async function main() {
     return await req.loadJSON();
   }
   
-    async function monthBillRank(status, yearMonth) {
+  async function monthBillRank(status, yearMonth) {
     const req = new Request('https://bill.jd.com/monthBill/rank.html')
     req.method = 'POST'
     req.headers = {
