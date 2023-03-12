@@ -52,7 +52,7 @@ async function main() {
       inTotal = income.totalAmount;
       inPercent = income.list[0].amount;
       inP = income.list[0].percent;
-      inPer = inP === '100.00' ? String(Math.floor(inP)) : inP.toFixed(1);
+      inPer = inP === '100.00' ? String(Math.floor(inP)) : Number(inP).toFixed(1);
     } else {
       inTotal = '1';
       inPercent = '0';
@@ -65,7 +65,7 @@ async function main() {
       outTotal = expend.totalAmount;
       outPercent = expend.list[0].amount
       outP = expend.list[0].percent;
-      outPer = outP === '100.00' ? String(Math.floor(outP)) : outP.toFixed(1);
+      outPer = outP === '100.00' ? String(Math.floor(outP)) : Number(outP).toFixed(1);
     } else {
       outTotal = '1';
       outPercent = '0';
@@ -172,7 +172,7 @@ async function main() {
     leftStack.setPadding(0, 8, 0, 8);
     const avatarStack = leftStack.addStack();
     avatarStack.layoutHorizontally();
-    avatarStack.addSpacer(7);
+    avatarStack.addSpacer(5);
     
     const avatarStack1 = avatarStack.addStack();
     const iconSymbol = await getImage(info.headImageUrl);
