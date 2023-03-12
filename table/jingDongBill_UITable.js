@@ -93,10 +93,8 @@ async function main() {
       setting.randomIndex = 0;
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fm%2Findex.html%3Fsceneval%3D2%26jxsid%3D16780988595962555448%26channel%3Dwq%26from%3Djdmwode%22%7D'
     }
-    await monthBill();
-  }
-
-  const monthBill = async () => {
+    
+    // inRank & outRank
     if (statistics === 0) {
       setting.statistics = 1;
       const inRank = await monthBillRank('IN', yearMonth);
