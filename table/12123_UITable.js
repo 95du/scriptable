@@ -206,7 +206,7 @@ async function main() {
      * @param {string} text
      * Cylindrical Bar Chart
      */
-    widget.setPadding(nothing || !sign ? 19 : 15, 18, 15, 14);
+    widget.setPadding(nothing || main.success === false ? 19 : 15, 18, 15, 14);
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     // Left Stack Violation Data
