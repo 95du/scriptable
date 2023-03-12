@@ -152,7 +152,6 @@ violation.body = 'params=' + encodeURIComponent(`{
   "verifyToken": "${verifyToken}"
 }`);
 const main = await violation.loadJSON();
-console.log(main.resultMsg)
 const success = main.success === true;
 
 if (success) {
@@ -339,7 +338,7 @@ async function createWidget() {
    * @param {string} text
    * Cylindrical Bar Chart
    */
-  widget.setPadding(nothing || main.success === false ? 19 : 15, 18, 15, 14);
+  widget.setPadding(nothing || !success ? 19 : 15, 18, 15, 14);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
   
