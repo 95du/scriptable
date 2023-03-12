@@ -188,7 +188,7 @@ async function main() {
     nameStack.layoutHorizontally();
     nameStack.centerAlignContent();
     nameStack.setPadding(1, 4, 1, 4);
-    const nameIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/crown.png');
+    const nameIcon = await getImage('http://m.360buyimg.com/mobilecms/jfs/t21250/351/1000721513/1891/9bfe1d6c/5b1e3870Nee820e5e.png');
     const nameIconElement = nameStack.addImage(nameIcon);
     nameIconElement.imageSize = new Size(17, 17);
     nameStack.addSpacer(4);
