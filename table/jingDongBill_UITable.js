@@ -3,7 +3,7 @@
 // icon-color: red; icon-glyph: tags;
 /**
  * 小组件作者：95度茅台
- * UITable 版本: Version 1.0.0
+ * UITable 版本: Version 1.0.1
  * 2023-03-10 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
@@ -175,12 +175,13 @@ async function main() {
     avatarStack.addSpacer(5);
     
     const avatarStack1 = avatarStack.addStack();
-    const iconSymbol = await getImage(info.headImageUrl);
-    const avatarIcon = avatarStack1.addImage(iconSymbol);
-    avatarIcon.imageSize = new Size(setting.avatarSize, setting.avatarSize);
-    avatarStack1.cornerRadius = 50
-    avatarStack1.borderWidth = 3;
-    avatarStack1.borderColor = new Color('#FFBF00');
+    const iconSymbol = await circleImage(info.headImageUrl);
+    avatarStack1.backgroundImage = iconSymbol;
+    iconSymbol.size = new Size(60, 60);
+    const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
+    const plusImage = avatarStack1.addImage(plus);
+    plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
+    plusImage.centerAlignImage();
     leftStack.addSpacer(6);
       
     // name stack
@@ -551,7 +552,7 @@ async function main() {
       canvas.width = sourceImg.width;
       canvas.height = sourceImg.height;
       ctx.save();
-      ctx.arc(sourceImg.width / 2, sourceImg.height / 2, sourceImg.height / 2, 0, 2 * Math.PI);
+      ctx.arc(sourceImg.width / 2, sourceImg.height / 2, sourceImg.height / 2.1, 0, 1.9 * Math.PI);
       ctx.clip();
       ctx.drawImage(sourceImg, 0, 0);
       ctx.restore();
