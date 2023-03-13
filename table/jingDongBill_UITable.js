@@ -180,7 +180,7 @@ async function main() {
     const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
     const plusImage = avatarStack1.addImage(plus);
     plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
-    leftStack.addSpacer(6);
+    leftStack.addSpacer(3);
       
     // name stack
     const nameStack = leftStack.addStack();
