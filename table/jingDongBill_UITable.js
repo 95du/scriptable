@@ -164,6 +164,7 @@ async function main() {
     mainStack.layoutHorizontally();
     mainStack.centerAlignContent();
     mainStack.addSpacer();
+    
     /** 
     * Left Content
     * @param {image} image
@@ -204,7 +205,7 @@ async function main() {
     const nameIcon = await getImage('http://m.360buyimg.com/mobilecms/jfs/t21250/351/1000721513/1891/9bfe1d6c/5b1e3870Nee820e5e.png');
     const nameIconElement = nameStack.addImage(nameIcon);
     nameIconElement.imageSize = new Size(16, 16);
-    nameStack.addSpacer(4);
+    nameStack.addSpacer(5);
     
     const nameText = nameStack.addText(!setting.userName ? info.nickname : setting.userName);
     nameText.font = Font.mediumSystemFont(12);
