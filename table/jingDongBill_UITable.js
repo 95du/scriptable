@@ -3,8 +3,8 @@
 // icon-color: red; icon-glyph: tags;
 /**
  * 小组件作者：95度茅台
- * UITable 版本: Version 1.0.1
- * 2023-03-10 11:30
+ * UITable 版本: Version 1.0.2
+ * 2023-03-13 19:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
