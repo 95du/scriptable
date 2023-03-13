@@ -11,7 +11,7 @@
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong_Bill");
+  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong_Bill_2");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
@@ -175,12 +175,22 @@ async function main() {
     avatarStack.addSpacer(5);
     
     const avatarStack1 = avatarStack.addStack();
-    const iconSymbol = await circleImage(info.headImageUrl);
-    avatarStack1.backgroundImage = iconSymbol;
-    const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
-    const plusImage = avatarStack1.addImage(plus);
-    plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
-    leftStack.addSpacer(5);
+    const iconSymbol = await circleImage(info.headImageUrl);  
+    
+    if (setting.isPlus === 'true') {
+      avatarStack1.backgroundImage = iconSymbol;
+      const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
+      const plusImage = avatarStack1.addImage(plus);
+      plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
+      leftStack.addSpacer(5);
+    } else {
+      const avatarIcon = avatarStack1.addImage(iconSymbol);
+      avatarIcon.imageSize = new Size(setting.avatarSize, setting.avatarSize);
+      avatarStack1.cornerRadius = 50;
+      avatarStack1.borderWidth = 3;
+      avatarStack1.borderColor = new Color('#FFBF00');
+      leftStack.addSpacer(6);
+    }
       
     // name stack
     const nameStack = leftStack.addStack();
