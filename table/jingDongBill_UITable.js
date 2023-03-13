@@ -177,11 +177,9 @@ async function main() {
     const avatarStack1 = avatarStack.addStack();
     const iconSymbol = await circleImage(info.headImageUrl);
     avatarStack1.backgroundImage = iconSymbol;
-    iconSymbol.size = new Size(60, 60);
     const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
     const plusImage = avatarStack1.addImage(plus);
     plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
-    plusImage.centerAlignImage();
     leftStack.addSpacer(6);
       
     // name stack
