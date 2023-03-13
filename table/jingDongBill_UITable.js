@@ -195,7 +195,7 @@ async function main() {
     const nameText = nameStack.addText(!setting.userName ? info.nickname : setting.userName);
     nameText.font = Font.mediumSystemFont(12);
     nameText.textOpacity = 0.8;
-    leftStack.addSpacer(3);
+    leftStack.addSpacer(2);
   
     // Baitiao Stack
     const btStack = leftStack.addStack();
