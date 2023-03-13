@@ -114,7 +114,7 @@ async function main() {
     } else if (index === 5) {
       const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fm%2Findex.html%3Fsceneval%3D2%26jxsid%3D16780988595962555448%26channel%3Dwq%26from%3Djdmwode%22%7D'
-      setting.randomIndex = 0;
+      setting.randomIndex = 6;
       val = {
         leading: 3,
         imageSize: 33,
@@ -122,6 +122,20 @@ async function main() {
         logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
         text1: `守约分 ${promise.xbScore}`,
         text2: promise.recentDate,
+        lightColor: '#000000',
+        darkColor: '#FFFFFF'
+      }
+    } else if (index === 6) {
+      const score = await totalScore('https://rsp.jd.com/windControl/queryScore/v1?lt=m&an=plus.mobile&stamp=1678691332059');
+      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fplus.m.jd.com%2Frights%2FwindControl%22%7D'
+      setting.randomIndex = 0;
+      val = {
+        leading: 3,
+        imageSize: 46,
+        spac: 8,
+        logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/crown.png',
+        text1: 'PLUS 会员',
+        text2: `综合分 ${String(score.totalScore)}`,
         lightColor: '#000000',
         darkColor: '#FFFFFF'
       }
@@ -402,6 +416,17 @@ async function main() {
     req.body = `reqData={}`
     const res = await req.loadJSON();
     return res.resultData.data;
+  }
+  
+  async function totalScore(url) {
+    const req = new Request(url)
+    req.method = 'GET'
+    req.headers = {
+      Cookie: cookie,
+      Referer: 'https://plus.m.jd.com/rights/windControl'
+    }
+    const res = await req.loadJSON();
+    return res.rs.userSynthesizeScore
   }
   
   async function createErrWidget() {
