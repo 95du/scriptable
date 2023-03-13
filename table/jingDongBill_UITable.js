@@ -56,7 +56,7 @@ async function main() {
     } else {
       inTotal = '1';
       inPercent = '0';
-      inPer = '100';
+      inPer = '0.00';
     }
     
     expend = await incomeData('OUT', yearMonth);
