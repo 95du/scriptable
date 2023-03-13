@@ -180,13 +180,13 @@ async function main() {
     const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
     const plusImage = avatarStack1.addImage(plus);
     plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
-    leftStack.addSpacer(3);
+    leftStack.addSpacer(5);
       
     // name stack
     const nameStack = leftStack.addStack();
     nameStack.layoutHorizontally();
     nameStack.centerAlignContent();
-    nameStack.setPadding(1, 4, 1, 4);
+    nameStack.setPadding(0, 4, 0, 4);
     const nameIcon = await getImage('http://m.360buyimg.com/mobilecms/jfs/t21250/351/1000721513/1891/9bfe1d6c/5b1e3870Nee820e5e.png');
     const nameIconElement = nameStack.addImage(nameIcon);
     nameIconElement.imageSize = new Size(16, 16);
@@ -195,7 +195,7 @@ async function main() {
     const nameText = nameStack.addText(!setting.userName ? info.nickname : setting.userName);
     nameText.font = Font.mediumSystemFont(12);
     nameText.textOpacity = 0.8;
-    leftStack.addSpacer(2);
+    leftStack.addSpacer(3);
   
     // Baitiao Stack
     const btStack = leftStack.addStack();
