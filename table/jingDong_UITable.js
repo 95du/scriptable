@@ -130,7 +130,7 @@ async function main() {
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fplus.m.jd.com%2Frights%2FwindControl%22%7D'
       setting.randomIndex = 0;
       val = {
-        leading: 3,
+        leading: 0,
         imageSize: 46,
         spac: 8,
         logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/crown.png',
