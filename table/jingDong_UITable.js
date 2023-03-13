@@ -125,20 +125,6 @@ async function main() {
         lightColor: '#000000',
         darkColor: '#FFFFFF'
       }
-    } else if (index === 6) {
-      const score = await totalScore('https://rsp.jd.com/windControl/queryScore/v1?lt=m&an=plus.mobile&stamp=1678691332059');
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fplus.m.jd.com%2Frights%2FwindControl%22%7D'
-      setting.randomIndex = 0;
-      val = {
-        leading: 0,
-        imageSize: 46,
-        spac: 8,
-        logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/crown.png',
-        text1: 'PLUS 会员',
-        text2: `综合分 ${String(score.totalScore)}`,
-        lightColor: '#000000',
-        darkColor: '#FFFFFF'
-      }
     }
     // Stack & Text Color
     stackSize = new Size(0, 64);
@@ -402,7 +388,6 @@ async function main() {
     req.body = 'body=version:4&appid=wh5&clientVersion=9.1.0'
     const res = await req.loadJSON();
     const { farmUserPro } = res;
-    //const { treeState, name, treeTotalEnergy, treeEnergy, simpleName } = farmUserPro;
     return farmUserPro;
   }
   
@@ -416,17 +401,6 @@ async function main() {
     req.body = `reqData={}`
     const res = await req.loadJSON();
     return res.resultData.data;
-  }
-  
-  async function totalScore(url) {
-    const req = new Request(url)
-    req.method = 'GET'
-    req.headers = {
-      Cookie: cookie,
-      Referer: 'https://plus.m.jd.com/rights/windControl'
-    }
-    const res = await req.loadJSON();
-    return res.rs.userSynthesizeScore
   }
   
   async function createErrWidget() {
