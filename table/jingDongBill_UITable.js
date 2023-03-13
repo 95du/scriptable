@@ -56,7 +56,7 @@ async function main() {
     } else {
       inTotal = '1';
       inPercent = '0';
-      inPer = '0.00';
+      inPer = '100';
     }
     
     expend = await incomeData('OUT', yearMonth);
@@ -156,11 +156,14 @@ async function main() {
     }
     
     
-    widget.setPadding(12, 10, 12, 10);
-    const mainStack = widget.addStack();
+    widget.setPadding(10, 12, 10, 12);
+    const bigStack = widget.addStack();
+    bigStack.layoutVertically();
+    bigStack.centerAlignContent();
+    const mainStack = bigStack.addStack();
     mainStack.layoutHorizontally();
     mainStack.centerAlignContent();
-    
+    mainStack.addSpacer();
     /** 
     * Left Content
     * @param {image} image
@@ -169,11 +172,12 @@ async function main() {
     const leftStack = mainStack.addStack();
     leftStack.layoutVertically();
     leftStack.centerAlignContent();
-    leftStack.setPadding(0, 8, 0, 8);
+    leftStack.addSpacer()
+    leftStack.size = new Size(80, 0);
+    
+    // avatarStack
     const avatarStack = leftStack.addStack();
     avatarStack.layoutHorizontally();
-    avatarStack.addSpacer(5);
-    
     const avatarStack1 = avatarStack.addStack();
     const iconSymbol = await circleImage(info.headImageUrl);  
     
@@ -182,21 +186,21 @@ async function main() {
       const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
       const plusImage = avatarStack1.addImage(plus);
       plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
-      leftStack.addSpacer(5);
     } else {
       const avatarIcon = avatarStack1.addImage(iconSymbol);
       avatarIcon.imageSize = new Size(setting.avatarSize, setting.avatarSize);
       avatarStack1.cornerRadius = 50;
       avatarStack1.borderWidth = 3;
       avatarStack1.borderColor = new Color('#FFBF00');
-      leftStack.addSpacer(5.5);
     }
-      
+    avatarStack.addSpacer();
+    leftStack.addSpacer(6.5);
+    
+    
     // name stack
     const nameStack = leftStack.addStack();
     nameStack.layoutHorizontally();
     nameStack.centerAlignContent();
-    nameStack.setPadding(0, 3, 0, 3);
     const nameIcon = await getImage('http://m.360buyimg.com/mobilecms/jfs/t21250/351/1000721513/1891/9bfe1d6c/5b1e3870Nee820e5e.png');
     const nameIconElement = nameStack.addImage(nameIcon);
     nameIconElement.imageSize = new Size(16, 16);
@@ -205,14 +209,14 @@ async function main() {
     const nameText = nameStack.addText(!setting.userName ? info.nickname : setting.userName);
     nameText.font = Font.mediumSystemFont(12);
     nameText.textOpacity = 0.8;
-    leftStack.addSpacer(2);
+    nameStack.addSpacer();
+    leftStack.addSpacer(3);
+    
   
     // Baitiao Stack
     const btStack = leftStack.addStack();
     btStack.layoutHorizontally();
     btStack.centerAlignContent();
-    btStack.addSpacer(3);
-    
     const baitiaoImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baitiao.png');
     const baitiaoIcon = btStack.addImage(baitiaoImage);
     baitiaoIcon.imageSize = new Size(25, 18);
@@ -222,8 +226,8 @@ async function main() {
     const amount = state === '1' ? asset.bill.amount.replace(',', '') : '0.00';
     const baitiaoText = btStack.addText(amount >= '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
-    leftStack.addSpacer(2);
-    mainStack.addSpacer(12);
+    btStack.addSpacer();
+    mainStack.addSpacer();
     
     
     /** 
@@ -234,11 +238,10 @@ async function main() {
     const rightStack = mainStack.addStack();
     rightStack.layoutVertically();
     rightStack.centerAlignContent();
-    rightStack.setPadding(-5, 0, 6, 0)
+    
     const logoStack = rightStack.addStack();
     logoStack.layoutHorizontally();
     logoStack.centerAlignContent();
-    
     const topImg = [
       'http://mtw.so/67mqz3',  
       'https://gitcode.net/enoyee/scriptable/-/raw/master/img/jd/ic_jd_logo.png'  
@@ -254,6 +257,7 @@ async function main() {
     assetText.textOpacity = 0.8;
     logoStack.addSpacer();
     
+    
     const jdImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const jdIcon = logoStack.addImage(jdImage);
     jdIcon.imageSize = new Size(36, 36);
@@ -265,7 +269,7 @@ async function main() {
     */
     const middleStack = rightStack.addStack();
     middleStack.layoutHorizontally();
-    middleStack.setPadding(6, 0, 6, 0)
+    middleStack.setPadding(6, 0, 6, 0);
     
     const midLeftStack = middleStack.addStack();
     midLeftStack.layoutVertically();
@@ -305,6 +309,7 @@ async function main() {
     outAmountText.rightAlignText();
     outAmountText.textOpacity = 0.7;
     
+    
     const lowerStack = rightStack.addStack();
     lowerStack.size = new Size(0, 16)
     lowerStack.layoutHorizontally();
@@ -318,6 +323,7 @@ async function main() {
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
+    bigStack.addSpacer(5)
     
     
     /** 
@@ -333,8 +339,8 @@ async function main() {
     getwidget(inTotal, inPercent, '收入', `${inPer} %`, progressColor = new Color(setting.progressColor2));
     
     function getwidget(inTotal, haveGone, str, percent, progressColor) {
-      const percStack = widget.addStack();
-      percStack.setPadding(0, 10, 0, 8);
+      const percStack = bigStack.addStack();
+      percStack.setPadding(0, 8, 0, 8);
       percStack.layoutHorizontally();
       percStack.centerAlignContent();
       
@@ -356,8 +362,9 @@ async function main() {
       percentText.font = Font.boldSystemFont(12);
       
       const phoneSize = Device.screenSize().height
-      widget.addSpacer(phoneSize < 926 ? 1 : 2.5)
+      bigStack.addSpacer(phoneSize < 926 ? 1.5 : 2.5)
     }
+    bigStack.addSpacer(5)
     
     function creatProgress(inTotal, havegone) {
       const context = new DrawContext();
