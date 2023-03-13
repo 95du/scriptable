@@ -157,10 +157,7 @@ async function main() {
     
     
     widget.setPadding(10, 12, 10, 12);
-    const bigStack = widget.addStack();
-    bigStack.layoutVertically();
-    bigStack.centerAlignContent();
-    const mainStack = bigStack.addStack();
+    const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     mainStack.centerAlignContent();
     mainStack.addSpacer();
@@ -173,7 +170,7 @@ async function main() {
     const leftStack = mainStack.addStack();
     leftStack.layoutVertically();
     leftStack.centerAlignContent();
-    leftStack.addSpacer()
+    leftStack.addSpacer();
     leftStack.size = new Size(80, 0);
     
     // avatarStack
@@ -324,7 +321,7 @@ async function main() {
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
-    bigStack.addSpacer(5)
+    widget.addSpacer(5);
     
     
     /** 
@@ -340,10 +337,10 @@ async function main() {
     getwidget(inTotal, inPercent, '收入', `${inPer} %`, progressColor = new Color(setting.progressColor2));
     
     function getwidget(inTotal, haveGone, str, percent, progressColor) {
-      const percStack = bigStack.addStack();
-      percStack.setPadding(0, 8, 0, 8);
+      const percStack = widget.addStack();
       percStack.layoutHorizontally();
-      percStack.centerAlignContent();
+      percStack.centerAlignContent();  
+      percStack.setPadding(0, 7.8, 0, 7.8);
       
       const title = percStack.addText(str);
       title.centerAlignText();
@@ -363,9 +360,9 @@ async function main() {
       percentText.font = Font.boldSystemFont(12);
       
       const phoneSize = Device.screenSize().height
-      bigStack.addSpacer(phoneSize < 926 ? 1.5 : 2.5)
+      widget.addSpacer(phoneSize < 926 ? 1.5 : 2.5)
     }
-    bigStack.addSpacer(5)
+    widget.addSpacer(5);
     
     function creatProgress(inTotal, havegone) {
       const context = new DrawContext();
