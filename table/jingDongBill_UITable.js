@@ -185,7 +185,7 @@ async function main() {
       plusImage.imageSize = new Size(62, 62);
     } else {
       const avatarIcon = avatarStack.addImage(iconSymbol);
-      avatarIcon.imageSize = new Size(setting.avatarSize, setting.avatarSize);
+      avatarIcon.imageSize = new Size(62, 62);
       avatarStack.cornerRadius = 50;
       avatarStack.borderWidth = 3;
       avatarStack.borderColor = new Color('#FFBF00');
