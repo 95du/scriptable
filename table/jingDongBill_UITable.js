@@ -182,7 +182,7 @@ async function main() {
       avatarStack.backgroundImage = iconSymbol;
       const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
       const plusImage = avatarStack.addImage(plus);
-      plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
+      plusImage.imageSize = new Size(62, 62);
     } else {
       const avatarIcon = avatarStack.addImage(iconSymbol);
       avatarIcon.imageSize = new Size(setting.avatarSize, setting.avatarSize);
