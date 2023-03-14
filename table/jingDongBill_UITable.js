@@ -176,23 +176,20 @@ async function main() {
     
     // avatarStack
     const avatarStack = leftStack.addStack();
-    avatarStack.layoutHorizontally();
-    const avatarStack1 = avatarStack.addStack();
     const iconSymbol = await circleImage(info.headImageUrl);  
     
     if (setting.isPlus === 'true') {
-      avatarStack1.backgroundImage = iconSymbol;
+      avatarStack.backgroundImage = iconSymbol;
       const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
-      const plusImage = avatarStack1.addImage(plus);
+      const plusImage = avatarStack.addImage(plus);
       plusImage.imageSize = new Size(setting.avatarSize, setting.avatarSize);
     } else {
-      const avatarIcon = avatarStack1.addImage(iconSymbol);
+      const avatarIcon = avatarStack.addImage(iconSymbol);
       avatarIcon.imageSize = new Size(setting.avatarSize, setting.avatarSize);
-      avatarStack1.cornerRadius = 50;
-      avatarStack1.borderWidth = 3;
-      avatarStack1.borderColor = new Color('#FFBF00');
+      avatarStack.cornerRadius = 50;
+      avatarStack.borderWidth = 3;
+      avatarStack.borderColor = new Color('#FFBF00');
     }
-    avatarStack.addSpacer();
     leftStack.addSpacer(6.5);
     
     
@@ -208,7 +205,6 @@ async function main() {
     const nameText = nameStack.addText(!setting.userName ? info.nickname : setting.userName);
     nameText.font = Font.mediumSystemFont(12);
     nameText.textOpacity = 0.8;
-    nameStack.addSpacer();
     leftStack.addSpacer(3);
     
   
@@ -225,7 +221,6 @@ async function main() {
     const amount = state === '1' ? asset.bill.amount.replace(',', '') : '0.00';
     const baitiaoText = btStack.addText(amount >= '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
-    btStack.addSpacer();
     mainStack.addSpacer();
     
     
