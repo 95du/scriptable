@@ -35,7 +35,6 @@ async function main() {
     return await n.schedule();
   }
   
-  //const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const info = await getJson('https://api.m.jd.com?functionId=queryJDUserInfo&appid=jd-cphdeveloper-m');
 
   const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
@@ -222,7 +221,7 @@ async function main() {
     const amount = state === '1' ? asset.bill.amount.replace(',', '') : '0.00';
     const baitiaoText = btStack.addText(amount >= '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
-    mainStack.addSpacer(phoneSize < 926 ? 15 : null);
+    mainStack.addSpacer(phoneSize < 926 ? 10 : null);
     
     
     /** 
