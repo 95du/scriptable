@@ -5,6 +5,7 @@
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.2
  * 2023-03-13 19:30
+ * 🔥示例图渐变颜色 #FFE5B4
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
@@ -255,7 +256,6 @@ async function main() {
     assetText.textOpacity = 0.8;
     logoStack.addSpacer();
     
-    
     const jdImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const jdIcon = logoStack.addImage(jdImage);
     jdIcon.imageSize = new Size(36, 36);
@@ -293,6 +293,7 @@ async function main() {
     const bag = moneyBag.indexOf('gitcode') > -1 ? 48 : 41;
     assetIconElement.imageSize = new Size(bag, bag);
     middleStack.addSpacer();
+    
     
     const midRightStack = middleStack.addStack();
     midRightStack.layoutVertically();
