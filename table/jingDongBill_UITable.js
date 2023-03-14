@@ -254,7 +254,6 @@ async function main() {
     const jdImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const jdIcon = logoStack.addImage(jdImage);
     jdIcon.imageSize = new Size(36, 36);
-    mainStack.addSpacer();
     
     
     /**
@@ -317,6 +316,7 @@ async function main() {
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
+    mainStack.addSpacer();
     widget.addSpacer(5);
     
     
