@@ -190,7 +190,7 @@ async function main() {
       avatarStack.borderWidth = 3;
       avatarStack.borderColor = new Color('#FFBF00');
     }
-    leftStack.addSpacer(7);
+    leftStack.addSpacer(6.5);
     
     
     // name stack
