@@ -172,7 +172,7 @@ async function main() {
     leftStack.layoutVertically();
     leftStack.centerAlignContent();
     leftStack.addSpacer();
-    leftStack.size = new Size(80, 0);
+    leftStack.size = new Size(phoneSize < 926 ? 70 : 80, 0);
     
     // avatarStack
     const avatarStack = leftStack.addStack();
@@ -221,7 +221,7 @@ async function main() {
     const amount = state === '1' ? asset.bill.amount.replace(',', '') : '0.00';
     const baitiaoText = btStack.addText(amount >= '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
-    mainStack.addSpacer(phoneSize < 926 ? 10 : null);
+    mainStack.addSpacer();
     
     
     /** 
