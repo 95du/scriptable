@@ -11,6 +11,7 @@
 
 async function main() {
   const uri = Script.name();
+  const phoneSize = Device.screenSize().height;
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong_Bill");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
@@ -221,7 +222,7 @@ async function main() {
     const amount = state === '1' ? asset.bill.amount.replace(',', '') : '0.00';
     const baitiaoText = btStack.addText(amount >= '1000' ? String(Math.floor(amount)) : amount);
     baitiaoText.font = Font.mediumSystemFont(14);
-    mainStack.addSpacer();
+    mainStack.addSpacer(phoneSize < 926 ? 15 : null);
     
     
     /** 
@@ -354,8 +355,6 @@ async function main() {
       percentText.centerAlignText();
       percentText.textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
       percentText.font = Font.boldSystemFont(12);
-      
-      const phoneSize = Device.screenSize().height
       widget.addSpacer(phoneSize < 926 ? 1.5 : 2.5)
     }
     widget.addSpacer(5);
