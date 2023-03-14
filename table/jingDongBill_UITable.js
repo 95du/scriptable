@@ -157,7 +157,7 @@ async function main() {
     }
     
     
-    widget.setPadding(10, 12, 10, 12);
+    widget.setPadding(10, 10, 10, 10);
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     mainStack.centerAlignContent();
