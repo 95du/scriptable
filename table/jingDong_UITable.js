@@ -47,7 +47,7 @@ async function main() {
         imageSize: 48,
         spac: 10,
         logoImage: 'http://mtw.so/67mqz3',
-        text1: state ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : '0.00',
+        text1: state ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : '额度 0.00',
         text2: state ? `待还 ${asset.bill.amount}` : '0.00',
         lightColor: '#FF0000',
         darkColor: '#FFBF00'
