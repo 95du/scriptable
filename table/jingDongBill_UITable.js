@@ -112,7 +112,7 @@ async function main() {
       const outRank = await monthBillRank('OUT', yearMonth);
       const outCode = outRank.responseCode === '00000';
       if (outCode) {
-        const { showText, amount, date, icon} = outRank.list[0];
+        const { showText, amount, date, icon } = outRank.list[0];
         obj = {
           icon: icon,
           det: `支出  ${amount}，${date}`
