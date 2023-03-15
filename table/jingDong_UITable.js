@@ -132,11 +132,11 @@ async function main() {
       setting.randomIndex = 0;
       val = {
         leading: 3,
-        imageSize: 33,
+        imageSize: 38,
         spac: 8,
         logoImage: 'https://img30.360buyimg.com/jr_image/jfs/t1/2680/23/18225/4283/63f4510aFd71b94e8/244143e5d89e8cda.png',
         text1: `小金库 ${treasury.xjkAvailable}`,
-        text2: `收益 ${treasury.totalIncome}`,
+        text2: `收益 ${(treasury.totalIncome).toFixed(2)}`,
         lightColor: '#000000',
         darkColor: '#FFFFFF'
       }
