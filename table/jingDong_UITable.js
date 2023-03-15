@@ -112,9 +112,10 @@ async function main() {
         darkColor: '#FFA500'
       }
     } else if (index === 5) {
+      const treasury = await custXbScore('https://ms.jr.jd.com/gw2/generic/finRepay/h5/m/queryXJKInfo');
       const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fm%2Findex.html%3Fsceneval%3D2%26jxsid%3D16780988595962555448%26channel%3Dwq%26from%3Djdmwode%22%7D'
-      setting.randomIndex = 0;
+      setting.randomIndex = 6;
       val = {
         leading: 3,
         imageSize: 33,
@@ -122,6 +123,20 @@ async function main() {
         logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
         text1: `守约分 ${promise.xbScore}`,
         text2: promise.recentDate,
+        lightColor: '#000000',
+        darkColor: '#FFFFFF'
+      }
+    } else if (index === 6) {
+      const treasury = await custXbScore('https://ms.jr.jd.com/gw2/generic/finRepay/h5/m/queryXJKInfo');
+      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Flc.jr.jd.com%2Fck%2FxjkHold%2Findex%2F%3Fchannel%3Da00294%22%7D'
+      setting.randomIndex = 0;
+      val = {
+        leading: 3,
+        imageSize: 33,
+        spac: 8,
+        logoImage: 'https://img30.360buyimg.com/jr_image/jfs/t1/2680/23/18225/4283/63f4510aFd71b94e8/244143e5d89e8cda.png',
+        text1: `小金库 ${treasury.xjkAvailable}`,
+        text2: `收益 ${treasury.totalIncome}`,
         lightColor: '#000000',
         darkColor: '#FFFFFF'
       }
