@@ -237,7 +237,6 @@ async function main() {
     logoStack.layoutHorizontally();
     logoStack.centerAlignContent();
     const topImg = [
-      'http://mtw.so/67mqz3',  
       'https://gitcode.net/enoyee/scriptable/-/raw/master/img/jd/ic_jd_logo.png'  
     ];
     const logoImage = topImg[Math.floor(Math.random() * topImg.length)];
