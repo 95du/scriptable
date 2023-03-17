@@ -202,14 +202,10 @@ async function main() {
     quotaText2.font = Font.mediumSystemFont(12);
     quotaText2.textOpacity = 0.5;
     middleStack.addSpacer();
-    
-    const assetIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png');
-    const assetIconElement = middleStack.addImage(assetIcon);
-    assetIconElement.imageSize = new Size(30, 30);
 
-    const eIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png');
-    const eIconElement = middleStack.addImage(eIcon);
-    eIconElement.imageSize = new Size(53, 53);
+    const gooseIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png');
+    const gooseIconElement = middleStack.addImage(gooseIcon);
+    gooseIconElement.imageSize = new Size(53, 53);
     middleStack.addSpacer();
     
     
