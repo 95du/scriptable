@@ -46,37 +46,28 @@ async function main() {
     progressNextLevelText
   } = stripe.right.data;
   
-  let level = '3'//title.match(/\d/)[0];
+  let level = '5'//title.match(/\d/)[0];
   if (level === '1') {
-    levelColor = '#4FC3F7'
+    levelColor = new Color('#4FC3F7', 0.6);
     levelTextColor = '#000000'
-    barColor = new Color(levelColor, 0.5);
   } else if (level === '2') {
-    levelColor = '#99C0F0'
+    levelColor = new Color('#99C0F0', 0.6);
     levelTextColor = '#000000'
-    barColor = new Color(levelColor, 0.5);
   } else if (level === '3') {
-    levelColor = '#FF9999'
+    levelColor = new Color('#FF9999', 0.6);
     levelTextColor = '#FFFFFF'
-    barColor = new Color(levelColor, 0.5);
   } else if (level === '4') {
-    levelColor = '#F72E27'
+    levelColor = new Color('#F72E27', 0.6);
     levelTextColor = '#FFFFFF'
-    barColor = new Color(levelColor, 0.5);
   } else if (level === '5') {
-    levelColor = '#AB0D0D'
+    levelColor = new Color('#AB0D0D', 0.6);
     levelTextColor = '#FFFFFF'
-    barColor = new Color(levelColor, 0.5);
   } else if (level === '6') {
     levelColor = Color.dynamic(
-      new Color('#222222'),
+      new Color('#222222', 0.5),
       new Color("#333333")
     );;
     levelTextColor = '#FFFFFF'
-    barColor = Color.dynamic(
-      new Color('#222222', 0.5),
-      new Color("#444444")
-    );;
   }
   
   
@@ -86,7 +77,7 @@ async function main() {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
     } else if (setting.gradient.length !== 0) {
       const gradient = new LinearGradient();
-      color = setting.gradient;
+      color = setting.gradient
       const items = color[Math.floor(Math.random() * color.length)];
       gradient.locations = [0, 1]
       gradient.colors = [
@@ -95,7 +86,7 @@ async function main() {
       ]
       widget.backgroundGradient = gradient
     } else {
-      widget.backgroundColor = Color.dynamic(new Color("#BCBBBB", 0.5), new Color("#111111"));
+      widget.backgroundColor = Color.dynamic(new Color('#4FC3F7', 0.2), new Color("#111111"));
     }
     
     
@@ -137,7 +128,7 @@ async function main() {
     const barStack = btStack.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
-    barStack.backgroundColor = level === '6' ? levelColor : new Color(levelColor, 0.8);
+    barStack.backgroundColor = levelColor;
     barStack.setPadding(1, 15, 1, 15);
     barStack.cornerRadius = 10;
     
@@ -265,8 +256,8 @@ async function main() {
       const barHeight = tempBarHeight - 10;
       barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
       draw.addPath(barPath);
-    
-      draw.setFillColor((barColor));
+      
+      draw.setFillColor((levelColor));
       draw.fillPath();
     
       const currPath = new Path();
