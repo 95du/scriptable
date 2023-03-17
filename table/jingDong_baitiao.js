@@ -303,8 +303,6 @@ async function main() {
     await smallrWidget();
   } else if (setting.code === 0) {
     await createWidget();
-  } else {
-    await createErrWidget();
   }
   
   async function smallrWidget() {
@@ -329,11 +327,7 @@ async function main() {
     }
     req.body = `reqData={"environment":"1","clientType":"ios","clientVersion":"11.6.4"}`
     const res = await req.loadJSON();
-    if (res.resultCode === 0) {
-      return res.resultData.data;
-    } else {
-      notify('用户未登录', 'Cookie 过期，请重新登录京东白条 ‼️');
-    }
+    return res.resultData.data;
   }
   
   async function LvlProgress(url) {
@@ -345,11 +339,7 @@ async function main() {
     }
     req.body = `reqData={"appId":"benefitGateway","channelId":"1","customerId":"1","shopId":"1","deviceInfo":{}}`
     const res = await req.loadJSON();
-    if (res.resultCode === 0) {
-      return res.resultData;
-    } else {
-      await createErrWidget();
-    }
+    return res.resultData;
   }
   
   async function getImage(url) {
@@ -397,19 +387,6 @@ async function main() {
     const base64Image = await wv.evaluateJavaScript(js);
     const iconImage = await new Request(base64Image).loadImage();
     return iconImage
-  }
-  
-  async function createErrWidget() {
-    const widget = new ListWidget();
-    const image = await getImage('http://mtw.so/5Zca3L');
-    const widgetImage = widget.addImage(image);
-    widgetImage.imageSize = new Size(50, 50);
-    widgetImage.centerAlignImage();
-    widget.addSpacer(10);
-    const text = widget.addText('用户未登录');
-    text.font = Font.systemFont(17);
-    text.centerAlignText();
-    Script.setWidget(widget);
   }
 }
 module.exports = { main }
