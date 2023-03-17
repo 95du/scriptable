@@ -33,7 +33,7 @@ async function main() {
   }
   
   const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
-  const { lvlScore, curScore, code, nextLvl } = score;
+  const { lvlScore, curScore, level, code, nextLvl } = score;
   
   const stripe = await whiteStripe('https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2');
   const {
@@ -45,33 +45,27 @@ async function main() {
     progressNextLevelText
   } = stripe.right.data;
   
-  let level = '5'//title.match(/\d/)[0];
+  
   if (level === '1') {
     levelColor = '#4FC3F7'
-    levelTextColor = '#000000'
     barColor = new Color(levelColor, 0.6);
   } else if (level === '2') {
     levelColor = '#99C0F0'
-    levelTextColor = '#000000'
     barColor = new Color(levelColor, 0.6);
   } else if (level === '3') {
     levelColor = '#FF9999'
-    levelTextColor = '#FFFFFF'
     barColor = new Color(levelColor, 0.6);
   } else if (level === '4') {
     levelColor = '#F72E27'
-    levelTextColor = '#FFFFFF'
     barColor = new Color(levelColor, 0.6);
   } else if (level === '5') {
     levelColor = '#AB0D0D'
-    levelTextColor = '#FFFFFF'
     barColor = new Color(levelColor, 0.6);
   } else if (level === '6') {
     levelColor = Color.dynamic(
       new Color('#222222'),
       new Color("#333333")
     );;
-    levelTextColor = '#FFFFFF'
     barColor = Color.dynamic(
       new Color('#222222', 0.5),
       new Color("#444444")
@@ -81,8 +75,9 @@ async function main() {
   
   async function createWidget() {
     const widget = new ListWidget();
-    if (F_MGR.fileExists(bgImage)) {
-      widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
+    const Appearance = Device.isUsingDarkAppearance();
+    if (F_MGR.fileExists(bgImage) && Appearance === false) {
+      widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))  
     } else if (setting.gradient.length !== 0) {
       const gradient = new LinearGradient();
       color = setting.gradient
@@ -93,8 +88,10 @@ async function main() {
         new Color('#00000000')
       ]
       widget.backgroundGradient = gradient
+    } else if (Appearance == false) {
+      widget.backgroundImage = await getImage('http://mtw.so/60NF6g');
     } else {
-      widget.backgroundImage = await getImage('https://sweixinfile.hisense.com/media/M00/74/C4/Ch4FyWQUg7KAIeSDAABZWb3KMyw27.jpeg')
+      widget.backgroundColor = new Color('#111111')  
     }
     
     
@@ -148,7 +145,7 @@ async function main() {
     
     const titleText = barStack.addText(title);
     titleText.font = Font.boldSystemFont(13);
-    titleText.textColor = new Color(levelTextColor)
+    titleText.textColor = Color.white();
     btStack.addSpacer(5)
     
     
@@ -194,7 +191,7 @@ async function main() {
     quotaStack.centerAlignContent();
     const quotaText = quotaStack.addText('可用额度');
     quotaText.font = Font.mediumSystemFont(12);
-    quotaText.textOpacity = 0.5;
+    quotaText.textOpacity = 0.7;
     quotaStack.addSpacer(3);
     
     const quota = quotaStack.addText(stripe.quota.quotaLeft.replace(',', ''));
@@ -206,10 +203,13 @@ async function main() {
     quotaText2.textOpacity = 0.5;
     middleStack.addSpacer();
     
-    
     const assetIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png');
     const assetIconElement = middleStack.addImage(assetIcon);
-    assetIconElement.imageSize = new Size(53, 53);
+    assetIconElement.imageSize = new Size(30, 30);
+
+    const eIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png');
+    const eIconElement = middleStack.addImage(eIcon);
+    eIconElement.imageSize = new Size(53, 53);
     middleStack.addSpacer();
     
     
@@ -218,7 +218,7 @@ async function main() {
     billStack.centerAlignContent();
     const billText = billStack.addText('当月待还');  
     billText.font = Font.mediumSystemFont(12);
-    billText.textOpacity = 0.5;
+    billText.textOpacity = 0.7;
     billStack.addSpacer(3);
     
     const bill = billStack.addText(stripe.bill.amount.replace(',', ''));
