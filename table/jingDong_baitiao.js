@@ -46,28 +46,37 @@ async function main() {
     progressNextLevelText
   } = stripe.right.data;
   
-  let level = '5'//title.match(/\d/)[0];
+  let level = '6'//title.match(/\d/)[0];
   if (level === '1') {
-    levelColor = new Color('#4FC3F7', 0.6);
+    levelColor = '#4FC3F7'
     levelTextColor = '#000000'
+    barColor = new Color(levelColor, 0.6);
   } else if (level === '2') {
-    levelColor = new Color('#99C0F0', 0.6);
+    levelColor = '#99C0F0'
     levelTextColor = '#000000'
+    barColor = new Color(levelColor, 0.6);
   } else if (level === '3') {
-    levelColor = new Color('#FF9999', 0.6);
+    levelColor = '#FF9999'
     levelTextColor = '#FFFFFF'
+    barColor = new Color(levelColor, 0.6);
   } else if (level === '4') {
-    levelColor = new Color('#F72E27', 0.6);
+    levelColor = '#F72E27'
     levelTextColor = '#FFFFFF'
+    barColor = new Color(levelColor, 0.6);
   } else if (level === '5') {
-    levelColor = new Color('#AB0D0D', 0.6);
+    levelColor = '#AB0D0D'
     levelTextColor = '#FFFFFF'
+    barColor = new Color(levelColor, 0.6);
   } else if (level === '6') {
     levelColor = Color.dynamic(
-      new Color('#222222', 0.5),
+      new Color('#222222'),
       new Color("#333333")
     );;
     levelTextColor = '#FFFFFF'
+    barColor = Color.dynamic(
+      new Color('#222222', 0.5),
+      new Color("#444444")
+    );;
   }
   
   
@@ -128,7 +137,7 @@ async function main() {
     const barStack = btStack.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
-    barStack.backgroundColor = levelColor;
+    barStack.backgroundColor = level === '6' ? levelColor : new Color(levelColor);
     barStack.setPadding(1, 15, 1, 15);
     barStack.cornerRadius = 10;
     
@@ -257,7 +266,7 @@ async function main() {
       barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
       draw.addPath(barPath);
       
-      draw.setFillColor((levelColor));
+      draw.setFillColor((barColor));
       draw.fillPath();
     
       const currPath = new Path();
