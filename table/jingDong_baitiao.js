@@ -32,7 +32,12 @@ async function main() {
   }
   
   const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
-  const { lvlScore, curScore, level, code, nextLvl } = score;
+  const {
+    lvlScore,
+    curScore,
+    level,
+    nextLvl
+  } = score;
   
   const stripe = await whiteStripe('https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2');
   const {
@@ -327,7 +332,7 @@ async function main() {
     if (res.resultCode === 0) {
       return res.resultData.data;
     } else {
-      await createErrWidget();
+      notify('用户未登录', 'Cookie 过期，请重新登录京东白条 ‼️');
     }
   }
   
