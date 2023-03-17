@@ -39,7 +39,7 @@ async function main() {
     progressNextLevelText
   } = stripe.right.data;
   
-  let level = '5'//title.match(/\d/)[0];
+  let level = '3'//title.match(/\d/)[0];
   if (level === '1') {
     levelColor = '#4FC3F7'
     levelTextColor = '#000000'
@@ -100,14 +100,13 @@ async function main() {
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     mainStack.centerAlignContent();
-    mainStack.setPadding(10, 10, 10, 10)
+    mainStack.setPadding(10, 10, 10, 10);
     mainStack.addSpacer();
     // avatarStack
     const avatarStack = mainStack.addStack();
     avatarStack.layoutHorizontally();
     avatarStack.centerAlignContent();
-    avatarStack.addSpacer()
-    
+    avatarStack.setPadding(0, 15, 0, 15);
     const avatarStack2 = avatarStack.addStack();
     const iconSymbol = await circleImage(portrait);  
     
@@ -118,12 +117,12 @@ async function main() {
       plusImage.imageSize = new Size(55, 55);
     } else {
       const avatarIcon = avatarStack2.addImage(iconSymbol);
-      avatarIcon.imageSize = new Size(52, 52);
+      avatarIcon.imageSize = new Size(55, 55);
       avatarStack2.cornerRadius = 50;
       avatarStack2.borderWidth = 3;
       avatarStack2.borderColor = new Color('#FFBF00');
     }
-    avatarStack.addSpacer();
+    avatarStack.addSpacer(15);
     
     const btStack = avatarStack.addStack();
     btStack.layoutVertically();
@@ -182,8 +181,7 @@ async function main() {
     const middleStack = mainStack.addStack();
     middleStack.layoutHorizontally();
     middleStack.centerAlignContent();
-    middleStack.setPadding(0, 18, 0, 18);
-    //middleStack.addSpacer();
+    middleStack.setPadding(0, 15, 0, 15);
     
     const quotaStack = middleStack.addStack();  
     quotaStack.layoutVertically();
@@ -224,7 +222,6 @@ async function main() {
     const billText2 = billStack.addText(stripe.bill.buttonName);  
     billText2.font = Font.mediumSystemFont(12);
     billText2.textOpacity = 0.5;
-    //middleStack.addSpacer();
     mainStack.addSpacer();
     
     
@@ -240,11 +237,12 @@ async function main() {
     
     const prgsStack = mainStack.addStack();  
     prgsStack.layoutHorizontally();
-    prgsStack.addSpacer();
+    prgsStack.centerAlignContent();
+    prgsStack.setPadding(0, 15, 0, 15);
     
     const curScoreText = prgsStack.addText(curScore)
     curScoreText.font = Font.mediumSystemFont(13);
-    prgsStack.addSpacer(8);
+    prgsStack.addSpacer();
     
     const imgProgress = prgsStack.addImage(creatProgress());
     imgProgress.centerAlignImage();
@@ -274,10 +272,9 @@ async function main() {
       return draw.getImage();
     }
     
-    prgsStack.addSpacer(8);
+    prgsStack.addSpacer();
     const percentText = prgsStack.addText(`${percent} %`)
     percentText.font = Font.mediumSystemFont(13);
-    prgsStack.addSpacer();
     mainStack.addSpacer();
     
     
