@@ -195,7 +195,7 @@ async function main() {
     quotaStack.addSpacer(3);
     
     const quota = quotaStack.addText(stripe.quota.quotaLeft.replace(',', ''));
-    quota.font = Font.boldSystemFont(17);
+    quota.font = Font.boldSystemFont(18);
     quotaStack.addSpacer(3);
 
     const quotaText2 = quotaStack.addText(`总额度 ${stripe.quota.quotaAll.replace(',', '')}`);
@@ -218,7 +218,7 @@ async function main() {
     billStack.addSpacer(3);
     
     const bill = billStack.addText(stripe.bill.amount.replace(',', ''));
-    bill.font = Font.boldSystemFont(15);
+    bill.font = Font.boldSystemFont(18);
     billStack.addSpacer(3);
 
     const billText2 = billStack.addText(stripe.bill.buttonName);  
