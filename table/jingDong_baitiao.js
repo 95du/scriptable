@@ -10,7 +10,6 @@
 
 async function main() {
   const uri = Script.name();
-  const phoneSize = Device.screenSize().height;
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong_BaiTiao");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
@@ -109,7 +108,7 @@ async function main() {
     const avatarStack = mainStack.addStack();
     avatarStack.layoutHorizontally();
     avatarStack.centerAlignContent();
-    avatarStack.setPadding(0, 15, 0, 15);
+    avatarStack.setPadding(0, 15, 0, 8);
     const avatarStack2 = avatarStack.addStack();
     const iconSymbol = await circleImage(portrait);  
     
@@ -127,10 +126,11 @@ async function main() {
     }
     avatarStack.addSpacer(15);
     
-    const btStack = avatarStack.addStack();
-    btStack.layoutVertically();
-    btStack.centerAlignContent();
-    const barStack = btStack.addStack();
+    const topStack = avatarStack.addStack();
+    topStack.layoutVertically();
+    topStack.centerAlignContent();
+    
+    const barStack = topStack.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
     barStack.backgroundColor = level === '6' ? levelColor : new Color(levelColor);
@@ -144,12 +144,12 @@ async function main() {
     barStack.addSpacer(4);
     
     const titleText = barStack.addText(title);
-    titleText.font = Font.boldSystemFont(13);
+    titleText.font = Font.boldSystemFont(14);
     titleText.textColor = Color.white();
-    btStack.addSpacer(5)
+    topStack.addSpacer(5);
     
     
-    const pointStack = btStack.addStack();
+    const pointStack = topStack.addStack();
     pointStack.layoutHorizontally();
     pointStack.centerAlignContent();
     const baitiaoImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baitiao.png');
@@ -205,7 +205,7 @@ async function main() {
 
     const gooseIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png');
     const gooseIconElement = middleStack.addImage(gooseIcon);
-    gooseIconElement.imageSize = new Size(53, 53);
+    gooseIconElement.imageSize = new Size(55, 55);
     middleStack.addSpacer();
     
     
@@ -279,7 +279,7 @@ async function main() {
     percentText.font = Font.boldSystemFont(13);
     mainStack.addSpacer();
     
-    
+    widget.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fcredit_rights%2Findex.html%3Ffrom%3Dbtsyjifentc%22%7D'
     if (config.runsInWidget) {
       Script.setWidget(widget);
       Script.complete();
@@ -297,7 +297,6 @@ async function main() {
   if (isSmallWidget && config.runsInWidget) {
     await smallrWidget();
   } else if (setting.code === 0) {
-    //await Run();
     await createWidget();
   } else {
     await createErrWidget();
@@ -325,7 +324,11 @@ async function main() {
     }
     req.body = `reqData={"environment":"1","clientType":"ios","clientVersion":"11.6.4"}`
     const res = await req.loadJSON();
-    return res.resultData.data
+    if (res.resultCode === 0) {
+      return res.resultData.data;
+    } else {
+      await createErrWidget();
+    }
   }
   
   async function LvlProgress(url) {
@@ -337,7 +340,11 @@ async function main() {
     }
     req.body = `reqData={"appId":"benefitGateway","channelId":"1","customerId":"1","shopId":"1","deviceInfo":{}}`
     const res = await req.loadJSON();
-    return res.resultData
+    if (res.resultCode === 0) {
+      return res.resultData;
+    } else {
+      await createErrWidget();
+    }
   }
   
   async function getImage(url) {
