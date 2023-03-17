@@ -90,8 +90,8 @@ async function main() {
       const items = color[Math.floor(Math.random() * color.length)];
       gradient.locations = [0, 1]
       gradient.colors = [
-        new Color('#00000000'),
-        new Color(items, Number(setting.transparency))
+        new Color(items, Number(setting.transparency)),
+        new Color('#00000000')
       ]
       widget.backgroundGradient = gradient
     } else {
