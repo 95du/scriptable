@@ -5,7 +5,6 @@
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
  * 2023-03-17 19:30
- * 🔥示例图渐变颜色 #FFE5B4
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
@@ -46,7 +45,7 @@ async function main() {
     progressNextLevelText
   } = stripe.right.data;
   
-  let level = '6'//title.match(/\d/)[0];
+  let level = '5'//title.match(/\d/)[0];
   if (level === '1') {
     levelColor = '#4FC3F7'
     levelTextColor = '#000000'
@@ -95,7 +94,7 @@ async function main() {
       ]
       widget.backgroundGradient = gradient
     } else {
-      widget.backgroundColor = Color.dynamic(new Color('#4FC3F7', 0.2), new Color("#111111"));
+      widget.backgroundImage = await getImage('https://sweixinfile.hisense.com/media/M00/74/C4/Ch4FyWQUg7KAIeSDAABZWb3KMyw27.jpeg')
     }
     
     
@@ -248,7 +247,7 @@ async function main() {
     prgsStack.setPadding(0, 15, 0, 15);
     
     const curScoreText = prgsStack.addText(curScore)
-    curScoreText.font = Font.mediumSystemFont(13);
+    curScoreText.font = Font.boldSystemFont(13);
     prgsStack.addSpacer();
     
     const imgProgress = prgsStack.addImage(creatProgress());
@@ -281,7 +280,7 @@ async function main() {
     
     prgsStack.addSpacer();
     const percentText = prgsStack.addText(`${percent} %`)
-    percentText.font = Font.mediumSystemFont(13);
+    percentText.font = Font.boldSystemFont(13);
     mainStack.addSpacer();
     
     
