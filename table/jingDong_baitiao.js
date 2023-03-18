@@ -294,7 +294,8 @@ async function main() {
     }
     
     prgsStack.addSpacer();
-    const percentText = prgsStack.addText(`${isPercent} %`);
+    const isPercent2 = percent < 1 ? percent * 100 : percent;
+    const percentText = prgsStack.addText(`${isPercent2} %`);
     percentText.font = Font.boldSystemFont(13);
     mainStack.addSpacer();
     
