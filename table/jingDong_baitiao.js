@@ -1,17 +1,17 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: red; icon-glyph: tags;
+// icon-color: deep-purple; icon-glyph: file-alt;
 /**
  * 小组件作者：95度茅台
- * UITable 版本: Version 1.0.2
- * 2023-02-27 11:30
+ * UITable 版本: Version 1.0.0
+ * 2023-03-17 19:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong");
+  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong_BaiTiao");
   const cacheFile = F_MGR.joinPath(folder, 'setting.json');
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
@@ -20,7 +20,6 @@ async function main() {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
     cookie = setting.cookie;
-    index = setting.randomIndex;
   }
   
   const notify = async (title, body, url) => {
@@ -32,239 +31,329 @@ async function main() {
     return await n.schedule();
   }
   
-  // User Information
-  const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
-  const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
-  const order = await getLogistics('https://wq.jd.com/bases/wuliudetail/notify?sceneval=2&sceneval=2&g_login_type=1&callback');
+  const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
+  const {
+    lvlScore,
+    curScore,
+    level,
+    nextLvl
+  } = score;
   
-  const Run = async () => {
-    if (index === 0) {
-      const asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmbt.jd.com%2Fbill%2Fmonthlybill%2Fmonthbillcore%2Fmonth-bill-index.html%3Fchannelcode%3D024%22%7D'
-      setting.randomIndex = 1;
-      const state = asset.quota.state === '1';
-      val = {
-        leading: 3,
-        imageSize: 48,
-        spac: 10,
-        logoImage: 'http://mtw.so/67mqz3',
-        text1: state ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : '额度 0.00',
-        text2: state ? `待还 ${asset.bill.amount}` : '0.00',
-        lightColor: '#FF0000',
-        darkColor: '#FFBF00'
-      }
-    } else if (index === 1) {
-      const expireBean = await splitBeans('https://api.m.jd.com?appid=jd-cphdeveloper-m&functionId=myBean&body=%7B%22tenantCode%22:%22jgm%22,%22bizModelCode%22:%226%22,%22bizModeClientType%22:%22M%22,%22externalLoginType%22:%221%22%7D&g_login_type=0&g_tk=997104177&g_ty=ajax&appCode=ms0ca95114');
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fbean.m.jd.com%2FbeanDetail%2Findex.action%3FresourceValue%3Dbean%22%7D'
-      setting.randomIndex = 2;
-      val = {
-        leading: -3,
-        imageSize: 38,
-        spac: 1,
-        logoImage: 'http://mtw.so/5ZaG1N',
-        text1: '今日京豆 ' + String(posi - mega),
-        text2: `即将过期 ${expireBean}`,  
-        lightColor: '#FF0000',
-        darkColor: '#FFBF00'
-      }
-    } else if (index === 2) {
-      const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fwqs.jd.com%2Fmy%2Fredpacket.shtml%3Fsceneval%3D2%26jxsid%3D16780988595962555448%22%7D'
-      setting.randomIndex = 3;
-      val = {
-        leading: -3,
-        imageSize: 42,
-        spac: 1,
-        logoImage: 'http://mtw.so/5ZaunR',
-        text1: `红包 ${redEnvelope.balance}`,
-        text2: `即将过期 ${redEnvelope.expiredBalance}`,  
-        lightColor: '#FF0000',
-        darkColor: '#FFBF00'
-      }
-    } else if (index === 3) {
-      const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');
-      if (farm.treeState === 2 || farm.treeState === 3) {
-        notify('东东农场', `${farm.name}，可以兑换啦~`);  
-      }
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fcarry.m.jd.com%2FbabelDiy%2FZeus%2F3KSjXqQabiTuD1cJ28QskrpWoBKT%2Findex.html%3FbabelChannel%3D94%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
-      setting.randomIndex = 4;
-      val = {
-        leading: 5,
-        imageSize: 35,
-        spac: 5,
-        logoImage: 'https://gitcode.net/enoyee/scriptable/raw/master/img/jd/icon_fruit.png',
-        text1: `已种植『 ${farm.simpleName} 』`,
-        text2: '果树进度  ' + Math.floor((farm.treeEnergy / farm.treeTotalEnergy) * 100) + '%',  
-        lightColor: '#1ea532',
-        darkColor: '#32CD32'
-      }
-    } else if (index === 4) {
-      // http://mtw.so/66Fl0K
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fh5.m.jd.com%2Frn%2F3a5TGXF7Y8xpQ45CjgMzQ3tyqd4K%2Findex.html%3Fhas_native%3D0%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
-      setting.randomIndex = 5;
-      val = {
-        leading: 3,
-        imageSize: 40,
-        spac: 8,
-        logoImage: 'https://m.360buyimg.com/babel/jfs/t1/163192/9/7798/5516/6037526eE6df71306/1504fb66a0aa1a8e.png',
-        text1: `已连签 ${sign.continuousDays} 天`,
-        text2: `明天加 ${sign.tomorrowSendBeans} 京豆`,
-        lightColor: '#000000',
-        darkColor: '#FFA500'
-      }
-    } else if (index === 5) {
-      const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fm%2Findex.html%3Fsceneval%3D2%26jxsid%3D16780988595962555448%26channel%3Dwq%26from%3Djdmwode%22%7D'
-      setting.randomIndex = 0;
-      val = {
-        leading: 3,
-        imageSize: 33,
-        spac: 8,
-        logoImage: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/human.png',
-        text1: `守约分 ${promise.xbScore}`,
-        text2: promise.recentDate,
-        lightColor: '#000000',
-        darkColor: '#FFFFFF'
-      }
-    }
-    // Stack & Text Color
-    stackSize = new Size(0, 64);
-    stackBackground = Color.dynamic(
-      new Color('#EFEBE9', Number(setting.light)),
-      new Color('#161D2A', Number(setting.dark))
-    );
-    textColor = Color.dynamic(
-      new Color('#1E1E1E'),
-      new Color('#FEFEFE')
-    );
-    jNumColor = Color.dynamic(
-      new Color('#FF0000'),
-      new Color('#FFBF00')
-    );
-    botTextColor = Color.dynamic(
-      new Color(val.lightColor),
-      new Color(val.darkColor)
-    );
+  const stripe = await whiteStripe('https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2');
+  const {
+    scorePopJumpUrl,
+    title,
+    identityPicture,
+    portrait,
+    percent,
+    progressNextLevelText
+  } = stripe.right.data;
+  
+  
+  if (level === '1') {
+    levelColor = '#4FC3F7'
+    barColor = new Color(levelColor, 0.6);
+  } else if (level === '2') {
+    levelColor = '#99C0F0'
+    barColor = new Color(levelColor, 0.6);
+  } else if (level === '3') {
+    levelColor = '#FF9999'
+    barColor = new Color(levelColor, 0.6);
+  } else if (level === '4') {
+    levelColor = '#F72E27'
+    barColor = new Color(levelColor, 0.6);
+  } else if (level === '5') {
+    levelColor = '#AB0D0D'
+    barColor = new Color(levelColor, 0.6);
+  } else if (level === '6') {
+    levelColor = Color.dynamic(
+      new Color('#222222'),
+      new Color("#333333")
+    );;
+    barColor = Color.dynamic(
+      new Color('#222222', 0.5),
+      new Color("#444444")
+    );;
   }
-
   
-  /**
-   * Frame Layout
-   * @param {image} image
-   * @param {string} text
-   */
+  
   async function createWidget() {
     const widget = new ListWidget();
-    if (F_MGR.fileExists(bgImage)) {
-      widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
+    const Appearance = Device.isUsingDarkAppearance();
+    if (F_MGR.fileExists(bgImage) && Appearance === false) {
+      widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))  
+    } else if (setting.gradient.length !== 0) {
+      const gradient = new LinearGradient();
+      color = setting.gradient
+      const items = color[Math.floor(Math.random() * color.length)];
+      gradient.locations = [0, 1]
+      gradient.colors = [
+        new Color(items, Number(setting.transparency)),
+        new Color('#00000000')
+      ]
+      widget.backgroundGradient = gradient
+    } else if (Appearance == false) {
+      widget.backgroundImage = await getImage('http://mtw.so/60NF6g');
     } else {
-      widget.backgroundColor = Color.dynamic(new Color('#967969'), new Color('#555555'));
+      widget.backgroundColor = new Color('#1e1e1e')  
     }
     
-    /* Top Content */
-    widget.setPadding(0, 0, 0, 0);
-    const topStack = widget.addStack();
-    topStack.setPadding(10, 3, 10, 3)
-    topStack.layoutHorizontally();
-    topStack.centerAlignContent();
-    topStack.addSpacer();
-    topStack.backgroundColor = stackBackground;
-    topStack.cornerRadius = 21;
-    topStack.size = stackSize;
-    
-    const iconStack = topStack.addStack();
-    const headImage = await getImage(info.headImageUrl);
-    const imageElement = iconStack.addImage(headImage);
-    imageElement.imageSize = new Size(45, 45);
-    iconStack.cornerRadius = Number(setting.radian);
-    iconStack.borderWidth = 2;
-    iconStack.borderColor = new Color('#FFBF00');
-    topStack.addSpacer(10);
-    
-    const nameStack = topStack.addStack();
-    nameStack.layoutVertically();
-    nameStack.centerAlignContent();
-    const nicknameText = nameStack.addText(info.nickname);
-    nicknameText.font = Font.boldSystemFont(15);
-    nicknameText.textColor = textColor;
-    nicknameText.textOpacity = 0.8
-    nameStack.addSpacer(2);
-    
-    const jdNumStack = nameStack.addStack();
-    jdNumStack.layoutHorizontally();
-    jdNumStack.centerAlignContent();
-    const jdou = await getImage('http://mtw.so/5K9zGv');
-    const jdouIcon = jdNumStack.addImage(jdou);
-    jdouIcon.imageSize = new Size(16, 16);
-    jdNumStack.addSpacer(3);
-    const contentText = jdNumStack.addText(info.jdNum.toString());
-    contentText.font = Font.boldSystemFont(16);
-    contentText.textColor = jNumColor
-    contentText.textOpacity = 0.7;
-    topStack.addSpacer();
-    widget.addSpacer(5);
-    
-    // middleStack
-    const middleStack = widget.addStack();
-    middleStack.addSpacer();
-    const middleText = middleStack.addText(`京享值 ${info.jvalue.toString()}`);
-    middleText.textColor = Color.white();
-    middleText.textOpacity = 0.9
-    middleText.font = Font.boldSystemFont(11);
-    middleStack.addSpacer();
-    widget.addSpacer();
     
     /** 
-    * Bottom Content
     * @param {image} image
-    * @param {string} jvalue
+    * @param {string} string
     */
-    const contentStack = widget.addStack();
-    contentStack.layoutHorizontally()
-    contentStack.centerAlignContent()
-    contentStack.addSpacer();
-    contentStack.backgroundColor = stackBackground;
-    contentStack.setPadding(10, val.leading, 10, 3);
-    contentStack.cornerRadius = 21;
-    contentStack.size = stackSize;
-    // Logo icon
-    const logoStack = contentStack.addStack();
-    const logoImage = await getImage(val.logoImage);
-    const logoIcon = logoStack.addImage(logoImage);
-    logoIcon.imageSize = new Size(val.imageSize, val.imageSize);
-    contentStack.addSpacer(val.spac);
+    widget.setPadding(10, 10, 10, 10);
+    const mainStack = widget.addStack();
+    mainStack.layoutVertically();
+    mainStack.centerAlignContent();
+    mainStack.setPadding(8, 8, 8, 8);
+    mainStack.addSpacer();
+    // avatarStack
+    const avatarStack = mainStack.addStack();
+    avatarStack.layoutHorizontally();
+    avatarStack.centerAlignContent();
+    const avatarStack2 = avatarStack.addStack();
+    const iconSymbol = await circleImage(portrait);  
     
-    const bottStack = contentStack.addStack();
-    bottStack.layoutVertically();
-    bottStack.centerAlignContent();
-    
-    const randomText1 = bottStack.addText(val.text1);
-    randomText1.textColor = textColor;
-    randomText1.font = Font.boldSystemFont(13);
-    randomText1.textOpacity = 0.8;
-    bottStack.addSpacer(2.5);
-  
-    const randomText2 = bottStack.addText(val.text2);
-    randomText2.textColor = botTextColor;
-    randomText2.font = Font.mediumSystemFont(13);
-    randomText2.textOpacity = 0.8;
-    contentStack.addSpacer();
-    
-    widget.url = setting.schemeUrl
-    F_MGR.writeString(cacheFile, JSON.stringify(setting));
-    if (config.runsInApp) {
-      await widget.presentSmall();
+    if (setting.isPlus === 'true') {
+      avatarStack2.backgroundImage = iconSymbol;
+      const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
+      const plusImage = avatarStack2.addImage(plus);
+      plusImage.imageSize = new Size(55, 55);
     } else {
+      const avatarIcon = avatarStack2.addImage(iconSymbol);
+      avatarIcon.imageSize = new Size(55, 55);
+      avatarStack2.cornerRadius = 50;
+      avatarStack2.borderWidth = 3;
+      avatarStack2.borderColor = new Color('#FFBF00');
+    }
+    avatarStack.addSpacer(15);
+    
+    const topStack = avatarStack.addStack();
+    topStack.layoutVertically();
+    topStack.centerAlignContent();
+    
+    const barStack = topStack.addStack();
+    barStack.layoutHorizontally();
+    barStack.centerAlignContent();
+    barStack.backgroundColor = level === '6' ? levelColor : new Color(levelColor);
+    barStack.setPadding(1, 15, 1, 15);
+    barStack.cornerRadius = 10;
+    
+    const iconSF = SFSymbol.named('crown.fill');
+    const barIcon = barStack.addImage(iconSF.image);
+    barIcon.imageSize = new Size(20, 20);
+    barIcon.tintColor = new Color('#FDDA0D');
+    barStack.addSpacer(4);
+    
+    const titleText = barStack.addText(title);
+    titleText.font = Font.boldSystemFont(14);
+    titleText.textColor = Color.white();
+    topStack.addSpacer(5);
+    
+    
+    const pointStack = topStack.addStack();
+    pointStack.layoutHorizontally();
+    pointStack.centerAlignContent();
+    const baitiaoImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baitiao.png');
+    const baitiaoIcon = pointStack.addImage(baitiaoImage);
+    baitiaoIcon.imageSize = new Size(25, 18);
+    pointStack.addSpacer(8);
+    
+    const LevelText = pointStack.addText(progressNextLevelText);
+    LevelText.font = Font.mediumSystemFont(12);
+    LevelText.textOpacity = 0.7;
+    pointStack.addSpacer(8);
+    
+    const barStack2 = pointStack.addStack();
+    barStack2.layoutHorizontally();
+    barStack2.centerAlignContent();
+    barStack2.backgroundColor = new Color('#FF9500', 0.7);
+    barStack2.setPadding(1, 8, 1, 8);
+    barStack2.cornerRadius = 6;
+    
+    const pointText = barStack2.addText(lvlScore);
+    pointText.font = Font.boldSystemFont(11);
+    pointText.textColor = new Color('#FFFFFF');
+    //avatarStack.addSpacer();
+    mainStack.addSpacer();
+    
+    
+    /** 
+    * Middle Stack
+    * @param {image} image
+    * @param {string} string
+    */
+    const middleStack = mainStack.addStack();
+    middleStack.layoutHorizontally();
+    middleStack.centerAlignContent();
+    
+    const quotaStack = middleStack.addStack();  
+    quotaStack.layoutVertically();
+    quotaStack.centerAlignContent();
+    
+    const quotaStack1 = quotaStack.addStack();
+    const quotaText = quotaStack1.addText('可用额度');
+    quotaText.font = Font.mediumSystemFont(12);
+    quotaText.textOpacity = 0.7;
+    quotaStack1.addSpacer();
+    quotaStack.addSpacer(3);
+    
+    const quotaStack2 = quotaStack.addStack();
+    const quota = quotaStack2.addText(stripe.quota.quotaLeft.replace(',', ''));
+    quota.font = Font.boldSystemFont(18);
+    quotaStack2.addSpacer();
+    quotaStack.addSpacer(3);
+
+    const quotaStack3 = quotaStack.addStack();
+    const quotaText2 = quotaStack3.addText(`总额度 ${stripe.quota.quotaAll.replace(',', '')}`);
+    quotaText2.font = Font.mediumSystemFont(12);
+    quotaText2.textOpacity = 0.5;
+    quotaStack3.addSpacer();
+    middleStack.addSpacer();
+
+    const gooseIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png');
+    const gooseIconElement = middleStack.addImage(gooseIcon);
+    gooseIconElement.imageSize = new Size(55, 55);
+    middleStack.addSpacer();
+    
+    
+    const billStack = middleStack.addStack();    
+    billStack.layoutVertically();  
+    billStack.centerAlignContent();
+    
+    const billStack1 = billStack.addStack();
+    billStack1.addSpacer();
+    const billText = billStack1.addText('当月待还');  
+    billText.font = Font.mediumSystemFont(12);
+    billText.textOpacity = 0.7;
+    billStack.addSpacer(3);
+    
+    billStack2 = billStack.addStack();
+    billStack2.addSpacer();
+    const bill = billStack2.addText(stripe.bill.amount.replace(',', ''));
+    bill.font = Font.boldSystemFont(18);
+    billStack.addSpacer(3);
+    
+    billStack3 = billStack.addStack();
+    billStack3.addSpacer();
+    const billText2 = billStack3.addText(stripe.bill.buttonName);  
+    billText2.font = Font.mediumSystemFont(12);
+    billText2.textOpacity = 0.5;
+    mainStack.addSpacer();
+    
+    
+    /** 
+    * bottom Stack
+    * @param {image} image
+    * @param {string} string
+    */
+    const prgrWid = Number(setting.progressWidth);
+    const tempBarWidth = curScore === '0' ? prgrWid : (curScore > '0' && curScore <= '1000') ? prgrWid - 25 : curScore - 30;
+    const tempBarHeight = 18
+    const progressColor = "#f2f5f7"
+    
+    const prgsStack = mainStack.addStack();  
+    prgsStack.layoutHorizontally();
+    prgsStack.centerAlignContent();
+    
+    const curScoreText = prgsStack.addText(curScore)
+    curScoreText.font = Font.boldSystemFont(13);
+    prgsStack.addSpacer();
+    
+    const imgProgress = prgsStack.addImage(creatProgress());
+    imgProgress.centerAlignImage();
+    imgProgress.imageSize = new Size(tempBarWidth, tempBarHeight);
+    
+    function creatProgress() {
+      const draw = new DrawContext();
+      draw.opaque = false;
+      draw.respectScreenScale = true;
+      draw.size = new Size(tempBarWidth, tempBarHeight);
+    
+      const barPath = new Path();
+      const barHeight = tempBarHeight - 10;
+      barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
+      draw.addPath(barPath);
+      
+      draw.setFillColor((barColor));
+      draw.fillPath();
+    
+      const currPath = new Path();
+      const isPercent = percent > 1 ? percent / 100 : percent;
+      currPath.addEllipse(new Rect((tempBarWidth - tempBarHeight) * isPercent, 0, tempBarHeight, tempBarHeight));
+      draw.addPath(currPath);
+      // #00FF00
+      draw.setFillColor(new Color(progressColor));
+      draw.fillPath();
+      return draw.getImage();
+    }
+    
+    prgsStack.addSpacer();
+    const isPercent2 = percent < 1 ? percent * 100 : percent;
+    const percentText = prgsStack.addText(`${isPercent2} %`);
+    percentText.font = Font.boldSystemFont(13);
+    mainStack.addSpacer();
+    
+    gooseIconElement.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmcr.jd.com%2Fcredit_home%2Fpages%2Findex.html%3FbtPageType%3DBT%26channelName%3D024%22%7D'
+    if (config.runsInWidget) {
       Script.setWidget(widget);
       Script.complete();
+    } else {
+      await widget.presentMedium()
     }
-    return widget;
   }
   
   
-  /**-------------------------**
-   * Request(url) json & image
-   */
+  /**-------------------------**/
+     /** Request(url) json **/
+  /**-------------------------**/
+  
+  const isSmallWidget =  config.widgetFamily === 'small';
+  if (isSmallWidget && config.runsInWidget) {
+    await smallrWidget();
+  } else if (setting.code === 0) {
+    await createWidget();
+  }
+  
+  async function smallrWidget() {
+    const widget = new ListWidget();
+    const text = widget.addText('仅支持中尺寸');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
+    Script.complete();
+  }
+  
+  /**-------------------------**/
+     /** Request(url) json **/
+  /**-------------------------**/
+  
+  async function whiteStripe(url) {
+    const req = new Request(url)
+    req.method = 'POST'
+    req.headers = {
+      Cookie: cookie,
+      Referer: 'https://mcr.jd.com/'
+    }
+    req.body = `reqData={"environment":"1","clientType":"ios","clientVersion":"11.6.4"}`
+    const res = await req.loadJSON();
+    return res.resultData.data;
+  }
+  
+  async function LvlProgress(url) {
+    const req = new Request(url)
+    req.method = 'POST'
+    req.headers = {
+      Cookie: cookie,
+      Referer: 'https://agree.jd.com/'
+    }
+    req.body = `reqData={"appId":"benefitGateway","channelId":"1","customerId":"1","shopId":"1","deviceInfo":{}}`
+    const res = await req.loadJSON();
+    return res.resultData;
+  }
+  
   async function getImage(url) {
     const r = await new Request(url);
     return await r.loadImage();
@@ -279,166 +368,37 @@ async function main() {
     return await ctx.getImage()
   }
   
-  async function signBeanAct(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Referer: 'https://h5.m.jd.com/',
-      Cookie: cookie
-    }
-    req.body = `body={
-      fp: "-1",
-      shshshfp: "-1",
-      shshshfpa: "-1",
-      referUrl: "-1",
-      userAgent: "-1",
-      jda: "-1",
-      rnVersion: "3.9"
-    }`
-    const res = await req.loadJSON();
-    if (res.code === '0') {
-      const { data } = res;
-      const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
-      if (status === '1') {
-        setting.signData = res.data
-        F_MGR.writeString(cacheFile, JSON.stringify(setting));
-        if (dailyAward) {
-          notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
-        } else {
-          notify(continuityAward.title, `获得 ${continuityAward.beanAward.beanCount} 京豆，已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
-        }
-      }
-      return res.data;
-    } else {
-      setting.code = 3;
-      F_MGR.writeString(cacheFile, JSON.stringify(setting));
-      notify(res.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
-    }
-  }
-    
-  async function getJson(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-      Cookie: cookie
-    }
-    const res = await req.loadJSON();
-    return res.base;
-  }
-  
-  async function totalAsset(url) {
-    const request = new Request(url);
-    request.method = 'POST'
-    request.headers = {
-      Referer: "https://mallwallet.jd.com/",
-      Cookie: cookie
-    }
-    request.body = `reqData={
-      "clientType": "ios"
-    }`
-    const res = await request.loadJSON();
-    return res.resultData.data
-  }
-  
-  async function splitBeans(url) {
-    const req = new Request(url)
-    req.method = 'GET'
-    req.headers = {
-      Referer: 'https://plantearth.m.jd.com/',
-      Cookie: cookie
-    }
-    const res = await req.loadJSON();
-    const df = new DateFormatter();
-    df.dateFormat = 'yyyy-MM-dd'
-    const date = df.string(new Date());
-    let positive = [];
-    let megative = [];
-    for (const item of res.list) {
-      if (item.amount > 0 && item.createDate.indexOf(date) > -1) {
-        positive.push(item.amount);
-      } else if (item.amount < 0 && item.createDate.indexOf(date) > -1) {
-        megative.push(item.amount);
-      }
-    }
-    
-    posi = positive.length == 0 ? 0 : positive.reduce((accumulator, currentValue) => accumulator + currentValue);
-    mega = megative.length == 0 ? 0 : Math.abs(megative.reduce((accumulator, currentValue) => accumulator + currentValue));
-
-    return res.willExpireNum;
-  }
-  
-  async function redPackage(url) {
-    const req = new Request(url)
-    req.method = 'GET'
-    req.headers = {
-      Referer: 'https://plantearth.m.jd.com/',
-      Cookie: cookie
-    }
-    const res = await req.loadJSON();
-    return res.data;
-  }
-  
-  async function farmProgress(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Referer: 'https://h5.m.jd.com/',  
-      Cookie: cookie
-    }
-    req.body = 'body=version:4&appid=wh5&clientVersion=9.1.0'
-    const res = await req.loadJSON();
-    const { farmUserPro } = res;
-    return farmUserPro;
-  }
-  
-  async function custXbScore(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Referer: 'https://agree.jd.com/',
-      Cookie: cookie
-    }
-    req.body = `reqData={}`
-    const res = await req.loadJSON();
-    return res.resultData.data;
-  }
-  
-  async function getLogistics(url) {
-    const req = new Request(url)
-    req.method = 'GET'
-    req.headers = {
-      Referer: 'https://agree.jd.com/'
-    }
-    const res = await req.loadJSON();
-    if (res.errCode === '0' && res.dealLogList.length > 0) {
-      const { wlStateDesc, stateName, createTime, name, img, orderId } = res.dealLogList[0];
-      if (createTime !== setting.createTime) {
-        notify(`${stateName}  ${createTime.match(/\d{2}-\d{2}\s\d{2}:\d{2}/)[0]}`, `${wlStateDesc}\n${name}`);  
-        setting.createTime = createTime;
-        F_MGR.writeString(cacheFile, JSON.stringify(setting));
-      }
-    }
-  }
-  
-  async function createErrWidget() {
-    const widget = new ListWidget();
-    const image = await getImage('http://mtw.so/5Zca3L');
-    const widgetImage = widget.addImage(image);
-    widgetImage.imageSize = new Size(50, 50);
-    widgetImage.centerAlignImage();
-    widget.addSpacer(10);
-    const text = widget.addText('用户未登录');
-    text.font = Font.systemFont(17);
-    text.centerAlignText();
-    Script.setWidget(widget);
-  }
-  
-  if (setting.code === 0) {
-    await Run();
-    await createWidget();
-  } else {
-    await createErrWidget();
+  async function circleImage(url) {
+    const req = new Request(url);  
+    let img = await req.loadImage()
+    const imgData = Data.fromPNG(img).toBase64String();
+    const html = `
+      <img id="sourceImg" src="data:image/png;base64,${imgData}" />
+      <img id="silhouetteImg" src="" />
+      <canvas id="mainCanvas" />
+        `
+    const js = `
+      var canvas = document.createElement("canvas");
+      var sourceImg = document.getElementById("sourceImg");
+      var silhouetteImg = document.getElementById("silhouetteImg");
+      var ctx = canvas.getContext('2d');
+      canvas.width = sourceImg.width;
+      canvas.height = sourceImg.height;
+      ctx.save();
+      ctx.arc(sourceImg.width / 2, sourceImg.height / 2, sourceImg.height / 2.1, 0, 1.9 * Math.PI);
+      ctx.clip();
+      ctx.drawImage(sourceImg, 0, 0);
+      ctx.restore();
+      var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      ctx.putImageData(imgData,0,0);
+      silhouetteImg.src = canvas.toDataURL();
+      output=canvas.toDataURL();
+        `
+    let wv = new WebView();
+    await wv.loadHTML(html);
+    const base64Image = await wv.evaluateJavaScript(js);
+    const iconImage = await new Request(base64Image).loadImage();
+    return iconImage
   }
 }
 module.exports = { main }
