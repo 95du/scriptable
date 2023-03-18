@@ -103,7 +103,7 @@ async function main() {
     * @param {image} image
     * @param {string} string
     */
-    widget.setPadding(0, 0, 0, 0);
+    widget.setPadding(10, 10, 10, 10);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     mainStack.centerAlignContent();
@@ -113,7 +113,6 @@ async function main() {
     const avatarStack = mainStack.addStack();
     avatarStack.layoutHorizontally();
     avatarStack.centerAlignContent();
-    avatarStack.setPadding(0, 15, 0, 0);
     const avatarStack2 = avatarStack.addStack();
     const iconSymbol = await circleImage(portrait);  
     
@@ -189,7 +188,6 @@ async function main() {
     const middleStack = mainStack.addStack();
     middleStack.layoutHorizontally();
     middleStack.centerAlignContent();
-    middleStack.setPadding(0, 15, 0, 15);
     
     const quotaStack = middleStack.addStack();  
     quotaStack.layoutVertically();
@@ -259,7 +257,6 @@ async function main() {
     const prgsStack = mainStack.addStack();  
     prgsStack.layoutHorizontally();
     prgsStack.centerAlignContent();
-    prgsStack.setPadding(0, 15, 0, 15);
     
     const curScoreText = prgsStack.addText(curScore)
     curScoreText.font = Font.boldSystemFont(13);
