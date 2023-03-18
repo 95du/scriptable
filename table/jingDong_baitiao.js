@@ -95,7 +95,7 @@ async function main() {
     } else if (Appearance == false) {
       widget.backgroundImage = await getImage('http://mtw.so/60NF6g');
     } else {
-      widget.backgroundColor = new Color('#111111')  
+      widget.backgroundColor = new Color('#1e1e1e')  
     }
     
     
