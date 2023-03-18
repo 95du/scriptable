@@ -107,7 +107,7 @@ async function main() {
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     mainStack.centerAlignContent();
-    mainStack.setPadding(10, 10, 10, 10);
+    mainStack.setPadding(8, 8, 8, 8);
     mainStack.addSpacer();
     // avatarStack
     const avatarStack = mainStack.addStack();
@@ -171,12 +171,12 @@ async function main() {
     barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#FF9500', 0.7);
     barStack2.setPadding(1, 8, 1, 8);
-    barStack2.cornerRadius = 10;
+    barStack2.cornerRadius = 6;
     
     const pointText = barStack2.addText(lvlScore);
     pointText.font = Font.boldSystemFont(11);
     pointText.textColor = new Color('#FFFFFF');
-    avatarStack.addSpacer();
+    //avatarStack.addSpacer();
     mainStack.addSpacer();
     
     
