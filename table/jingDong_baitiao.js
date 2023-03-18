@@ -303,6 +303,7 @@ async function main() {
     } else {
       await widget.presentMedium()
     }
+    return widget;
   }
   
   
