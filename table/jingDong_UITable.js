@@ -60,7 +60,7 @@ async function main() {
         leading: -3,
         imageSize: 38,
         spac: 1,
-        logoImage: 'http://mtw.so/5ZaG1N',
+        logoImage: 'http://mtw.so/6mCxwp',
         text1: '今日京豆 ' + String(posi - mega),
         text2: `即将过期 ${expireBean}`,  
         lightColor: '#FF0000',
