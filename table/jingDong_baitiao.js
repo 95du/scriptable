@@ -250,7 +250,7 @@ async function main() {
     * @param {string} string
     */
     const prgrWid = Number(setting.progressWidth);
-    const tempBarWidth = curScore === '0' ? prgrWid : prgrWid - 30;
+    const tempBarWidth = curScore == 0 ? prgrWid : curScore <= 100 ? prgrWid - 10 : (curScore > 100 && curScore <= 1000) ? prgrWid - 15 : (curScore > 1000 && curScore <= 10000) ? prgrWid - 25 : prgrWid - 32;
     const tempBarHeight = 18;
     const progressColor = "#f2f5f7"
     
