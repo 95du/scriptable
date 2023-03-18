@@ -284,7 +284,7 @@ async function main() {
     percentText.font = Font.boldSystemFont(13);
     mainStack.addSpacer();
     
-    widget.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmbt.jd.com%2Fbill%2Fmonthlybill%2Fmonthbillcore%2Fmonth-bill-all.html%3Fchannelcode%3Dzhuye%22%7D'
+    gooseIconElement.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmcr.jd.com%2Fcredit_home%2Fpages%2Findex.html%3FbtPageType%3DBT%26channelName%3D024%22%7D'
     if (config.runsInWidget) {
       Script.setWidget(widget);
       Script.complete();
