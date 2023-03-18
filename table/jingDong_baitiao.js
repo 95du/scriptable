@@ -113,7 +113,7 @@ async function main() {
     const avatarStack = mainStack.addStack();
     avatarStack.layoutHorizontally();
     avatarStack.centerAlignContent();
-    avatarStack.setPadding(0, 15, 0, 8);
+    avatarStack.setPadding(0, 15, 0, 0);
     const avatarStack2 = avatarStack.addStack();
     const iconSymbol = await circleImage(portrait);  
     
@@ -194,18 +194,25 @@ async function main() {
     const quotaStack = middleStack.addStack();  
     quotaStack.layoutVertically();
     quotaStack.centerAlignContent();
-    const quotaText = quotaStack.addText('可用额度');
+    
+    const quotaStack1 = quotaStack.addStack();
+    const quotaText = quotaStack1.addText('可用额度');
     quotaText.font = Font.mediumSystemFont(12);
     quotaText.textOpacity = 0.7;
+    quotaStack1.addSpacer();
     quotaStack.addSpacer(3);
     
-    const quota = quotaStack.addText(stripe.quota.quotaLeft.replace(',', ''));
+    const quotaStack2 = quotaStack.addStack();
+    const quota = quotaStack2.addText(stripe.quota.quotaLeft.replace(',', ''));
     quota.font = Font.boldSystemFont(18);
+    quotaStack2.addSpacer();
     quotaStack.addSpacer(3);
 
-    const quotaText2 = quotaStack.addText(`总额度 ${stripe.quota.quotaAll.replace(',', '')}`);
+    const quotaStack3 = quotaStack.addStack();
+    const quotaText2 = quotaStack3.addText(`总额度 ${stripe.quota.quotaAll.replace(',', '')}`);
     quotaText2.font = Font.mediumSystemFont(12);
     quotaText2.textOpacity = 0.5;
+    quotaStack3.addSpacer();
     middleStack.addSpacer();
 
     const gooseIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png');
@@ -217,16 +224,23 @@ async function main() {
     const billStack = middleStack.addStack();    
     billStack.layoutVertically();  
     billStack.centerAlignContent();
-    const billText = billStack.addText('当月待还');  
+    
+    const billStack1 = billStack.addStack();
+    billStack1.addSpacer();
+    const billText = billStack1.addText('当月待还');  
     billText.font = Font.mediumSystemFont(12);
     billText.textOpacity = 0.7;
     billStack.addSpacer(3);
     
-    const bill = billStack.addText(stripe.bill.amount.replace(',', ''));
+    billStack2 = billStack.addStack();
+    billStack2.addSpacer();
+    const bill = billStack2.addText(stripe.bill.amount.replace(',', ''));
     bill.font = Font.boldSystemFont(18);
     billStack.addSpacer(3);
-
-    const billText2 = billStack.addText(stripe.bill.buttonName);  
+    
+    billStack3 = billStack.addStack();
+    billStack3.addSpacer();
+    const billText2 = billStack3.addText(stripe.bill.buttonName);  
     billText2.font = Font.mediumSystemFont(12);
     billText2.textOpacity = 0.5;
     mainStack.addSpacer();
