@@ -171,7 +171,7 @@ async function main() {
     barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#FF9500', 0.7);
     barStack2.setPadding(1, 8, 1, 8);
-    barStack2.cornerRadius = 6;
+    barStack2.cornerRadius = 7;
     
     const pointText = barStack2.addText(lvlScore);
     pointText.font = Font.boldSystemFont(11);
