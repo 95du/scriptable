@@ -40,6 +40,12 @@ async function main() {
   } = treasury;
   
   
+  if (amountBar.balance !== setting.totalAssets) {
+    setting.totalAssets = amountBar.balance;
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));  
+    notify('京东金融提醒', `${amountBar.text}变动，剩余 ${amountBar.balance} 元。`)
+  }
+  
   async function createWidget() {
     const widget = new ListWidget();
     if (F_MGR.fileExists(bgImage)) {
@@ -74,11 +80,11 @@ async function main() {
     const topStack = mainStack.addStack();
     topStack.layoutVertically();
     topStack.centerAlignContent();
-    
+
     const barStack = topStack.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
-    barStack.backgroundColor = Color.orange()
+    barStack.backgroundColor = new Color('#FF9500');
     barStack.setPadding(3, 10, 3, 10);
     barStack.cornerRadius = 6;
     
@@ -86,7 +92,7 @@ async function main() {
     titleText.font = Font.boldSystemFont(13);
     titleText.textColor = new Color('#000000');
     
-    const balanceText = topStack.addText('688.00');
+    const balanceText = topStack.addText(amountBar.balance);
     balanceText.font = Font.boldSystemFont(28);
     balanceText.textColor = new Color('#FFFFFF');
     topStack.addSpacer()
@@ -129,7 +135,7 @@ async function main() {
     fourthText2.textColor = new Color('#FFFFFF');
     mainStack.addSpacer();
     
-    
+    // Right
     const rightStack = mainStack.addStack();
     rightStack.layoutVertically();
     rightStack.centerAlignContent()
@@ -150,7 +156,6 @@ async function main() {
     }
     return widget;
   }
-  
   
   /**-------------------------**/
      /** Request(url) json **/
