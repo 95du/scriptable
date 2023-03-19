@@ -43,7 +43,7 @@ async function main() {
   if (amountBar.balance !== setting.totalAssets) {
     setting.totalAssets = amountBar.balance;
     F_MGR.writeString(cacheFile, JSON.stringify(setting));  
-    notify('京东金融提醒', `${amountBar.text}变动，剩余 ${amountBar.balance} 元。`)
+    notify('京东金融提醒', `${amountBar.text}变动，剩余 ${amountBar.balance} 元。`);
   }
   
   async function createWidget() {
@@ -95,7 +95,7 @@ async function main() {
     const balanceText = topStack.addText(amountBar.balance);
     balanceText.font = Font.boldSystemFont(28);
     balanceText.textColor = new Color('#FFFFFF');
-    topStack.addSpacer()
+    topStack.addSpacer();
     
     // 2
     const secondStack = topStack.addStack();
@@ -106,7 +106,7 @@ async function main() {
     secondStack.addSpacer(7);
     
     const secondText2 = secondStack.addText(availableAmountBar.balance);
-    secondText2.font = Font.boldSystemFont(16);
+    secondText2.font = Font.boldSystemFont(15);
     secondText2.textColor = new Color('#FFFFFF');
     
     
@@ -119,7 +119,7 @@ async function main() {
     thirdStack.addSpacer(7);
     
     const thirdText2 = thirdStack.addText(totalIncomeAmtBar.balance);
-    thirdText2.font = Font.boldSystemFont(16);
+    thirdText2.font = Font.boldSystemFont(15);
     thirdText2.textColor = new Color('#FFFFFF');    
     
     // 4
@@ -131,15 +131,15 @@ async function main() {
     fourthStack.addSpacer(7);
     
     const fourthText2 = fourthStack.addText(profitAmtBar.balance);
-    fourthText2.font = Font.boldSystemFont(16);
+    fourthText2.font = Font.boldSystemFont(15);
     fourthText2.textColor = new Color('#FFFFFF');
     mainStack.addSpacer();
     
     // Right
     const rightStack = mainStack.addStack();
     rightStack.layoutVertically();
-    rightStack.centerAlignContent()
-    rightStack.setPadding(-12, 10, 10, 0)
+    rightStack.centerAlignContent();
+    rightStack.setPadding(-12, 0, 0, 0);
     
     const assetIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const assetImage = rightStack.addImage(assetIcon);
@@ -153,7 +153,7 @@ async function main() {
       Script.setWidget(widget);
       Script.complete();
     } else {
-      await widget.presentMedium()
+      await widget.presentMedium();
     }
     return widget;
   }
