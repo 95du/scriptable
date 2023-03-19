@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: blue; icon-glyph: fingerprint;
+// icon-color: light-brown; icon-glyph: fingerprint;
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
@@ -142,9 +142,10 @@ async function main() {
     rightStack.setPadding(-12, 10, 10, 0)
     
     const assetIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
-    const assetIconElement = rightStack.addImage(assetIcon);
-    assetIconElement.imageSize = new Size(40, 40);
-    assetIconElement.tintColor = new Color('#000000');
+    const assetImage = rightStack.addImage(assetIcon);
+    assetImage.imageSize = new Size(40, 40);
+    assetImage.tintColor = new Color('#000000');
+    assetImage.imageOpacity = 0.7;
     rightStack.addSpacer();
     
     widget.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Flc.jr.jd.com%2Fck%2FxjkHold%2Findex%2F%3Fchannel%3Da00294%22%7D'
