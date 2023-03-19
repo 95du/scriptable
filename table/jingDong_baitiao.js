@@ -7,7 +7,7 @@
  * 2023-03-17 19:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -171,8 +171,8 @@ async function main() {
     barStack2.layoutHorizontally();
     barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#FF9500', 0.7);
-    barStack2.setPadding(1, 6, 1, 6);
-    barStack2.cornerRadius = 7;
+    barStack2.setPadding(1, 8, 1, 8);
+    barStack2.cornerRadius = 5;
     
     const pointText = barStack2.addText(lvlScore);
     pointText.font = Font.boldSystemFont(11);
