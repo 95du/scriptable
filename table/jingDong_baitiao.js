@@ -210,7 +210,7 @@ async function main() {
     const quotaStack3 = quotaStack.addStack();
     const quotaText2 = quotaStack3.addText(`总额度 ${stripe.quota.quotaAll.replace(',', '')}`);
     quotaText2.font = Font.mediumSystemFont(12);
-    quotaText2.textOpacity = 0.6;
+    quotaText2.textOpacity = 0.5;
     quotaStack3.addSpacer();
     middleStack.addSpacer();
 
@@ -241,7 +241,7 @@ async function main() {
     billStack3.addSpacer();
     const billText2 = billStack3.addText(stripe.bill.buttonName.replace('最近还款日', '还款日 '));  
     billText2.font = Font.mediumSystemFont(12);
-    billText2.textOpacity = 0.6;
+    billText2.textOpacity = 0.5;
     mainStack.addSpacer();
     
     
