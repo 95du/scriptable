@@ -20,6 +20,7 @@ async function main() {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
     cookie = setting.cookie;
+    gap = setting.gap;
   }
   
   const notify = async (title, body, url) => {
@@ -103,11 +104,11 @@ async function main() {
     * @param {image} image
     * @param {string} string
     */
-    widget.setPadding(10, 10, 10, 10);
+    widget.setPadding(0, 0, 0, 0);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     mainStack.centerAlignContent();
-    mainStack.setPadding(8, 8, 8, 8);
+    mainStack.setPadding(gap, gap, gap, gap);
     mainStack.addSpacer();
     // avatarStack
     const avatarStack = mainStack.addStack();
