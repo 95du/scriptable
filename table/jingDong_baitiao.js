@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-purple; icon-glyph: file-alt;
+// icon-color: deep-green; icon-glyph: file-alt;
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
@@ -238,7 +238,7 @@ async function main() {
     
     billStack3 = billStack.addStack();
     billStack3.addSpacer();
-    const billText2 = billStack3.addText(stripe.bill.buttonName);  
+    const billText2 = billStack3.addText(stripe.bill.buttonName.replace('最近还款日', '还款日 '));  
     billText2.font = Font.mediumSystemFont(12);
     billText2.textOpacity = 0.5;
     mainStack.addSpacer();
