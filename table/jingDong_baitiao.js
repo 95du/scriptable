@@ -21,6 +21,7 @@ async function main() {
     setting = JSON.parse(data);
     cookie = setting.cookie;
     gap = setting.gap;
+    location = setting.location;
   }
   
   const notify = async (title, body, url) => {
@@ -177,12 +178,15 @@ async function main() {
     const pointText = barStack2.addText(lvlScore);
     pointText.font = Font.boldSystemFont(11);
     pointText.textColor = new Color('#FFFFFF');
-    //avatarStack.addSpacer();
     mainStack.addSpacer();
     
+    // Switch position
+    if (location == 0) {
+      await progressBar();
+    }
     
     /** 
-    * Middle Stack
+    * Middle or bottom Stack
     * @param {image} image
     * @param {string} string
     */
@@ -244,58 +248,66 @@ async function main() {
     billText2.textOpacity = 0.5;
     mainStack.addSpacer();
     
+    // Switch position
+    if (location == 1) {
+      await progressBar();
+    }
+    
     
     /** 
-    * bottom Stack
+    * progressBar Stack
     * @param {image} image
     * @param {string} string
     */
-    const prgrWid = Number(setting.progressWidth);
-    const tempBarWidth = curScore == 0 ? prgrWid : curScore <= 100 ? prgrWid - 10 : (curScore > 100 && curScore <= 1000) ? prgrWid - 15 : (curScore > 1000 && curScore <= 10000) ? prgrWid - 25 : prgrWid - 32;
-    const tempBarHeight = 18;
-    const progressColor = "#f2f5f7"
-    
-    const prgsStack = mainStack.addStack();  
-    prgsStack.layoutHorizontally();
-    prgsStack.centerAlignContent();
-    
-    const curScoreText = prgsStack.addText(curScore)
-    curScoreText.font = Font.boldSystemFont(13);
-    prgsStack.addSpacer();
-    
-    const imgProgress = prgsStack.addImage(creatProgress());
-    imgProgress.centerAlignImage();
-    imgProgress.imageSize = new Size(tempBarWidth, tempBarHeight);
-    
-    function creatProgress() {
-      const draw = new DrawContext();
-      draw.opaque = false;
-      draw.respectScreenScale = true;
-      draw.size = new Size(tempBarWidth, tempBarHeight);
-    
-      const barPath = new Path();
-      const barHeight = tempBarHeight - 10;
-      barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
-      draw.addPath(barPath);
+    async function progressBar() {
+      const prgrWid = Number(setting.progressWidth);
+      const tempBarWidth = curScore == 0 ? prgrWid : curScore <= 100 ? prgrWid - 10 : (curScore > 100 && curScore <= 1000) ? prgrWid - 15 : (curScore > 1000 && curScore <= 10000) ? prgrWid - 25 : prgrWid - 32;
+      const tempBarHeight = 18;
+      const progressColor = "#f2f5f7"
       
-      draw.setFillColor((barColor));
-      draw.fillPath();
-    
-      const currPath = new Path();
-      const isPercent = percent > 1 ? percent / 100 : percent;
-      currPath.addEllipse(new Rect((tempBarWidth - tempBarHeight) * isPercent, 0, tempBarHeight, tempBarHeight));
-      draw.addPath(currPath);
-      // #00FF00
-      draw.setFillColor(new Color(progressColor));
-      draw.fillPath();
-      return draw.getImage();
+      const prgsStack = mainStack.addStack();  
+      prgsStack.layoutHorizontally();
+      prgsStack.centerAlignContent();
+      
+      const curScoreText = prgsStack.addText(curScore)
+      curScoreText.font = Font.boldSystemFont(13);
+      prgsStack.addSpacer();
+      
+      const imgProgress = prgsStack.addImage(creatProgress());
+      imgProgress.centerAlignImage();
+      imgProgress.imageSize = new Size(tempBarWidth, tempBarHeight);
+      
+      function creatProgress() {
+        const draw = new DrawContext();
+        draw.opaque = false;
+        draw.respectScreenScale = true;
+        draw.size = new Size(tempBarWidth, tempBarHeight);
+      
+        const barPath = new Path();
+        const barHeight = tempBarHeight - 10;
+        barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
+        draw.addPath(barPath);
+        
+        draw.setFillColor((barColor));
+        draw.fillPath();
+      
+        const currPath = new Path();
+        const isPercent = percent > 1 ? percent / 100 : percent;
+        currPath.addEllipse(new Rect((tempBarWidth - tempBarHeight) * isPercent, 0, tempBarHeight, tempBarHeight));
+        draw.addPath(currPath);
+        // #00FF00
+        draw.setFillColor(new Color(progressColor));
+        draw.fillPath();
+        return draw.getImage();
+      }
+      
+      prgsStack.addSpacer();
+      const isPercent2 = percent < 1 ? percent * 100 : percent;
+      const percentText = prgsStack.addText(`${isPercent2} %`);
+      percentText.font = Font.boldSystemFont(13);  
+      mainStack.addSpacer();
     }
     
-    prgsStack.addSpacer();
-    const isPercent2 = percent < 1 ? percent * 100 : percent;
-    const percentText = prgsStack.addText(`${isPercent2} %`);
-    percentText.font = Font.boldSystemFont(13);
-    mainStack.addSpacer();
     
     gooseIconElement.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmcr.jd.com%2Fcredit_home%2Fpages%2Findex.html%3FbtPageType%3DBT%26channelName%3D024%22%7D'
     if (config.runsInWidget) {
@@ -331,6 +343,8 @@ async function main() {
   /**-------------------------**/
      /** Request(url) json **/
   /**-------------------------**/
+  
+  
   
   async function whiteStripe(url) {
     const req = new Request(url)
