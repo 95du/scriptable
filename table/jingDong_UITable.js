@@ -60,7 +60,7 @@ async function main() {
       val = {
         leading: -3,
         imageSize: 38,
-        spac: 1,
+        spac: 3,
         logoImage: 'https://img30.360buyimg.com/jdmonitor/jfs/t1/187437/15/5066/2037/60ad0590E9aa565a9/fbacab715a77dc29.png',
         text1: '今日京豆 ' + String(posi - mega),
         text2: `即将过期 ${expireBean}`,  
@@ -74,7 +74,7 @@ async function main() {
       val = {
         leading: -3,
         imageSize: 42,
-        spac: 1,
+        spac: 3,
         logoImage: 'http://mtw.so/5ZaunR',
         text1: `红包 ${redEnvelope.balance}`,
         text2: `即将过期 ${redEnvelope.expiredBalance}`,  
