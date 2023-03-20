@@ -157,7 +157,8 @@ async function createWidget() {
     run: data.owner,
     coordinates: `${data.longitude},${data.latitude}`,
     pushTime: timestamp,
-    parkingTime: GMT2
+    parkingTime: GMT2,
+    cookie: json.cookie
   }
     
   object = {
