@@ -35,6 +35,7 @@ async function main() {
   // User Information
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
+  const order = await getLogistics('https://wq.jd.com/bases/wuliudetail/notify?sceneval=2&sceneval=2&g_login_type=1&callback');
   
   const Run = async () => {
     if (index === 0) {
@@ -60,7 +61,7 @@ async function main() {
         leading: -3,
         imageSize: 38,
         spac: 1,
-        logoImage: 'http://mtw.so/5ZaG1N',
+        logoImage: 'https://img30.360buyimg.com/jdmonitor/jfs/t1/187437/15/5066/2037/60ad0590E9aa565a9/fbacab715a77dc29.png',
         text1: '今日京豆 ' + String(posi - mega),
         text2: `即将过期 ${expireBean}`,  
         lightColor: '#FF0000',
@@ -401,6 +402,23 @@ async function main() {
     req.body = `reqData={}`
     const res = await req.loadJSON();
     return res.resultData.data;
+  }
+  
+  async function getLogistics(url) {
+    const req = new Request(url)
+    req.method = 'GET'
+    req.headers = {
+      Referer: 'https://agree.jd.com/'
+    }
+    const res = await req.loadJSON();
+    if (res.errCode === '0' && res.dealLogList.length > 0) {
+      const { wlStateDesc, stateName, createTime, name, img, orderId } = res.dealLogList[0];
+      if (createTime !== setting.createTime) {
+        notify(`${stateName}  ${createTime.match(/\d{2}-\d{2}\s\d{2}:\d{2}/)[0]}`, `${wlStateDesc}\n${name}`);  
+        setting.createTime = createTime;
+        F_MGR.writeString(cacheFile, JSON.stringify(setting));
+      }
+    }
   }
   
   async function createErrWidget() {
