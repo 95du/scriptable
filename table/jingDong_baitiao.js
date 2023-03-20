@@ -7,7 +7,7 @@
  * 2023-03-17 19:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -217,10 +217,14 @@ async function main() {
     quotaText2.textOpacity = 0.5;
     quotaStack3.addSpacer();
     middleStack.addSpacer();
-
-    const gooseIcon = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png');
+    
+    const gooseUrl = [
+      'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose0.png',  
+      'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose1.png'];
+    const gooseItems = gooseUrl[Math.floor(Math.random() * gooseUrl.length)];
+    const gooseIcon = await getImage(gooseItems);
     const gooseIconElement = middleStack.addImage(gooseIcon);
-    gooseIconElement.imageSize = new Size(55, 55);
+    gooseIconElement.imageSize = new Size(45, 52);
     middleStack.addSpacer();
     
     
