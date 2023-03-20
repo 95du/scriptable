@@ -31,6 +31,7 @@ async function presentMenu() {
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
   alert.addAction('家人地图');
+  alert.addAction('输入凭证');
   alert.addAction('预览组件');
   alert.addAction('退出菜单');
   response = await alert.presentAlert();
@@ -42,9 +43,12 @@ async function presentMenu() {
     Safari.open('amapuri://WatchFamily/myFamily');
   }
   if (response === 3) {
+    await inputCookie();
+  }
+  if (response === 4) {
     widget = await createWidget();
   }
-  if (response === 4) return;
+  if (response === 5) return;
   if (response === 0) {
     const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
     const finish = new Alert();
@@ -65,6 +69,24 @@ async function presentMenu() {
         Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
       }
     }
+  }
+}
+
+async function inputCookie() {
+  const alert = new Alert();
+  alert.message = '输入 Cookie'
+  alert.addTextField('高德地图Cookie', json.cookie);
+  alert.addAction('确定');
+  alert.addCancelAction('取消');
+  const input = await alert.present();
+  if (input === -1) return;
+  const cookie = alert.textFieldValue(0);
+  if (cookie) {
+    json.cookie = cookie;
+    F_MGR.writeString(
+      cacheFile,
+      JSON.stringify(json)
+    );
   }
 }
 
@@ -91,7 +113,9 @@ async function createWidget() {
   
   const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
   req.method = 'GET'
-  req.headers = {"Cookie": "sessionid=ggylbvv5klxzm6ahibpfng4ldna2cxsy"}
+  req.headers = {
+    Cookie: json.cookie
+  }
   const res = await req.loadJSON();
   if (res.code != 1) return;
   const data = res.data
