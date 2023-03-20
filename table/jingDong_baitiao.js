@@ -34,6 +34,11 @@ async function main() {
   }
   
   const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
+  if (!score) {
+    setting.code = 3;
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
+    notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
+  }
   const {
     lvlScore,
     curScore,
