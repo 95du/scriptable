@@ -33,6 +33,7 @@ async function main() {
     return await n.schedule();
   }
   
+  const benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
   const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
   if (!score) {
     setting.code = 3;
@@ -141,11 +142,15 @@ async function main() {
     topStack.layoutVertically();
     topStack.centerAlignContent();
     
-    const barStack = topStack.addStack();
+    const levelStack = topStack.addStack();
+    levelStack.layoutHorizontally();
+    levelStack.centerAlignContent();
+    
+    const barStack = levelStack.addStack();
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
     barStack.backgroundColor = level === '6' ? levelColor : new Color(levelColor);
-    barStack.setPadding(1, 15, 1, 15);
+    barStack.setPadding(1, 12, 1, 12);
     barStack.cornerRadius = 10;
     
     const iconSF = SFSymbol.named('crown.fill');
@@ -157,6 +162,19 @@ async function main() {
     const titleText = barStack.addText(title);
     titleText.font = Font.boldSystemFont(14);
     titleText.textColor = Color.white();
+    levelStack.addSpacer(8);
+    
+    const beneStack = levelStack.addStack();
+    beneStack.layoutHorizontally();
+    beneStack.centerAlignContent();
+    const benefitText = beneStack.addText(benefit.extValue.alreadyGetBenefitNum);
+    benefitText.font = Font.boldSystemFont(15);
+    benefitText.textColor = Color.red();
+    
+    const benefitText2 = beneStack.addText(' 项特权');
+    benefitText2.font = Font.boldSystemFont(13);
+    benefitText2.textOpacity = 0.7;
+    barStack.addSpacer(5);
     topStack.addSpacer(5);
     
     
@@ -171,7 +189,7 @@ async function main() {
     const LevelText = pointStack.addText(progressNextLevelText);
     LevelText.font = Font.mediumSystemFont(12);
     LevelText.textOpacity = 0.7;
-    pointStack.addSpacer(8);
+    pointStack.addSpacer();
     
     const barStack2 = pointStack.addStack();
     barStack2.layoutHorizontally();
@@ -317,7 +335,8 @@ async function main() {
       mainStack.addSpacer();
     }
     
-    
+    // jump App page
+    barStack.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fcredit_rights%2Findex.html%3Ffrom%3Dbtsyright%22%7D'
     gooseIconElement.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmcr.jd.com%2Fcredit_home%2Fpages%2Findex.html%3FbtPageType%3DBT%26channelName%3D024%22%7D'
     if (config.runsInWidget) {
       Script.setWidget(widget);
