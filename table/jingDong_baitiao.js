@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-green; icon-glyph: file-alt;
+// icon-color: purple; icon-glyph: file-alt;
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
@@ -108,7 +108,7 @@ async function main() {
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg1.png'];
       const bgImageItems = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
       widget.backgroundImage = await getImage(bgImageItems);
-      widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color("#000000"));
+      widget.backgroundColor = Color.dynamic( new Color("#055555"), new Color("#000000"));
     }
     
     
