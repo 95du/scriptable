@@ -110,7 +110,7 @@ async function main() {
       widget.backgroundImage = await getImage(bgImageItems);
       const widgetColor = [
         '#055555',
-        '#000000'
+        '#111111'
       ];
       const widgetColorItems = widgetColor[Math.floor(Math.random() * widgetColor.length)];
       widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color(widgetColorItems));
