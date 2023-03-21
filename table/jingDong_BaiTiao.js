@@ -204,7 +204,7 @@ async function main() {
     barStack2.cornerRadius = 5;
     
     const pointText = barStack2.addText(lvlScore);
-    pointText.font = Font.boldSystemFont(12);
+    pointText.font = Font.boldSystemFont(11);
     pointText.textColor = new Color('#FFFFFF');
     mainStack.addSpacer();
     
