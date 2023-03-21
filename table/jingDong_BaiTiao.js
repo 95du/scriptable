@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: purple; icon-glyph: file-alt;
+// icon-color: teal; icon-glyph: file-alt;
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
@@ -204,7 +204,7 @@ async function main() {
     barStack2.cornerRadius = 5;
     
     const pointText = barStack2.addText(lvlScore);
-    pointText.font = Font.boldSystemFont(11);
+    pointText.font = Font.boldSystemFont(12);
     pointText.textColor = new Color('#FFFFFF');
     mainStack.addSpacer();
     
