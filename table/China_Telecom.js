@@ -393,7 +393,7 @@ df.dateFormat = 'ddHHmm'
     if (F_MGR.fileExists(bgImage)) {
       widget.backgroundImage = F_MGR.readImage(bgImage);
     } else {
-      widget.backgroundColor = bgColor1;
+      widget.backgroundColor = widgetBgColor;
     }
     
     const width = 130
