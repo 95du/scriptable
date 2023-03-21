@@ -391,10 +391,9 @@ df.dateFormat = 'ddHHmm'
     const widget = new ListWidget();
     widget.setPadding(0, 0, -6, 0);
     if (F_MGR.fileExists(bgImage)) {
-      widget.backgroundImage = F_MGR.readImage(bgImage);
+      widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
     } else {
-      widget.backgroundColor = widgetBgColor;  
-      widget.backgroundImage = await getImage('https://img30.360buyimg.com/cf/jfs/t1/203832/1/22345/21468/6296f6c5Ea03dc222/aa0b246c6f8008ef.png');
+      widget.backgroundColor = widgetBgColor;
     }
     
     const width = 130
@@ -466,11 +465,6 @@ df.dateFormat = 'ddHHmm'
     n.sound = 'accept'
     if (url) n.openURL = url
     return await n.schedule()
-  }
-  
-  async function getImage(url) {
-    const r = await new Request(url);
-    return await r.loadImage();
   }
   
   async function shadowImage(img) {
