@@ -191,7 +191,7 @@ async function createWidget() {
   
   const usedFlowStack = Stack1.addStack();
   usedFlowStack.addSpacer();
-  if (day1st > '010000' && day1st < '010030') {
+  if (day1st > '010000' && day1st < '010100') {
     usedFlowText = usedFlowStack.addText(`- ${(flowBalance - flowBalance).toFixed(2)}`);
   } else {
     usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
