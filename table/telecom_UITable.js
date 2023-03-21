@@ -38,7 +38,7 @@ async function main() {
   SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
   
   // Small Widget Color
-  bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#151515'));  
+  bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#1e1e1e'));  
   bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
   textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
   barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
