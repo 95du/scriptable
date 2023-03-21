@@ -108,7 +108,7 @@ async function main() {
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg1.png'];
       const bgImageItems = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
       widget.backgroundImage = await getImage(bgImageItems);
-      widget.backgroundColor = Color.dynamic( new Color("#055555"), new Color("#000000"));
+      widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color("#000000"));
     }
     
     
