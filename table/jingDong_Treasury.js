@@ -32,13 +32,17 @@ async function main() {
   }
   
   const treasury = await myAsset();
+  if (!treasury) {
+    setting.code = 3;
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
+    notify('京东小金库', 'Cookie已过期，请重新登录京东账号');
+  }
   const {
     profitAmtBar,
     amountBar,
     availableAmountBar,
     totalIncomeAmtBar
   } = treasury;
-  
   
   if (amountBar.balance !== setting.totalAssets) {
     setting.totalAssets = amountBar.balance;
