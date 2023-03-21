@@ -103,7 +103,12 @@ async function main() {
     } else if (Appearance == false) {
       widget.backgroundImage = await getImage('http://mtw.so/60NF6g');
     } else {
-      widget.backgroundColor = new Color('#1e1e1e')  
+      const baiTiaoUrl = [
+        'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg.png',  
+        'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg1.png'];
+      const bgImageItems = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
+      widget.backgroundImage = await getImage(bgImageItems);
+      widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color("#000000"));
     }
     
     
