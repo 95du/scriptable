@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: red; icon-glyph: tags;
+// icon-color: deep-purple; icon-glyph: tags;
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.2
@@ -45,9 +45,9 @@ async function main() {
       const state = asset.quota.state === '1';
       val = {
         leading: 3,
-        imageSize: 48,
-        spac: 10,
-        logoImage: 'http://mtw.so/67mqz3',
+        imageSize: 42,
+        spac: 3,
+        logoImage: 'https://img30.360buyimg.com/jdmonitor/jfs/t1/181893/30/3987/817/609e1793Eb465f6e0/ea370a95758beddf.png',
         text1: state ? `额度 ${Math.round(asset.quota.quotaLeft.replace(',', ''))}` : '额度 0.00',
         text2: state ? `待还 ${asset.bill.amount}` : '0.00',
         lightColor: '#FF0000',
