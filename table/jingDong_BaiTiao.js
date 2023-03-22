@@ -34,12 +34,13 @@ async function main() {
   }
   
   const benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
-  const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
-  if (!score) {
+  if (!benefit) {
     setting.code = 3;
     F_MGR.writeString(cacheFile, JSON.stringify(setting));
     notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
   }
+  
+  const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
   const {
     lvlScore,
     curScore,
