@@ -4,11 +4,10 @@
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
- * 2023-03-17 19:30
+ * 2023-03-23 11:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
-await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -58,7 +57,6 @@ async function main() {
       Script.complete();
     }
   }
-  await createWidget();
   
   async function getImage(url) {
     const r = await new Request(url);
@@ -73,5 +71,6 @@ async function main() {
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage();
   }
+  await createWidget();
 }
 module.exports = { main }
