@@ -21,13 +21,6 @@ async function main() {
     setting = JSON.parse(data);
   }
   
-  
-  function selectFrom( a, b ) {
-    const choices = b - a + 1;
-    return Math.floor( Math.random() * choices + a );
-  }
-  const num = selectFrom( 1, 30 );
-  const image = await getImage(`https://storage.360buyimg.com/swm-stable/joypark-static1/unlock_joy_level${num}.png`);
 
   async function createWidget() {
     const widget = new ListWidget();
@@ -48,6 +41,12 @@ async function main() {
       widget.backgroundColor = Color.dynamic(new Color(setting.light), new Color(setting.dark));
     }
     
+    function selectFrom( a, b ) {
+      const choices = b - a + 1;
+      return Math.floor(Math.random() * choices + a);
+    }
+    const num = selectFrom( 1, 30 );
+    const image = await getImage(`https://storage.360buyimg.com/swm-stable/joypark-static1/unlock_joy_level${num}.png`);
     const widgetImage = widget.addImage(image);
     widgetImage.centerAlignImage();
     if (!config.runsInWidget) {
