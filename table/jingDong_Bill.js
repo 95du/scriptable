@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: red; icon-glyph: tags;
+// icon-color: blue; icon-glyph: tags;
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.2
@@ -272,7 +272,7 @@ async function main() {
     const inAmountText = midLeftStack.addText(income.totalAmount);
     inAmountText.font = Font.boldSystemFont(20);
     inAmountText.leftAlignText();
-    inAmountText.textOpacity = 0.7;
+    inAmountText.textOpacity = 0.9;
     
     
     middleStack.addSpacer();
@@ -299,7 +299,7 @@ async function main() {
     const outAmountText = midRightStack.addText(expend.totalAmount);
     outAmountText.font = Font.boldSystemFont(20);
     outAmountText.rightAlignText();
-    outAmountText.textOpacity = 0.7;
+    outAmountText.textOpacity = 0.9;
     
     
     const lowerStack = rightStack.addStack();
