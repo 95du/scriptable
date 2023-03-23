@@ -4,10 +4,9 @@
 /**
  * 小组件作者: 95度茅台
  * 随机自动切换多个小组件
- * Version 1.1.0
- * 2022-12-26 15:30
+ * Version 1.1.5
+ * 2023-03-23 15:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
- * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  */
 
 const get = await new Request(atob(
@@ -24,7 +23,7 @@ if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile)
   script = JSON.parse(data);
 } else { 
-  script = get.script 
+  script = get.script;
 }
 
 const scriptUrl = script[Math.floor(Math.random() * script.length)];
@@ -39,7 +38,6 @@ if (modulePath != null) {
   }
 }
 
-
 async function notify (title, body, url, opts = {}) {
   let n = new Notification()
   n = Object.assign(n, opts);
@@ -50,44 +48,58 @@ async function notify (title, body, url, opts = {}) {
   return await n.schedule();
 }
 
-
 async function downloadModule() {
   const modulePath = F_MGR.joinPath(folder, 'random.js');
-  if (F_MGR.fileExists(modulePath)) {
-    await F_MGR.remove(modulePath)
+  if (F_MGR.fileExists(modulePath)) {  
+    await F_MGR.remove(modulePath);
   }
-  const req = new Request(scriptUrl);
-  const moduleJs = await req.load().catch(() => {
+  const req = new Request(scriptUrl)
+  let moduleJs = await req.loadString().catch(() => {
     return null;
   });
-  if (moduleJs) {
-    F_MGR.write(modulePath, moduleJs);
+  if (F_MGR.fileExists(cacheFile)) {
+    const str = `
+async function main() {
+♾️
+}
+module.exports = { main }`
+    moduleJs = str.replace('♾️', moduleJs);  
+    console.log('模块获取成功 ‼️\n' + scriptUrl);
+  }
+  if ( moduleJs ) {
+    F_MGR.writeString(modulePath, moduleJs);  
     return modulePath;
   }
 }
 
-
 async function presentMenu() {
   let alert = new Alert();
   alert.title = "随机切换小组件"
-  alert.message = get.version
+  alert.message = get.version;
   alert.addDestructiveAction('更新代码');
-  alert.addAction('使用教程');
+  alert.addDestructiveAction('重置所有');
+  alert.addAction('更多组件');
   alert.addAction('添加组件');
   alert.addAction('预览组件');
   alert.addAction('取消操作');
   response = await alert.presentAlert();
   if (response === 1) {
-    await shortcutsTutorial();
+    if (F_MGR.fileExists(folder)) {
+      await F_MGR.remove(folder);
+      notify('已重置数据', '请重新添加小组件URL');  
+    }
   }
   if (response === 2) {
-    await addScriptURL();
+    await importModule(await downloadScripts()).main();
   }
   if (response === 3) {
+    await addScriptURL();
+  }
+  if (response === 4) {
     const importedModule = importModule(modulePath);
     await importedModule.main();
   }
-  if (response === 4) return;
+  if (response === 5) return;
   if (response === 0) {
     const codeString = await new Request(get.update).loadString();
     if (codeString.indexOf('95度茅台') == -1) {
@@ -104,36 +116,20 @@ async function presentMenu() {
   }
 }
 
-
-async function shortcutsTutorial() {
-  const tutorial = new Alert();  
-  tutorial.title = '使用教程';
-  tutorial.message = get.msg
-  tutorial.addDestructiveAction('重置所有数据');
-  tutorial.addAction('获取仓库Cookie');
-  tutorial.addAction('GitCode 捷径');
-  tutorial.addAction('上传代码捷径');
-  tutorial.addAction('返回上页');
-  index = await tutorial.presentAlert();
-  if (index === 0) {
-    if (F_MGR.fileExists(folder)) {
-      await F_MGR.remove(folder);
-      notify('已重置数据', '请重新添加小组件URL');  
-    }
+async function downloadScripts() {
+  const modulePath = F_MGR.joinPath(folder, 'store.js');
+  if (F_MGR.fileExists(modulePath)) {
+    await F_MGR.remove(modulePath)
   }
-  if (index === 1) {
-    const script = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/boxjs/GitCode.js').loadString();
-    const fm = FileManager.iCloud();
-    fm.writeString(fm.documentsDirectory() + '/GitCode.js', script);
-  } else if (index === 2) {
-    Safari.open(get.shortcuts1);
-  } else if (index === 3) {
-    Safari.open(get.shortcuts2);
-  } else if (index === 4) {
-    await presentMenu();
+  const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW45NWR1U3RvcmUuanM='));
+  const moduleJs = await req.load().catch(() => {
+    return null;
+  });
+  if (moduleJs) {
+    F_MGR.write(modulePath, moduleJs);
+    return modulePath;
   }
 }
-
 
 async function addScriptURL() {
   const input = new Alert();
@@ -156,6 +152,6 @@ async function addScriptURL() {
       }
       notify('添加成功', `当前数据库中已储存${count}个小组件`);
     }
-    await presentMenu();
+    //await presentMenu();
   } 
 }
