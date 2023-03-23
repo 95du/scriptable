@@ -7,7 +7,7 @@
  * 2023-03-17 19:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -296,7 +296,6 @@ async function main() {
       const prgrWid = Number(setting.progressWidth);
       const tempBarWidth = curScore == 0 ? prgrWid : curScore <= 100 ? prgrWid - 10 : (curScore > 100 && curScore <= 1000) ? prgrWid - 15 : (curScore > 1000 && curScore <= 10000) ? prgrWid - 25 : prgrWid - 32;
       const tempBarHeight = 18;
-      const progressColor = "#f2f5f7"
       
       const prgsStack = mainStack.addStack();  
       prgsStack.layoutHorizontally();
@@ -328,8 +327,8 @@ async function main() {
         const isPercent = percent > 1 ? percent / 100 : percent;
         currPath.addEllipse(new Rect((tempBarWidth - tempBarHeight) * isPercent, 0, tempBarHeight, tempBarHeight));
         draw.addPath(currPath);
-        // #00FF00
-        draw.setFillColor(new Color(progressColor));
+        // progressColor
+        draw.setFillColor(new Color('#F2F5F7'));
         draw.fillPath();
         return draw.getImage();
       }
