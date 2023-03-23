@@ -53,17 +53,17 @@ async function downloadModule() {
   if (F_MGR.fileExists(modulePath)) {  
     await F_MGR.remove(modulePath);
   }
-  const req = new Request(scriptUrl)
+  const req = new Request(scriptUrl);
   let moduleJs = await req.loadString().catch(() => {
     return null;
   });
   if (F_MGR.fileExists(cacheFile)) {
-    const str = `
+    const newModuleJs = `
 async function main() {
 ♾️
 }
 module.exports = { main }`
-    moduleJs = str.replace('♾️', moduleJs);  
+    moduleJs = newModuleJs.replace('♾️', moduleJs);  
     console.log('模块获取成功 ‼️\n' + scriptUrl);
   }
   if ( moduleJs ) {
