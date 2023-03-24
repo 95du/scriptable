@@ -188,12 +188,11 @@ F_MGR.readString(cacheFile)
    * @param {image} image
    * @param {string} text
    * Cylindrical Bar Chart
-   * setPadding(10, 17, 10, 15)
    */
   widget.setPadding(10, 10, 10, 15);
   const mainStack = widget.addStack();
-  mainStack.addSpacer();
   mainStack.layoutHorizontally();
+  mainStack.addSpacer();
     
   // Left Main Stack
   const leftStack = mainStack.addStack();
@@ -203,8 +202,9 @@ F_MGR.readString(cacheFile)
   const plateStack = leftStack.addStack();
   const textPlate = plateStack.addText(minutes1 <= 3 ? 'Maybach🚦' : '琼A·849A8');
   textPlate.font = Font.mediumSystemFont(19);
-  textPlate.textColor =Color.black();
-  leftStack.addSpacer(3)
+  textPlate.textColor = Color.black();
+  textPlate.textOpacity = 0.9;
+  leftStack.addSpacer(3);
     
   // Mercedes Logo
   const benzStack = leftStack.addStack();
@@ -217,7 +217,8 @@ F_MGR.readString(cacheFile)
   // mercedes text
   const vehicleModelText = benzStack.addText('Mercedes');
   vehicleModelText.font = Font.mediumSystemFont(14);
-  vehicleModelText.textColor = new Color('#424242');
+  vehicleModelText.textColor = Color.black();
+  vehicleModelText.textOpacity = 0.7;
   leftStack.addSpacer(3)
   
   // update time icon
@@ -231,19 +232,18 @@ F_MGR.readString(cacheFile)
   // update time text
   const textUpdateTime = dateStack.addText(GMT2);
   textUpdateTime.font = Font.mediumSystemFont(13);
-  textUpdateTime.textColor = new Color('#424242');
-  leftStack.addSpacer(22)
+  textUpdateTime.textColor = Color.black();
+  textUpdateTime.textOpacity = 0.7;
+  leftStack.addSpacer(22);
   
   // Left Stack barRow
   const barStack = leftStack.addStack();
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
   barStack.setPadding(3, 10, 3, 10);
-  
-  barStack.backgroundColor = new Color('#EEEEEE', 0.1);
-  barStack.cornerRadius = 10
+  barStack.cornerRadius = 10;
   barStack.borderColor = new Color(speed <= 5 ? '#AB47BC' : '#FF1744', 0.7);
-  barStack.borderWidth = 2
+  barStack.borderWidth = 2;
   // bar icon
   const barIcon = SFSymbol.named(speed <= 5 ? 'location' : 'location.fill');
   const barIconElement = barStack.addImage(barIcon.image);
@@ -254,17 +254,16 @@ F_MGR.readString(cacheFile)
   const totalMonthBar = barStack.addText(state);
   totalMonthBar.font = Font.mediumSystemFont(14);
   totalMonthBar.textColor = new Color(speed <= 5 ? '#AA00FF' : '#D50000');
-  leftStack.addSpacer(8)
+  leftStack.addSpacer(8);
 
   // Left Stack barRow2
   const barStack2 = leftStack.addStack();
   barStack2.layoutHorizontally();
   barStack2.centerAlignContent();
-  barStack2.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack2.setPadding(3, 10, 3, 10);
-  barStack2.cornerRadius = 10
-  barStack2.borderColor = new Color('#616161', 0.7);
-  barStack2.borderWidth = 2
+  barStack2.cornerRadius = 10;
+  barStack2.borderColor = Color.dynamic(new Color('#000000', 0.4), new Color('#000000', 0.4));
+  barStack2.borderWidth = 2;
   // bsr icon
   const barIcon2 = SFSymbol.named('lock.shield.fill');
   const barIconElement2 = barStack2.addImage(barIcon2.image);
@@ -274,7 +273,8 @@ F_MGR.readString(cacheFile)
   // bar text
   const totalMonthBar2 = barStack2.addText('已锁车');
   totalMonthBar2.font = Font.mediumSystemFont(14);
-  totalMonthBar2.textColor = new Color('#616161');
+  totalMonthBar2.textColor = Color.black();
+  totalMonthBar2.textOpacity = 0.6;
   leftStack.addSpacer();
   
     
@@ -293,7 +293,7 @@ F_MGR.readString(cacheFile)
   const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
   const image = carLogoStack.addImage(carLogo);
   image.imageSize = new Size(27,27);
-  image.tintColor = Color.black();
+  image.tintColor = Color.dynamic(new Color('#000000'), new Color('#000000'));
   rightStack.addSpacer(2)
     
   // Car image
@@ -325,7 +325,8 @@ F_MGR.readString(cacheFile)
     textAddress = adrStack.addText(address);
   }
   textAddress.font = Font.mediumSystemFont(11.3);
-  textAddress.textColor = new Color('#484848');
+  textAddress.textColor = Color.black();
+  textAddress.textOpacity = 0.7;
   textAddress.centerAlignText();
   rightStack.addSpacer();
   
