@@ -61,12 +61,11 @@ async function downloadModule() {
     return null;
   });
   if ( files ) {
-    const newModuleJs = `
+    moduleJs = `
 async function main() {
-♾️
+  ${moduleJs}
 }
-module.exports = { main }`
-    moduleJs = newModuleJs.replace('♾️', moduleJs);  
+module.exports = { main }`  
   }
   if ( moduleJs ) {
     F_MGR.writeString(modulePath, moduleJs);  
