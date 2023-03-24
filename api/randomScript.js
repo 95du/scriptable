@@ -146,7 +146,7 @@ async function addScriptURL() {
   const install = await input.presentAlert();
   const url = input.textFieldValue(0)
   if (install === 0) {
-    F_MGR.fileExists(cacheFile) ? arr = script : arr = new Array();
+    files ? arr = script : arr = new Array();
     const javaScript = url.substring(url.lastIndexOf(".") + 1);
     if (javaScript === 'js') {
       await arr.push(url);
