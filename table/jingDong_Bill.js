@@ -22,7 +22,6 @@ async function main() {
     data = F_MGR.readString(cacheFile);
     setting = JSON.parse(data);
     cookie = setting.cookie;
-    index = setting.randomIndex;
     statistics = setting.statistics;
   }
   
@@ -73,29 +72,10 @@ async function main() {
       outPer = '0.00';
     }
   }
-
+  
+  
+  // inRank & outRank
   const Run = async () => {
-    if (index === 0) {
-      setting.randomIndex = 1;
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmbt.jd.com%2Fbill%2Fmonthlybill%2Fmonthbillcore%2Fmonth-bill-index.html%3Fchannelcode%3D024%22%7D'
-    } else if (index === 1) {
-      setting.randomIndex = 2;
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fbean.m.jd.com%2FbeanDetail%2Findex.action%3FresourceValue%3Dbean%22%7D'
-    } else if (index === 2) {
-      setting.randomIndex = 3;
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fwqs.jd.com%2Fmy%2Fredpacket.shtml%3Fsceneval%3D2%26jxsid%3D16780988595962555448%22%7D'
-    } else if (index === 3) {
-      setting.randomIndex = 4;
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fcarry.m.jd.com%2FbabelDiy%2FZeus%2F3KSjXqQabiTuD1cJ28QskrpWoBKT%2Findex.html%3FbabelChannel%3D94%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
-    } else if (index === 4) {
-      setting.randomIndex = 5;
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fh5.m.jd.com%2Frn%2F3a5TGXF7Y8xpQ45CjgMzQ3tyqd4K%2Findex.html%3Fhas_native%3D0%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
-    } else if (index === 5) {
-      setting.randomIndex = 0;
-      setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fm%2Findex.html%3Fsceneval%3D2%26jxsid%3D16780988595962555448%26channel%3Dwq%26from%3Djdmwode%22%7D'
-    }
-    
-    // inRank & outRank
     if (statistics === 0) {
       setting.statistics = 1;
       const inRank = await monthBillRank('IN', yearMonth);
@@ -379,8 +359,8 @@ async function main() {
       return context.getImage();
     }
     
-    widget.url = setting.schemeUrl
-    F_MGR.writeString(cacheFile, JSON.stringify(setting));
+    assetIconElement.url = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fmbt.jd.com%2Fbill%2Fmonthlybill%2Fmonthbillcore%2Fmonth-bill-index.html%3Fchannelcode%3D024%22%7D'
+
     if (config.runsInApp) {
       await widget.presentMedium()
     } else {
