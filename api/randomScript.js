@@ -7,6 +7,7 @@
  * Version 1.1.5
  * 2023-03-23 15:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * 例如: https://gitcode.net/4qiao/scriptable/raw/master/api/housePrice.js
  */
 
 const get = await new Request(atob(
@@ -19,7 +20,9 @@ const cacheFile = F_MGR.joinPath(folder, 'data.json');
 if (!F_MGR.fileExists(folder)) {
   F_MGR.createDirectory(folder);
 };
-if (F_MGR.fileExists(cacheFile)) {
+
+const files = F_MGR.fileExists(cacheFile);
+if ( files ) {
   data = F_MGR.readString(cacheFile)
   script = JSON.parse(data);
 } else { 
@@ -57,14 +60,13 @@ async function downloadModule() {
   let moduleJs = await req.loadString().catch(() => {
     return null;
   });
-  if (F_MGR.fileExists(cacheFile)) {
+  if ( files ) {
     const newModuleJs = `
 async function main() {
 ♾️
 }
 module.exports = { main }`
     moduleJs = newModuleJs.replace('♾️', moduleJs);  
-    console.log('模块获取成功 ‼️\n' + scriptUrl);
   }
   if ( moduleJs ) {
     F_MGR.writeString(modulePath, moduleJs);  
@@ -79,6 +81,7 @@ async function presentMenu() {
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
   alert.addAction('更多组件');
+  alert.addDestructiveAction('删减脚本');
   alert.addAction('添加组件');
   alert.addAction('预览组件');
   alert.addAction('取消操作');
@@ -92,14 +95,17 @@ async function presentMenu() {
   if (response === 2) {
     await importModule(await downloadScripts()).main();
   }
-  if (response === 3) {
-    await addScriptURL();
+  if (response === 3 && files) {
+    await removeScript();
   }
   if (response === 4) {
+    await addScriptURL();
+  }
+  if (response === 5) {
     const importedModule = importModule(modulePath);
     await importedModule.main();
   }
-  if (response === 5) return;
+  if (response === 6) return;
   if (response === 0) {
     const codeString = await new Request(get.update).loadString();
     if (codeString.indexOf('95度茅台') == -1) {
@@ -154,4 +160,29 @@ async function addScriptURL() {
     }
     //await presentMenu();
   } 
+}
+
+async function removeScript() {
+  if ( files ) {
+    const Run = async () => {
+      const alert = new Alert();
+      alert.title = '\n删除已添加的组件 URL';
+      script.forEach(item => {
+        alert.addAction(decodeURIComponent(item.substring(item.lastIndexOf('/') + 1)));
+      });
+      alert.addCancelAction('取消');
+      const menuId = await alert.presentSheet();
+      if (menuId !== -1) {
+        script.some((item, i) => {
+          if (menuId == i) {
+            script.splice(i, 1);
+            return true;
+          }
+        })
+      F_MGR.writeString(cacheFile, JSON.stringify(script));  
+      script.length !== 0 ? await Run() : F_MGR.remove(cacheFile);
+      }
+    }
+    await Run();
+  }
 }
