@@ -106,7 +106,8 @@ async function main() {
     } else {
       const baiTiaoUrl = [
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg.png',  
-        'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg1.png'];
+        'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg1.png',  
+        'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png'];
       const bgImageItems = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
       widget.backgroundImage = await getImage(bgImageItems);
       widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
