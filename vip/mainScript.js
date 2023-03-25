@@ -157,6 +157,7 @@ async function main() {
   };
   
   const Run = async () => {
+    const cacheKey = 'subscriptionList';
     try {
       // 默认订阅列表
       const defaultSubscribeList = [{
@@ -166,7 +167,7 @@ async function main() {
       const mainAlert = new Alert();
       mainAlert.title = "小组件下载";
       mainAlert.message = "可自行添加订阅地址";
-      const cacheKey = "subscriptionList";
+      // const cacheKey = "subscriptionList";
       const render = async () => {
         let subscriptionList = [];
         if (Keychain.contains(cacheKey)) {
@@ -216,7 +217,7 @@ async function main() {
           }
         });
         _actions.push(async () => {
-          Keychain.set(cacheKey, JSON.stringify(defaultSubscribeList));
+          Keychain.set(cacheKey, JSON.stringify(defaultSubscribeList))
           await Run();
       });
         // Main Menu
@@ -231,6 +232,7 @@ async function main() {
       };
       await render();
     } catch (e) {
+      Keychain.remove(cacheKey);
       console.log("缓存读取错误" + e);
     }
   };
