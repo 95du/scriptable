@@ -19,7 +19,7 @@ const cacheFile = F_MGR.joinPath(folder, 'data.json');
 
 if (!F_MGR.fileExists(folder)) {
   F_MGR.createDirectory(folder);
-};
+}
 
 const files = F_MGR.fileExists(cacheFile);
 if ( files ) {
@@ -33,7 +33,7 @@ const scriptUrl = script[Math.floor(Math.random() * script.length)];
 const modulePath = await downloadModule(scriptUrl);
 
 if (modulePath != null) {
-  if (config.runsInWidget) {
+  if ( config.runsInWidget ) {
     const importedModule = importModule(modulePath);
     await importedModule.main();
   } else {
@@ -85,29 +85,29 @@ async function presentMenu() {
   alert.addAction('预览组件');
   alert.addAction('取消操作');
   response = await alert.presentAlert();
-  if (response === 1) {
+  if ( response === 1 ) {
     if (F_MGR.fileExists(folder)) {
       await F_MGR.remove(folder);
       notify('已重置数据', '请重新添加小组件URL');  
     }
   }
-  if (response === 2) {
+  if ( response === 2 ) {
     await importModule(await downloadScripts()).main();
   }
-  if (response === 3 && files) {
+  if ( response === 3 && files ) {
     await removeScript();
   }
-  if (response === 4) {
+  if ( response === 4 ) {
     await addScriptURL();
   }
-  if (response === 5) {
+  if ( response === 5 ) {
     const importedModule = importModule(modulePath);
     await importedModule.main();
   }
-  if (response === 6) return;
-  if (response === 0) {
+  if ( response === 6 ) return;
+  if ( response === 0 ) {
     const codeString = await new Request(get.update).loadString();
-    if (codeString.indexOf('95度茅台') == -1) {
+    if ( codeString.indexOf('95度茅台' ) == -1) {
       notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
       F_MGR.writeString(
@@ -130,7 +130,7 @@ async function downloadScripts() {
   const moduleJs = await req.load().catch(() => {
     return null;
   });
-  if (moduleJs) {
+  if ( moduleJs ) {
     F_MGR.write(modulePath, moduleJs);
     return modulePath;
   }
@@ -145,14 +145,14 @@ async function addScriptURL() {
   input.addCancelAction('取消');
   const install = await input.presentAlert();
   const url = input.textFieldValue(0)
-  if (install === 0) {
+  if ( install === 0 ) {
     files ? arr = script : arr = new Array();
     const javaScript = url.substring(url.lastIndexOf(".") + 1);
-    if (javaScript === 'js') {
+    if ( javaScript === 'js' ) {
       await arr.push(url);
       F_MGR.writeString(cacheFile, JSON.stringify(arr));  
       let count = 0;  
-      for (const obj of arr) {
+      for ( const obj of arr ) {
         count++
       }
       notify('添加成功', `当前数据库中已储存${count}个小组件`);
@@ -171,9 +171,9 @@ async function removeScript() {
       });
       alert.addCancelAction('取消');
       const menuId = await alert.presentSheet();
-      if (menuId !== -1) {
+      if ( menuId !== -1 ) {
         script.some((item, i) => {
-          if (menuId == i) {
+          if ( menuId == i ) {
             script.splice(i, 1);
             return true;
           }
