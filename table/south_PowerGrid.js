@@ -261,7 +261,7 @@ async function main() {
     const gooseItems = gooseUrl[Math.floor(Math.random() * gooseUrl.length)];
     const gooseIcon = await getImage(gooseItems);
     const gooseIconElement = middleStack.addImage(gooseIcon);
-    gooseIconElement.imageSize = new Size(50, 55);
+    gooseIconElement.imageSize = new Size(50, 52);
     middleStack.addSpacer();
     
     
