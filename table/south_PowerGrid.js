@@ -251,7 +251,7 @@ async function main() {
     const quotaStack3 = quotaStack.addStack();
     const quotaText2 = quotaStack3.addText(`待缴  ${pay}`);
     quotaText2.font = Font.boldSystemFont(13);
-    quotaText2.textColor = new Color(pay > 0 ? '#FF0000' : '#000000');
+    quotaText2.textColor = pay > 0 ? Color.red() : Color.dynamic(new Color('#000000'),new Color("#FFFFFF"));;
     quotaText2.textOpacity = 0.7;
     quotaStack3.addSpacer();
     middleStack.addSpacer();
