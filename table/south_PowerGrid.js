@@ -98,7 +98,7 @@ async function main() {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))  
     } else if (setting.gradient.length !== 0) {
       const gradient = new LinearGradient();
-      color = setting.gradient
+      const color = setting.gradient
       const items = color[Math.floor(Math.random() * color.length)];
       gradient.locations = [0, 1]
       gradient.colors = [
@@ -434,7 +434,7 @@ async function main() {
     req.body = JSON.stringify({
       eleCustId: id,
       areaCode: code,
-      yearMonth: `${Year}${Month}`,
+      yearMonth: Year + Month,
       meteringPointId: p.data[0].meteringPointId
     });
     const m = await req.loadJSON();
