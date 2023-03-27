@@ -135,7 +135,7 @@ async function main() {
     const avatarStack2 = avatarStack.addStack();
     const iconSymbol = await getImage(avatarImg);
     const avatarIcon = avatarStack2.addImage(iconSymbol);
-    avatarIcon.imageSize = new Size(52, 52);
+    avatarIcon.imageSize = new Size(50, 50);
     if ( avatarImg.indexOf('png') == -1 ) {
       avatarStack2.cornerRadius = 50;
       avatarStack2.borderWidth = 3;
