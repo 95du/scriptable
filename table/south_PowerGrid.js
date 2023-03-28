@@ -403,13 +403,14 @@ async function main() {
     req.headers = headers;
     const res = await req.loadJSON();
     if (res.sta == 00) {
-      const user = res.data[parseInt(Math.random() * res.data.length)];
-      return user //User res.data[0]
+      let countArr = res.data.length;
+      setting.count = countArr == 1 ? countArr - 1 : setting.count > 0 ? setting.count - 1 : countArr - 1;
+      return res.data[setting.count];
     } else if (res.sta == 04) {
       setting.code = 3;
-      F_MGR.writeString(cacheFile, JSON.stringify(setting)); 
       notify('用户未登录⚠️', 'Token 读取错误，请重新获取');
     }
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
   
   async function getMonthData() {
