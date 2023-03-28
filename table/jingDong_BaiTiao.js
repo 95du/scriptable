@@ -249,12 +249,14 @@ async function main() {
     middleStack.addSpacer();
     
     const gooseUrl = [
-      'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose0.png',  
+      'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png',
+      'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose0.png',
       'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose1.png'];
     const gooseItems = gooseUrl[Math.floor(Math.random() * gooseUrl.length)];
     const gooseIcon = await getImage(gooseItems);
     const gooseIconElement = middleStack.addImage(gooseIcon);
-    gooseIconElement.imageSize = new Size(45, 52);
+    const name = gooseItems.substring(gooseItems.lastIndexOf('/') + 1);
+    gooseIconElement.imageSize = name == 'whiteGoose.png' ? new Size(55, 55) : new Size(52, 52);
     middleStack.addSpacer();
     
     
@@ -321,7 +323,7 @@ async function main() {
         barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
         draw.addPath(barPath);
         
-        draw.setFillColor((barColor));
+        draw.setFillColor((barColor))
         draw.fillPath();
       
         const currPath = new Path();
