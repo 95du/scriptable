@@ -173,11 +173,11 @@ async function main() {
     beneStack.layoutHorizontally();
     beneStack.centerAlignContent();
     const benefitText = beneStack.addText('昨日  ');
-    benefitText.font = Font.boldSystemFont(13);  
+    benefitText.font = Font.boldSystemFont(14);  
     benefitText.textOpacity = 0.7;
     
     const benefitText2 = beneStack.addText(`${ystdayPower} °`);
-    benefitText2.font = Font.boldSystemFont(14);
+    benefitText2.font = Font.boldSystemFont(15);
     benefitText2.textColor = Color.red();
     barStack.addSpacer(5);
     topStack.addSpacer(5);
