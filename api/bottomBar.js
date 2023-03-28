@@ -10,7 +10,7 @@
 * 小机型修改第 10 行中的数字 65⚠️
 */
 
-const stackSize = new Size(0, 65);
+const stackSize = new Size(0, 63);
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
@@ -21,6 +21,9 @@ const textColor = Color.dynamic(
 );
 
 const timeStamp = Date.parse(new Date());
+const df = new DateFormatter();
+df.dateFormat = 'HH:mm';
+const GMT = (df.string(new Date()));
 const uri = Script.name();
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
@@ -134,12 +137,12 @@ async function createWidget() {
   */
   widget.setPadding(0, 0, 0, 0);
   const eventStack = widget.addStack();
-  eventStack.setPadding(15, 15, 15, 15)
+  eventStack.setPadding(15, 15, 15, 17);
   eventStack.layoutHorizontally();
   eventStack.centerAlignContent();
-  eventStack.backgroundColor = stackBackground
-  eventStack.cornerRadius = 23
-  eventStack.size = stackSize
+  eventStack.backgroundColor = stackBackground;
+  eventStack.cornerRadius = 23;
+  eventStack.size = stackSize;
   
   // WeChat icon
   const imageElement = eventStack.addImage(weChat);
@@ -151,8 +154,16 @@ async function createWidget() {
   const twoHoursStack = eventStack.addStack();
   twoHoursStack.layoutVertically();
   twoHoursStack.centerAlignContent();
-  const weatherText = twoHoursStack.addText(result.radarData.title);
+  
+  const statusStack = twoHoursStack.addStack();
+  statusStack.layoutHorizontally();
+  const weatherText = statusStack.addText(result.radarData.title);
   weatherText.font = Font.boldSystemFont(14);
+  statusStack.addSpacer();
+  const statusText = statusStack.addText(GMT);
+  statusText.font = Font.boldSystemFont(15);
+  statusText.textColor = textColor;
+  statusText.textOpacity = 0.45
   
   // Two Hours Weather
   twoHoursStack.addSpacer(2);
@@ -160,28 +171,18 @@ async function createWidget() {
   contentText.font = Font.boldSystemFont(13.5);
   contentText.textColor = textColor;
   contentText.textOpacity = 0.7
-  eventStack.addSpacer();
-  
-  // Right timeStack
-  const timeStack = eventStack.addStack();
-  timeStack.layoutVertically();
-  const statusText = timeStack.addText(result.radarData.content.length <= 18 ? '现在' : '');
-  statusText.font = Font.boldSystemFont(12);
-  statusText.textColor = textColor;
-  statusText.textOpacity = 0.4
-  timeStack.addSpacer();
   widget.addSpacer();
+  
   
   /** 
   * Bottom Content
-  * Alert image
   * One word
   */
   const contentStack = widget.addStack();
   contentStack.layoutHorizontally();
   contentStack.centerAlignContent();
   contentStack.addSpacer();
-  contentStack.backgroundColor = stackBackground
+  contentStack.backgroundColor = stackBackground;
   //contentStack.backgroundImage = await shadowImage(stackBgImage)
   contentStack.setPadding(10, 18, 10, 18);
   contentStack.cornerRadius = 23
