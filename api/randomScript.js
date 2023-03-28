@@ -151,11 +151,7 @@ async function addScriptURL() {
     if ( javaScript === 'js' ) {
       await arr.push(url);
       F_MGR.writeString(cacheFile, JSON.stringify(arr));  
-      let count = 0;  
-      for ( const obj of arr ) {
-        count++
-      }
-      notify('添加成功', `当前数据库中已储存${count}个小组件`);
+      notify('添加成功', `当前数据库中已储存${arr.length}个小组件`);
     }
     //await presentMenu();
   } 
