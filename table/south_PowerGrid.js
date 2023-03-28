@@ -257,7 +257,6 @@ async function main() {
     middleStack.addSpacer();
     
     const gooseUrl = [
-      'http://mtw.so/6mKe4d',
       'https://img30.360buyimg.com/jdmonitor/jfs/t1/109272/11/13863/2415/60a7819eE5454a1ed/c7fbf0a22f7adb2e.png'];
     const gooseItems = gooseUrl[Math.floor(Math.random() * gooseUrl.length)];
     const gooseIcon = await getImage(gooseItems);
