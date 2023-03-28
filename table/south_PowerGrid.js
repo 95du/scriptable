@@ -200,7 +200,7 @@ async function main() {
     pointStack.addSpacer(8);
     
     const LevelText = pointStack.addText(number);
-    LevelText.font = Font.mediumSystemFont(13);
+    LevelText.font = Font.mediumSystemFont(14);
     LevelText.textOpacity = 0.7;
     pointStack.addSpacer();
     
