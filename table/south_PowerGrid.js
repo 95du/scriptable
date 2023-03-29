@@ -7,7 +7,7 @@
  * 2023-03-27 19:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -249,7 +249,7 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText(`待缴  ${pay}`);
+    const quotaText2 = quotaStack3.addText(pay > 0 ? '待缴  ' + pay : '预计缴  ' + (arrears / total * totalPower).toFixed(2));
     quotaText2.font = Font.boldSystemFont(14);
     quotaText2.textColor = pay > 0 ? Color.red() : Color.dynamic(new Color('#000000'),new Color("#FFFFFF"));;
     quotaText2.textOpacity = 0.7;
@@ -284,7 +284,7 @@ async function main() {
     
     billStack3 = billStack.addStack();
     billStack3.addSpacer();
-    const billText2 = billStack3.addText(`${arrears}`); 
+    const billText2 = billStack3.addText(arrears); 
     billText2.font = Font.boldSystemFont(14);
     billText2.textOpacity = 0.7;
     mainStack.addSpacer();
