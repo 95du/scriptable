@@ -43,12 +43,6 @@ async function main() {
   textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
   barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
   progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
-    
-  const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
-  balUrl.method = 'GET'
-  balUrl.headers = { Cookie: cookie }
-  const balances = await balUrl.loadJSON();
-  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
   
   const makeRequest = async (url) => {
     const request = new Request(url);
