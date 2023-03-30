@@ -50,24 +50,39 @@ async function main() {
   const balances = await balUrl.loadJSON();
   const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
   
-  const package = new Request('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-  package.method = 'GET'
-  package.headers = { Cookie: cookie }
-  const res = await package.loadJSON();
-  if (!res.voiceAmount) {
+  const makeRequest = async (url) => {
+    const request = new Request(url);
+    request.method = 'GET';
+    request.headers = {
+      Cookie: cookie
+    };
+    return await request.loadJSON();
+  }
+  
+  // Voice Package
+  const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+  const {
+    items: arr,
+    total,
+    balance,
+    voiceAmount,
+    voiceBalance
+  } = package;
+  
+  if (!voiceAmount) {
     voiceAmount = '1';
     voiceBalance = '0';
     voice = '0';
   } else {
-    voiceAmount = res.voiceAmount
-    voiceBalance = res.voiceBalance
     voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
   }
   
-  let pacArr = [];  
+  
+  // Flow Package
+  const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
+  let pacArr = [];
   let newArr = [];
   let balArr = [];
-  const arr = res.items
   for (let i in arr) {
     pacArr.push(...arr[i].items);
   }
@@ -83,14 +98,17 @@ async function main() {
     flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
     bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
   } else {
-    flowTotal = res.total / 1048576
-    bal = res.balance / 1048576
+    flowTotal = total / 1048576
+    bal = balance / 1048576
   }
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
+  
+  // Get Balance
+  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
+  // Get dayNumber
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-  console.log(dayNumber)
   const df = new DateFormatter();
 df.dateFormat = 'ddHHmm'
   const day1st = df.string(new Date());
