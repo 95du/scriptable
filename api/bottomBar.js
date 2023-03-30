@@ -19,8 +19,9 @@ const textColor = Color.dynamic(
   new Color('#1E1E1E'), 
   new Color('#FEFEFE')
 );
-
-const timeStamp = Date.parse(new Date());
+const timeStamp = Date.parse(
+  new Date()
+);
 const df = new DateFormatter();
 df.dateFormat = 'HH:mm';
 const GMT = (df.string(new Date()));
@@ -36,20 +37,16 @@ if (F_MGR.fileExists(cacheFile)) {
   data = JSON.parse(data)
   // 计算时长
   const pushTime = (timeStamp - data.updateTime);
-  const P1 = pushTime % (24 * 3600 * 1000);
-  const hours = Math.floor(P1 / (3600 * 1000));
-  if (hours <= 3) {
-    location = data
+  const duration = pushTime % (24 * 3600 * 1000);
+  const intervalTime = Math.floor(duration / (3600 * 1000));
+  if ( intervalTime <= 3 ) {
+    location = data;
   } else {
     try {
       location = await Location.current();
-      obj = {
-        ...location,
-        updateTime: timeStamp
-      }
-      F_MGR.writeString(cacheFile, JSON.stringify(obj));
+      F_MGR.writeString(cacheFile, JSON.stringify({ ...location, updateTime: timeStamp }));
     } catch (error) {
-      location = data
+      location = data;
     }
   }
   // Conversion GPS
@@ -65,11 +62,7 @@ if (F_MGR.fileExists(cacheFile)) {
 if (!F_MGR.fileExists(folder)) {
   F_MGR.createDirectory(folder);
   const location = await Location.current();
-  obj = {
-    ...location,
-    updateTime: timeStamp
-  }
-  F_MGR.writeString(cacheFile, JSON.stringify(obj));
+  F_MGR.writeString(cacheFile, JSON.stringify({ ...location, updateTime: timeStamp }));
   Safari.open('scriptable:///run/' + encodeURIComponent(uri));
 }
 
@@ -117,6 +110,7 @@ async function presentMenu() {
   }
 }
 
+
 async function createWidget() {
   const widget = new ListWidget();
   widget.backgroundImage = F_MGR.readImage(bgImage);
@@ -128,9 +122,9 @@ async function createWidget() {
   weChat = await getImage(items);
   const one = await getJson('http://open.iciba.com/dsapi');
   // Next two hours
-  await get({"url": "https://ssfc.api.moji.com/sfc/json/nowcast"})
-  const stackBgImage = await getImage(one.picture4);
-
+  await get({'url': 'https://ssfc.api.moji.com/sfc/json/nowcast'})
+  
+  
   /**
   * Frame Layout
   * Top Row Events
@@ -157,17 +151,16 @@ async function createWidget() {
   
   const statusStack = twoHoursStack.addStack();
   statusStack.layoutHorizontally();
-  const weatherText = statusStack.addText(result.radarData.title);
+  const weatherText = statusStack.addText(title);
   weatherText.font = Font.boldSystemFont(14);
   statusStack.addSpacer();
   const statusText = statusStack.addText(GMT);
   statusText.font = Font.boldSystemFont(15);
   statusText.textColor = textColor;
   statusText.textOpacity = 0.45
-  
-  // Two Hours Weather
   twoHoursStack.addSpacer(2);
-  const contentText = twoHoursStack.addText(result.radarData.content);
+  
+  const contentText = twoHoursStack.addText(content);
   contentText.font = Font.boldSystemFont(13.5);
   contentText.textColor = textColor;
   contentText.textOpacity = 0.7
@@ -178,24 +171,35 @@ async function createWidget() {
   * Bottom Content
   * One word
   */
-  const contentStack = widget.addStack();
-  contentStack.layoutHorizontally();
-  contentStack.centerAlignContent();
-  contentStack.addSpacer();
-  contentStack.backgroundColor = stackBackground;
-  //contentStack.backgroundImage = await shadowImage(stackBgImage)
-  contentStack.setPadding(10, 18, 10, 18);
-  contentStack.cornerRadius = 23
-  contentStack.size = new Size(0, 80);
+  const oneStack = widget.addStack();
+  oneStack.layoutHorizontally();
+  oneStack.centerAlignContent();
+  oneStack.addSpacer();
+  oneStack.backgroundColor = stackBackground;
+  //const stackBgImage = await getImage(one.picture4);
+  //oneStack.backgroundImage = await shadowImage(stackBgImage)
+  oneStack.setPadding(10, 18, 10, 18)
+  oneStack.cornerRadius = 23;
+  oneStack.size = new Size(0, 80);
   
-  const textElement = contentStack.addText(one.note.length >= 21 ? one.note : `${one.note}\n${one.content}`);
+  const textElement = oneStack.addText(one.note.length >= 21 ? one.note : `${one.note}\n${one.content}`);
   textElement.textColor = textColor
   textElement.font = Font.boldSystemFont(14);
   textElement.textOpacity = 0.8;
-  textElement.url = one.fenxiang_img
-  contentStack.addSpacer();
-  
+  textElement.url = one.fenxiang_img;
+  oneStack.addSpacer();
   return widget;
+}
+
+if (config.runsInApp) {
+  await presentMenu();
+} else {
+  try {
+    Script.setWidget(widget);
+    Script.complete();
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 async function downloadModule() {
@@ -214,28 +218,22 @@ async function downloadModule() {
   }
 }
 
-if (config.runsInApp) {
-  await presentMenu();
-} else {
-  Script.setWidget(widget);
-  Script.complete();
-}
-
 async function get(opts) {
   const coordinates = convert.locations.split(",");
   const request = new Request(opts.url);
   request.method = 'POST'
-  request.body = `{
+  request.body = JSON.stringify({
     common: {
-      platform: "iPhone",
-      language: "CN"
+      platform: 'iPhone',
+      language: 'CN'
     }, 
     params: {
-      lat: ${coordinates[1]}, 
-      lon: ${coordinates[0]}
+      lat: coordinates[1],
+      lon: coordinates[0]
     }
-  }`
-  return result = await request.loadJSON();
+  });
+  const response = await request.loadJSON();
+  return { title, content } = response.radarData;
 }
 
 async function getJson(url) {
