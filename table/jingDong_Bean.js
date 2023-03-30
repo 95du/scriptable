@@ -408,7 +408,8 @@ async function main() {
     const req = new Request(url)
     req.method = 'GET'
     req.headers = {
-      Referer: 'https://agree.jd.com/'
+      Referer: 'https://agree.jd.com/',  
+      Cookie: cookie
     }
     const res = await req.loadJSON();
     if (res.errCode === '0' && res.dealLogList.length > 0) {
