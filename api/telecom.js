@@ -47,31 +47,42 @@ textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
 barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
 progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
 
-const balUrl = new Request('https://e.189.cn/store/user/balance_new.do?t=189Bill');
-balUrl.method = 'GET'
-balUrl.headers = { Cookie: cookie }
-const balances = await balUrl.loadJSON();
-const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
+const makeRequest = async (url) => {
+  const request = new Request(url);
+  request.method = 'GET';
+  request.headers = {
+    Cookie: cookie
+  };
+  return await request.loadJSON();
+}
 
-const package = new Request('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-package.method = 'GET'
-package.headers = { Cookie: cookie }
-const res = await package.loadJSON();
-console.log(res)
-if (!res.voiceAmount) {
+// Voice Package
+const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+const {
+  items: arr,
+  total,
+  balance,
+  voiceAmount,
+  voiceBalance
+} = package;
+
+if (!voiceAmount) {
   voiceAmount = '1';
   voiceBalance = '0';
   voice = '0';
 } else {
-  voiceAmount = res.voiceAmount
-  voiceBalance = res.voiceBalance
   voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
 }
+
+
+// Flow Package
+const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
+// Balance
+const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
 
 let pacArr = [];
 let newArr = [];
 let balArr = [];
-const arr = res.items
 for (let i in arr) {
   pacArr.push(...arr[i].items);
 }
@@ -87,18 +98,19 @@ if (newArr.length > 0) {
   flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
   bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
 } else {
-  flowTotal = res.total / 1048576
-  bal = res.balance / 1048576
+  flowTotal = total / 1048576
+  bal = balance / 1048576
 }
-
 const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
+// Get dayNumber
 const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
 const df = new DateFormatter();
 df.dateFormat = 'ddHHmm'
 const day1st = df.string(new Date());
 
+// Daily Usages
 if (!F_MGR.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
   setting = {
     flow: flow,
@@ -117,6 +129,7 @@ const StepFin = 100;
 const barWidth = 15;
 const barHeigth = 105;
 const phone = Device.screenSize().height;
+// Logo image
 const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
 
 const isSmallWidget =  config.widgetFamily === 'small'
@@ -170,14 +183,14 @@ async function createWidget() {
   
   const Stack1 = Content.addStack();
   Stack1.layoutVertically();
-  Stack1.backgroundColor = stackBgColor
+  Stack1.backgroundColor = stackBgColor;
   Stack1.cornerRadius = 8;
-  Stack1.addSpacer(9);
+  Stack1.addSpacer(12);
   
   const Stack1Head = Stack1.addStack();
   Stack1Head.addSpacer();
   let flowTitleText = Stack1Head.addText('剩余流量');
-  flowTitleText.textColor = SubTextColor
+  flowTitleText.textColor = SubTextColor;
   flowTitleText.font = Font.mediumSystemFont(12);
   Stack1Head.addSpacer();
   Stack1.addSpacer(3);
@@ -196,7 +209,7 @@ async function createWidget() {
   } else {
     usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
   }
-  usedFlowText.textColor  = SubTextColor
+  usedFlowText.textColor  = SubTextColor;
   usedFlowText.font = Font.systemFont(12);
   usedFlowStack.addSpacer();
   Stack1.addSpacer(5);
@@ -206,10 +219,10 @@ async function createWidget() {
   Stack1Percent.centerAlignContent();
   Stack1Percent.addSpacer();
   let percentText1 = Stack1Percent.addText(flow);
-  percentText1.textColor = MainTextColor
+  percentText1.textColor = MainTextColor;
   percentText1.font = Font.boldSystemFont(28);
   percentSymbol1 = Stack1Percent.addText(' %');
-  percentSymbol1.textColor = SubTextColor
+  percentSymbol1.textColor = SubTextColor;
   percentSymbol1.font = Font.systemFont(20);
   Stack1Percent.addSpacer();
   Stack1.addSpacer();
@@ -233,14 +246,14 @@ async function createWidget() {
   
   const Stack2 = Content.addStack();
   Stack2.layoutVertically();
-  Stack2.backgroundColor = stackBgColor
+  Stack2.backgroundColor = stackBgColor;
   Stack2.cornerRadius = 8;
-  Stack2.addSpacer(9);
+  Stack2.addSpacer(12);
   
   const Stack2Head = Stack2.addStack();
   Stack2Head.addSpacer();
   let voiceTitleText = Stack2Head.addText('剩余语音');
-  voiceTitleText.textColor = SubTextColor
+  voiceTitleText.textColor = SubTextColor;
   voiceTitleText.font = Font.mediumSystemFont(12);
   Stack2Head.addSpacer();
   Stack2.addSpacer(3);
@@ -259,7 +272,7 @@ async function createWidget() {
   } else {
     voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
   }
-  voiceUsedText.textColor  = SubTextColor
+  voiceUsedText.textColor  = SubTextColor;
   voiceUsedText.font = Font.systemFont(12);
   voiceUsedStack.addSpacer();
   Stack2.addSpacer(5);
@@ -270,10 +283,10 @@ async function createWidget() {
   Stack2Percent.addSpacer();
   
   let percentText2 = Stack2Percent.addText(voice);
-  percentText2.textColor = MainTextColor
+  percentText2.textColor = MainTextColor;
   percentText2.font = Font.boldSystemFont(28);
   percentSymbol2 = Stack2Percent.addText(' %');
-  percentSymbol2.textColor = SubTextColor
+  percentSymbol2.textColor = SubTextColor;
   percentSymbol2.font = Font.systemFont(20);
   Stack2Percent.addSpacer();
   Stack2.addSpacer();
