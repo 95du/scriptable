@@ -61,16 +61,16 @@ const package = await makeRequest('https://e.189.cn/store/user/package_detail.do
 const {
   items: arr,
   total,
-  balance,
-  voiceAmount,
-  voiceBalance
+  balance
 } = package;
-
-if (!voiceAmount) {
+  
+if (!package.voiceAmount) {
   voiceAmount = '1';
   voiceBalance = '0';
   voice = '0';
 } else {
+  voiceAmount = package.voiceAmount;
+  voiceBalance = package.voiceBalance;
   voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
 }
 
