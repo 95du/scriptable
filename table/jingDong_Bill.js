@@ -235,7 +235,7 @@ async function main() {
     jdIcon.imageSize = new Size(36, 36);
     
     
-    /**
+    /*
     * Right Center Stack
     */
     const middleStack = rightStack.addStack();
@@ -244,18 +244,22 @@ async function main() {
     
     const midLeftStack = middleStack.addStack();
     midLeftStack.layoutVertically();
-    const inText = midLeftStack.addText(inCode ? income.compareLastTotalAmount : '收入(月)');
+    
+    const inStack1 = midLeftStack.addStack();
+    const inText = inStack1.addText(inCode ? income.compareLastTotalAmount : '收入(月)');
     inText.font = Font.mediumSystemFont(13);
     inText.textOpacity = 0.7;
+    inStack1.addSpacer();
     midLeftStack.addSpacer(7);
     
-    const inAmountText = midLeftStack.addText(income.totalAmount);
+    const inStack2 = midLeftStack.addStack();
+    const inAmountText = inStack2.addText(income.totalAmount);
     inAmountText.font = Font.boldSystemFont(20);
     inAmountText.leftAlignText();
     inAmountText.textOpacity = 0.9;
-    
-    
+    inStack2.addSpacer();
     middleStack.addSpacer();
+    
     const moneyBagUrl = [
       'https://img30.360buyimg.com/jdmonitor/jfs/t1/191158/3/10079/3167/60d4547bEee00ce33/dc8d2287590e39af.png',
       'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png'
@@ -270,18 +274,25 @@ async function main() {
     
     const midRightStack = middleStack.addStack();
     midRightStack.layoutVertically();
-    const outText = midRightStack.addText(outCode ? expend.compareLastTotalAmount : '支出(月)');
+    
+    const outStack1 = midRightStack.addStack();
+    outStack1.addSpacer();
+    const outText = outStack1.addText(outCode ? expend.compareLastTotalAmount : '支出(月)');
     outText.font = Font.mediumSystemFont(13);
     outText.textOpacity = 0.7;
     outText.rightAlignText();
     midRightStack.addSpacer(7);
 
-    const outAmountText = midRightStack.addText(expend.totalAmount);
+    const outStack2 = midRightStack.addStack();
+    outStack2.addSpacer();
+    const outAmountText = outStack2.addText(expend.totalAmount)
     outAmountText.font = Font.boldSystemFont(20);
     outAmountText.rightAlignText();
     outAmountText.textOpacity = 0.9;
     
-    
+    /*
+    * Right bottom Stack
+    */
     const lowerStack = rightStack.addStack();
     lowerStack.size = new Size(0, 16)
     lowerStack.layoutHorizontally();
