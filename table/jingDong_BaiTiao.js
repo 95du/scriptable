@@ -34,30 +34,10 @@ async function main() {
   }
   
   const benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
-  if (!benefit) {
-    setting.code = 3;
-    F_MGR.writeString(cacheFile, JSON.stringify(setting));
-    notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
-  }
-  
-  const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
-  const {
-    lvlScore,
-    curScore,
-    level,
-    nextLvl
-  } = score;
   
   const stripe = await whiteStripe('https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2');
-  const {
-    scorePopJumpUrl,
-    title,
-    identityPicture,
-    portrait,
-    percent,
-    progressNextLevelText
-  } = stripe.right.data;
   
+  const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
   
   if (level === '1') {
     levelColor = '#4FC3F7'
@@ -236,13 +216,13 @@ async function main() {
     quotaStack.addSpacer(3);
     
     const quotaStack2 = quotaStack.addStack();
-    const quota = quotaStack2.addText(stripe.quota.quotaLeft.replace(',', ''));
+    const quota = quotaStack2.addText(quotaLeft.replace(',', ''));
     quota.font = Font.boldSystemFont(18);
     quotaStack2.addSpacer();
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText(`总额度 ${stripe.quota.quotaAll.replace(',', '')}`);
+    const quotaText2 = quotaStack3.addText(`总额度 ${quotaAll.replace(',', '')}`);
     quotaText2.font = Font.mediumSystemFont(12);
     quotaText2.textOpacity = 0.5;
     quotaStack3.addSpacer();
@@ -273,13 +253,13 @@ async function main() {
     
     billStack2 = billStack.addStack();
     billStack2.addSpacer();
-    const bill = billStack2.addText(stripe.bill.amount.replace(',', ''));
+    const bill = billStack2.addText(amount.replace(',', ''));
     bill.font = Font.boldSystemFont(18);
     billStack.addSpacer(3);
     
     billStack3 = billStack.addStack();
     billStack3.addSpacer();
-    const billText2 = billStack3.addText(stripe.bill.buttonName.replace('最近还款日', '还款日 '));  
+    const billText2 = billStack3.addText(buttonName.replace('最近还款日', '还款日 '));  
     billText2.font = Font.mediumSystemFont(12);
     billText2.textOpacity = 0.5;
     mainStack.addSpacer();
@@ -366,6 +346,8 @@ async function main() {
     await smallrWidget();
   } else if (setting.code === 0) {
     await createWidget();
+  } else if (setting.code === 3) {
+    await createErrWidget();
   }
   
   async function smallrWidget() {
@@ -382,7 +364,6 @@ async function main() {
   /**-------------------------**/
   
   
-  
   async function whiteStripe(url) {
     const req = new Request(url)
     req.method = 'POST'
@@ -390,9 +371,32 @@ async function main() {
       Cookie: cookie,
       Referer: 'https://mcr.jd.com/'
     }
-    req.body = `reqData={"environment":"1","clientType":"ios","clientVersion":"11.6.4"}`
+    req.body = `reqData={
+      "environment": "1", 
+      "clientType": "ios", 
+      "clientVersion": "11.6.4"
+    }`
     const res = await req.loadJSON();
-    return res.resultData.data;
+    return {
+      quota: {
+        quotaLeft,
+        quotaAll
+      },
+      bill: {
+        amount,
+        buttonName
+      },
+      right: {
+        data: {
+          scorePopJumpUrl,
+          title,
+          identityPicture,
+          portrait,
+          percent,
+          progressNextLevelText
+        }
+      }
+    } = res.resultData.data;
   }
   
   async function LvlProgress(url) {
@@ -402,9 +406,26 @@ async function main() {
       Cookie: cookie,
       Referer: 'https://agree.jd.com/'
     }
-    req.body = `reqData={"appId":"benefitGateway","channelId":"1","customerId":"1","shopId":"1","deviceInfo":{}}`
+    req.body = `reqData={  
+      "appId": "benefitGateway", 
+      "channelId": "1", 
+      "customerId": "1", 
+      "shopId": "1", 
+      "deviceInfo": { }
+    }`
     const res = await req.loadJSON();
-    return res.resultData;
+    if ( res.resultCode == 0 ) {
+      return {
+        lvlScore,
+        curScore,
+        level,
+        nextLvl
+      } = res.resultData;
+    } else {
+      setting.code = 3;
+      F_MGR.writeString(cacheFile, JSON.stringify(setting));
+      notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
+    }
   }
   
   async function getImage(url) {
@@ -452,6 +473,19 @@ async function main() {
     const base64Image = await wv.evaluateJavaScript(js);
     const iconImage = await new Request(base64Image).loadImage();
     return iconImage
+  }
+  
+  async function createErrWidget() {
+    const widget = new ListWidget();
+    const image = await getImage('http://mtw.so/5Zca3L');
+    const widgetImage = widget.addImage(image);
+    widgetImage.imageSize = new Size(50, 50);
+    widgetImage.centerAlignImage();
+    widget.addSpacer(10);
+    const text = widget.addText('用户未登录');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
   }
 }
 module.exports = { main }
