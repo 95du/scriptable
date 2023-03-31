@@ -34,7 +34,7 @@ async function main() {
   }
   
   
-  const loadData = async () => {
+  const getData = async () => {
     benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
     
     await whiteStripe('https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2');
@@ -347,7 +347,7 @@ async function main() {
   if (isSmallWidget && config.runsInWidget) {
     await smallrWidget();
   } else if (setting.code === 0) {
-    await loadData();
+    await getData();
     await createWidget();
   } else {
     await createErrWidget();
