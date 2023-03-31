@@ -349,7 +349,7 @@ async function main() {
   } else if (setting.code === 0) {
     await loadData();
     await createWidget();
-  } else if (setting.code === 3) {
+  } else {
     await createErrWidget();
   }
   
