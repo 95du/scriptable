@@ -249,7 +249,7 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText(pay > 0 ? '待缴  ' + pay : '预计缴  ' + (arrears / total * totalPower).toFixed(2));
+    const quotaText2 = quotaStack3.addText(pay > 0 ? pay : '预计缴 ' + (arrears / total * totalPower).toFixed(2));
     quotaText2.font = Font.boldSystemFont(14);
     quotaText2.textColor = pay > 0 ? Color.red() : Color.dynamic(new Color('#000000'),new Color("#FFFFFF"));;
     quotaText2.textOpacity = 0.7;
