@@ -8,7 +8,7 @@
  * 🔥示例图渐变颜色 #FFE5B4
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const phoneSize = Device.screenSize().height;
@@ -246,7 +246,7 @@ async function main() {
     midLeftStack.layoutVertically();
     
     const inStack1 = midLeftStack.addStack();
-    const inText = inStack1.addText(inCode ? income.compareLastTotalAmount : '收入(月)');
+    const inText = inStack1.addText(inCode ? income.compareLastTotalAmount : '收入/月');
     inText.font = Font.mediumSystemFont(13);
     inText.textOpacity = 0.7;
     inStack1.addSpacer();
@@ -276,7 +276,7 @@ async function main() {
     
     const outStack1 = midRightStack.addStack();
     outStack1.addSpacer();
-    const outText = outStack1.addText(outCode ? expend.compareLastTotalAmount : '支出(月)');
+    const outText = outStack1.addText(outCode ? expend.compareLastTotalAmount : '支出/月');
     outText.font = Font.mediumSystemFont(13);
     outText.textOpacity = 0.7;
     outText.rightAlignText();
