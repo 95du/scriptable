@@ -8,6 +8,8 @@
  * 2023-01-17 14:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
+
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -55,19 +57,20 @@ async function main() {
   
   // Voice Package
   const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+  console.log(JSON.stringify(package, null, 2))
   const {
     items: arr,
     total,
-    balance,
-    voiceAmount,
-    voiceBalance
+    balance
   } = package;
   
-  if (!voiceAmount) {
+  if (!package.voiceAmount) {
     voiceAmount = '1';
     voiceBalance = '0';
     voice = '0';
   } else {
+    voiceAmount = package.voiceAmount;
+    voiceBalance = package.voiceBalance;
     voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
   }
   
@@ -203,7 +206,7 @@ df.dateFormat = 'ddHHmm'
     Stack1.layoutVertically();
     Stack1.backgroundColor = stackBgColor;
     Stack1.cornerRadius = 8;
-    Stack1.addSpacer(9);
+    Stack1.addSpacer(12);
     
     const Stack1Head = Stack1.addStack();
     Stack1Head.addSpacer();
@@ -266,7 +269,7 @@ df.dateFormat = 'ddHHmm'
     Stack2.layoutVertically();
     Stack2.backgroundColor = stackBgColor
     Stack2.cornerRadius = 8;
-    Stack2.addSpacer(9);
+    Stack2.addSpacer(12);
     
     const Stack2Head = Stack2.addStack();
     Stack2Head.addSpacer();
