@@ -154,6 +154,7 @@ async function createWidget() {
   const weatherText = statusStack.addText(title);
   weatherText.font = Font.boldSystemFont(14);
   statusStack.addSpacer();
+  
   const statusText = statusStack.addText(GMT);
   statusText.font = Font.boldSystemFont(15);
   statusText.textColor = textColor;
