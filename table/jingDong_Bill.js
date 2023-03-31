@@ -271,7 +271,6 @@ async function main() {
     assetIconElement.imageSize = new Size(bag, bag);
     middleStack.addSpacer();
     
-    
     const midRightStack = middleStack.addStack();
     midRightStack.layoutVertically();
     
@@ -290,9 +289,7 @@ async function main() {
     outAmountText.rightAlignText();
     outAmountText.textOpacity = 0.9;
     
-    /*
-    * Right bottom Stack
-    */
+    // Right bottom Stack
     const lowerStack = rightStack.addStack();
     lowerStack.size = new Size(0, 16)
     lowerStack.layoutHorizontally();
@@ -311,7 +308,7 @@ async function main() {
     
     
     /** 
-    * Bottom Content
+    * widget Bottom Content
     * @param {image} Progress Bar
     * @param {string} string
     */
