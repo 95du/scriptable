@@ -63,6 +63,9 @@ async function main() {
     totalPower = month.totalPower;
     const arr = month.result;
     ystdayPower = arr[arr.length-1].power;
+  } else {
+    totalPower = '0.00';
+    ystdayPower = '0.00';
   }
   
   // selectElecBill
@@ -271,7 +274,10 @@ async function main() {
     
     const billStack1 = billStack.addStack();
     billStack1.addSpacer();
-    const billText = billStack1.addText(`${Year}-${Month < 10 ? '0' : ''}` + String(Month - 1));
+    // Last Month
+    const lastMomth = new Date().getMonth();  
+    const month = lastMomth == 0 ? 12 : lastMomth < 10 ? `0${lastMomth}` : lastMomth;
+    const billText = billStack1.addText(`${Year}-${pay > 0 ? month : String(month == 1 ? 12 : month - 1 < 10 ? `0${month - 1}` : month - 1)}`);
     billText.font = Font.mediumSystemFont(14);
     billText.textOpacity = 0.7;
     billStack.addSpacer(3);
