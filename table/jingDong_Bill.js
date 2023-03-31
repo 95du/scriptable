@@ -8,7 +8,7 @@
  * 🔥示例图渐变颜色 #FFE5B4
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-await main()
+
 async function main() {
   const uri = Script.name();
   const phoneSize = Device.screenSize().height;
