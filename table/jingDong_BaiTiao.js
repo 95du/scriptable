@@ -33,38 +33,40 @@ async function main() {
     return await n.schedule();
   }
   
-  const benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
   
-  const stripe = await whiteStripe('https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2');
-  
-  const score = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
-  
-  if (level === '1') {
-    levelColor = '#4FC3F7'
-    barColor = new Color(levelColor, 0.6);
-  } else if (level === '2') {
-    levelColor = '#99C0F0'
-    barColor = new Color(levelColor, 0.6);
-  } else if (level === '3') {
-    levelColor = '#FF9999'
-    barColor = new Color(levelColor, 0.6);
-  } else if (level === '4') {
-    levelColor = '#F72E27'
-    barColor = new Color(levelColor, 0.6);
-  } else if (level === '5') {
-    levelColor = '#AB0D0D'
-    barColor = new Color(levelColor, 0.6);
-  } else if (level === '6') {
-    levelColor = Color.dynamic(
-      new Color('#222222'),
-      new Color("#333333")
-    );;
-    barColor = Color.dynamic(
-      new Color('#222222', 0.5),
-      new Color("#444444")
-    );;
+  const loadData = async () => {
+    benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
+    
+    await whiteStripe('https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2');
+    
+    await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
+    
+    if (level === '1') {
+      levelColor = '#4FC3F7'
+      barColor = new Color(levelColor, 0.6);
+    } else if (level === '2') {
+      levelColor = '#99C0F0'
+      barColor = new Color(levelColor, 0.6);
+    } else if (level === '3') {
+      levelColor = '#FF9999'
+      barColor = new Color(levelColor, 0.6);
+    } else if (level === '4') {
+      levelColor = '#F72E27'
+      barColor = new Color(levelColor, 0.6);
+    } else if (level === '5') {
+      levelColor = '#AB0D0D'
+      barColor = new Color(levelColor, 0.6);
+    } else if (level === '6') {
+      levelColor = Color.dynamic(
+        new Color('#222222'),
+        new Color("#333333")
+      );;
+      barColor = Color.dynamic(
+        new Color('#222222', 0.5),
+        new Color("#444444")
+      );;
+    }
   }
-  
   
   async function createWidget() {
     const widget = new ListWidget();
@@ -345,6 +347,7 @@ async function main() {
   if (isSmallWidget && config.runsInWidget) {
     await smallrWidget();
   } else if (setting.code === 0) {
+    await loadData();
     await createWidget();
   } else if (setting.code === 3) {
     await createErrWidget();
