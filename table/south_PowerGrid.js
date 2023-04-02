@@ -177,8 +177,8 @@ async function main() {
     if ( pay > 0 ) {
       const payText0 = 
       beneStack.addText(pay);
-      payText0.font = Font.boldSystemFont(17);
-      payText0.textColor = Color.red();
+      payText0.font = Font.boldSystemFont(16);
+      payText0.textColor = new Color('#FF2400');
     }
     topStack.addSpacer(5);
     
