@@ -48,40 +48,32 @@ async function main() {
     'Content-Type': 'application/json;charset=utf-8'
   }
   
-  // UserInfo
-  const info = await userInfo();
-  const {  
-    userName: name,
-    areaCode: code,
-    bindingId: id,
-    eleCustNumber: number,
-  } = info;
-  
-  // Month & Yesterday
-  const month = await getMonthData();
-  if ( month ) {  
-    totalPower = month.totalPower;
-    const arr = month.result;
-    ystdayPower = arr[arr.length-1].power;
-  } else {
-    totalPower = '0.00';
-    ystdayPower = '0.00';
-  }
-  
-  // selectElecBill
-  const ele = await getEleBill();
-  if ( ele ) {  
-    pay = ele.electricBillPay;
-    const bill = ele.billUserAndYear.pop();
-    total = bill.totalPower;
-    arrears = bill.totalElectricity;
-  } else {
-    pay = '0.00';
-    total = '0.00';
-    arrears = '0.00';
-  }
-  
   const Run = async () => {
+    // Month & Yesterday
+    const month = await getMonthData();
+    if ( month ) {  
+      totalPower = month.totalPower;
+      const arr = month.result;
+      ystdayPower = arr[arr.length-1].power;
+    } else {
+      totalPower = '0.00';
+      ystdayPower = '0.00';
+    }
+    
+    // selectElecBill
+    const ele = await getEleBill();
+    if ( ele ) {  
+      pay = ele.electricBillPay;
+      const bill = ele.billUserAndYear.pop();
+      total = bill.totalPower;
+      arrears = bill.totalElectricity;
+    } else {
+      pay = '0.00';
+      total = '0.00';
+      arrears = '0.00';
+    }
+    
+    // levelColor loop
     if ( loop == 0 ) {
       setting.loop = 1
       levelColor = '#34C579'
@@ -252,7 +244,7 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText(pay > 0 ? pay : '预计缴 ' + (arrears / total * totalPower).toFixed(2));
+    const quotaText2 = quotaStack3.addText(pay > 0 ? '待缴 ' + pay : '预计缴 ' + (arrears / total * totalPower).toFixed(2));
     quotaText2.font = Font.boldSystemFont(14);
     quotaText2.textColor = pay > 0 ? Color.red() : Color.dynamic(new Color('#000000'),new Color("#FFFFFF"));;
     quotaText2.textOpacity = 0.7;
@@ -383,9 +375,12 @@ async function main() {
   const isSmallWidget =  config.widgetFamily === 'small';
   if (isSmallWidget && config.runsInWidget) {
     await smallrWidget();
-  } else if (setting.code === 0) {
+  } else if (setting.code == 0) {
+    await userInfo();
     await Run();
     await createWidget();
+  } else {
+    notify('南网用户未登录⚠️', 'Token 读取错误，请重新获取');
   }
   
   async function smallrWidget() {
@@ -411,12 +406,14 @@ async function main() {
     if (res.sta == 00) {
       let countArr = res.data.length;
       setting.count = countArr == 1 ? countArr - 1 : setting.count > 0 ? setting.count - 1 : countArr - 1;
-      return res.data[setting.count];
-    } else if (res.sta == 04) {
-      setting.code = 3;
-      notify('用户未登录⚠️', 'Token 读取错误，请重新获取');
+      F_MGR.writeString(cacheFile, JSON.stringify(setting));
+      return {  
+        userName: name,
+        areaCode: code,
+        bindingId: id,
+        eleCustNumber: number,
+      } = res.data[setting.count];
     }
-    F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
   
   async function getMonthData() {
