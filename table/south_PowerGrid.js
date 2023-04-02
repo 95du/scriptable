@@ -82,10 +82,6 @@ async function main() {
       const bill = ele.billUserAndYear.pop();
       total = bill.totalPower;
       arrears = bill.totalElectricity;
-    } else {
-      pay = '0.00';
-      total = '0.00';
-      arrears = '0.00';
     }
   }
   
