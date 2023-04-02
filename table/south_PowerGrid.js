@@ -5,7 +5,6 @@
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
  * 2023-03-27 19:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
 async function main() {
@@ -178,7 +177,7 @@ async function main() {
     if ( pay > 0 ) {
       const payText0 = 
       beneStack.addText(pay);
-      payText0.font = Font.boldSystemFont(16);
+      payText0.font = Font.boldSystemFont(17);
       payText0.textColor = Color.red();
     }
     topStack.addSpacer(5);
