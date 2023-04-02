@@ -173,7 +173,14 @@ async function main() {
     const benefitText2 = beneStack.addText(`${ystdayPower} °`);
     benefitText2.font = Font.boldSystemFont(16);
     benefitText2.textColor = Color.red();
-    barStack.addSpacer(5);
+    beneStack.addSpacer();
+    
+    if ( pay > 0 ) {
+      const payText0 = 
+      beneStack.addText(pay);
+      payText0.font = Font.boldSystemFont(16);
+      payText0.textColor = Color.red();
+    }
     topStack.addSpacer(5);
     
     
@@ -243,9 +250,8 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText(pay > 0 ? '待缴 ' + pay : '预计缴 ' + (arrears / total * totalPower).toFixed(2));
+    const quotaText2 = quotaStack3.addText('预计缴 ' + (arrears / total * totalPower).toFixed(2));
     quotaText2.font = Font.boldSystemFont(14);
-    quotaText2.textColor = pay > 0 ? Color.red() : Color.dynamic(new Color('#000000'),new Color("#FFFFFF"));;
     quotaText2.textOpacity = 0.7;
     quotaStack3.addSpacer();
     middleStack.addSpacer();
