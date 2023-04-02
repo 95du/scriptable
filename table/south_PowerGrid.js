@@ -48,22 +48,40 @@ async function main() {
     'Content-Type': 'application/json;charset=utf-8'
   }
   
+  // UserInfo
+  const info = await userInfo();
+  const {  
+    userName: name,
+    areaCode: code,
+    bindingId: id,
+    eleCustNumber: number,
+  } = info;
+  
+  // Month & Yesterday
+  const month = await getMonthData();
+  if ( month ) {  
+    totalPower = month.totalPower;
+    const arr = month.result;
+    ystdayPower = arr[arr.length-1].power;
+  } else {
+    totalPower = '0.00';
+    ystdayPower = '0.00';
+  }
+  
+  // selectElecBill
+  const ele = await getEleBill();
+  if ( ele ) {  
+    pay = ele.electricBillPay;
+    const bill = ele.billUserAndYear.pop();
+    total = bill.totalPower;
+    arrears = bill.totalElectricity;
+  } else {
+    pay = '0.00';
+    total = '0.00';
+    arrears = '0.00';
+  }
+  
   const Run = async () => {
-    // Month & Yesterday
-    const month = await getMonthData();
-    if ( month ) {  
-      totalPower = month.totalPower;
-      const arr = month.result;
-      ystdayPower = arr[arr.length-1].power;
-    } else {
-      totalPower = '0.00';
-      ystdayPower = '0.00';
-    }
-    
-    // selectBill
-    await getEleBill();
-    
-    // levelColor loop
     if ( loop == 0 ) {
       setting.loop = 1
       levelColor = '#34C579'
@@ -75,15 +93,6 @@ async function main() {
     }
   }
   
-  const selectBill = async () => {
-    const ele = await selectEleBill();
-    if ( ele ) {  
-      pay = ele.electricBillPay;
-      const bill = ele.billUserAndYear.pop();
-      total = bill.totalPower;
-      arrears = bill.totalElectricity;
-    }
-  }
   
   async function createWidget() {
     const widget = new ListWidget();
@@ -243,7 +252,7 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText(pay > 0 ? '待缴 ' + pay : '预计缴 ' + (arrears / total * totalPower).toFixed(2));
+    const quotaText2 = quotaStack3.addText(pay > 0 ? pay : '预计缴 ' + (arrears / total * totalPower).toFixed(2));
     quotaText2.font = Font.boldSystemFont(14);
     quotaText2.textColor = pay > 0 ? Color.red() : Color.dynamic(new Color('#000000'),new Color("#FFFFFF"));;
     quotaText2.textOpacity = 0.7;
@@ -374,12 +383,9 @@ async function main() {
   const isSmallWidget =  config.widgetFamily === 'small';
   if (isSmallWidget && config.runsInWidget) {
     await smallrWidget();
-  } else if (setting.code == 0) {
-    await userInfo();
+  } else if (setting.code === 0) {
     await Run();
     await createWidget();
-  } else {
-    notify('南网用户未登录⚠️', 'Token 读取错误，请重新获取');
   }
   
   async function smallrWidget() {
@@ -405,14 +411,12 @@ async function main() {
     if (res.sta == 00) {
       let countArr = res.data.length;
       setting.count = countArr == 1 ? countArr - 1 : setting.count > 0 ? setting.count - 1 : countArr - 1;
-      F_MGR.writeString(cacheFile, JSON.stringify(setting));
-      return {  
-        userName: name,
-        areaCode: code,
-        bindingId: id,
-        eleCustNumber: number,
-      } = res.data[setting.count];
+      return res.data[setting.count];
+    } else if (res.sta == 04) {
+      setting.code = 3;
+      notify('用户未登录⚠️', 'Token 读取错误，请重新获取');
     }
+    F_MGR.writeString(cacheFile, JSON.stringify(setting));
   }
   
   async function getMonthData() {
@@ -457,41 +461,6 @@ async function main() {
   }
   
   async function getEleBill() {
-    const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryCharges');
-    elecBill.method = 'POST'
-    elecBill.headers = headers;
-    elecBill.body = JSON.stringify({
-      type: 0,
-      areaCode: code,
-      eleModels: [
-        {
-          areaCode: code,
-          eleCustId: id
-        }
-      ]
-    });
-    const res = await elecBill.loadJSON();
-    const lastBill = res.data[0].points[0];
-    if ( lastBill ) {  
-      if ( !lastBill.arrears ) {
-        await selectBill();
-      } else {
-        return {
-          arrears: pay ,
-          billingElectricity: total,
-          receieElectricity: arrears
-        } = lastBill;
-      }
-    } else {
-      return {
-        pay: pay = '0',
-        total: total = '0.00',
-        arrears: arrears = '0.00'
-      }
-    }
-  }
-  
-  async function selectEleBill() {
     const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
     req.method = 'POST'
     req.headers = headers;
