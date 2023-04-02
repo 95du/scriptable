@@ -60,7 +60,7 @@ async function main() {
       ystdayPower = '0.00';
     }
     
-    // selectElecBill
+    // selectBill
     await getEleBill();
     
     // levelColor loop
@@ -75,6 +75,19 @@ async function main() {
     }
   }
   
+  const selectBill = async () => {
+    const ele = await selectEleBill();
+    if ( ele ) {  
+      pay = ele.electricBillPay;
+      const bill = ele.billUserAndYear.pop();
+      total = bill.totalPower;
+      arrears = bill.totalElectricity;
+    } else {
+      pay = '0.00';
+      total = '0.00';
+      arrears = '0.00';
+    }
+  }
   
   async function createWidget() {
     const widget = new ListWidget();
@@ -448,7 +461,6 @@ async function main() {
   }
   
   async function getEleBill() {
-    // selectElecBill
     const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryCharges');
     elecBill.method = 'POST'
     elecBill.headers = headers;
@@ -462,39 +474,17 @@ async function main() {
         }
       ]
     });
-    const resBill = await elecBill.loadJSON();
-    const bill = resBill.data[0].points[0];
-
-    if ( bill ) {  
-      if ( !bill.arrears ) {
-        const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
-        req.method = 'POST'
-        req.headers = headers;
-        req.body = JSON.stringify({
-          electricityBillYear: year,
-          areaCode: code,
-          eleCustId: id
-        });
-        const res = await req.loadJSON();
-        const {
-          electricBillPay: pay,
-          billUserAndYear: billUser
-        } = res.data;
-        const {
-          totalPower: total,
-          totalElectricity: arrears
-        } = billUser.pop();
-        return {
-          pay,
-          total,
-          arrears
-        } = bill;
+    const res = await elecBill.loadJSON();
+    const lastBill = res.data[0].points[0];
+    if ( lastBill ) {  
+      if ( !lastBill.arrears ) {
+        await selectBill();
       } else {
         return {
           arrears: pay ,
           billingElectricity: total,
           receieElectricity: arrears
-        } = bill;
+        } = lastBill;
       }
     } else {
       return {
@@ -503,6 +493,19 @@ async function main() {
         arrears: arrears = '0.00'
       }
     }
+  }
+  
+  async function selectEleBill() {
+    const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
+    req.method = 'POST'
+    req.headers = headers;
+    req.body = JSON.stringify({
+      electricityBillYear: year,
+      areaCode: code,
+      eleCustId: id
+    });
+    const res = await req.loadJSON();
+    return res.data;
   }
   
   async function getImage(url) {
