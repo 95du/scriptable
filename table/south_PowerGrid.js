@@ -353,9 +353,8 @@ async function main() {
     gooseIconElement.url = 'alipays://platformapi/startapp?appId=2021001164644764';
     // 计算时长  
     const pushTime = (timestamp - setting.updateTime);
-    const P1 = pushTime % (24 * 3600 * 1000);
-    const hours = Math.floor(P1 / (3600 * 1000));
-        
+    const duration = pushTime % (24 * 3600 * 1000);
+    const hours = Math.floor(duration / (3600 * 1000));
     if ( hours >= 12 && pay > 0 ) {
       notify('用电缴费通知‼️', `${name}` + `，户号 ${number}` + `\n上月用电 ${total} 度 ，待缴电费 ${pay} 元`)
       setting.updateTime = timestamp;
