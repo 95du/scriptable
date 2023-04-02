@@ -61,17 +61,7 @@ async function main() {
     }
     
     // selectElecBill
-    const ele = await getEleBill();
-    if ( ele ) {  
-      pay = ele.electricBillPay;
-      const bill = ele.billUserAndYear.pop();
-      total = bill.totalPower;
-      arrears = bill.totalElectricity;
-    } else {
-      pay = '0.00';
-      total = '0.00';
-      arrears = '0.00';
-    }
+    await getEleBill();
     
     // levelColor loop
     if ( loop == 0 ) {
@@ -458,16 +448,61 @@ async function main() {
   }
   
   async function getEleBill() {
-    const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
-    req.method = 'POST'
-    req.headers = headers;
-    req.body = JSON.stringify({
-      electricityBillYear: year,
+    // selectElecBill
+    const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryCharges');
+    elecBill.method = 'POST'
+    elecBill.headers = headers;
+    elecBill.body = JSON.stringify({
+      type: 0,
       areaCode: code,
-      eleCustId: id
+      eleModels: [
+        {
+          areaCode: code,
+          eleCustId: id
+        }
+      ]
     });
-    const res = await req.loadJSON();
-    return res.data;
+    const resBill = await elecBill.loadJSON();
+    const bill = resBill.data[0].points[0];
+
+    if ( bill ) {  
+      if ( !bill.arrears ) {
+        const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
+        req.method = 'POST'
+        req.headers = headers;
+        req.body = JSON.stringify({
+          electricityBillYear: year,
+          areaCode: code,
+          eleCustId: id
+        });
+        const res = await req.loadJSON();
+        const {
+          electricBillPay: pay,
+          billUserAndYear: billUser
+        } = res.data;
+        const {
+          totalPower: total,
+          totalElectricity: arrears
+        } = billUser.pop();
+        return {
+          pay,
+          total,
+          arrears
+        } = bill;
+      } else {
+        return {
+          arrears: pay ,
+          billingElectricity: total,
+          receieElectricity: arrears
+        } = bill;
+      }
+    } else {
+      return {
+        pay: pay = '0',
+        total: total = '0.00',
+        arrears: arrears = '0.00'
+      }
+    }
   }
   
   async function getImage(url) {
