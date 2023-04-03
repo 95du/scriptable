@@ -33,7 +33,6 @@ async function main() {
     return await n.schedule();
   }
   
-  
   const getData = async () => {
     benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
     
@@ -304,7 +303,7 @@ async function main() {
         const barHeight = tempBarHeight - 10;
         barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
         draw.addPath(barPath);
-        
+        // Circle Color
         draw.setFillColor((barColor))
         draw.fillPath();
       
