@@ -35,31 +35,31 @@ async function presentMenu() {
   alert.addAction('预览组件');
   alert.addAction('退出菜单');
   response = await alert.presentAlert();
-  if (response === 1) {
+  if ( response === 1 ) {
     F_MGR.remove(path);
     return;
   }
-  if (response === 2) {
+  if ( response === 2 ) {
     Safari.open('amapuri://WatchFamily/myFamily');
   }
-  if (response === 3) {
+  if ( response === 3 ) {
     await inputCookie();
   }
-  if (response === 4) {
+  if ( response === 4 ) {
     await getData();
     await createWidget();
   }
-  if (response === 5) return;
-  if (response === 0) {
+  if ( response === 5 ) return;
+  if ( response === 0 ) {
     const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
     const finish = new Alert();
-    if (codeString.indexOf('Maybach' || 'HONDA') == -1) {
+    if ( codeString.indexOf('Maybach' || 'HONDA') == -1 ) {
       finish.title = '更新失败';
       finish.addAction('OK');
       await finish.presentAlert();
     } else {
       const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
-      if (iCloudInUse) {
+      if ( iCloudInUse ) {
         F_MGR.writeString(  
           module.filename,
           codeString
@@ -80,9 +80,9 @@ async function inputCookie() {
   alert.addAction('确定');
   alert.addCancelAction('取消');
   const input = await alert.present();
-  if (input === -1) return;
+  if ( input === -1 ) return;
   const cookie = alert.textFieldValue(0);
-  if (cookie) {
+  if ( cookie ) {
     json.cookie = cookie;
     F_MGR.writeString(
       cacheFile,
@@ -94,25 +94,7 @@ async function inputCookie() {
 
 // Create Widget
 async function createWidget() {
-  const widget = new ListWidget();
-  widget.backgroundColor = Color.white();
-  const gradient = new LinearGradient();
-  color = [
-    "#82B1FF",
-    "#4FC3F7",
-    "#66CCFF",
-    "#99CCCC",
-    "#BCBBBB"
-  ];
-  const items = color[Math.floor(Math.random()*color.length)];
-  gradient.locations = [0, 1];
-  gradient.colors = [
-    new Color(items, 0.5),
-    new Color('#00000000')
-  ];
-  widget.backgroundGradient = gradient;
-
-  if (speed <= 5) {
+  if ( speed <= 5 ) {
     state = '已静止';
     status = '[ 车辆静止中 ]';
   } else {
@@ -126,14 +108,13 @@ async function createWidget() {
   const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
   const address = adr.regeocode.formatted_address;
   
-  // 计算停车时长(红绿灯图标)
-  const timestamp = Date.parse(new Date());
-  const parkingTime = (timestamp - updateTime);
-  const days = Math.floor(parkingTime/(24 * 3600 * 1000));
-  const P1 = parkingTime % (24 * 3600 * 1000);
-  const hours1 = Math.floor(P1 / (3600 * 1000));
-  const P2 = P1 % (3600 * 1000);
-  const minutes1 = Math.floor(P2 / (60 * 1000));
+  // 计算停车时长(红绿灯图标)  
+  function getParkingTime( updateTime ) {
+    const timeAgo = new Date(Date.now() - updateTime);
+    const minutes = timeAgo.getUTCMinutes();
+    return minutes;
+  }
+  const parkingTime = getParkingTime(updateTime);
   
   // Timestamp Formatter
   const date = new Date(updateTime);
@@ -149,7 +130,7 @@ async function createWidget() {
     address: address,
     run: owner,
     coordinates: `${longitude},${latitude}`,
-    pushTime: timestamp,
+    pushTime: Date.now(),
     parkingTime: GMT2,
     cookie: json.cookie
   }
@@ -170,9 +151,24 @@ F_MGR.readString(cacheFile)
   }
   
   
-  /**
-   * 界面显示布局(左到右)
-   */
+  // 显示小组件
+  const widget = new ListWidget();
+  widget.backgroundColor = Color.white();
+  const gradient = new LinearGradient();
+  color = [
+    "#82B1FF",
+    "#4FC3F7",
+    "#66CCFF",
+    "#99CCCC",
+    "#BCBBBB"
+  ];
+  const items = color[Math.floor(Math.random()*color.length)];
+  gradient.locations = [0, 1];
+  gradient.colors = [
+    new Color(items, 0.5),
+    new Color('#00000000')
+  ];
+  widget.backgroundGradient = gradient;
   widget.setPadding(10, 10, 10, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
@@ -189,7 +185,7 @@ F_MGR.readString(cacheFile)
   leftStack.addSpacer();
   
   const plateStack = leftStack.addStack();
-  const plateText = plateStack.addText(minutes1 <= 3 ? 'Maybach🚦' : '琼A·849A8');
+  const plateText = plateStack.addText(parkingTime <= 3 ? 'Maybach🚦' : '琼A·849A8');
   plateText.font = Font.mediumSystemFont(19);
   plateText.textColor = Color.black();
   plateText.textOpacity = 0.9;
@@ -304,7 +300,7 @@ F_MGR.readString(cacheFile)
   };  
   str = (jmz.GetLength(address));
     
-  if (str <= 35) {
+  if ( str <= 35 ) {
     textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}` + `${adr.regeocode.pois[0].distance}米`)
   } else if (str < 46) {
     textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}`);
@@ -322,7 +318,7 @@ F_MGR.readString(cacheFile)
   textAddress.url = mapUrl;
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
   
-  if (!config.runsInWidget) {  
+  if ( !config.runsInWidget ) {  
     await widget.presentMedium();
   } else {
     Script.setWidget(widget);
@@ -338,11 +334,11 @@ F_MGR.readString(cacheFile)
   
   const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
   
-  if (json.run !== 'HONDA') {
+  if ( json.run !== 'HONDA' ) {
     const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${longitude},${latitude}`).loadJSON();  
     const distance = fence.route.paths[0].distance  
     
-    if (distance > 20) {
+    if ( distance > 20 ) {
       // push message to WeChat_1
       const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_1.method = 'POST'
@@ -377,18 +373,18 @@ F_MGR.readString(cacheFile)
    * 驻车时长，行驶中，静止状态
    * 推送信息到微信
    */
-  const date1 = (timestamp - json.pushTime);
-  const L1 = date1 % (24 * 3600 * 1000);
-  const hours = Math.floor(L1 / (3600 * 1000));
-  const L2 = L1 % (3600 * 1000);
-  const minutes = Math.floor(L2 / (60 * 1000));
-  const L3 = L2 % (60 * 1000);
-  const seconds = Math.round(L3 / 1000);
-  let moment = (hours * 60 + minutes)
+  function calculateMoment(json) {
+    const timeAgo = new Date(Date.now() - json.pushTime);
+    const hours = timeAgo.getUTCHours();
+    const minutes = timeAgo.getUTCMinutes();
+    const moment = hours * 60 + minutes;
+    return moment;
+  }
+  const moment = calculateMoment(json);
   
-  if (speed <= 5) {
+  if ( speed <= 5 ) {
     const duration = updateTime == json.updateTime ? 240 : 10;
-    if (moment >= duration) {
+    if ( moment >= duration ) {
       // push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_2.method = 'POST'
@@ -415,7 +411,7 @@ F_MGR.readString(cacheFile)
       );
     } 
   } else {
-    if (json.run !== 'HONDA'){
+    if ( json.run !== 'HONDA' ) {
       // push message to WeChat_3
       const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_3.method = 'POST'
@@ -472,7 +468,7 @@ F_MGR.readString(cacheFile)
 }
 
 const isMediumWidget =  config.widgetFamily === 'medium'
-if (config.runsInWidget) {
+if ( config.runsInWidget ) {
   if ( isMediumWidget ) {
     await getData();
     await createWidget();
@@ -490,17 +486,18 @@ async function getData() {
     Cookie: json.cookie
   }
   const res = await req.loadJSON();
-  if (res.code != 1) return;
-  return {
-    speed,
-    owner,
-    longitude,
-    latitude,
-    updateTime
-  } = res.data;
+  if ( res.code == 1 ) {
+    return {
+      speed,
+      owner,
+      longitude,
+      latitude,
+      updateTime
+    } = res.data;
+  }
 }
 
-async function notify (title, body, url, opts = {}) {
+async function notify ( title, body, url, opts = {} ) {
   let n = new Notification();
   n = Object.assign(n, opts);
   n.title = title
