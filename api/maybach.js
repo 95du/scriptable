@@ -169,30 +169,32 @@ F_MGR.readString(cacheFile)
     );
   }
   
+  
   /**
    * 界面显示布局(左到右)
-   * @param {image} image
-   * @param {string} text
-   * Cylindrical Bar Chart
    */
   widget.setPadding(10, 10, 10, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
   mainStack.addSpacer();
     
-  // Left Main Stack
+  /**
+   * Left Stack
+   * @param {image} SFSymbol
+   * @param {string} text
+   * Cylindrical Bar Chart
+   */
   const leftStack = mainStack.addStack();
   leftStack.layoutVertically();
   leftStack.addSpacer();
-  // plateStack
+  
   const plateStack = leftStack.addStack();
-  const textPlate = plateStack.addText(minutes1 <= 3 ? 'Maybach🚦' : '琼A·849A8');
-  textPlate.font = Font.mediumSystemFont(19);
-  textPlate.textColor = Color.black();
-  textPlate.textOpacity = 0.9;
+  const plateText = plateStack.addText(minutes1 <= 3 ? 'Maybach🚦' : '琼A·849A8');
+  plateText.font = Font.mediumSystemFont(19);
+  plateText.textColor = Color.black();
+  plateText.textOpacity = 0.9;
   leftStack.addSpacer(3);
-    
-  // Mercedes Logo
+  
   const benzStack = leftStack.addStack();
   benzStack.layoutHorizontally();
   benzStack.centerAlignContent();
@@ -200,14 +202,14 @@ F_MGR.readString(cacheFile)
   const carIcon1 = benzStack.addImage(iconSymbol.image);
   carIcon1.imageSize = new Size(16, 16);
   benzStack.addSpacer(4);
-  // mercedes text
+  
   const vehicleModelText = benzStack.addText('Mercedes');
   vehicleModelText.font = Font.mediumSystemFont(14);
   vehicleModelText.textColor = Color.black();
   vehicleModelText.textOpacity = 0.7;
   leftStack.addSpacer(3)
   
-  // update time icon
+  // Update Time
   const dateStack = leftStack.addStack();
   dateStack.layoutHorizontally();
   dateStack.centerAlignContent();
@@ -215,14 +217,14 @@ F_MGR.readString(cacheFile)
   const carIcon2 = dateStack.addImage(iconSymbol2.image)
   carIcon2.imageSize = new Size(16, 16);
   dateStack.addSpacer(4);
-  // update time text
-  const textUpdateTime = dateStack.addText(GMT2);
-  textUpdateTime.font = Font.mediumSystemFont(13);
-  textUpdateTime.textColor = Color.black();
-  textUpdateTime.textOpacity = 0.7;
+  
+  const updateTimeText = dateStack.addText(GMT2);
+  updateTimeText.font = Font.mediumSystemFont(13);
+  updateTimeText.textColor = Color.black();
+  updateTimeText.textOpacity = 0.7;
   leftStack.addSpacer(22);
   
-  // Left Stack barRow
+  // Left Stack bar
   const barStack = leftStack.addStack();
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
@@ -230,19 +232,19 @@ F_MGR.readString(cacheFile)
   barStack.cornerRadius = 10;
   barStack.borderColor = new Color(speed <= 5 ? '#AB47BC' : '#FF1744', 0.7);
   barStack.borderWidth = 2;
-  // bar icon
+  
   const barIcon = SFSymbol.named(speed <= 5 ? 'location' : 'location.fill');
   const barIconElement = barStack.addImage(barIcon.image);
   barIconElement.imageSize = new Size(16, 16);
   barIconElement.tintColor = speed <= 5 ? Color.purple() : Color.red();
   barStack.addSpacer(4);
-  // bar text
-  const totalMonthBar = barStack.addText(state);
-  totalMonthBar.font = Font.mediumSystemFont(14);
-  totalMonthBar.textColor = new Color(speed <= 5 ? '#AA00FF' : '#D50000');
+  
+  const speedText = barStack.addText(state);
+  speedText.font = Font.mediumSystemFont(14);
+  speedText.textColor = new Color(speed <= 5 ? '#AA00FF' : '#D50000');
   leftStack.addSpacer(8);
 
-  // Left Stack barRow2
+  // Left Stack bar2
   const barStack2 = leftStack.addStack();
   barStack2.layoutHorizontally();
   barStack2.centerAlignContent();
@@ -250,30 +252,29 @@ F_MGR.readString(cacheFile)
   barStack2.cornerRadius = 10;
   barStack2.borderColor = Color.dynamic(new Color('#000000', 0.4), new Color('#000000', 0.4));
   barStack2.borderWidth = 2;
-  // bsr icon
+  
   const barIcon2 = SFSymbol.named('lock.shield.fill');
   const barIconElement2 = barStack2.addImage(barIcon2.image);
   barIconElement2.imageSize = new Size(16, 16);
   barIconElement2.tintColor = Color.green();
   barStack2.addSpacer(4);
-  // bar text
-  const totalMonthBar2 = barStack2.addText('已锁车');
-  totalMonthBar2.font = Font.mediumSystemFont(14);
-  totalMonthBar2.textColor = Color.black();
-  totalMonthBar2.textOpacity = 0.6;
+  
+  const statusText = barStack2.addText('已锁车');
+  statusText.font = Font.mediumSystemFont(14);
+  statusText.textColor = Color.black();
+  statusText.textOpacity = 0.6;
   leftStack.addSpacer();
   
     
   /**
    * right Stack
-   * Car Logo and image
    * @param {image} image
    * @param {string} address
    */
   const rightStack = mainStack.addStack();
   rightStack.layoutVertically();
   rightStack.addSpacer();
-  // Car Logo
+  
   const carLogoStack = rightStack.addStack();
   carLogoStack.addSpacer();
   const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
