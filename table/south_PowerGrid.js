@@ -6,7 +6,7 @@
  * UITable 版本: Version 1.0.0
  * 2023-03-27 19:30
  */
-
+await main()
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -213,7 +213,7 @@ async function main() {
     
     const balance = await getBalance();
     const pointText = barStack2.addText(Number(balance).toFixed(2));
-    pointText.font = Font.boldSystemFont(11);
+    pointText.font = Font.boldSystemFont(12);
     pointText.textColor = new Color('#FFFFFF');
     mainStack.addSpacer();
     
