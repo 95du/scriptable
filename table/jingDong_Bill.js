@@ -33,16 +33,10 @@ async function main() {
     if (url) {n.openURL = url}
     return await n.schedule();
   }
-  
-  const info = await getJson('https://api.m.jd.com?functionId=queryJDUserInfo&appid=jd-cphdeveloper-m');
 
   const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
   
   if (sign !== undefined) {
-    asset = await totalAsset('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
-  
-    wallet = await myWallet('https://ms.jr.jd.com/gw2/generic/MyWallet/h5/m/myWalletInfo');
-  
     const df = new DateFormatter();
     df.dateFormat = 'yyyy-MM';
     yearMonth = (df.string(new Date()));
@@ -133,7 +127,7 @@ async function main() {
       ]
       widget.backgroundGradient = gradient
     } else {
-      widget.backgroundColor = Color.dynamic(new Color("#FFE5B4", 0.5), new Color("#1e1e1e"));
+      widget.backgroundColor = Color.dynamic(new Color('#FFE5B4', 0.5), new Color('#1e1e1e'));
     }
     
     
@@ -156,7 +150,7 @@ async function main() {
     
     // avatarStack
     const avatarStack = leftStack.addStack();
-    const iconSymbol = await circleImage(info.headImageUrl);  
+    const iconSymbol = await circleImage(headImageUrl);  
     
     if (setting.isPlus === 'true') {
       avatarStack.backgroundImage = iconSymbol;
@@ -182,7 +176,7 @@ async function main() {
     nameIconElement.imageSize = new Size(16, 16);
     nameStack.addSpacer(5);
     
-    const nameText = nameStack.addText(!setting.userName ? info.nickname : setting.userName);
+    const nameText = nameStack.addText(!setting.userName ? nickname : setting.userName);
     nameText.font = Font.mediumSystemFont(12);
     nameText.textOpacity = 0.8;
     leftStack.addSpacer(3);
@@ -197,9 +191,8 @@ async function main() {
     baitiaoIcon.imageSize = new Size(25, 18);
     btStack.addSpacer(6);
     
-    const state = asset.quota.state;
-    const amount = state === '1' ? asset.bill.amount.replace(',', '') : '0.00';
-    const baitiaoText = btStack.addText(amount >= '1000' ? String(Math.floor(amount)) : amount);
+    const Amount = state === '1' ? amount.replace(',', '') : '0.00';
+    const baitiaoText = btStack.addText(Amount >= '1000' ? String(Math.floor(Amount)) : Amount);
     baitiaoText.font = Font.mediumSystemFont(14);
     mainStack.addSpacer();
     
@@ -224,7 +217,7 @@ async function main() {
     logoIcon.imageSize = new Size(32, 32);
     logoStack.addSpacer();
     
-    const assetText = logoStack.addText(wallet.assetAmt);
+    const assetText = logoStack.addText(assetAmt);
     assetText.textColor = Color.red();
     assetText.font = Font.boldSystemFont(20);
     assetText.textOpacity = 0.8;
@@ -387,6 +380,9 @@ async function main() {
   if (isSmallWidget && config.runsInWidget) {
     await smallrWidget();
   } else if (setting.code === 0) {
+    await getJson();
+    await totalAsset();
+    await myWallet();
     await Run();
     await createWidget();
   } else {
@@ -456,20 +452,23 @@ async function main() {
       notify(res.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
     }
   }
-    
-  async function getJson(url) {
-    const req = new Request(url)
+  
+  async function getJson() {
+    const req = new Request('https://api.m.jd.com?functionId=queryJDUserInfo&appid=jd-cphdeveloper-m');
     req.method = 'GET'
     req.headers = {
       Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
       Cookie: cookie
     }
     const res = await req.loadJSON();
-    return res.base;
+    return {
+      headImageUrl,
+      nickname
+    } = res.base;
   }
   
-  async function totalAsset(url) {
-    const request = new Request(url);
+  async function totalAsset() {
+    const request = new Request('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
     request.method = 'POST'
     request.headers = {
       Referer: "https://mallwallet.jd.com/",
@@ -479,11 +478,14 @@ async function main() {
       "clientType": "ios"
     }`
     const res = await request.loadJSON();
-    return res.resultData.data
+    return {
+      quota: { state },
+      bill: { amount }
+    } = res.resultData.data;
   }
   
-  async function myWallet(url) {
-    const req = new Request(url)
+  async function myWallet() {
+    const req = new Request('https://ms.jr.jd.com/gw2/generic/MyWallet/h5/m/myWalletInfo');
     req.method = 'POST'
     req.headers = {
       Referer: 'https://mallwallet.jd.com/',
@@ -491,10 +493,12 @@ async function main() {
     }
     req.body = `reqData={"timestamp":${Date.parse(new Date())}}&aar={"nonce":""}`
     const res = await req.loadJSON();
-    const arr = res.resultData.data.floors[0].nodes
+    const arr = res.resultData.data.floors[0].nodes;
     for (const item of arr) {
-      if (item.title.value.indexOf('总资产') > -1) {
-        return item.data;
+      if ( item.title.value.indexOf('总资产') > -1 ) {
+        return { 
+          assetAmt 
+        } = item.data;
       }
     }
   }
