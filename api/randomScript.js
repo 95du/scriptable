@@ -32,7 +32,7 @@ if ( files ) {
 const scriptUrl = script[Math.floor(Math.random() * script.length)];
 const modulePath = await downloadModule(scriptUrl);
 
-if (modulePath != null) {
+if ( modulePath != null ) {
   if ( config.runsInWidget ) {
     const importedModule = importModule(modulePath);
     await importedModule.main();
