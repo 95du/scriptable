@@ -205,7 +205,7 @@ async function main() {
     barStack2.layoutHorizontally();
     barStack2.centerAlignContent();
     barStack2.backgroundColor = new Color('#FF9500', 0.7);
-    barStack2.setPadding(1, 8, 1, 8);
+    barStack2.setPadding(0.5, 8, 0.5, 8);
     barStack2.cornerRadius = 5;
     
     const balance = await getBalance();
