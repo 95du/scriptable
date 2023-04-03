@@ -11,7 +11,7 @@
 
 const uri = Script.name();
 const F_MGR = FileManager.iCloud();
-const path = F_MGR.joinPath(F_MGR.documentsDirectory(), "mercedes");
+const path = F_MGR.joinPath(F_MGR.documentsDirectory(), 'mercedes');
 const cacheFile = F_MGR.joinPath(path, 'honda.json');
 
 if (!F_MGR.fileExists(path)) {
@@ -26,7 +26,7 @@ if (F_MGR.fileExists(cacheFile)) {
 // Presents the main menu
 async function presentMenu() {
   let alert = new Alert();
-  alert.title = "Mercedes Maybach"
+  alert.title = 'Mercedes Maybach';
   alert.message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
@@ -46,14 +46,15 @@ async function presentMenu() {
     await inputCookie();
   }
   if (response === 4) {
-    widget = await createWidget();
+    await getData();
+    await createWidget();
   }
   if (response === 5) return;
   if (response === 0) {
     const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
     const finish = new Alert();
-    if (codeString.indexOf("Maybach" || "HONDA") == -1) {
-      finish.title = "更新失败"
+    if (codeString.indexOf('Maybach' || 'HONDA') == -1) {
+      finish.title = '更新失败';
       finish.addAction('OK');
       await finish.presentAlert();
     } else {
@@ -63,7 +64,7 @@ async function presentMenu() {
           module.filename,
           codeString
         );
-        finish.title = "更新成功";
+        finish.title = '更新成功';
         finish.addAction('OK');
         await finish.presentAlert();
         Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
@@ -102,43 +103,28 @@ async function createWidget() {
     "#66CCFF",
     "#99CCCC",
     "#BCBBBB"
-  ]
+  ];
   const items = color[Math.floor(Math.random()*color.length)];
   gradient.locations = [0, 1];
   gradient.colors = [
     new Color(items, 0.5),
     new Color('#00000000')
-  ]
-  widget.backgroundGradient = gradient
-  
-  const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
-  req.method = 'GET'
-  req.headers = {
-    Cookie: json.cookie
-  }
-  const res = await req.loadJSON();
-  if (res.code != 1) return;
-  const {
-    speed,
-    owner,
-    longitude,
-    latitude,
-    updateTime
-  } = res.data
-  
-  const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${latitude},${longitude}&t=m`;
+  ];
+  widget.backgroundGradient = gradient;
 
   if (speed <= 5) {
-    state = "已静止";
-    status = "[ 车辆静止中 ]";
+    state = '已静止';
+    status = '[ 车辆静止中 ]';
   } else {
     state = `${speed} km·h`;
     status = `[ 车速 ${speed} km·h ]`;
   }
   
+  const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${latitude},${longitude}&t=m`;
+  
   // Get address (aMap)
   const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
-  const address = adr.regeocode.formatted_address  
+  const address = adr.regeocode.formatted_address;
   
   // 计算停车时长(红绿灯图标)
   const timestamp = Date.parse(new Date());
@@ -359,21 +345,21 @@ F_MGR.readString(cacheFile)
       // push message to WeChat_1
       const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_1.method = 'POST'
-      weChat_1.body = `{
-        "touser": "DianQiao",
-        "agentid": "1000004",
-        "msgtype": "news",
-        "news": {
-          "articles": [
+      weChat_1.body = JSON.stringify({
+        touser: 'DianQiao',
+        agentid: '1000004',
+        msgtype: 'news',
+        news: {
+          articles: [
             {
-              "title": "${address}",
-              "picurl": "${mapKey},0:${longitude},${latitude}",
-              "description": "${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米",
-              "url": "${mapUrl}"
+              title: address,
+              picurl: `${mapKey},0:${longitude},${latitude}`,
+              description: `${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米`,
+              url: mapUrl
             }
           ]
         }
-      }`;
+      });
       await weChat_1.loadJSON();
       notify(status + ' ' + GMT, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
       F_MGR.writeString(
@@ -400,26 +386,26 @@ F_MGR.readString(cacheFile)
   let moment = (hours * 60 + minutes)
   
   if (speed <= 5) {
-    const duration = updateTime == json.updateTime ? 180 : 10
+    const duration = updateTime == json.updateTime ? 240 : 10;
     if (moment >= duration) {
       // push message to WeChat_2
       const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_2.method = 'POST'
-      weChat_2.body = `{
-        "touser": "DianQiao",
-        "agentid": "1000004",
-        "msgtype": "news",
-        "news": {
-          "articles": [
+      weChat_2.body = JSON.stringify({
+        touser: 'DianQiao',
+        agentid: '1000004',
+        msgtype: 'news',
+        news: {
+          articles: [
             {
-              "title": "${address}",
-              "picurl": "${mapKey},0:${longitude},${latitude}",
-              "description": "${status} 停车时间 ${GMT}",
-              "url": "${mapUrl}"
+              title: address,
+              picurl: `${mapKey},0:${longitude},${latitude}`,
+              description: `${status} 停车时间 ${GMT}`,
+              url: mapUrl
             }
           ]
         }
-      }`;
+      });
       await weChat_2.loadJSON();
       notify(status + ' ' + GMT, address, mapUrl);
       F_MGR.writeString(
@@ -432,21 +418,21 @@ F_MGR.readString(cacheFile)
       // push message to WeChat_3
       const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_3.method = 'POST'
-      weChat_3.body = `{
-        "touser": "DianQiao",
-        "agentid": "1000004",
-        "msgtype": "news",
-        "news": {
-          "articles": [
+      weChat_3.body = JSON.stringify({
+        touser: 'DianQiao',
+        agentid: '1000004',
+        msgtype: 'news',
+        news: {
+          articles: [
             {
-              "title": "${address}",
-              "picurl": "${mapKey},0:${longitude},${latitude}",
-              "description": "${status} 启动时间 ${GMT}",
-              "url": "${mapUrl}"
+              title: address,
+              picurl: `${mapKey},0:${longitude},${latitude}`,
+              description: `${status} 启动时间 ${GMT}`,
+              url: mapUrl
             }
           ]
         }
-      }`;
+      });
       await weChat_3.loadJSON();
       notify(status + ' ' + GMT, address, mapUrl)
       F_MGR.writeString(
@@ -457,21 +443,21 @@ F_MGR.readString(cacheFile)
       // push message to WeChat_4
       const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
       weChat_4.method = 'POST'
-      weChat_4.body = `{
-        "touser": "DianQiao",
-        "agentid": "1000004",
-        "msgtype": "news",
-        "news": {
-          "articles": [
+      weChat_4.body = JSON.stringify({
+        touser: 'DianQiao',
+        agentid: '1000004',
+        msgtype: 'news',
+        news: {
+          articles: [
             {
-              "title": "${address}",
-              "picurl": "${mapKey},0:${longitude},${latitude}",
-              "description": "${status} 更新时间 ${GMT}",
-              "url": "${mapUrl}"
+              title: address,
+              picurl: `${mapKey},0:${longitude},${latitude}`,
+              description: `${status} 更新时间 ${GMT}`,
+              url: mapUrl
             }
           ]
         }
-      }`;
+      });
       await weChat_4.loadJSON();
       notify(status + ' ' + GMT, address, mapUrl);
       F_MGR.writeString(
@@ -486,9 +472,31 @@ F_MGR.readString(cacheFile)
 
 const isMediumWidget =  config.widgetFamily === 'medium'
 if (config.runsInWidget) {
-  isMediumWidget ? widget = await createWidget() : await createErrorWidget();
+  if ( isMediumWidget ) {
+    await getData();
+    await createWidget();
+  } else {
+    await createErrorWidget();
+  }
 } else {
   await presentMenu();
+}
+
+async function getData() {
+  const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
+  req.method = 'GET'
+  req.headers = {
+    Cookie: json.cookie
+  }
+  const res = await req.loadJSON();
+  if (res.code != 1) return;
+  return {
+    speed,
+    owner,
+    longitude,
+    latitude,
+    updateTime
+  } = res.data;
 }
 
 async function notify (title, body, url, opts = {}) {
