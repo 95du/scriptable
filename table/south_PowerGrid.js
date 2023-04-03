@@ -59,9 +59,6 @@ async function main() {
       ystdayPower = '0.00';
     }
     
-    // selectBill
-    await getEleBill();
-    
     // levelColor loop
     if ( loop == 0 ) {
       setting.loop = 1
@@ -380,6 +377,7 @@ async function main() {
     await smallrWidget();
   } else if (setting.code == 0) {
     await userInfo();
+    await getEleBill();
     await Run();
     await createWidget();
   } else {
