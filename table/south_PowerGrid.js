@@ -6,7 +6,7 @@
  * UITable 版本: Version 1.0.0
  * 2023-03-27 19:30
  */
-await main()
+
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
