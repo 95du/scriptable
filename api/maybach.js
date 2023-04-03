@@ -117,12 +117,14 @@ async function createWidget() {
   const parkingTime = getParkingTime(updateTime);
   
   // Timestamp Formatter
-  const date = new Date(updateTime);
-  const df = new DateFormatter();
-  df.dateFormat = 'yyyy-MM-dd HH:mm';
-  const GMT = (df.string(date));
-  df.dateFormat = 'MM-dd HH:mm';
-  const GMT2 = (df.string(date));
+  function formatDate(updateTime, format) {
+    const date = new Date(updateTime);
+    const df = new DateFormatter();
+    df.dateFormat = format;
+    return df.string(date);
+  }
+  const GMT = formatDate(updateTime, 'yyyy-MM-dd HH:mm');
+  const GMT2 = formatDate(updateTime, 'MM-dd HH:mm');
   
   // Saved Json
   runObj = {
