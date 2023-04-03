@@ -21,6 +21,7 @@ if (!F_MGR.fileExists(path)) {
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile);
   json = JSON.parse(data);
+  cookie = json.cookie;
 }
 
 // Presents the main menu
@@ -67,7 +68,7 @@ async function presentMenu() {
         finish.title = '更新成功';
         finish.addAction('OK');
         await finish.presentAlert();
-        Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
+        Safari.open('scriptable:///run/' + encodeURIComponent(uri));
       }
     }
   }
@@ -76,18 +77,15 @@ async function presentMenu() {
 async function inputCookie() {
   const alert = new Alert();
   alert.message = '输入 Cookie'
-  alert.addTextField('高德地图Cookie', json.cookie);
+  alert.addTextField('高德地图Cookie');
   alert.addAction('确定');
   alert.addCancelAction('取消');
   const input = await alert.present();
   if ( input === -1 ) return;
   const cookie = alert.textFieldValue(0);
   if ( cookie ) {
-    json.cookie = cookie;
-    F_MGR.writeString(
-      cacheFile,
-      JSON.stringify(json)
-    );
+    F_MGR.writeString(cacheFile, JSON.stringify({ cookie: cookie }));  
+    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
 }
 
@@ -134,7 +132,7 @@ async function createWidget() {
     coordinates: `${longitude},${latitude}`,
     pushTime: Date.now(),
     parkingTime: GMT2,
-    cookie: json.cookie
+    cookie: cookie
   }
     
   object = {
@@ -142,14 +140,10 @@ async function createWidget() {
     run: speed
   }
   // Initial Save
-  if (!F_MGR.fileExists(cacheFile)) {
-    F_MGR.writeString(
-      cacheFile,
-      JSON.stringify(runObj, null, 2)
-    );
+  if ( !json.run ) {
+    F_MGR.writeString(cacheFile, JSON.stringify(runObj, null, 2));
     json = JSON.parse(
-F_MGR.readString(cacheFile)
-    );
+F_MGR.readString(cacheFile));
   }
   
   
@@ -332,13 +326,14 @@ F_MGR.readString(cacheFile)
    * 判断run为HONDA触发电子围栏
    * 推送信息到微信
    */
+  
   const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON(); // accessToken
   
   const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
   
   if ( json.run !== 'HONDA' ) {
     const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${longitude},${latitude}`).loadJSON();  
-    const distance = fence.route.paths[0].distance  
+    const distance = fence.route.paths[0].distance;
     
     if ( distance > 20 ) {
       // push message to WeChat_1
@@ -361,10 +356,7 @@ F_MGR.readString(cacheFile)
       });
       await weChat_1.loadJSON();
       notify(status + ' ' + GMT, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
-      F_MGR.writeString(
-        cacheFile,
-        JSON.stringify(runObj)
-      );
+      F_MGR.writeString(cacheFile, JSON.stringify(runObj, null, 2));
       return;// pushEnd_1
     }
   }
@@ -407,10 +399,7 @@ F_MGR.readString(cacheFile)
       });
       await weChat_2.loadJSON();
       notify(status + ' ' + GMT, address, mapUrl);
-      F_MGR.writeString(
-        cacheFile,
-        JSON.stringify(object)
-      );
+      F_MGR.writeString(cacheFile, JSON.stringify(object, null, 2));
     } 
   } else {
     if ( json.run !== 'HONDA' ) {
@@ -434,10 +423,7 @@ F_MGR.readString(cacheFile)
       });
       await weChat_3.loadJSON();
       notify(status + ' ' + GMT, address, mapUrl)
-      F_MGR.writeString(
-        cacheFile,
-        JSON.stringify(runObj)
-      );
+      F_MGR.writeString(cacheFile, JSON.stringify(runObj, null, 2));
     } else {
       // push message to WeChat_4
       const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
@@ -459,10 +445,7 @@ F_MGR.readString(cacheFile)
       });
       await weChat_4.loadJSON();
       notify(status + ' ' + GMT, address, mapUrl);
-      F_MGR.writeString(
-        cacheFile,
-        JSON.stringify(runObj)
-      );
+      F_MGR.writeString(cacheFile, JSON.stringify(runObj, null, 2));
       return;
     }
   }
@@ -484,9 +467,7 @@ if ( config.runsInWidget ) {
 async function getData() {
   const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
   req.method = 'GET'
-  req.headers = {
-    Cookie: json.cookie
-  }
+  req.headers = { Cookie: cookie }
   const res = await req.loadJSON();
   if ( res.code == 1 ) {
     return {
