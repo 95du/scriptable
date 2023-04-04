@@ -12,17 +12,25 @@ async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong_BaiTiao");
-  const cacheFile = F_MGR.joinPath(folder, 'setting.json');
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
   
-  if (F_MGR.fileExists(cacheFile)) {
-    data = F_MGR.readString(cacheFile);
-    setting = JSON.parse(data);
-    cookie = setting.cookie;
-    gap = setting.gap;
-    location = setting.location;
+  // file_Path
+  function getPath(pathName, fileName) {
+    return F_MGR.joinPath(pathName, fileName);
   }
+  const bgImage = getPath(bgPath, uri + '.jpg');
+  const cacheFile = getPath(folder, 'setting.json');
+  
+  // Get Settings { json }
+  const getSettings = (file) => {
+    if ( F_MGR.fileExists(file) ) {
+      const data = F_MGR.readString(file);
+      return { cookie, gap, location } = JSON.parse(data);
+    }
+    return null;
+  }
+  const setting = getSettings(cacheFile);
+
   
   const notify = async (title, body, url) => {
     let n = new Notification();
@@ -89,8 +97,8 @@ async function main() {
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg.png',  
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg1.png',  
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png'];
-      const bgImageItems = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
-      widget.backgroundImage = await getImage(bgImageItems);
+      const randomIndex = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
+      widget.backgroundImage = await getImage(randomIndex);
       widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
     }
     
