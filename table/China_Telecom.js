@@ -10,25 +10,28 @@
  */
 
 async function main() {
-  const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duTelecom");
-  if (!F_MGR.fileExists(folder)) {
-    F_MGR.createDirectory(folder)
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+  
+  // file_Path
+  function getPath(pathName, fileName) {
+    return F_MGR.joinPath(pathName, fileName);
   }
-  // Background image path  
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  const bgImage = getPath(bgPath, Script.name() + '.jpg');
+  const cacheFile = getPath(folder, 'setting.json');
+  
+  // Get Settings { json }
+  const getSettings = (file) => {
+    if ( F_MGR.fileExists(file) ) {
+      const data = F_MGR.readString(file);
+      return { cookie } = JSON.parse(data);
+    }
+    return null;
+  }
+  const setting = getSettings(cacheFile);
 
-  const cacheFile = F_MGR.joinPath(folder, 'setting.json');
-  if (F_MGR.fileExists(cacheFile)) {
-    data = F_MGR.readString(cacheFile);
-    setting = JSON.parse(data);
-    cookie = setting.cookie
-  }
-  if (!setting.cookie) {
-    notify('用户未登录 ⚠️', '请登录天翼账号中心获取 Cookie'); return;
-  }
+  //=========> START <=========//
   
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
   widgetBgColor = Color.dynamic(
