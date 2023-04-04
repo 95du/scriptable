@@ -7,27 +7,34 @@
  * 获取Token作者: @FoKit
  * UITable 版本: Version 1.1.0
  */
+
 async function main() {
   const get = await new Request(atob(
 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON()
-  const url = get.infoURL
+  const url = get.infoURL;
   
-  const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95du12123");
-  const cacheFile = F_MGR.joinPath(folder, 'setting.json');
-  // Background image path
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
   
-  if (F_MGR.fileExists(cacheFile)) {
-    data = F_MGR.readString(cacheFile)
-    setting = JSON.parse(data);
-    verifyToken = setting.verifyToken
-    myPlate = setting.myPlate
-    referer = setting.referer
-    sign = setting.sign
+  // file_Path
+  function getPath(pathName, fileName) {
+    return F_MGR.joinPath(pathName, fileName);
   }
+  const bgImage = getPath(bgPath, Script.name() + '.jpg');
+  const cacheFile = getPath(folder, 'setting.json');
+  
+  // Get Settings { json }
+  const getSettings = (file) => {
+    if ( F_MGR.fileExists(file) ) {
+      const data = F_MGR.readString(file);
+      return { verifyToken, myPlate, referer, sign } = JSON.parse(data);
+    }
+    return null;
+  }
+  const setting = getSettings(cacheFile);
+
+  //=========> START <=========//
   
   if (verifyToken === null || sign === null || !referer) {
     try {
