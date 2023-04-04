@@ -10,7 +10,6 @@
  */
 
 async function main() {
-  const uri = Script.name();
   const phoneSize = Device.screenSize().height;
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duJingDong_Bill');
@@ -20,7 +19,7 @@ async function main() {
   function getPath(pathName, fileName) {
     return F_MGR.joinPath(pathName, fileName);
   }
-  const bgImage = getPath(bgPath, uri + '.jpg');
+  const bgImage = getPath(bgPath, Script.name() + '.jpg');
   const cacheFile = getPath(folder, 'setting.json');
   
   // Get Settings { json }
@@ -33,6 +32,7 @@ async function main() {
   }
   const setting = getSettings(cacheFile);
 
+  //=========> START <=========//
   
   const notify = async (title, body, url) => {
     let n = new Notification();
