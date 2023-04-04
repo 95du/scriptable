@@ -8,22 +8,28 @@
  */
 
 async function main() {
-  const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
-  const cacheFile = F_MGR.joinPath(folder, 'setting.json');
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
-  const bgImage = F_MGR.joinPath(bgPath, uri + '.jpg');
   
-  if (F_MGR.fileExists(cacheFile)) {
-    data = F_MGR.readString(cacheFile);
-    setting = JSON.parse(data);
-    loop = setting.loop;
-    token = setting.token;
-    gap = setting.gap;
-    location = setting.location;
-    avatarImg = setting.avatarImage
+  // file_Path
+  function getPath(pathName, fileName) {
+    return F_MGR.joinPath(pathName, fileName);
   }
+  const bgImage = getPath(bgPath, Script.name() + '.jpg');
+  const cacheFile = getPath(folder, 'setting.json');
+  
+  // Get Settings { json }
+  const getSettings = (file) => {
+    if ( F_MGR.fileExists(file) ) {
+      const data = F_MGR.readString(file);
+      return { loop, token, gap, location, avatarImage } = JSON.parse(data);
+    }
+    return null;
+  }
+  const setting = getSettings(cacheFile);
+  
+  //=========> START <=========//
   
   const notify = async (title, body, url) => {
     let n = new Notification();
@@ -123,10 +129,10 @@ async function main() {
     avatarStack.layoutHorizontally();
     avatarStack.centerAlignContent();
     const avatarStack2 = avatarStack.addStack();
-    const iconSymbol = await getImage(avatarImg);
+    const iconSymbol = await getImage(avatarImage);
     const avatarIcon = avatarStack2.addImage(iconSymbol);
     avatarIcon.imageSize = new Size(50, 50);
-    if ( avatarImg.indexOf('png') == -1 ) {
+    if ( avatarImage.indexOf('png') == -1 ) {
       avatarStack2.cornerRadius = 50;
       avatarStack2.borderWidth = 3;
       avatarStack2.borderColor = new Color('#FFBF00');
