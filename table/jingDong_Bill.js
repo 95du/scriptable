@@ -13,21 +13,26 @@ async function main() {
   const uri = Script.name();
   const phoneSize = Device.screenSize().height;
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong_Bill");
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duJingDong_Bill');
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
   
-  const cacheFile = F_MGR.joinPath(folder, 'setting.json');
-
-  const getSettings = () => {
-    if ( F_MGR.fileExists(cacheFile) ) {
-      const data = F_MGR.readString(cacheFile);
+  // file_Path
+  function getPath(pathName, fileName) {
+    return F_MGR.joinPath(pathName, fileName);
+  }
+  const bgImage = getPath(bgPath, uri + '.jpg');
+  const cacheFile = getPath(folder, 'setting.json');
+  
+  // Get Settings { json }
+  const getSettings = (file) => {
+    if ( F_MGR.fileExists(file) ) {
+      const data = F_MGR.readString(file);
       return { cookie, statistics } = JSON.parse(data);
     }
     return null;
   }
-  const setting = getSettings();
-  
+  const setting = getSettings(cacheFile);
+
   
   const notify = async (title, body, url) => {
     let n = new Notification();
