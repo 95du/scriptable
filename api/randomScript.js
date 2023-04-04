@@ -8,6 +8,7 @@
  * 2023-03-23 15:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  * 例如: https://gitcode.net/4qiao/scriptable/raw/master/api/housePrice.js
+ * https://gitcode.net/4qiao/scriptable/raw/master/api/telecom.js
  */
 
 const get = await new Request(atob(
@@ -16,22 +17,24 @@ const get = await new Request(atob(
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), 'randomScript');
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
-
-if (!F_MGR.fileExists(folder)) {
-  F_MGR.createDirectory(folder);
-}
-
 const files = F_MGR.fileExists(cacheFile);
-if ( files ) {
-  data = F_MGR.readString(cacheFile)
-  script = JSON.parse(data);
-} else { 
-  script = get.script;
-}
 
+const readCacheFile = () => {
+  if (!F_MGR.fileExists(folder)) {
+    F_MGR.createDirectory(folder);
+  }
+  if ( files ) {
+    const data = F_MGR.readString(cacheFile);
+    return JSON.parse(data);
+  } else {
+    return get.script;
+  }
+};
+const script = readCacheFile();
+
+// Get scriptUrl
 const scriptUrl = script[Math.floor(Math.random() * script.length)];
 const modulePath = await downloadModule(scriptUrl);
-
 if ( modulePath != null ) {
   if ( config.runsInWidget ) {
     const importedModule = importModule(modulePath);
