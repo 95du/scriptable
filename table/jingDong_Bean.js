@@ -9,19 +9,28 @@
  */
 
 async function main() {
-  const uri = Script.name();
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong");
-  const cacheFile = F_MGR.joinPath(folder, 'setting.json');
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
   
-  if (F_MGR.fileExists(cacheFile)) {
-    data = F_MGR.readString(cacheFile);
-    setting = JSON.parse(data);
-    cookie = setting.cookie;
-    index = setting.randomIndex;
+  // file_Path
+  function getPath(pathName, fileName) {
+    return F_MGR.joinPath(pathName, fileName);
   }
+  const bgImage = getPath(bgPath, Script.name() + '.jpg');
+  const cacheFile = getPath(folder, 'setting.json');
+  
+  // Get Settings { json }
+  const getSettings = (file) => {
+    if ( F_MGR.fileExists(file) ) {
+      const data = F_MGR.readString(file);
+      return { cookie, randomIndex: index } = JSON.parse(data);
+    }
+    return null;
+  }
+  const setting = getSettings(cacheFile);
+
+  //=========> START <=========//
   
   const notify = async (title, body, url) => {
     let n = new Notification();
