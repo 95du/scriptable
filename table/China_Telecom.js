@@ -22,14 +22,11 @@ async function main() {
   const cacheFile = getPath(folder, 'setting.json');
   
   // Get Settings { json }
-  const getSettings = (file) => {
-    if ( F_MGR.fileExists(file) ) {
-      const data = F_MGR.readString(file);
-      return { cookie } = JSON.parse(data);
-    }
-    return null;
+  if (F_MGR.fileExists(cacheFile)) {
+    data = F_MGR.readString(cacheFile);
+    setting = JSON.parse(data);
+    cookie = setting.cookie
   }
-  const setting = getSettings(cacheFile);
 
   //=========> START <=========//
   
@@ -76,7 +73,6 @@ async function main() {
     voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
   }
   
-  
   // Flow Package
   const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
   let pacArr = [];
@@ -115,10 +111,10 @@ df.dateFormat = 'ddHHmm'
   if (setting.init === false || dayNumber !== setting.dayNumber) {
     setting = {
       ...setting,
-      flow: flow,
-      voice: voice,
       dayNumber: dayNumber,
+      flow: flow,
       flowBalance: flowBalance,
+      voice: voice,
       voiceBalance: voiceBalance,
       init: true
     }
