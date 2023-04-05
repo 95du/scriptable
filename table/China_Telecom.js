@@ -22,11 +22,14 @@ async function main() {
   const cacheFile = getPath(folder, 'setting.json');
   
   // Get Settings { json }
-  if (F_MGR.fileExists(cacheFile)) {
-    data = F_MGR.readString(cacheFile);
-    setting = JSON.parse(data);
-    cookie = setting.cookie
+  const getSettings = (file) => {
+    if ( F_MGR.fileExists(file) ) {
+      const data = F_MGR.readString(file);
+      return { cookie } = JSON.parse(data);
+    }
+    return null;
   }
+  const setting = getSettings(cacheFile);
 
   //=========> START <=========//
   
@@ -109,7 +112,7 @@ df.dateFormat = 'ddHHmm'
   const day1st = df.string(new Date());
 
   if (setting.init === false || dayNumber !== setting.dayNumber) {
-    setting = {
+    settings = {
       ...setting,
       dayNumber: dayNumber,
       flow: flow,
@@ -118,7 +121,7 @@ df.dateFormat = 'ddHHmm'
       voiceBalance: voiceBalance,
       init: true
     }
-    F_MGR.writeString(cacheFile, JSON.stringify(setting));
+    F_MGR.writeString(cacheFile, JSON.stringify(settings));
   }
   
   const flow1st = setting.flow
