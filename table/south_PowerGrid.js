@@ -9,11 +9,11 @@
 
 async function main() {
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
+  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
   const cacheFile = F_MGR.joinPath(path, 'setting.json');
   // Background image Path
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  const bgPath = F_MGR.joinPath(path, "95duBackground");
+  const bgImage = F_MGR.joinPath(bgPath, `${Script.name()}.jpg`);
   
   // Get Settings { json }
   const getSettings = (file) => {
