@@ -18,8 +18,7 @@ async function main() {
   // Get Settings { json }
   const getSettings = (file) => {
     if ( F_MGR.fileExists(file) ) {
-      const data = F_MGR.readString(file);
-      return { loop, token, gap, location, avatarImage } = JSON.parse(data);
+      return { loop, token, gap, location, avatarImage } = JSON.parse(F_MGR.readString(file));
     }
     return null;
   }
