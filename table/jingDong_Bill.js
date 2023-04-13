@@ -12,21 +12,16 @@
 async function main() {
   const phoneSize = Device.screenSize().height;
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duJingDong_Bill');
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
-  
-  // file_Path
-  function getPath(pathName, fileName) {
-    return F_MGR.joinPath(pathName, fileName);
-  }
-  const bgImage = getPath(bgPath, Script.name() + '.jpg');
-  const cacheFile = getPath(folder, 'setting.json');
+  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duJingDong_Bill');
+  const cacheFile = F_MGR.joinPath(path, 'setting.json');
+  // Background image Path
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
+  const bgImage = F_MGR.joinPath(bgPath, `${Script.name()}.jpg`);
   
   // Get Settings { json }
   const getSettings = (file) => {
     if ( F_MGR.fileExists(file) ) {
-      const data = F_MGR.readString(file);
-      return { cookie, statistics } = JSON.parse(data);
+      return { cookie, statistics } = JSON.parse(F_MGR.readString(file));
     }
     return null;
   }
