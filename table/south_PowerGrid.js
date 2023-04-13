@@ -12,7 +12,7 @@ async function main() {
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
   const cacheFile = F_MGR.joinPath(path, 'setting.json');
   // Background image Path
-  const bgPath = F_MGR.joinPath(path, "95duBackground");
+  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, `${Script.name()}.jpg`);
   
   // Get Settings { json }
