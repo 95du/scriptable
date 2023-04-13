@@ -10,7 +10,7 @@
 async function main() {
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
-  const cacheFile = getPath(folder, 'setting.json');
+  const cacheFile = F_MGR.joinPath(path, 'setting.json');
   // Background image Path
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
