@@ -12,65 +12,101 @@
 const uri = Script.name();
 const F_MGR = FileManager.iCloud();
 const path = F_MGR.joinPath(F_MGR.documentsDirectory(), 'mercedes');
-const cacheFile = F_MGR.joinPath(path, 'honda.json');
-
 if (!F_MGR.fileExists(path)) {
   F_MGR.createDirectory(path);
 }
+const cacheFile = F_MGR.joinPath(path, 'setting.json');
 
-if (F_MGR.fileExists(cacheFile)) {
-  data = F_MGR.readString(cacheFile);
-  json = JSON.parse(data);
-  cookie = json.cookie;
+// Get Settings { json }
+const getSettings = (file) => {
+  let setting = {};
+  if (F_MGR.fileExists(file)) {
+    return { cookie, run, coordinates, pushTime } = JSON.parse(F_MGR.readString(file));
+  }
+  return {}
 }
+const setting = await getSettings(cacheFile);
+
+/**
+ * 存储当前设置
+ * @param { JSON } string
+ */
+const writeSettings = async (inObject) => {
+   if ( setting ) {
+     F_MGR.writeString(cacheFile, JSON.stringify(inObject));
+     console.log(JSON.stringify(
+       inObject, null, 2)
+    );
+   }
+ }
+
 
 // Presents the main menu
 async function presentMenu() {
-  let alert = new Alert();
-  alert.title = 'Mercedes Maybach';
-  alert.message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
-  alert.addDestructiveAction('更新代码');
-  alert.addDestructiveAction('重置所有');
-  alert.addAction('家人地图');
-  alert.addAction('输入凭证');
-  alert.addAction('预览组件');
-  alert.addAction('退出菜单');
-  response = await alert.presentAlert();
-  if ( response === 1 ) {
-    F_MGR.remove(path);
-    return;
+  const title = 'Mercedes Maybach';
+  const message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
+  const destructiveActions = ['更新代码', '重置所有'];
+  const actions = ['家人地图', '输入凭证', '预览组件', '退出菜单'];
+
+  const showAlert = (
+    title,
+    message
+  ) => {
+    let alert = new Alert();
+    alert.title = title;
+    alert.message = message;
+    return alert;
   }
-  if ( response === 2 ) {
-    Safari.open('amapuri://WatchFamily/myFamily');
+
+  const alert = showAlert(
+    title, 
+    message
+  );
+  for (const action of destructiveActions) {
+    alert.addDestructiveAction(action);
   }
-  if ( response === 3 ) {
-    await inputCookie();
+  for (const action of actions) {
+    alert.addAction(action);
   }
-  if ( response === 4 ) {
-    await getData();
-    await createWidget();
-  }
-  if ( response === 5 ) return;
-  if ( response === 0 ) {
-    const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
-    const finish = new Alert();
-    if ( codeString.indexOf('Maybach' || 'HONDA') == -1 ) {
-      finish.title = '更新失败';
-      finish.addAction('OK');
-      await finish.presentAlert();
-    } else {
-      const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
-      if ( iCloudInUse ) {
-        F_MGR.writeString(  
-          module.filename,
-          codeString
-        );
-        finish.title = '更新成功';
+
+  const response = await alert.presentAlert();
+  switch (response) {
+    case 1:
+      F_MGR.remove(path);
+      return;
+    case 2:
+      Safari.open('amapuri://WatchFamily/myFamily');
+      break;
+    case 3:
+      await inputCookie();
+      break;
+    case 4:
+      await getData();
+      await createWidget();
+      break;
+    case 5:
+      return;
+    case 0:
+      const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
+      const finish = showAlert();
+      if (codeString.includes('95度茅台' || 'HONDA' || 'Maybach')) {
+        const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
+        if (iCloudInUse) {
+          F_MGR.writeString(  
+            module.filename, 
+            codeString
+          );
+          finish.title = '更新成功';
+          finish.addAction('OK');
+          await finish.presentAlert();
+          Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+        }
+      } else {
+        finish.title = '更新失败';
         finish.addAction('OK');
         await finish.presentAlert();
-        Safari.open('scriptable:///run/' + encodeURIComponent(uri));
       }
-    }
+   // Main Menu
   }
 }
 
@@ -84,27 +120,28 @@ async function inputCookie() {
   if ( input === -1 ) return;
   const cookie = alert.textFieldValue(0);
   if ( cookie ) {
-    F_MGR.writeString(cacheFile, JSON.stringify({ cookie: cookie }));  
+    await writeSettings({ cookie: cookie });
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
 }
 
+// Get address (aMap)
+const getAddress = async () => {
+  const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
+  return { formatted_address: address } = adr.regeocode;
+}
+
+const getDistance = async () => {
+  const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`).loadJSON();
+  return { distance } = fence.route.paths[0];
+}
 
 // Create Widget
 async function createWidget() {
-  if ( speed <= 5 ) {
-    state = '已静止';
-    status = '[ 车辆静止中 ]';
-  } else {
-    state = `${speed} km·h`;
-    status = `[ 车速 ${speed} km·h ]`;
-  }
-  
+  await getAddress();
   const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${latitude},${longitude}&t=m`;
   
-  // Get address (aMap)
-  const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
-  const address = adr.regeocode.formatted_address;
+  const [ state, status ] = speed <= 5 ? ['已静止', '车辆静止中'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
   // 计算停车时长(红绿灯图标)  
   function getParkingTime( updateTime ) {
@@ -121,11 +158,17 @@ async function createWidget() {
     df.dateFormat = format;
     return df.string(date);
   }
-  const GMT = formatDate(updateTime, 'yyyy-MM-dd HH:mm');
-  const GMT2 = formatDate(updateTime, 'MM-dd HH:mm');
+  const GMT = formatDate(
+    updateTime,
+    'yyyy-MM-dd HH:mm'
+  );
+  const GMT2 = formatDate(
+    updateTime,
+    'MM-dd HH:mm'
+  );
   
   // Saved Json
-  runObj = {
+  const runObj = {
     updateTime: updateTime, 
     address: address,
     run: owner,
@@ -134,16 +177,9 @@ async function createWidget() {
     parkingTime: GMT2,
     cookie: cookie
   }
-    
-  object = {
-    ...runObj,
-    run: speed
-  }
   // Initial Save
-  if ( !json.run ) {
-    F_MGR.writeString(cacheFile, JSON.stringify(runObj, null, 2));
-    json = JSON.parse(
-F_MGR.readString(cacheFile));
+  if ( setting.run == undefined) {
+    await writeSettings(runObj);
   }
   
   
@@ -151,7 +187,7 @@ F_MGR.readString(cacheFile));
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient();
-  color = [
+  const color = [
     "#82B1FF",
     "#4FC3F7",
     "#66CCFF",
@@ -321,137 +357,96 @@ F_MGR.readString(cacheFile));
     Script.complete();
   }
 
+
   /**
    * Electronic Fence
    * 判断run为HONDA触发电子围栏
    * 推送信息到微信
    */
-  
-  const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON(); // accessToken
-  
-  const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
-  
-  if ( json.run !== 'HONDA' ) {
-    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${json.coordinates}&destination=${longitude},${latitude}`).loadJSON();  
-    const distance = fence.route.paths[0].distance;
-    
-    if ( distance > 20 ) {
-      // push message to WeChat_1
-      const weChat_1 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
-      weChat_1.method = 'POST'
-      weChat_1.body = JSON.stringify({
-        touser: 'DianQiao',
-        agentid: '1000004',
-        msgtype: 'news',
-        news: {
-          articles: [
-            {
-              title: address,
-              picurl: `${mapKey},0:${longitude},${latitude}`,
-              description: `${status}  启动时间 ${GMT}\n已离开📍${json.address}，相距 ${distance} 米`,
-              url: mapUrl
-            }
-          ]
-        }
-      });
-      await weChat_1.loadJSON();
-      notify(status + ' ' + GMT, `已离开📍${json.address}，相距 ${distance} 米`, mapUrl);
-      F_MGR.writeString(cacheFile, JSON.stringify(runObj, null, 2));
-      return;// pushEnd_1
-    }
-  }
-  
-      
-  /**
-   * 车辆状态触发条件
-   * 驻车时长，行驶中，静止状态
-   * 推送信息到微信
-   */
-  function calculateMoment(json) {
-    const timeAgo = new Date(Date.now() - json.pushTime);
+  const pushMessage = async (mapUrl, longitude, latitude, distance) => {
+    const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
+    const mapPicUrl = `${mapKey},0:${longitude},${latitude}`;
+    const timeAgo = new Date(Date.now() - pushTime);
     const hours = timeAgo.getUTCHours();
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
-    return moment;
-  }
-  const moment = calculateMoment(json);
-  
-  if ( speed <= 5 ) {
-    const duration = updateTime == json.updateTime ? 240 : 10;
-    if ( moment >= duration ) {
-      // push message to WeChat_2
-      const weChat_2 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
-      weChat_2.method = 'POST'
-      weChat_2.body = JSON.stringify({
-        touser: 'DianQiao',
-        agentid: '1000004',
-        msgtype: 'news',
-        news: {
-          articles: [
-            {
-              title: address,
-              picurl: `${mapKey},0:${longitude},${latitude}`,
-              description: `${status} 停车时间 ${GMT}`,
-              url: mapUrl
-            }
-          ]
-        }
-      });
-      await weChat_2.loadJSON();
-      notify(status + ' ' + GMT, address, mapUrl);
-      F_MGR.writeString(cacheFile, JSON.stringify(object, null, 2));
-    } 
-  } else {
-    if ( json.run !== 'HONDA' ) {
-      // push message to WeChat_3
-      const weChat_3 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
-      weChat_3.method = 'POST'
-      weChat_3.body = JSON.stringify({
-        touser: 'DianQiao',
-        agentid: '1000004',
-        msgtype: 'news',
-        news: {
-          articles: [
-            {
-              title: address,
-              picurl: `${mapKey},0:${longitude},${latitude}`,
-              description: `${status} 启动时间 ${GMT}`,
-              url: mapUrl
-            }
-          ]
-        }
-      });
-      await weChat_3.loadJSON();
-      notify(status + ' ' + GMT, address, mapUrl)
-      F_MGR.writeString(cacheFile, JSON.stringify(runObj, null, 2));
+    
+    if ( run !== 'HONDA' && distance > 20 ) {
+      await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
+      await writeSettings(runObj);
+    } else if ( speed <= 5 ) {
+      const duration = updateTime == setting.updateTime ? 0 : 10;
+      if (moment >= duration) {
+        await sendWechatMessage(`${status} 停车时间 ${GMT}`, mapUrl, mapPicUrl);
+        await writeSettings({
+          ...runObj,
+          run: speed
+        });
+      }
     } else {
-      // push message to WeChat_4
-      const weChat_4 = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
-      weChat_4.method = 'POST'
-      weChat_4.body = JSON.stringify({
-        touser: 'DianQiao',
-        agentid: '1000004',
-        msgtype: 'news',
-        news: {
-          articles: [
-            {
-              title: address,
-              picurl: `${mapKey},0:${longitude},${latitude}`,
-              description: `${status} 更新时间 ${GMT}`,
-              url: mapUrl
-            }
-          ]
-        }
-      });
-      await weChat_4.loadJSON();
-      notify(status + ' ' + GMT, address, mapUrl);
-      F_MGR.writeString(cacheFile, JSON.stringify(runObj, null, 2));
-      return;
+      if ( run !== 'HONDA' ) {
+        await sendWechatMessage(`${status} 启动时间 ${GMT}`, mapUrl, mapPicUrl);
+        await writeSettings(runObj);
+      } else {
+        await sendWechatMessage(`${status} 更新时间 ${GMT}`, mapUrl, mapPicUrl);
+        await writeSettings(runObj);
+      }
     }
   }
+  
+  const sendWechatMessage = async (description, url, picurl) => {
+    const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON(); // accessToken
+    const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
+    request.method = 'POST'
+    request.body = JSON.stringify({
+      touser: 'DianQiao',
+      agentid: '1000004',
+      msgtype: 'news',
+      news: {
+        articles: [{
+          title: address,
+          picurl,
+          description,
+          url
+        }]
+      }
+    });
+    if ( run !== 'HONDA' && distance > 20 ) {
+      notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
+    } else {
+      notify(`${status} ${GMT}`, address, mapUrl);
+    }
+    return request.loadJSON();
+  }
+  
+  await getDistance();
+  await pushMessage(mapUrl, longitude, latitude, distance);
+
   return widget;
 }
 
+
+/**-------------------------**/
+   /** Request(url) json **/
+/**-------------------------**/
+
+const argsParam = async () => {  
+  const descriptions = {
+    fortification_on: '解锁',
+    fortification_off: '锁定',
+    acc_on: await getData(),
+    acc_off: '熄火'
+  }
+  if ( args ) {
+    const description = descriptions[args.plainTexts];
+    return description || '未知';
+  }
+}
+if ( args.plainTexts[0] ) {
+  return await argsParam();
+}
+
+// config widget
 const isMediumWidget =  config.widgetFamily === 'medium'
 if ( config.runsInWidget ) {
   if ( isMediumWidget ) {
@@ -464,19 +459,23 @@ if ( config.runsInWidget ) {
   await presentMenu();
 }
 
+/**-------------------------**/
+   /** Request(url) json **/
+/**-------------------------**/
+  
+/**
+ * 获取地理位置信息
+ * @param {number} longitude - 经度
+ * @param {number} latitude - 纬度
+ * @returns {object} - 地理位置信息的对象，包含地址、停车时间等属性
+ */
 async function getData() {
   const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
   req.method = 'GET'
   req.headers = { Cookie: cookie }
   const res = await req.loadJSON();
   if ( res.code == 1 ) {
-    return {
-      speed,
-      owner,
-      longitude,
-      latitude,
-      updateTime
-    } = res.data;
+    return { speed, owner, longitude, latitude, updateTime } = res.data;
   }
 }
 
