@@ -81,6 +81,7 @@ async function presentMenu() {
       await inputCookie();
       break;
     case 4:
+      if ( !setting.cookie ) return;
       await getData();
       await createWidget();
       break;
@@ -128,13 +129,14 @@ async function inputCookie() {
 // Get address (aMap)
 const getAddress = async () => {
   const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
-  return { formatted_address: address } = adr.regeocode;
+  return { formatted_address: address, pois = [] } = adr.regeocode;
 }
 
 const getDistance = async () => {
   const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`).loadJSON();
   return { distance } = fence.route.paths[0];
 }
+
 
 // Create Widget
 async function createWidget() {
@@ -333,9 +335,9 @@ async function createWidget() {
   str = (jmz.GetLength(address));
     
   if ( str <= 35 ) {
-    textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}` + `${adr.regeocode.pois[0].distance}米`)
+    textAddress = adrStack.addText(`${address} - ${pois[0].address} ${pois[0].distance} 米`)
   } else if (str < 46) {
-    textAddress = adrStack.addText(address + ` - ${adr.regeocode.pois[0].address}`);
+    textAddress = adrStack.addText(`${address} - ${pois[0].address}`);
   } else {
     textAddress = adrStack.addText(address);
   }
@@ -375,7 +377,7 @@ async function createWidget() {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       await writeSettings(runObj);
     } else if ( speed <= 5 ) {
-      const duration = updateTime == setting.updateTime ? 0 : 10;
+      const duration = updateTime == setting.updateTime ? 120 : 10;
       if (moment >= duration) {
         await sendWechatMessage(`${status} 停车时间 ${GMT}`, mapUrl, mapPicUrl);
         await writeSettings({
