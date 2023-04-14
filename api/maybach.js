@@ -143,7 +143,7 @@ async function createWidget() {
   await getAddress();
   const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${latitude},${longitude}&t=m`;
   
-  const [ state, status ] = speed <= 5 ? ['已静止', '车辆静止中'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
+  const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
   // 计算停车时长(红绿灯图标)  
   function getParkingTime( updateTime ) {
@@ -448,7 +448,11 @@ if ( args.plainTexts[0] ) {
   return await argsParam();
 }
 
-// config widget
+/**-------------------------**/
+   /** Request(url) json **/
+/**-------------------------**/
+
+
 const isMediumWidget =  config.widgetFamily === 'medium'
 if ( config.runsInWidget ) {
   if ( isMediumWidget ) {
@@ -461,9 +465,6 @@ if ( config.runsInWidget ) {
   await presentMenu();
 }
 
-/**-------------------------**/
-   /** Request(url) json **/
-/**-------------------------**/
   
 /**
  * 获取地理位置信息
