@@ -21,7 +21,7 @@ const cacheFile = F_MGR.joinPath(path, 'setting.json');
 const getSettings = (file) => {
   let setting = {};
   if (F_MGR.fileExists(file)) {
-    return { cookie, run, coordinates, pushTime } = JSON.parse(F_MGR.readString(file));
+    return { cookie, run, coordinates, pushTime, imgArr } = JSON.parse(F_MGR.readString(file));
   }
   return {}
 }
@@ -73,7 +73,8 @@ async function presentMenu() {
   switch (response) {
     case 1:
       F_MGR.remove(path);
-      return;
+      Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
+      break;
     case 2:
       Safari.open('amapuri://WatchFamily/myFamily');
       break;
@@ -123,6 +124,33 @@ async function inputCookie() {
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
 }
+
+const downloadImage = async (path, item) => {
+  const carImage = await getImage(item);
+  const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
+  const cachePath = F_MGR.joinPath(path, imgKey);
+  F_MGR.writeImage(cachePath, carImage);
+  let arr = setting.imgArr;
+  arr.push(imgKey);
+  setting.imgArr = arr;
+  await writeSettings(setting);
+};
+
+if ( !setting.imgArr || !setting.imgArr.length ) {
+  const cacheUrl = await new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json').loadJSON();
+  const maybach = cacheUrl.maybach
+  maybach.forEach(async (item) => {
+    await downloadImage(path, item);
+  });
+}
+
+async function getRandomImage() {
+  const count = imgArr.length;
+  const index = Math.floor(Math.random() * count);
+  const cacheImgPath = path + '/' + imgArr[index];
+  return await F_MGR.readImage(cacheImgPath);
+}
+
 
 // Get address (aMap)
 const getAddress = async () => {
@@ -177,11 +205,14 @@ async function createWidget() {
     coordinates: `${longitude},${latitude}`,
     pushTime: Date.now(),
     parkingTime: GMT2,
-    cookie: cookie
+    cookie: cookie,
+    imgArr: []
   }
   // Initial Save
   if ( setting.run == undefined) {
     await writeSettings(runObj);
+    notify('初始化中...', '正在储存小组件数据，稍后自动更新');
+    return
   }
   
   
@@ -316,11 +347,8 @@ async function createWidget() {
   // Car image
   const carImageStack = rightStack.addStack();
   carImageStack.setPadding(-20, 5, 0, 0);
-  const imgUrl = new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json');
-  const resUrl = await imgUrl.loadJSON();
-  const item = resUrl.maybach[Math.floor(Math.random() * resUrl.maybach.length)];
-  const carImage = await getImage(item);
-  const imageCar = carImageStack.addImage(carImage);
+  const img = await getRandomImage();
+  const imageCar = carImageStack.addImage(img);
   imageCar.imageSize = new Size(225, 100);
   rightStack.addSpacer(1);
 
@@ -359,7 +387,6 @@ async function createWidget() {
     Script.complete();
   }
 
-
   /**
    * Electronic Fence
    * 判断run为HONDA触发电子围栏
@@ -368,17 +395,18 @@ async function createWidget() {
   const pushMessage = async (mapUrl, longitude, latitude, distance) => {
     const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
     const mapPicUrl = `${mapKey},0:${longitude},${latitude}`;
+    const driveAway = run !== 'HONDA' && distance > 20
     const timeAgo = new Date(Date.now() - pushTime);
     const hours = timeAgo.getUTCHours();
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
-    
+
     // push data
-    if ( run !== 'HONDA' && distance > 20 ) {
+    if ( driveAway ) {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       await writeSettings(runObj);
     } else if ( speed <= 5 ) {
-      const duration = updateTime == setting.updateTime ? 120 : 10;
+      const duration = updateTime == setting.updateTime ? 240 : 10;
       if (moment >= duration) {
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         await writeSettings({
@@ -395,8 +423,9 @@ async function createWidget() {
         await writeSettings(runObj);
       }
     }
-  }
+  };
   
+  // 推送到微信
   const sendWechatMessage = async (description, url, picurl) => {
     const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON(); // accessToken
     const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
@@ -409,22 +438,26 @@ async function createWidget() {
         articles: [{
           title: address,
           picurl,
-          description,
-          url
+          url,
+          description
         }]
       }
     });
-    if ( run !== 'HONDA' && distance > 20 ) {
+    
+    // 推送通知
+    const driveAway = run !== 'HONDA' && distance > 20
+    if ( driveAway ) {
       notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
     } else {
       notify(`${status}  ${GMT}`, address, mapUrl);
     }
     return request.loadJSON();
-  }
+  };
   
-  await getDistance();
-  await pushMessage(mapUrl, longitude, latitude, distance);
-
+  if ( setting.coordinates ) {
+    await getDistance();
+    await pushMessage(mapUrl, longitude, latitude, distance);
+  }
   return widget;
 }
 
@@ -444,7 +477,7 @@ const argsParam = async () => {
     const description = descriptions[args.plainTexts];
     return description || '未知';
   }
-}
+};
 if ( args.plainTexts[0] ) {
   return await argsParam();
 }
