@@ -10,7 +10,7 @@
  */
 
 const uri = Script.name();
-const F_MGR = FileManager.iCloud();
+const F_MGR = FileManager.local();
 const path = F_MGR.joinPath(F_MGR.documentsDirectory(), 'mercedes');
 if (!F_MGR.fileExists(path)) {
   F_MGR.createDirectory(path);
@@ -33,7 +33,7 @@ const setting = await getSettings(cacheFile);
  */
 const writeSettings = async (inObject) => {
    if ( setting ) {
-     F_MGR.writeString(cacheFile, JSON.stringify(inObject));
+     F_MGR.writeString(cacheFile, JSON.stringify(inObject), null, 2);
      console.log(JSON.stringify(
        inObject, null, 2)
     );
@@ -211,8 +211,7 @@ async function createWidget() {
   // Initial Save
   if ( setting.run == undefined) {
     await writeSettings(runObj);
-    notify('初始化中...', '正在储存小组件数据，稍后自动更新');
-    return
+    return;
   }
   
   
