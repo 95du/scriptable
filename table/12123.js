@@ -33,7 +33,7 @@ async function main() {
   // Get Settings { json }
   const getSettings = (file) => {
     if ( F_MGR.fileExists(file) ) {
-      return { verifyToken, myPlate, referer, sign, imgArr } = JSON.parse(F_MGR.readString(file));
+      return { verifyToken, myPlate, referer, sign, imgArr, picture } = JSON.parse(F_MGR.readString(file));
     }
     return {}
   }
@@ -64,9 +64,10 @@ async function main() {
     arr.push(imgKey);
     setting.imgArr = arr;
     await writeSettings(setting);
+    await getRandomImage();
   };
   
-  if ( !setting.imgArr || !setting.imgArr.length ) {
+  if ( !setting.imgArr || !setting.imgArr.length || !setting.picture ) {
     if (setting.picture.length > 0) {
       maybach = setting.picture;
     } else {
@@ -75,15 +76,15 @@ async function main() {
     maybach.forEach(async (item) => {
       await downloadImage(cache, item);
     });
-    await getRandomImage();
   }
   
   async function getRandomImage() {
     const count = imgArr.length;
     const index = Math.floor(Math.random() * count);
     const cacheImgPath = cache + '/' + imgArr[index];
-    return await F_MGR.readImage(cacheImgPath);
+    return ing = await F_MGR.readImage(cacheImgPath);
   }
+  const img = await getRandomImage();
   
   //=========> START <=========//
   
