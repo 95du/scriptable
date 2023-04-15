@@ -24,16 +24,67 @@ async function main() {
   const bgImage = getPath(bgPath, Script.name() + '.jpg');
   const cacheFile = getPath(folder, 'setting.json');
   
+  // image path
+  const cache = F_MGR.joinPath(folder, 'cachePath');
+  if (!F_MGR.fileExists(cache)) {
+    F_MGR.createDirectory(cache);
+  }
+  
   // Get Settings { json }
   const getSettings = (file) => {
     if ( F_MGR.fileExists(file) ) {
-      const data = F_MGR.readString(file);
-      return { verifyToken, myPlate, referer, sign } = JSON.parse(data);
+      return { verifyToken, myPlate, referer, sign, imgArr } = JSON.parse(F_MGR.readString(file));
     }
-    return null;
+    return {}
   }
   const setting = getSettings(cacheFile);
 
+
+  /**
+   * 存储当前设置
+   * @param { JSON } string
+   */
+  const writeSettings = async (inObject) => {
+     if ( setting ) {
+       F_MGR.writeString(cacheFile, JSON.stringify(inObject));
+       console.log(JSON.stringify(
+         inObject, null, 2)
+      );
+     }
+   }
+
+
+  // Get cache image
+  const downloadImage = async (path, item) => {
+    const carImage = await getImage(item);
+    const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
+    const cachePath = F_MGR.joinPath(cache, imgKey);
+    F_MGR.writeImage(cachePath, carImage);
+    let arr = setting.imgArr;
+    arr.push(imgKey);
+    setting.imgArr = arr;
+    await writeSettings(setting);
+  };
+  
+  if ( !setting.imgArr || !setting.imgArr.length ) {
+    if (setting.picture.length > 0) {
+      maybach = setting.picture;
+    } else {
+      maybach = get.maybach;
+    }
+    maybach.forEach(async (item) => {
+      await downloadImage(cache, item);
+    });
+    await getRandomImage();
+  }
+  
+  async function getRandomImage() {
+    const count = imgArr.length;
+    const index = Math.floor(Math.random() * count);
+    const cacheImgPath = cache + '/' + imgArr[index];
+    return await F_MGR.readImage(cacheImgPath);
+  }
+  
   //=========> START <=========//
   
   if (verifyToken === null || sign === null || !referer) {
@@ -52,7 +103,7 @@ async function main() {
           verifyToken: verifyToken,
           referer: referer
         }
-        F_MGR.writeString(cacheFile, JSON.stringify(data));  
+        await writeSettings(data);
         if (sign !== setting.sign && setting.sign !== null) {
           Timer.schedule(2000, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功')})
         }
@@ -155,7 +206,7 @@ async function main() {
       sign: null,
       verifyToken: null
     }
-    F_MGR.writeString(cacheFile, JSON.stringify(data));
+    await writeSettings(data);
     nothing = undefined;
     notify(main.resultMsg + ' ⚠️', '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取，请确保已打开辅助工具', get.details);
   } else {
@@ -313,7 +364,6 @@ async function main() {
     barStack2.addSpacer(4);
     // Bar Text
     const cumulativePoint = referer.match(/cumulativePoint=(\d{1,2}|undefined|null)/)[1];
-    console.log('累积记分: ' + cumulativePoint)
     const totalMonthBar2 = barStack2.addText(`记${cumulativePoint === 'undefined' ? '0' : cumulativePoint}分`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#616161');
@@ -341,14 +391,8 @@ async function main() {
     // Car image
     const carImageStack = rightStack.addStack();
     carImageStack.setPadding(-20, 6, 0, 0);
-    imgArr = setting.picture.length
-    if (imgArr === 0) {
-      item = get.maybach[Math.floor(Math.random() * get.maybach.length)];
-    } else {
-      item = setting.picture[Math.floor(Math.random() * imgArr)];
-    }
-    const carImage = await getImage(item);
-    const imageCar = carImageStack.addImage(carImage);
+    const img = await getRandomImage();
+    const imageCar = carImageStack.addImage(img);
     imageCar.imageSize = new Size(setting.carWidth, setting.carHeight);
     rightStack.addSpacer(2);
   
