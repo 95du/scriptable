@@ -89,19 +89,17 @@ async function presentMenu() {
       return;
     case 0:
       const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
+      const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
       const finish = showAlert();
-      if (codeString.includes('95度茅台' || 'HONDA' || 'Maybach')) {
-        const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
-        if (iCloudInUse) {
-          F_MGR.writeString(  
-            module.filename, 
-            codeString
-          );
-          finish.title = '更新成功';
-          finish.addAction('OK');
-          await finish.presentAlert();
-          Safari.open('scriptable:///run/' + encodeURIComponent(uri));
-        }
+      if (codeString.includes('95度茅台' || 'HONDA') && iCloudInUse) {
+        F_MGR.writeString(
+          module.filename, 
+          codeString
+        );
+        finish.title = '更新成功';
+        finish.addAction('OK');
+        await finish.presentAlert();
+        Safari.open('scriptable:///run/' + encodeURIComponent(uri));
       } else {
         finish.title = '更新失败';
         finish.addAction('OK');
@@ -128,8 +126,10 @@ async function inputCookie() {
 
 // Get address (aMap)
 const getAddress = async () => {
-  const adr = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
-  return { formatted_address: address, pois = [] } = adr.regeocode;
+  const req = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
+  const poisArr = req.regeocode.pois;
+  const poisData = poisArr.length > 0 ? poisArr : '未知附近地址';
+  return { formatted_address: address, pois = poisData } = req.regeocode;
 }
 
 const getDistance = async () => {
@@ -373,13 +373,14 @@ async function createWidget() {
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
     
+    // push data
     if ( run !== 'HONDA' && distance > 20 ) {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       await writeSettings(runObj);
     } else if ( speed <= 5 ) {
       const duration = updateTime == setting.updateTime ? 120 : 10;
       if (moment >= duration) {
-        await sendWechatMessage(`${status} 停车时间 ${GMT}`, mapUrl, mapPicUrl);
+        await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         await writeSettings({
           ...runObj,
           run: speed
@@ -387,10 +388,10 @@ async function createWidget() {
       }
     } else {
       if ( run !== 'HONDA' ) {
-        await sendWechatMessage(`${status} 启动时间 ${GMT}`, mapUrl, mapPicUrl);
+        await sendWechatMessage(`${status}  启动时间 ${GMT}`, mapUrl, mapPicUrl);
         await writeSettings(runObj);
       } else {
-        await sendWechatMessage(`${status} 更新时间 ${GMT}`, mapUrl, mapPicUrl);
+        await sendWechatMessage(`${status}  更新时间 ${GMT}`, mapUrl, mapPicUrl);
         await writeSettings(runObj);
       }
     }
@@ -416,7 +417,7 @@ async function createWidget() {
     if ( run !== 'HONDA' && distance > 20 ) {
       notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
     } else {
-      notify(`${status} ${GMT}`, address, mapUrl);
+      notify(`${status}  ${GMT}`, address, mapUrl);
     }
     return request.loadJSON();
   }
@@ -453,8 +454,8 @@ if ( args.plainTexts[0] ) {
 /**-------------------------**/
 
 
-const isMediumWidget =  config.widgetFamily === 'medium'
 if ( config.runsInWidget ) {
+  const isMediumWidget =  config.widgetFamily === 'medium';
   if ( isMediumWidget ) {
     await getData();
     await createWidget();
