@@ -86,6 +86,7 @@ async function main() {
   }
   const img = await getRandomImage();
   
+  
   //=========> START <=========//
   
   if (verifyToken === null || sign === null || !referer) {
