@@ -188,8 +188,9 @@ async function main() {
       const baiTiaoUrl = [
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg.png',
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png'];
-      const bgImageItems = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
-      const randomBackgroundImage = await getCacheImage("bg.png", bgImageItems);
+      const bgImageURL = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
+      const bgImageName = decodeURIComponent(bgImageURL.substring(bgImageURL.lastIndexOf("/") + 1));
+      const randomBackgroundImage = await getCacheImage(bgImageName, bgImageURL);
       widget.backgroundImage = randomBackgroundImage;
       widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
     }
