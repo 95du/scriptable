@@ -11,24 +11,61 @@
 
 async function main() {
   const phoneSize = Device.screenSize().height;
+  const cacheDirName = '95duJingDong_Bill';
   const F_MGR = FileManager.local();
-  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duJingDong_Bill');
-  const cacheFile = F_MGR.joinPath(path, 'setting.json');
-  // Background image Path
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, `${Script.name()}.jpg`);
+
+  /**
+   * 获取电报机器人的数据存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getSettingPath = () => {
+    const mainPath = F_MGR.joinPath(F_MGR.documentsDirectory(), cacheDirName);
+    F_MGR.createDirectory(mainPath, true);
+    const settingPath = F_MGR.joinPath(mainPath, 'setting.json', true);
+    return settingPath;
+  };
   
-  // Get Settings { json }
-  const getSettings = (file) => {
-    if ( F_MGR.fileExists(file) ) {
-      return { cookie, statistics } = JSON.parse(F_MGR.readString(file));
+  
+  /**
+   * 获取背景图片存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getBgImagePath = () => {
+    const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+    F_MGR.createDirectory(bgPath, true);
+    return F_MGR.joinPath(bgPath, Script.name() + '.jpg');
+  }
+  
+  /**
+   * 读取储存的设置
+   * @returns {object} - 设置对象
+   */
+  const getBotSettings = () => {
+    if ( getSettingPath() ) {
+      return { cookie, statistics } = JSON.parse(F_MGR.readString(getSettingPath()));
     }
     return null;
-  }
-  const setting = getSettings(cacheFile);
-
-  //=========> START <=========//
+  };
+  const setting = await getBotSettings();
   
+  /**
+   * 存储当前设置
+   * @param { JSON } string
+   */
+  const writeSettings = async () => {
+    typeof settings === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(setting)) : null;
+    console.log(JSON.stringify(
+      setting, null, 2)
+    );
+  }
+  
+  /**  
+  * 弹出一个通知
+  * @param {string} title
+  * @param {string} body
+  * @param {string} url
+  * @param {string} sound
+  */
   const notify = async (title, body, url) => {
     let n = new Notification();
     n.title = title
@@ -37,7 +74,55 @@ async function main() {
     if (url) {n.openURL = url}
     return await n.schedule();
   }
-
+  
+  /**
+   * 获取图片并使用缓存
+   * @param {string} File Extension
+   * @returns {image} - Request
+   */
+  const useFileManager = (options = {}) => {
+    const fm = FileManager.local();
+    const cacheDir = fm.joinPath(fm.documentsDirectory(), cacheDirName, options.cache || 'cache');
+    fm.createDirectory(cacheDir, true);
+    const cache = fm.joinPath(cacheDir, 'cache_path');
+    fm.createDirectory(cache, true);
+    
+    return {
+      readImage: (filePath) => {
+        const imageFile = fm.joinPath(cache, filePath);
+        if (fm.fileExists(imageFile) && options.cacheTime) {
+          const createTime = fm.creationDate(imageFile).getTime();
+          const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
+          if (diff >= options.cacheTime) {
+            fm.remove(imageFile);
+            return null;
+          }
+        }
+        return fm.readImage(imageFile);
+      },
+      writeImage: (filePath, image) => fm.writeImage(fm.joinPath(cache, filePath), image)
+    }
+  };
+  
+  const getImage = async (url) => {
+    return await new Request(url).loadImage();
+  };
+  
+  // 获取图片，使用缓存
+  const getCacheImage = async (name, url) => {
+    const cache = useFileManager({ cacheTime: 24 });
+    const image = cache.readImage(name);
+    if (image) {
+      return image;
+    }
+    const res = await getImage(url);
+    cache.writeImage(name, res);
+    return res;
+  };
+  
+  
+  //=========> START <=========//
+  
   const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
   
   if (sign !== undefined) {
@@ -118,18 +203,19 @@ async function main() {
   
   async function createWidget() {
     const widget = new ListWidget();
+    const bgImage = await getBgImagePath();
     if (F_MGR.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
     } else if (setting.gradient.length !== 0) {
       const gradient = new LinearGradient();
-      color = setting.gradient
+      color = setting.gradient;
       const items = color[Math.floor(Math.random() * color.length)];
       gradient.locations = [0, 1]
       gradient.colors = [
         new Color(items, Number(setting.transparency)),
         new Color('#00000000')
       ]
-      widget.backgroundGradient = gradient
+      widget.backgroundGradient = gradient;
     } else {
       widget.backgroundColor = Color.dynamic(new Color('#FFE5B4', 0.5), new Color('#1e1e1e'));
     }
@@ -154,11 +240,12 @@ async function main() {
     
     // avatarStack
     const avatarStack = leftStack.addStack();
-    const iconSymbol = await circleImage(headImageUrl);  
+    const avatar = await getCacheImage('avatar.png', headImageUrl);
+    const iconSymbol = await circleImage(avatar);
     
     if (setting.isPlus === 'true') {
       avatarStack.backgroundImage = iconSymbol;
-      const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
+      const plus = await getCacheImage('plus.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
       const plusImage = avatarStack.addImage(plus);
       plusImage.imageSize = new Size(62, 62);
     } else {
@@ -175,7 +262,7 @@ async function main() {
     const nameStack = leftStack.addStack();
     nameStack.layoutHorizontally();
     nameStack.centerAlignContent();
-    const nameIcon = await getImage('http://m.360buyimg.com/mobilecms/jfs/t21250/351/1000721513/1891/9bfe1d6c/5b1e3870Nee820e5e.png');
+    const nameIcon = await getCacheImage('name.png', 'http://m.360buyimg.com/mobilecms/jfs/t21250/351/1000721513/1891/9bfe1d6c/5b1e3870Nee820e5e.png');
     const nameIconElement = nameStack.addImage(nameIcon);
     nameIconElement.imageSize = new Size(16, 16);
     nameStack.addSpacer(5);
@@ -190,7 +277,7 @@ async function main() {
     const btStack = leftStack.addStack();
     btStack.layoutHorizontally();
     btStack.centerAlignContent();
-    const baitiaoImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baitiao.png');
+    const baitiaoImage = await getCacheImage('baitiao.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baitiao.png');
     const baitiaoIcon = btStack.addImage(baitiaoImage);
     baitiaoIcon.imageSize = new Size(25, 18);
     btStack.addSpacer(6);
@@ -213,11 +300,8 @@ async function main() {
     const logoStack = rightStack.addStack();
     logoStack.layoutHorizontally();
     logoStack.centerAlignContent();
-    const topImg = [
-      'https://gitcode.net/enoyee/scriptable/-/raw/master/img/jd/ic_jd_logo.png'  
-    ];
-    const logoImage = topImg[Math.floor(Math.random() * topImg.length)];
-    const logoIcon = logoStack.addImage(await getImage(logoImage));
+    const logoImage = await getCacheImage('logo.png', 'https://gitcode.net/enoyee/scriptable/-/raw/master/img/jd/ic_jd_logo.png');
+    const logoIcon = logoStack.addImage(logoImage);
     logoIcon.imageSize = new Size(32, 32);
     logoStack.addSpacer();
     
@@ -227,7 +311,7 @@ async function main() {
     assetText.textOpacity = 0.8;
     logoStack.addSpacer();
     
-    const jdImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
+    const jdImage = await getCacheImage('jdWord.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const jdIcon = logoStack.addImage(jdImage);
     jdIcon.imageSize = new Size(36, 36);
     
@@ -262,7 +346,8 @@ async function main() {
       'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png'
     ];
     const moneyBag = moneyBagUrl[Math.floor(Math.random() * moneyBagUrl.length)];
-    const assetIcon = await getImage(moneyBag);
+    const bgImageName = decodeURIComponent(moneyBag.substring(moneyBag.lastIndexOf("/") + 1));
+    const assetIcon = await getCacheImage(bgImageName, moneyBag);
     const assetIconElement = middleStack.addImage(assetIcon);
     const bag = moneyBag.indexOf('gitcode') > -1 ? 48 : 41;
     assetIconElement.imageSize = new Size(bag, bag);
@@ -377,48 +462,27 @@ async function main() {
   }
   
   /**-------------------------**/
-     /** Request(url) json **/
+       /** runWidget() **/
   /**-------------------------**/
-  
-  const isSmallWidget =  config.widgetFamily === 'small';
-  if (isSmallWidget && config.runsInWidget) {
-    await smallrWidget();
-  } else if (setting.code === 0) {
-    await getJson();
-    await totalAsset();
-    await myWallet();
-    await Run();
-    await createWidget();
-  } else {
-    await createErrWidget();
+
+  const runWidget = async () => {
+    if (config.widgetFamily === 'small') {
+      const widget = new ListWidget();
+      widget.addText("仅支持中尺寸").centerAlignText();
+      Script.setWidget(widget);
+    } else {
+      const settingCode = setting.code;
+      if (settingCode === 0) {
+        await Promise.all([getJson(), totalAsset(), myWallet(), Run()]);
+      }
+      await (settingCode === 0 ? createWidget() : createErrWidget());
+    }
   }
-  
-  async function smallrWidget() {
-    const widget = new ListWidget();
-    const text = widget.addText('仅支持中尺寸');
-    text.font = Font.systemFont(17);
-    text.centerAlignText();
-    Script.setWidget(widget);
-    Script.complete();
-  }
+  await runWidget();
   
   /**-------------------------**/
      /** Request(url) json **/
   /**-------------------------**/
-  
-  async function getImage(url) {
-    const r = await new Request(url);
-    return await r.loadImage();
-  }
-  
-  async function shadowImage(img) {
-    let ctx = new DrawContext()
-    ctx.size = img.size
-    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
-    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
-    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-    return await ctx.getImage()
-  }
   
   async function signBeanAct(url) {
     const req = new Request(url)
@@ -442,7 +506,10 @@ async function main() {
       const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
       if (status === '1') {
         setting.signData = res.data
-        F_MGR.writeString(cacheFile, JSON.stringify(setting));
+        F_MGR.writeString(
+          getSettingPath(),
+          JSON.stringify(setting)
+        );
         if (dailyAward) {
           notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
         } else {
@@ -452,7 +519,10 @@ async function main() {
       return res.data;
     } else {
       setting.code = 3;
-      F_MGR.writeString(cacheFile, JSON.stringify(setting));
+      F_MGR.writeString(
+        getSettingPath(),
+        JSON.stringify(setting)
+      );
       notify(res.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
     }
   }
@@ -538,9 +608,22 @@ async function main() {
     return await req.loadJSON();
   }
   
+  async function shadowImage(img) {
+    let ctx = new DrawContext()
+    ctx.size = img.size
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+    return await ctx.getImage()
+  }
+  
   async function circleImage(url) {
-    const req = new Request(url);  
-    let img = await req.loadImage()
+    if (typeof url === 'object') {
+      img = url;
+    } else {
+      const req = new Request(url);
+      img = await req.loadImage();
+    }
     const imgData = Data.fromPNG(img).toBase64String();
     const html = `
       <img id="sourceImg" src="data:image/png;base64,${imgData}" />
