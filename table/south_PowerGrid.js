@@ -18,8 +18,7 @@ async function main() {
   const getSettingPath = () => {
     const mainPath = F_MGR.joinPath(F_MGR.documentsDirectory(), cacheDirName);
     F_MGR.createDirectory(mainPath, true);
-    const settingPath = F_MGR.joinPath(mainPath, 'setting.json', true);
-    return settingPath;
+    return F_MGR.joinPath(mainPath, 'setting.json', true);
   };
   
   
@@ -168,7 +167,7 @@ async function main() {
   
   async function createWidget() {
     const widget = new ListWidget();
-    const bgImage = await getBgImagePath()
+    const bgImage = await getBgImagePath();
     const Appearance = Device.isUsingDarkAppearance();
     if (F_MGR.fileExists(bgImage) && Appearance === false) {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))  
