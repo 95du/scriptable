@@ -9,12 +9,13 @@
 
 async function main() {
   const F_MGR = FileManager.local();
+  const cacheDirName = '95du_electric';
   /**
    * 获取电报机器人的数据存储目录路径
    * @returns {string} - 目录路径
    */
   const getBotDataPath = () => {
-    const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
+    const path = F_MGR.joinPath(F_MGR.documentsDirectory(), cacheDirName);
     F_MGR.createDirectory(path, true);
     return path;
   };
@@ -76,7 +77,7 @@ async function main() {
    */
   const useFileManager = (options = {}) => {
     const fm = FileManager.local();
-    const cacheDir = fm.joinPath(fm.documentsDirectory(), Script.name(), options.cache || 'cache');
+    const cacheDir = fm.joinPath(fm.documentsDirectory(), cacheDirName, options.cache || 'cache');
     fm.createDirectory(cacheDir, true);
     const cache = fm.joinPath(cacheDir, 'cache_path');
     fm.createDirectory(cache, true);
