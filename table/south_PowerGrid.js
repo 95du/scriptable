@@ -8,17 +8,20 @@
  */
 
 async function main() {
-  const F_MGR = FileManager.local();
   const cacheDirName = '95du_electric';
+  const F_MGR = FileManager.local();
+
   /**
    * 获取电报机器人的数据存储目录路径
    * @returns {string} - 目录路径
    */
-  const getBotDataPath = () => {
-    const path = F_MGR.joinPath(F_MGR.documentsDirectory(), cacheDirName);
-    F_MGR.createDirectory(path, true);
-    return path;
+  const getSettingPath = () => {
+    const mainPath = F_MGR.joinPath(F_MGR.documentsDirectory(), cacheDirName);
+    F_MGR.createDirectory(mainPath, true);
+    const settingPath = F_MGR.joinPath(mainPath, 'setting.json', true);
+    return settingPath;
   };
+  
   
   /**
    * 获取背景图片存储目录路径
@@ -35,9 +38,8 @@ async function main() {
    * @returns {object} - 设置对象
    */
   const getBotSettings = () => {
-    const settingPath = F_MGR.joinPath(getBotDataPath(), 'setting.json', true);
-    if ( settingPath ) {
-      return { loop, token, gap, location, avatarImage } = JSON.parse(F_MGR.readString(settingPath));
+    if ( getSettingPath() ) {
+      return { loop, token, gap, location, avatarImage } = JSON.parse(F_MGR.readString(getSettingPath()));
     }
     return null;
   };
@@ -48,7 +50,7 @@ async function main() {
    * @param { JSON } string
    */
   const writeSettings = async () => {
-    typeof settings === 'object' ? F_MGR.writeString(cacheFile, JSON.stringify(setting)) : null;
+    typeof settings === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(setting)) : null;
     console.log(JSON.stringify(
       setting, null, 2)
     );
@@ -442,7 +444,8 @@ async function main() {
       setting.updateTime = timestamp;
     }
     await writeSettings();
-
+    
+    // 组件实例
     if (config.runsInWidget) {
       Script.setWidget(widget);
       Script.complete();
@@ -484,7 +487,11 @@ async function main() {
     if (res.sta == 00) {
       let countArr = res.data.length;
       setting.count = countArr == 1 ? countArr - 1 : setting.count > 0 ? setting.count - 1 : countArr - 1;
-      await writeSettings();
+      F_MGR.writeString(
+        await getSettingPath(),  
+        JSON.stringify(setting)
+      );
+      
       return {  
         userName: name,
         areaCode: code,
