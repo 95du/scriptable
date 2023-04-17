@@ -75,7 +75,7 @@ async function main() {
    * @returns {image} - Request
    */
   const useFileManager = (options = {}) => {
-    const fm = FileManager.iCloud()
+    const fm = FileManager.local();
     const cacheDir = fm.joinPath(fm.documentsDirectory(), Script.name(), options.cache || 'cache');
     fm.createDirectory(cacheDir, true);
     const cache = fm.joinPath(cacheDir, 'cache_path');
