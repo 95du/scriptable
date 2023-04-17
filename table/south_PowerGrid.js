@@ -9,23 +9,58 @@
 
 async function main() {
   const F_MGR = FileManager.local();
-  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
-  const cacheFile = F_MGR.joinPath(path, 'setting.json');
-  // Background image Path
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, `${Script.name()}.jpg`);
+  /**
+   * 获取电报机器人的数据存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getBotDataPath = () => {
+    const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
+    F_MGR.createDirectory(path, true);
+    return path;
+  };
   
-  // Get Settings { json }
-  const getSettings = (file) => {
-    if ( F_MGR.fileExists(file) ) {
-      return { loop, token, gap, location, avatarImage } = JSON.parse(F_MGR.readString(file));
+  /**
+   * 获取背景图片存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getBgImagePath = () => {
+    const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+    F_MGR.createDirectory(bgPath, true);
+    const backgroundImage = F_MGR.joinPath(bgPath, `${Script.name()}.jpg`);
+    return backgroundImage;
+  };
+  
+  /**
+   * 读取储存的设置
+   * @returns {object} - 设置对象
+   */
+  const getBotSettings = () => {
+    const settingPath = F_MGR.joinPath(getBotDataPath(), 'setting.json', true);
+    if ( settingPath ) {
+      return { loop, token, gap, location, avatarImage } = JSON.parse(F_MGR.readString(settingPath));
     }
     return null;
+  };
+  const setting = await getBotSettings();
+  
+  /**
+   * 存储当前设置
+   * @param { JSON } string
+   */
+  const writeSettings = async () => {
+    typeof settings === 'object' ? F_MGR.writeString(cacheFile, JSON.stringify(setting)) : null;
+    console.log(JSON.stringify(
+      setting, null, 2)
+    );
   }
-  const setting = getSettings(cacheFile);
   
-  //=========> START <=========//
-  
+  /**  
+  * 弹出一个通知
+  * @param {string} title
+  * @param {string} body
+  * @param {string} url
+  * @param {string} sound
+  */
   const notify = async (title, body, url) => {
     let n = new Notification();
     n.title = title
@@ -35,7 +70,54 @@ async function main() {
     return await n.schedule();
   }
   
-  // Get Year and Month  
+  /**
+   * 获取图片并使用缓存
+   * @param {string} File Extension
+   * @returns {image} - Request
+   */
+  const useFileManager = (options = {}) => {
+    const fm = FileManager.iCloud()
+    const cacheDir = fm.joinPath(fm.documentsDirectory(), Script.name(), options.cache || 'cache');
+    fm.createDirectory(cacheDir, true);
+    const cache = fm.joinPath(cacheDir, 'cache_path');
+    fm.createDirectory(cache, true);
+    
+    return {
+      readImage: (filePath) => {
+        const imageFile = fm.joinPath(cache, filePath);
+        if (fm.fileExists(imageFile) && options.cacheTime) {
+          const createTime = fm.creationDate(imageFile).getTime();
+          const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
+          if (diff >= options.cacheTime) {
+            fm.remove(imageFile);
+            return null;
+          }
+        }
+        return fm.readImage(imageFile);
+      },
+      writeImage: (filePath, image) => fm.writeImage(fm.joinPath(cache, filePath), image)
+    };
+  };
+  
+  const getImage = async (url) => {
+    return await new Request(url).loadImage();
+  };
+  
+  // 获取图片，使用缓存
+  const getCacheImage = async (name, url) => {
+    const cache = useFileManager({ cacheTime: 24 });
+    const image = cache.readImage(name);
+    if (image) {
+      return image;
+    }
+    const res = await getImage(url);
+    cache.writeImage(name, res);
+    return res;
+  };
+  
+  
+  //=========> START <=========//
+  
   const Year = new Date().getFullYear();
   const df = new DateFormatter();
   df.dateFormat = 'MM';
@@ -84,6 +166,7 @@ async function main() {
   
   async function createWidget() {
     const widget = new ListWidget();
+    const bgImage = await getBgImagePath()
     const Appearance = Device.isUsingDarkAppearance();
     if (F_MGR.fileExists(bgImage) && Appearance === false) {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))  
@@ -98,13 +181,14 @@ async function main() {
       ]
       widget.backgroundGradient = gradient
     } else if (Appearance == false) {
-      widget.backgroundImage = await getImage('http://mtw.so/60NF6g');
+      widget.backgroundImage = await getCacheImage("bg.jpeg", 'http://mtw.so/60NF6g');
     } else {
       const baiTiaoUrl = [
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg.png',
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png'];
       const bgImageItems = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
-      widget.backgroundImage = await getImage(bgImageItems);
+      const randomBackgroundImage = await getCacheImage("bg.png", bgImageItems);
+      widget.backgroundImage = randomBackgroundImage;
       widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
     }
     
@@ -124,7 +208,7 @@ async function main() {
     avatarStack.layoutHorizontally();
     avatarStack.centerAlignContent();
     const avatarStack2 = avatarStack.addStack();
-    const iconSymbol = await getImage(avatarImage);
+    const iconSymbol = await getCacheImage('avatar.jpeg', avatarImage);
     const avatarIcon = avatarStack2.addImage(iconSymbol);
     avatarIcon.imageSize = new Size(50, 50);
     if ( avatarImage.indexOf('png') == -1 ) {
@@ -256,7 +340,7 @@ async function main() {
     const gooseUrl = [
       'http://mtw.so/67LhN1'];
     const gooseItems = gooseUrl[Math.floor(Math.random() * gooseUrl.length)];
-    const gooseIcon = await getImage(gooseItems);
+    const gooseIcon = await getCacheImage('gose.png', gooseItems)
     const gooseIconElement = middleStack.addImage(gooseIcon);
     gooseIconElement.imageSize = new Size(58, 58);
     middleStack.addSpacer();
@@ -357,7 +441,7 @@ async function main() {
       notify('用电缴费通知‼️', `${name}` + `，户号 ${number}` + `\n上月用电 ${total} 度 ，待缴电费 ${pay} 元`)
       setting.updateTime = timestamp;
     }
-    F_MGR.writeString(cacheFile, JSON.stringify(setting));
+    await writeSettings();
 
     if (config.runsInWidget) {
       Script.setWidget(widget);
@@ -399,7 +483,6 @@ async function main() {
   /**-------------------------**/
   
   
-  
   async function userInfo() {
     const req = new Request('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers')
     req.method = 'POST'
@@ -408,7 +491,7 @@ async function main() {
     if (res.sta == 00) {
       let countArr = res.data.length;
       setting.count = countArr == 1 ? countArr - 1 : setting.count > 0 ? setting.count - 1 : countArr - 1;
-      F_MGR.writeString(cacheFile, JSON.stringify(setting));
+      await writeSettings();
       return {  
         userName: name,
         areaCode: code,
@@ -505,11 +588,6 @@ async function main() {
     });
     const res = await req.loadJSON();
     return res.data;
-  }
-  
-  async function getImage(url) {
-    const r = await new Request(url);
-    return await r.loadImage();
   }
   
   async function shadowImage(img) {
