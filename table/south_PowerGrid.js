@@ -460,10 +460,10 @@ async function main() {
      /** Request(url) json **/
   /**-------------------------**/
   
-  const executeWidget = async (widgetFn, otherFn, errorCode) => {
-    if ( config.runsInWidget && config.widgetFamily === 'small' && widgetFn ) {
-      await widgetFn();
-    } else if (errorCode === 0) {
+  async function runWidget() {
+    if (config.widgetFamily === 'small') {
+      await smallrWidget();
+    } else if (setting.code === 0) {
       await userInfo();
       await getEleBill();
       await Run();
@@ -471,8 +471,8 @@ async function main() {
     } else {
       notify('南网用户未登录⚠️', 'Token 读取错误，请重新获取');
     }
-  };
-  await executeWidget(smallrWidget, [userInfo, getEleBill, Run, createWidget], setting.code);
+  }
+  await runWidget();
   
   /**-------------------------**/
      /** Request(url) json **/
