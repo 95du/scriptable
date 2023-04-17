@@ -618,12 +618,7 @@ async function main() {
   }
   
   async function circleImage(url) {
-    if (typeof url === 'object') {
-      img = url;
-    } else {
-      const req = new Request(url);
-      img = await req.loadImage();
-    }
+    typeof url === 'object' ? img = url : img = await new Request(url).loadImage();
     const imgData = Data.fromPNG(img).toBase64String();
     const html = `
       <img id="sourceImg" src="data:image/png;base64,${imgData}" />
