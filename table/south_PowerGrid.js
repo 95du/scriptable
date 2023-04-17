@@ -26,9 +26,8 @@ async function main() {
   const getBgImagePath = () => {
     const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
     F_MGR.createDirectory(bgPath, true);
-    const backgroundImage = F_MGR.joinPath(bgPath, `${Script.name()}.jpg`);
-    return backgroundImage;
-  };
+    return F_MGR.joinPath(bgPath, Script.name() + '.jpg');
+  }
   
   /**
    * 读取储存的设置
@@ -96,7 +95,7 @@ async function main() {
         return fm.readImage(imageFile);
       },
       writeImage: (filePath, image) => fm.writeImage(fm.joinPath(cache, filePath), image)
-    };
+    }
   };
   
   const getImage = async (url) => {
@@ -457,26 +456,19 @@ async function main() {
      /** Request(url) json **/
   /**-------------------------**/
   
-  const isSmallWidget =  config.widgetFamily === 'small';
-  if (isSmallWidget && config.runsInWidget) {
-    await smallrWidget();
-  } else if (setting.code == 0) {
-    await userInfo();
-    await getEleBill();
-    await Run();
-    await createWidget();
-  } else {
-    notify('南网用户未登录⚠️', 'Token 读取错误，请重新获取');
-  }
-  
-  async function smallrWidget() {
-    const widget = new ListWidget();
-    const text = widget.addText('仅支持中尺寸');
-    text.font = Font.systemFont(17);
-    text.centerAlignText();
-    Script.setWidget(widget);
-    Script.complete();
-  }
+  const executeWidget = async (widgetFn, otherFn, errorCode) => {
+    if ( config.runsInWidget && config.widgetFamily === 'small' && widgetFn ) {
+      await widgetFn();
+    } else if (errorCode === 0) {
+      await userInfo();
+      await getEleBill();
+      await Run();
+      await createWidget();
+    } else {
+      notify('南网用户未登录⚠️', 'Token 读取错误，请重新获取');
+    }
+  };
+  await executeWidget(smallrWidget, [userInfo, getEleBill, Run, createWidget], setting.code);
   
   /**-------------------------**/
      /** Request(url) json **/
@@ -588,6 +580,15 @@ async function main() {
     });
     const res = await req.loadJSON();
     return res.data;
+  }
+  
+  async function smallrWidget() {
+    const widget = new ListWidget();
+    const text = widget.addText('仅支持中尺寸');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
+    Script.complete();
   }
   
   async function shadowImage(img) {
