@@ -14,21 +14,9 @@ async function main() {
   const url = get.infoURL;
   
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95du12123");
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
-  
-  // file_Path
-  function getPath(pathName, fileName) {
-    return F_MGR.joinPath(pathName, fileName);
-  }
-  const bgImage = getPath(bgPath, Script.name() + '.jpg');
-  const cacheFile = getPath(folder, 'setting.json');
-  
-  // image path
-  const cache = F_MGR.joinPath(folder, 'cachePath');
-  if (!F_MGR.fileExists(cache)) {
-    F_MGR.createDirectory(cache);
-  }
+  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du12123');  
+  F_MGR.createDirectory(folder, true);  
+  const cacheFile = F_MGR.joinPath(folder, 'setting.json', true);
   
   /**
    * 读取储存的设置
@@ -43,7 +31,6 @@ async function main() {
   }
   const setting = getSettings(cacheFile);
 
-
   /**
    * 存储当前设置
    * @param { JSON } string
@@ -56,9 +43,21 @@ async function main() {
       );
      }
    }
-
-
+  
+  /**
+   * 获取背景图片存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getBgImagePath = () => {
+    const bgImgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+    F_MGR.createDirectory(bgImgPath, true);
+    return F_MGR.joinPath(bgImgPath, Script.name() + '.jpg');
+  }
+  
+  
   // Get cache image
+  const cache = F_MGR.joinPath(folder, 'cachePath');
+  F_MGR.createDirectory(cache, true);
   const downloadImage = async (path, item) => {
     const carImage = await getImage(item);
     const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
@@ -69,7 +68,7 @@ async function main() {
     await getRandomImage();
   };
   
-  if ( !setting.imgArr || !setting.imgArr.length || !setting.picture ) {
+  if ( !setting.imgArr?.length || !setting.picture ) {
     if (setting.picture.length > 0) {
       maybach = setting.picture;
     } else {
@@ -237,6 +236,7 @@ async function main() {
   async function createWidget() {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
+    const bgImage = await getBgImagePath();
     if (F_MGR.fileExists(bgImage)) {
       widget.backgroundImage = F_MGR.readImage(bgImage);
     } else {
@@ -251,7 +251,7 @@ async function main() {
           "#BCBBBB"
         ]
       } else {
-        color = setting.gradient
+        color = setting.gradient;
       }
       const items = color[Math.floor(Math.random()*color.length)];
       gradient.locations = [0, 1]
@@ -259,7 +259,7 @@ async function main() {
         new Color(items, Number(setting.transparency)),
         new Color('#00000000')
       ]
-      widget.backgroundGradient = gradient
+      widget.backgroundGradient = gradient;
     }
   
   
