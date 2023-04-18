@@ -435,8 +435,7 @@ async function main() {
      /** Request(url) json **/
   /**-------------------------**/
   
-  const isSmallWidget =  config.widgetFamily === 'small';
-  if (isSmallWidget && config.runsInWidget) {
+  if (config.widgetFamily === 'small') {
     await smallrWidget();
   } else if (setting.code === 0) {
     await getData();
