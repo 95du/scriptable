@@ -184,20 +184,15 @@ async function createWidget() {
   const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
   // 计算停车时长(红绿灯图标)  
-  function getParkingTime( updateTime ) {
-    const timeAgo = new Date(Date.now() - updateTime);
-    const minutes = timeAgo.getUTCMinutes();
-    return minutes;
-  }
+  const getParkingTime = (updateTime) => (new Date(Date.now() - updateTime)).getUTCMinutes();
   const parkingTime = getParkingTime(updateTime);
   
   // Timestamp Formatter
-  function formatDate(updateTime, format) {
-    const date = new Date(updateTime);
+  const formatDate = (updateTime, format) => {
     const df = new DateFormatter();
     df.dateFormat = format;
-    return df.string(date);
-  }
+    return df.string(new Date(updateTime));
+  };
   const GMT = formatDate(
     updateTime,
     'yyyy-MM-dd HH:mm'
