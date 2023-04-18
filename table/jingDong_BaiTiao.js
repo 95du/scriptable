@@ -522,7 +522,6 @@ async function main() {
     } else {
       setting.code = 3;
       await writeSettings();
-      //F_MGR.writeString(cacheFile, JSON.stringify(setting));
       notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
     }
   }
