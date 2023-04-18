@@ -50,7 +50,9 @@ async function main() {
    */
   const getBgImagePath = () => {
     const bgImgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
-    F_MGR.createDirectory(bgImgPath, true);
+    F_MGR.createDirectory(
+      bgImgPath, true
+    );
     return F_MGR.joinPath(bgImgPath, Script.name() + '.jpg');
   }
   
@@ -58,6 +60,7 @@ async function main() {
   // Get cache image
   const cache = F_MGR.joinPath(folder, 'cachePath');
   F_MGR.createDirectory(cache, true);
+  
   const downloadImage = async (path, item) => {
     const carImage = await getImage(item);
     const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
