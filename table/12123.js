@@ -30,7 +30,11 @@ async function main() {
     F_MGR.createDirectory(cache);
   }
   
-  // Get Settings { json }
+  /**
+   * 读取储存的设置
+   * @param {string} file - JSON
+   * @returns {object} - JSON
+   */
   const getSettings = (file) => {
     if ( F_MGR.fileExists(file) ) {
       return { verifyToken, myPlate, referer, sign, imgArr, picture } = JSON.parse(F_MGR.readString(file));
@@ -60,9 +64,7 @@ async function main() {
     const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
     const cachePath = F_MGR.joinPath(cache, imgKey);
     F_MGR.writeImage(cachePath, carImage);
-    let arr = setting.imgArr;
-    arr.push(imgKey);
-    setting.imgArr = arr;
+    imgArr.push(imgKey);
     await writeSettings(setting);
     await getRandomImage();
   };
