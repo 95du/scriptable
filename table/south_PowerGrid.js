@@ -159,7 +159,8 @@ async function main() {
     const ele = await selectEleBill();
     if ( ele ) {  
       pay = ele.electricBillPay;
-      const bill = ele.billUserAndYear.pop();
+      const bill = ele.billUserAndYear[0];
+      monthDate = bill.startMonthDate.split('.')[0];
       total = bill.totalPower;
       arrears = bill.totalElectricity;
     }
@@ -347,17 +348,17 @@ async function main() {
     gooseIconElement.imageSize = new Size(58, 58);
     middleStack.addSpacer();
     
-    
+    /**
+     * Middle Right Stack
+     */
     const billStack = middleStack.addStack();    
     billStack.layoutVertically();  
     billStack.centerAlignContent();
     
     const billStack1 = billStack.addStack();
     billStack1.addSpacer();
-    // Last Month
-    const lastMomth = new Date().getMonth();  
-    const month = lastMomth == 0 ? 12 : lastMomth < 10 ? `0${lastMomth}` : lastMomth;
-    const billText = billStack1.addText(`${Year}-${pay > 0 ? month : String(month == 1 ? 12 : month - 1 < 10 ? `0${month - 1}` : month - 1)}`);
+    
+    const billText = billStack1.addText(`${Year}-${monthDate}`)
     billText.font = Font.mediumSystemFont(14);
     billText.textOpacity = 0.7;
     billStack.addSpacer(3);
@@ -558,7 +559,8 @@ async function main() {
     });
     const res = await elecBill.loadJSON();
     const lastBill = res.data[0].points[0];
-    if ( lastBill ) {  
+    //console.log(lastBill)
+    if ( lastBill ) {
       if ( !lastBill.arrears ) {
         await selectBill();
       } else {
