@@ -9,29 +9,107 @@
  */
 
 async function main() {
+  const cacheDirName = '95duJingDong_BaiTiao';
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong_BaiTiao");
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+
+  /**
+   * 获取电报机器人的数据存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getSettingPath = () => {
+    const mainPath = F_MGR.joinPath(F_MGR.documentsDirectory(), cacheDirName);
+    F_MGR.createDirectory(mainPath, true);
+    return F_MGR.joinPath(mainPath, 'setting.json', true);
+  };
   
-  // file_Path
-  function getPath(pathName, fileName) {
-    return F_MGR.joinPath(pathName, fileName);
+  
+  /**
+   * 获取背景图片存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getBgImagePath = () => {
+    const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+    F_MGR.createDirectory(bgPath, true);
+    return F_MGR.joinPath(bgPath, Script.name() + '.jpg');
   }
-  const bgImage = getPath(bgPath, Script.name() + '.jpg');
-  const cacheFile = getPath(folder, 'setting.json');
   
-  // Get Settings { json }
-  const getSettings = (file) => {
-    if ( F_MGR.fileExists(file) ) {
-      const data = F_MGR.readString(file);
-      return { cookie, gap, location } = JSON.parse(data);
+  /**
+   * 读取储存的设置
+   * @returns {object} - 设置对象
+   */
+  const getBotSettings = () => {
+    if ( getSettingPath() ) {
+      return { cookie, location, gap } = JSON.parse(F_MGR.readString(
+        getSettingPath()
+      ));
     }
     return null;
-  }
-  const setting = getSettings(cacheFile);
-
-  //=========> START <=========//
+  };
+  const setting = await getBotSettings();
   
+  /**
+   * 存储当前设置
+   * @param { JSON } string
+   */
+  const writeSettings = async () => {
+    typeof settings === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(setting)) : null;
+    console.log(JSON.stringify(
+      setting, null, 2)
+    );
+  }
+  
+  /**
+   * 获取图片并使用缓存
+   * @param {string} File Extension
+   * @returns {image} - Request
+   */
+  const useFileManager = (options = {}) => {
+    const fm = FileManager.local();
+    const cacheDir = fm.joinPath(fm.documentsDirectory(), cacheDirName, options.cache || 'cache');
+    fm.createDirectory(cacheDir, true);
+    const cache = fm.joinPath(cacheDir, 'cache_path');
+    fm.createDirectory(cache, true);
+    
+    return {
+      readImage: (filePath) => {
+        const imageFile = fm.joinPath(cache, filePath);
+        if (fm.fileExists(imageFile) && options.cacheTime) {
+          const createTime = fm.creationDate(imageFile).getTime();
+          const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
+          if (diff >= options.cacheTime) {
+            fm.remove(imageFile);
+            return null;
+          }
+        }
+        return fm.readImage(imageFile);
+      },
+      writeImage: (filePath, image) => fm.writeImage(fm.joinPath(cache, filePath), image)
+    }
+  };
+  
+  const getImage = async (url) => {
+    return await new Request(url).loadImage();
+  };
+  
+  // 获取图片，使用缓存
+  const getCacheImage = async (name, url) => {
+    const cache = useFileManager({ cacheTime: 24 });
+    const image = cache.readImage(name);
+    if (image) {
+      return image;
+    }
+    const res = await getImage(url);
+    cache.writeImage(name, res);
+    return res;
+  };
+  
+  /**  
+  * 弹出一个通知
+  * @param {string} title
+  * @param {string} body
+  * @param {string} url
+  * @param {string} sound
+  */
   const notify = async (title, body, url) => {
     let n = new Notification();
     n.title = title
@@ -40,6 +118,9 @@ async function main() {
     if (url) {n.openURL = url}
     return await n.schedule();
   }
+  
+  
+  //=========> START <=========//
   
   const getData = async () => {
     benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
@@ -77,28 +158,31 @@ async function main() {
   
   async function createWidget() {
     const widget = new ListWidget();
+    const bgImage = await getBgImagePath();
     const Appearance = Device.isUsingDarkAppearance();
     if (F_MGR.fileExists(bgImage) && Appearance === false) {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))  
     } else if (setting.gradient.length !== 0) {
       const gradient = new LinearGradient();
-      color = setting.gradient
+      const color = setting.gradient
       const items = color[Math.floor(Math.random() * color.length)];
       gradient.locations = [0, 1]
       gradient.colors = [
         new Color(items, Number(setting.transparency)),
         new Color('#00000000')
       ]
-      widget.backgroundGradient = gradient
+      widget.backgroundGradient = gradient;
     } else if (Appearance == false) {
-      widget.backgroundImage = await getImage('http://mtw.so/60NF6g');
+      widget.backgroundImage = await getCacheImage("bg.jpeg", 'http://mtw.so/60NF6g');
     } else {
       const baiTiaoUrl = [
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg.png',  
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg1.png',  
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png'];
-      const randomIndex = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
-      widget.backgroundImage = await getImage(randomIndex);
+      const bgImageURL = baiTiaoUrl[Math.floor(Math.random() * baiTiaoUrl.length)];
+      const bgImageName = decodeURIComponent(bgImageURL.substring(bgImageURL.lastIndexOf("/") + 1));
+      const randomBackgroundImage = await getCacheImage(bgImageName, bgImageURL);
+      widget.backgroundImage = randomBackgroundImage;
       widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
     }
     
@@ -118,11 +202,12 @@ async function main() {
     avatarStack.layoutHorizontally();
     avatarStack.centerAlignContent();
     const avatarStack2 = avatarStack.addStack();
-    const iconSymbol = await circleImage(portrait);  
+    const avatar = await getCacheImage('avatar.png', portrait);
+    const iconSymbol = await circleImage(avatar);
     
     if (setting.isPlus === 'true') {
       avatarStack2.backgroundImage = iconSymbol;
-      const plus = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
+      const plus = await getCacheImage('plus.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/plus.png');
       const plusImage = avatarStack2.addImage(plus);
       plusImage.imageSize = new Size(55, 55);
     } else {
@@ -177,7 +262,7 @@ async function main() {
     const pointStack = topStack.addStack();
     pointStack.layoutHorizontally();
     pointStack.centerAlignContent();
-    const baitiaoImage = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baitiao.png');
+    const baitiaoImage = await getCacheImage('baitiao.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baitiao.png');
     const baitiaoIcon = pointStack.addImage(baitiaoImage);
     baitiaoIcon.imageSize = new Size(25, 18);
     pointStack.addSpacer(8);
@@ -241,11 +326,11 @@ async function main() {
       'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose.png',
       'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose0.png',
       'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/whiteGoose1.png'];
-    const gooseItems = gooseUrl[Math.floor(Math.random() * gooseUrl.length)];
-    const gooseIcon = await getImage(gooseItems);
+    const goose = gooseUrl[Math.floor(Math.random() * gooseUrl.length)];
+    const bgImageName = decodeURIComponent(goose.substring(goose.lastIndexOf("/") + 1));
+    const gooseIcon = await getCacheImage(bgImageName, goose);
     const gooseIconElement = middleStack.addImage(gooseIcon);
-    const name = gooseItems.substring(gooseItems.lastIndexOf('/') + 1);
-    gooseIconElement.imageSize = name == 'whiteGoose.png' ? new Size(55, 55) : new Size(52, 52);
+    gooseIconElement.imageSize = bgImageName == 'whiteGoose.png' ? new Size(55, 55) : new Size(52, 52);
     middleStack.addSpacer();
     
     
@@ -387,26 +472,30 @@ async function main() {
       "clientVersion": "11.6.4"
     }`
     const res = await req.loadJSON();
-    return {
-      quota: {
-        quotaLeft,
-        quotaAll
-      },
-      bill: {
-        amount,
-        buttonName
-      },
-      right: {
-        data: {
-          scorePopJumpUrl,
-          title,
-          identityPicture,
-          portrait,
-          percent,
-          progressNextLevelText
+    if ( res.resultCode == 0 ) {
+      return {
+        quota: {
+          quotaLeft,
+          quotaAll
+        },
+        bill: {
+          amount,
+          buttonName
+        },
+        right: {
+          data: {
+            scorePopJumpUrl,
+            title,
+            identityPicture,
+            portrait,
+            percent,
+            progressNextLevelText
+          }
         }
-      }
-    } = res.resultData.data;
+      } = res.resultData.data;
+    } else {
+      console.log(res)
+    }
   }
   
   async function LvlProgress(url) {
@@ -433,14 +522,10 @@ async function main() {
       } = res.resultData;
     } else {
       setting.code = 3;
-      F_MGR.writeString(cacheFile, JSON.stringify(setting));
+      await writeSettings();
+      //F_MGR.writeString(cacheFile, JSON.stringify(setting));
       notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
     }
-  }
-  
-  async function getImage(url) {
-    const r = await new Request(url);
-    return await r.loadImage();
   }
   
   async function shadowImage(img) {
@@ -453,8 +538,7 @@ async function main() {
   }
   
   async function circleImage(url) {
-    const req = new Request(url);  
-    let img = await req.loadImage()
+    typeof url === 'object' ? img = url : img = await new Request(url).loadImage();
     const imgData = Data.fromPNG(img).toBase64String();
     const html = `
       <img id="sourceImg" src="data:image/png;base64,${imgData}" />
