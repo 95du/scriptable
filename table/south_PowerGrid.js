@@ -559,7 +559,6 @@ async function main() {
     });
     const res = await elecBill.loadJSON();
     const lastBill = res.data[0].points[0];
-    //console.log(lastBill)
     if ( lastBill ) {
       if ( !lastBill.arrears ) {
         await selectBill();
