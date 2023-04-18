@@ -10,14 +10,17 @@
  */
 
 const uri = Script.name();
-const F_MGR = FileManager.local();
+const F_MGR = FileManager.local()
 const path = F_MGR.joinPath(F_MGR.documentsDirectory(), 'mercedes');
-if (!F_MGR.fileExists(path)) {
-  F_MGR.createDirectory(path);
-}
+F_MGR.createDirectory(path, true);
 const cacheFile = F_MGR.joinPath(path, 'setting.json');
 
-// Get Settings { json }
+
+/**
+ * 读取储存的设置
+ * @param {string} file - JSON
+ * @returns {object} - JSON
+ */
 const getSettings = (file) => {
   let setting = {};
   if (F_MGR.fileExists(file)) {
@@ -26,6 +29,7 @@ const getSettings = (file) => {
   return {}
 }
 const setting = await getSettings(cacheFile);
+
 
 /**
  * 存储当前设置
@@ -41,7 +45,9 @@ const writeSettings = async (inObject) => {
  }
 
 
-// Presents the main menu
+/**
+ * 弹出菜单供用户选择进行操作
+ */
 async function presentMenu() {
   const title = 'Mercedes Maybach';
   const message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
@@ -129,21 +135,26 @@ const downloadImage = async (path, item) => {
   const carImage = await getImage(item);
   const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
   const cachePath = F_MGR.joinPath(path, imgKey);
-  F_MGR.writeImage(cachePath, carImage);
-  let arr = setting.imgArr;
-  arr.push(imgKey);
-  setting.imgArr = arr;
+  await F_MGR.writeImage(cachePath, carImage, { overwrite: true });
+  imgArr.push(imgKey);
   await writeSettings(setting);
 };
 
-if ( !setting.imgArr || !setting.imgArr.length ) {
-  const cacheUrl = await new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json').loadJSON();
-  const maybach = cacheUrl.maybach
-  maybach.forEach(async (item) => {
-    await downloadImage(path, item);
-  });
+const loadPicture = async () => {  
+  if ( !setting.imgArr?.length ) {
+    const cacheUrl = await new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json').loadJSON();
+    const maybach = cacheUrl.maybach;
+    maybach.forEach(async (item) => {
+      await downloadImage(path, item);
+    });
+  }
 }
+await loadPicture();
 
+/**
+ * 随机获取缓存图片
+ * @param {image} file
+ */
 async function getRandomImage() {
   const count = imgArr.length;
   const index = Math.floor(Math.random() * count);
@@ -156,7 +167,7 @@ async function getRandomImage() {
 const getAddress = async () => {
   const req = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
   const poisArr = req.regeocode.pois;
-  const poisData = poisArr.length > 0 ? poisArr : '未知附近地址';
+  const poisData = poisArr.length > 0 ? poisArr : null;
   return { formatted_address: address, pois = poisData } = req.regeocode;
 }
 
@@ -168,7 +179,6 @@ const getDistance = async () => {
 
 // Create Widget
 async function createWidget() {
-  await getAddress();
   const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${latitude},${longitude}&t=m`;
   
   const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
@@ -198,6 +208,7 @@ async function createWidget() {
   );
   
   // Saved Json
+  await getAddress();
   const runObj = {
     updateTime: updateTime, 
     address: address,
@@ -440,7 +451,7 @@ async function createWidget() {
           url,
           description
         }]
-      }
+      } // pushMessage to wiChat
     });
     
     // 推送通知
@@ -485,19 +496,15 @@ if ( args.plainTexts[0] ) {
    /** Request(url) json **/
 /**-------------------------**/
 
-
-if ( config.runsInWidget ) {
-  const isMediumWidget =  config.widgetFamily === 'medium';
-  if ( isMediumWidget ) {
-    await getData();
-    await createWidget();
+const runWidget = async () => {  
+  if (config.runsInWidget) {
+    const isMediumWidget = config.widgetFamily === 'medium';
+    await (isMediumWidget ? getData().then(createWidget) : createErrorWidget());
   } else {
-    await createErrorWidget();
+    await presentMenu();
   }
-} else {
-  await presentMenu();
 }
-
+await runWidget()
   
 /**
  * 获取地理位置信息
