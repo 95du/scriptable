@@ -10,7 +10,7 @@
  */
 
 const uri = Script.name();
-const F_MGR = FileManager.local()
+const F_MGR = FileManager.local();
 const path = F_MGR.joinPath(F_MGR.documentsDirectory(), 'mercedes');
 F_MGR.createDirectory(path, true);
 const cacheFile = F_MGR.joinPath(path, 'setting.json');
@@ -131,7 +131,7 @@ async function inputCookie() {
   }
 }
 
-const downloadImage = async (path, item) => {
+const downloadCarImage = async (item) => {
   const carImage = await getImage(item);
   const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
   const cachePath = F_MGR.joinPath(path, imgKey);
@@ -145,7 +145,7 @@ const loadPicture = async () => {
     const cacheUrl = await new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json').loadJSON();
     const maybach = cacheUrl.maybach;
     maybach.forEach(async (item) => {
-      await downloadImage(path, item);
+      await downloadCarImage(item);
     });
   }
 }
@@ -401,6 +401,7 @@ async function createWidget() {
     const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
     const mapPicUrl = `${mapKey},0:${longitude},${latitude}`;
     const driveAway = run !== 'HONDA' && distance > 20
+    
     const timeAgo = new Date(Date.now() - pushTime);
     const hours = timeAgo.getUTCHours();
     const minutes = timeAgo.getUTCMinutes();
@@ -499,7 +500,7 @@ const runWidget = async () => {
     await presentMenu();
   }
 }
-await runWidget()
+runWidget()
   
 /**
  * 获取地理位置信息
