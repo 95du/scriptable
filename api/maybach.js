@@ -500,7 +500,7 @@ const runWidget = async () => {
     await presentMenu();
   }
 }
-runWidget()
+await runWidget()
   
 /**
  * 获取地理位置信息
