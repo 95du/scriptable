@@ -446,11 +446,14 @@ async function main() {
     return widget;
   }
   
-  const isMediumWidget =  config.widgetFamily === 'medium'
-  if ((isMediumWidget || config.runsInApp) && referer && imgArr?.length) {
-    await createWidget();
+  /**-------------------------**/
+     /** Request(url) json **/
+  /**-------------------------**/
+  
+  if ((config.widgetFamily === 'medium' || config.runsInApp) && referer && imgArr.length > 0) {
+    createWidget();
   } else {
-    await createErrWidget();
+    createErrWidget();
   }
   
   async function notify (title, body, url, opts = {}) {
