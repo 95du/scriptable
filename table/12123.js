@@ -5,7 +5,7 @@
  * 支付宝小程序 交管12123
  * 小组件作者：95度茅台
  * 获取Token作者: @FoKit
- * UITable 版本: Version 1.2.0
+ * UITable 版本: Version 1.2.1
  */
 
 async function main() {
@@ -432,17 +432,17 @@ async function main() {
     textAddress.centerAlignText();
     rightStack.addSpacer();
     
+    // jump show status
+    barStack2.url = statusUrl;
+    textPlate2.url = 'tmri12123://'
+    imageCar.url = detailsUrl;
+    
     if ( !config.runsInWidget ) {  
       await widget.presentMedium();
     } else {
       Script.setWidget(widget);
       Script.complete();
     }
-    
-    // jump show status
-    barStack2.url = statusUrl;
-    textPlate2.url = 'tmri12123://'
-    imageCar.url = detailsUrl;
     return widget;
   }
   
