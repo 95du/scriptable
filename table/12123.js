@@ -135,7 +135,14 @@ async function main() {
     return ing = await F_MGR.readImage(cacheImgPath);
   };
   
-  // 请求违章信息
+  /**
+   * 发送请求获取信息
+   *
+   * @param {string} api
+   * @param {object} params 请求参数
+   * @param {object} params具体请求参数
+   * @returns {object} 响应结果对象
+   */
   const requestInfo = async (api, params) => {
     const request = new Request(infoURL);
     request.method = 'POST';
