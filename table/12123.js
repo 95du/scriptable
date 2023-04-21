@@ -5,18 +5,14 @@
  * 支付宝小程序 交管12123
  * 小组件作者：95度茅台
  * 获取Token作者: @FoKit
- * UITable 版本: Version 1.1.0
+ * UITable 版本: Version 1.2.0
  */
 
 async function main() {
-  const get = await new Request(atob(
-'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON()
-  const url = get.infoURL;
-  
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du12123');  
-  F_MGR.createDirectory(folder, true);  
-  const cacheFile = F_MGR.joinPath(folder, 'setting.json', true);
+  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du12123');  
+  F_MGR.createDirectory(path, true);  
+  const cacheFile = F_MGR.joinPath(path, 'setting.json');
   
   /**
    * 读取储存的设置
@@ -28,7 +24,7 @@ async function main() {
       return { verifyToken, myPlate, referer, sign, imgArr, picture } = JSON.parse(F_MGR.readString(file));
     }
     return {}
-  }
+  };
   const setting = getSettings(cacheFile);
 
   /**
@@ -42,7 +38,7 @@ async function main() {
          inObject, null, 2)
       );
      }
-   }
+   };
   
   /**
    * 获取背景图片存储目录路径
@@ -54,31 +50,81 @@ async function main() {
       bgImgPath, true
     );
     return F_MGR.joinPath(bgImgPath, Script.name() + '.jpg');
+  };
+  
+  // Get boxjs Data
+  const getBoxjsData = async () => {
+    try {
+      const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
+      const boxjs = boxjs_data.val.split(',');
+      verifyToken = boxjs[0];
+      sign = boxjs[1];
+      const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
+      referer = boxjs_referer.val;
+
+      if (verifyToken && referer) {
+        await writeSettings({
+          ...setting,
+          sign,
+          verifyToken,
+          referer
+        })
+        
+        if (sign !== setting.sign && imgArr?.length) {
+          Timer.schedule(2000, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功')})
+        }
+      }
+    } catch (e) {
+      notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
+    }
+  };
+  
+  if (verifyToken === null || sign === null || !referer) {
+    await getBoxjsData();
   }
   
+  /**
+   * 获取请求数据
+   * @param {string} - string
+   * @returns {image} - url
+   */
+  const getGovData = async() => {
+    const invoke = await new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON();
+    return { infoURL, productId, version, api1, api2, api3, api4, alipayUrl, statusUrl, detailsUrl, maybach } = invoke;
+  };
+  await getGovData();
   
-  // Get cache image
-  const cache = F_MGR.joinPath(folder, 'cachePath');
+  /**
+   * 获取远程图片
+   * @returns {image} - image
+   */
+  const getImage = async (url) => {
+    return await new Request(url).loadImage();
+  };
+  
+  /**
+   * 获取图片并使用缓存
+   * @param {string} File Extension
+   * @returns {image} - Request
+   */
+  const cache = F_MGR.joinPath(path, 'cachePath');
   F_MGR.createDirectory(cache, true);
   
-  const downloadImage = async (path, item) => {
+  const downloadCarImage = async (item) => {
     const carImage = await getImage(item);
     const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
     const cachePath = F_MGR.joinPath(cache, imgKey);
     F_MGR.writeImage(cachePath, carImage);
     imgArr.push(imgKey);
     await writeSettings(setting);
-    await getRandomImage();
   };
   
-  if ( !setting.imgArr?.length || !setting.picture ) {
-    if (setting.picture.length > 0) {
+  if ( !imgArr?.length ) {
+    if (picture.length > 0) {
       maybach = setting.picture;
-    } else {
-      maybach = get.maybach;
     }
     maybach.forEach(async (item) => {
-      await downloadImage(cache, item);
+      await downloadCarImage(item);
     });
   }
   
@@ -87,155 +133,116 @@ async function main() {
     const index = Math.floor(Math.random() * count);
     const cacheImgPath = cache + '/' + imgArr[index];
     return ing = await F_MGR.readImage(cacheImgPath);
-  }
-  const img = await getRandomImage();
+  };
   
-  
-  //=========> START <=========//
-  
-  if (verifyToken === null || sign === null || !referer) {
-    try {
-      const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
-      const boxjs = boxjs_data.val.split(',');
-      verifyToken = boxjs[0];
-      sign = boxjs[1];
-      const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
-      referer = boxjs_referer.val;
-      // Save boxjs_val
-      if (verifyToken) {
-        data = {
-          ...setting,
-          sign: sign,
-          verifyToken: verifyToken,
-          referer: referer
-        }
-        await writeSettings(data);
-        if (sign !== setting.sign && setting.sign !== null) {
-          Timer.schedule(2000, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功')})
-        }
-      }
-    } catch(e) {
-      notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
+  // 请求违章信息
+  const requestInfo = async (api, params) => {
+    const request = new Request(infoURL);
+    request.method = 'POST';
+    request.body = `params=${encodeURIComponent(JSON.stringify({
+      productId,
+      api,
+      sign,
+      version,
+      verifyToken,
+      params,
+    }))}`;
+    const response = await request.loadJSON();
+    if (!response.success) {
+      await handleError(request);
     }
-  }
+    return response;
+  };
   
-  
-  // violation main
-  const violation = new Request(url);
-  violation.method = 'POST'
-  violation.body = 'params=' + encodeURIComponent(JSON.stringify({
-    productId: get.productId,
-    api: get.api1,
-    sign: sign,
-    version: get.version,
-    verifyToken: verifyToken
-  }));
-  const main = await violation.loadJSON();
-  const success = main.success === true;
-  
-  if (success) {
-    vehicle = main.data.list
-    vioList = vehicle[Math.floor(Math.random() * vehicle.length)];
-    nothing = vioList === undefined;
-    if (!nothing) {
-      // issueOrganization plate
-      const plate = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z])/)[1];
-      const issueOrganization = new Request(url);
-      issueOrganization.method = 'POST'
-      issueOrganization.body = 'params=' + encodeURIComponent(JSON.stringify({
-        productId: get.productId,
-        api: get.api2,
-        sign: sign,
-        version: get.version,
-        verifyToken: verifyToken,
-        params: {
-          internalOrder: vioList.internalOrder,
-          plateType: 02,
-          _issueOrganization: plate
-        }
-      }));
-      const issue = await issueOrganization.loadJSON();
-      const issueArr = issue.data.vioCity
-      let newArr = [];
-      for (const item of issueArr) {
-        if (item.vioCount >= 1) {
-          newArr.push(item)
-        }
-      }
-      const issueData = newArr[Math.floor(Math.random() * newArr.length)];
-      
-      // get surveils
-      const area = new Request(url);
-      area.method = 'POST'
-      area.body = 'params=' + encodeURIComponent(JSON.stringify({
-        productId: get.productId,
-        api: get.api3,
-        sign: sign,
-        version: get.version,
-        verifyToken: verifyToken,
-        params: {
-          internalOrder: vioList.internalOrder,
-          plateType: 02,
-          issueOrganization: issueData.issueOrganization
-        }
-      }));
-      const surveils = await area.loadJSON();
-      const vioItems = surveils.data.surveils;
-      detail = vioItems[Math.floor(Math.random() * vioItems.length)];
-    
-      // violation Message
-      if (detail !== undefined) {
-        const violationMsg = new Request(url);
-        violationMsg.method = 'POST'
-        violationMsg.body = 'params=' + encodeURIComponent(JSON.stringify({
-          productId: get.productId,
-          api: get.api4,
-          sign: sign,
-          version: get.version,
-          verifyToken: verifyToken,
-          params: {
-            violationSerialNumber: detail.violationSerialNumber,
-            issueOrganization: detail.issueOrganization
-          }
-        }));
-        const details = await violationMsg.loadJSON();
-        vio = details.data.detail
-        const imgItems = details.data.photos
-        photos = imgItems[Math.floor(Math.random() * imgItems.length)];
-      } else {
-        nothing = undefined;
-      }
+  // 获取车辆违章信息
+  const getVehicleViolation = async (vehicle) => {
+    const vioList = getRandomItem(vehicle);
+    if (!vioList) {
+      return undefined;
     }
-  } else if (main.resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || main.resultCode === 'SECURITY_INFO_ABNORMAL') {
-    data = {
-      ...setting,
-      sign: null,
-      verifyToken: null
+    const issueData = await getIssueData(vioList);
+    if (!issueData) {
+      return undefined;
     }
-    await writeSettings(data);
-    nothing = undefined;
-    notify(main.resultMsg + ' ⚠️', '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取，请确保已打开辅助工具', get.details);
-  } else {
-    nothing = undefined;
-    notify(main.resultCode + ' ⚠️', main.resultMsg, get.details);
-  }
-
-  const isMediumWidget =  config.widgetFamily === 'medium'
-  if (!config.runsInWidget) {
-    const widget = await createWidget(main);
-    await widget.presentMedium();
-  } else {
-    if (isMediumWidget) {
-      const widget = await createWidget(main);
-      Script.setWidget(widget);
-      Script.complete();
+    const surveils = await getSurveils(vioList, issueData);
+    const detail = getRandomItem(surveils);
+    if (!detail) {
+      return undefined;
+    }
+    const vio = await getViolationMsg(detail);
+    const photos = getRandomItem(vio.photos);
+    return { vioList, detail, vio, photos };
+  };
+  
+  // 获取违章对应的发证机关信息
+  const getIssueData = async (vioList) => {
+    const { plate } = myPlate.match(/(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领])([A-Z])/);
+    const params = {
+      internalOrder: vioList.internalOrder,
+      plateType: 2,
+      _issueOrganization: plate,
+    };
+    const issue = await requestInfo(api2, params);
+    const issueArr = issue.data.vioCity.filter((item) => item.vioCount >= 1);
+    return getRandomItem(issueArr);
+  };
+  
+  // 获取违章对应的违法行为信息
+  const getSurveils = async (vioList, issueData) => {
+    const params = {
+      internalOrder: vioList.internalOrder,
+      plateType: 2,
+      issueOrganization: issueData.issueOrganization,
+    };
+    const surveils = await requestInfo(api3, params);
+    return surveils.data.surveils;
+  };
+  
+  // 获取违章详细信息
+  const getViolationMsg = async (detail) => {
+    const params = {
+      violationSerialNumber: detail.violationSerialNumber,
+      issueOrganization: detail.issueOrganization,
+    };
+    const violationMsg = await requestInfo(api4, params);
+    return violationMsg.data.detail;
+  };
+  
+  // 查询主函数
+  const violationQuery = async () => {
+    const params = { productId, api: api1, sign, version, verifyToken };
+    const main = await requestInfo(api1, params);
+    const { success } = main;
+    if (success) {
+      const { list: vehicle } = main.data;
+      const violationDetails = await getVehicleViolation(vehicle);
+      if (violationDetails) {
+        return { success, ...violationDetails };
+      }
     } else {
-      await createErrorWidget();
+      await handleError(main);
     }
-  }
+    return { success };
+  };
+  
+  // 获取随机数组元素
+  const getRandomItem = (array) => (array.length ? array[Math.floor(Math.random() * array.length)] : undefined);
+  
+  // 处理错误
+  const handleError = async (response) => {
+    const { resultCode, resultMsg } = response;
+    if (resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || resultCode === 'SECURITY_INFO_ABNORMAL') {
+      const data = { ...setting, sign: null, verifyToken: null };
+      await writeSettings(data);
+      notify(`${resultMsg} ⚠️`, '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取，请确保已打开辅助工具', detailsUrl);
+    } else {
+      notify(`${resultCode} ⚠️`, resultMsg, detailsUrl);
+    }
+  };
   
   
-  // createWidget
+  //=========> Create <=========//
+  
   async function createWidget() {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
@@ -264,14 +271,18 @@ async function main() {
       ]
       widget.backgroundGradient = gradient;
     }
-  
-  
+    
+    // 调用违章查询函数
+    const queryResult = await violationQuery();
+    const { success, vioList, detail, vio, photos } = queryResult;
+    const nothing = !Array.isArray(vioList);
+    
     /**
      * @param {image} image
      * @param {string} text
      * Cylindrical Bar Chart
      */
-    widget.setPadding(nothing || main.success === false ? 19 : 15, 18, 15, 14);
+    widget.setPadding(nothing || !success ? 19 : 15, 18, 15, 14);
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     // Left Stack Violation Data
@@ -304,7 +315,7 @@ async function main() {
     // violationPoint
     const vioPointStack = leftStack.addStack();
     const vioPoint = vioPointStack.addStack();
-    if (!nothing && success && detail) {
+    if ( !nothing && success && detail ) {
       vioPointText = vioPoint.addText(`罚款${vio.fine}元、` + `扣${vio.violationPoint}分`);
       vioPointText.font = Font.mediumSystemFont(12);
       vioPointText.textColor = new Color('#484848');
@@ -315,7 +326,7 @@ async function main() {
     const dateStack = leftStack.addStack();
     dateStack.layoutHorizontally();
     dateStack.centerAlignContent();
-    if (nothing || !success || !detail) {
+    if ( nothing || !success || !detail ) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(15, 15);
@@ -340,7 +351,7 @@ async function main() {
     barStack.cornerRadius = 10
     barStack.borderColor = nothing ? Color.green() : !success ? Color.orange() : new Color('#FF0000', 0.7);
     barStack.borderWidth = 2
-    if (nothing) {
+    if ( nothing ) {
       // bar icon
       const barIcon = SFSymbol.named('leaf.fill');
       const barIconElement = barStack.addImage(barIcon.image);
@@ -412,7 +423,7 @@ async function main() {
       textAddress = tipsStack.addText(setting.botStr);
     } else {
       textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
-      if (success && detail) {
+      if ( success && detail ) {
         textAddress.url = `${photos}`
       }
     }
@@ -421,11 +432,25 @@ async function main() {
     textAddress.centerAlignText();
     rightStack.addSpacer();
     
+    if ( !config.runsInWidget ) {  
+      await widget.presentMedium();
+    } else {
+      Script.setWidget(widget);
+      Script.complete();
+    }
+    
     // jump show status
-    barStack2.url = get.status;
+    barStack2.url = statusUrl;
     textPlate2.url = 'tmri12123://'
-    imageCar.url = get.details;
+    imageCar.url = detailsUrl;
     return widget;
+  }
+  
+  const isMediumWidget =  config.widgetFamily === 'medium'
+  if ((isMediumWidget || config.runsInApp) && referer && imgArr?.length) {
+    await createWidget();
+  } else {
+    await createErrWidget();
   }
   
   async function notify (title, body, url, opts = {}) {
@@ -437,12 +462,7 @@ async function main() {
     return await n.schedule()
   }
   
-  async function getImage(url) {
-    const r = await new Request(url);
-    return await r.loadImage();
-  }
-  
-  async function createErrorWidget() {
+  async function createErrWidget() {
     const widget = new ListWidget();
     const text = widget.addText('仅支持中尺寸');
     text.font = Font.systemFont(17);
@@ -454,10 +474,9 @@ async function main() {
     let ctx = new DrawContext()
     ctx.size = img.size
     ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
-    // 图片遮罩颜色、透明度设置
-    ctx.setFillColor(new Color("#000000", 0.2))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage()
-  }
+  };
 }
 module.exports = { main }
