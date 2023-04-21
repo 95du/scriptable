@@ -121,7 +121,7 @@ async function main() {
   
   if ( !imgArr?.length ) {
     if (picture.length > 0) {
-      maybach = setting.picture;
+      maybach = getRandomItem(picture);
     }
     maybach.forEach(async (item) => {
       await downloadCarImage(item);
