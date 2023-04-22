@@ -4,7 +4,7 @@
 /**
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
- * 2023-03-27 19:30
+ * 2023-04-23 19:30
  */
 
 async function main() {
@@ -12,7 +12,7 @@ async function main() {
   const F_MGR = FileManager.local();
 
   /**
-   * 获取电报机器人的数据存储目录路径
+   * 获取数据存储目录路径
    * @returns {string} - 目录路径
    */
   const getSettingPath = () => {
@@ -115,16 +115,21 @@ async function main() {
     return res;
   };
   
+  /**
+  * 该函数获取当前的年份和月份
+  * @returns {Promise}
+  */
+  const getYearMonth = async () => {
+    const Year = new Date().getFullYear();
+    const df = new DateFormatter();
+    df.dateFormat = 'MM';
+    const Month = (df.string(new Date()));
+    const year = Month == 1 ? Year - 1 : Year;  
+    return { Year, Month, year }
+  }
+  const { Year, Month, year } = await getYearMonth();
   
-  //=========> START <=========//
-  
-  const Year = new Date().getFullYear();
-  const df = new DateFormatter();
-  df.dateFormat = 'MM';
-  const Month = (df.string(new Date()));
-  const year = Month == 1 ? Year - 1 : Year;
-  const timestamp = Date.parse(new Date());
-  
+  // 请求头参数
   const headers = {
     'x-auth-token': token,
     'Content-Type': 'application/json;charset=utf-8'
@@ -163,7 +168,10 @@ async function main() {
       total = bill.totalPower;
       arrears = bill.totalElectricity;
     }
-  }
+  };
+  
+  
+  //=========> Create <=========//
   
   async function createWidget() {
     const widget = new ListWidget();
@@ -438,14 +446,18 @@ async function main() {
     }
     
     gooseIconElement.url = 'alipays://platformapi/startapp?appId=2021001164644764';
-    // 计算时长  
-    const pushTime = (timestamp - setting.updateTime);
-    const duration = pushTime % (24 * 3600 * 1000);
-    const hours = Math.floor(duration / (3600 * 1000));
-    if ( hours >= 12 && pay > 0 ) {
-      notify('用电缴费通知‼️', `${name}` + `，户号 ${number}` + `\n上月用电 ${total} 度 ，待缴电费 ${pay} 元`)
-      setting.updateTime = timestamp;
+    
+    // 欠费时每12小时通知一次
+    const arrearsNotice = () => {
+      const pushTime = (Date.now() - setting.updateTime);
+      const duration = pushTime % (24 * 3600 * 1000);
+      const hours = Math.floor(duration / (3600 * 1000));
+      if ( hours >= 12 && pay > 0 ) {
+        notify('用电缴费通知‼️', `${name}` + `，户号 ${number}` + `\n上月用电 ${total} 度 ，待缴电费 ${pay} 元`)
+        setting.updateTime = Date.now();
+      }
     }
+    await arrearsNotice();
     await writeSettings();
     
     // 组件实例
