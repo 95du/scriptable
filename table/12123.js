@@ -36,7 +36,7 @@ async function main() {
        F_MGR.writeString(cacheFile, JSON.stringify(inObject));
        console.log(JSON.stringify(
          inObject, null, 2)
-      );
+       );
      }
    };
   
@@ -270,7 +270,7 @@ async function main() {
       } else {
         color = setting.gradient;
       }
-      const items = color[Math.floor(Math.random()*color.length)];
+      const items = color[Math.floor(Math.random() * color.length)];
       gradient.locations = [0, 1]
       gradient.colors = [
         new Color(items, Number(setting.transparency)),
@@ -305,8 +305,8 @@ async function main() {
   
     // Car icon
     const carIconStack = leftStack.addStack();
-    carIconStack.layoutHorizontally();
-    carIconStack.centerAlignContent();
+    carIconStack.layoutHorizontally()
+    carIconStack.centerAlignContent()
     const man = SFSymbol.named('car');
     const carIcon = carIconStack.addImage(man.image);
     carIcon.imageSize = new Size(15, 15);
