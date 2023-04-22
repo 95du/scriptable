@@ -25,7 +25,6 @@ async function main() {
     return settingPath;
   };
   
-  
   /**
    * 获取背景图片存储目录路径
    * @returns {string} - 目录路径
@@ -40,20 +39,20 @@ async function main() {
    * 读取储存的设置
    * @returns {object} - 设置对象
    */
-  const getBotSettings = () => {
-    if ( getSettingPath() ) {
-      return { cookie, statistics } = JSON.parse(F_MGR.readString(getSettingPath()));
+  const getBotSettings = (file) => {
+    if (F_MGR.fileExists(file)) {
+      return { cookie, statistics } = JSON.parse(F_MGR.readString(file));
     }
     return null;
   };
-  const setting = await getBotSettings();
+  const setting = await getBotSettings(getSettingPath());
   
   /**
    * 存储当前设置
    * @param { JSON } string
    */
   const writeSettings = async () => {
-    typeof settings === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(setting)) : null;
+  typeof setting === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(setting)) : null;
     console.log(JSON.stringify(
       setting, null, 2)
     );
