@@ -282,7 +282,7 @@ async function main() {
     // 调用违章查询函数
     const queryResult = await violationQuery();
     const { success, vioList, detail, vio, photos } = queryResult;
-    const nothing = !Array.isArray(vioList);
+    const nothing = vioList === undefined;
     
     /**
      * @param {image} image
