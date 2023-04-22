@@ -465,19 +465,16 @@ async function main() {
   /**-------------------------**/
 
   const runWidget = async () => {
-    if (config.widgetFamily === 'small') {
-      const widget = new ListWidget();
-      widget.addText("仅支持中尺寸").centerAlignText();
-      Script.setWidget(widget);
+    if (setting.code === 0) {
+      await Promise.all([getJson(), totalAsset(), myWallet(), Run()]);
+    }
+    if (config.widgetFamily === 'medium' || config.runsInApp) {
+      await (setting.code === 0 ? createWidget() : createErrWidget());
     } else {
-      const settingCode = setting.code;
-      if (settingCode === 0) {
-        await Promise.all([getJson(), totalAsset(), myWallet(), Run()]);
-      }
-      await (settingCode === 0 ? createWidget() : createErrWidget());
+      await smallrWidget();
     }
   }
-  await runWidget();
+  runWidget();
   
   /**-------------------------**/
      /** Request(url) json **/
@@ -646,6 +643,15 @@ async function main() {
     const base64Image = await wv.evaluateJavaScript(js);
     const iconImage = await new Request(base64Image).loadImage();
     return iconImage
+  }
+  
+  async function smallrWidget() {
+    const widget = new ListWidget();
+    const text = widget.addText('仅支持中尺寸');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
+    Script.complete();
   }
   
   async function createErrWidget() {
