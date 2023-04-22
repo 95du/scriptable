@@ -463,16 +463,16 @@ async function main() {
      /** Request(url) json **/
   /**-------------------------**/
   
-  async function runWidget() {
-    if (config.widgetFamily === 'small') {
-      await smallrWidget();
-    } else if (setting.code === 0) {
+  const runWidget = async () => {
+    if (setting.code === 0) {
       await userInfo();
       await getEleBill();
       await Run();
-      await createWidget();
+    }
+    if (config.widgetFamily === 'medium' || config.runsInApp) {
+      await (setting.code === 0 ? createWidget() : createErrWidget());
     } else {
-      notify('南网用户未登录⚠️', 'Token 读取错误，请重新获取');
+      await smallrWidget();
     }
   }
   await runWidget();
@@ -593,6 +593,15 @@ async function main() {
     return res.data;
   }
   
+  async function shadowImage(img) {
+    let ctx = new DrawContext()
+    ctx.size = img.size
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+    return await ctx.getImage()
+  }
+  
   async function smallrWidget() {
     const widget = new ListWidget();
     const text = widget.addText('仅支持中尺寸');
@@ -602,13 +611,17 @@ async function main() {
     Script.complete();
   }
   
-  async function shadowImage(img) {
-    let ctx = new DrawContext()
-    ctx.size = img.size
-    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
-    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
-    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-    return await ctx.getImage()
+  async function createErrWidget() {
+    const widget = new ListWidget();
+    const image = await getCacheImage('gose.png', 'http://mtw.so/67LhN1');
+    const widgetImage = widget.addImage(image);
+    widgetImage.imageSize = new Size(50, 50);
+    widgetImage.centerAlignImage();
+    widget.addSpacer(10);
+    const text = widget.addText('用户未登录');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
   }
 }
 module.exports = { main }
