@@ -431,7 +431,7 @@ async function main() {
     } else {
       textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
       if ( success && detail ) {
-        textAddress.url = `${photos}`
+        textAddress.url = photos;
       }
     }
     textAddress.font = Font.mediumSystemFont(nothing || !success ? 11.5 : 11);
