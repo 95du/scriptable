@@ -10,29 +10,122 @@
  */
 
 async function main() {
+  const cacheDirName = '95duTelecom';
   const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duTelecom");
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+
+  /**
+   * 获取数据存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getSettingPath = () => {
+    const mainPath = F_MGR.joinPath(F_MGR.documentsDirectory(), cacheDirName);
+    F_MGR.createDirectory(mainPath, true);
+    return F_MGR.joinPath(mainPath, 'setting.json', true);
+  };
   
-  // file_Path
-  function getPath(pathName, fileName) {
-    return F_MGR.joinPath(pathName, fileName);
-  }
-  const bgImage = getPath(bgPath, Script.name() + '.jpg');
-  const cacheFile = getPath(folder, 'setting.json');
-  
-  // Get Settings { json }
-  const getSettings = (file) => {
-    if ( F_MGR.fileExists(file) ) {
-      const data = F_MGR.readString(file);
-      return { cookie } = JSON.parse(data);
+  /**
+   * 读取储存的设置
+   * @returns {object} - 设置对象
+   */
+  const getBotSettings = (file) => {
+    if (F_MGR.fileExists(file)) {
+      return { cookie, balanceColor } = JSON.parse(F_MGR.readString(file));
     }
     return null;
-  }
-  const setting = getSettings(cacheFile);
-
-  //=========> START <=========//
+  };
+  const setting = await getBotSettings(getSettingPath());
   
+  /**
+   * 存储当前设置
+   * @param { JSON } string
+   */
+  const writeSettings = async () => {
+    typeof setting === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(setting)) : null;
+    console.log(JSON.stringify(
+      setting, null, 2)
+    );
+  }
+  
+  /**  
+  * 弹出一个通知
+  * @param {string} title
+  * @param {string} body
+  * @param {string} url
+  * @param {string} sound
+  */
+  const notify = async (title, body, url) => {
+    let n = new Notification();
+    n.title = title
+    n.body = body
+    n.sound = 'alert'
+    if (url) {n.openURL = url}
+    return await n.schedule();
+  }
+  
+  /**
+   * 获取背景图片存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getBgImagePath = () => {
+    const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+    F_MGR.createDirectory(bgPath, true);
+    return F_MGR.joinPath(bgPath, Script.name() + '.jpg');
+  }
+  
+  /**
+   * 获取图片并使用缓存
+   * @param {string} File Extension
+   * @returns {image} - Request
+   */
+  const useFileManager = (options = {}) => {
+    const fm = FileManager.local();
+    const cacheDir = fm.joinPath(fm.documentsDirectory(), cacheDirName, options.cache || 'cache');
+    fm.createDirectory(cacheDir, true);
+    const cache = fm.joinPath(cacheDir, 'cache_path');
+    fm.createDirectory(cache, true);
+    
+    return {
+      readImage: (filePath) => {
+        const imageFile = fm.joinPath(cache, filePath);
+        if (fm.fileExists(imageFile) && options.cacheTime) {
+          const createTime = fm.creationDate(imageFile).getTime();
+          const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
+          if (diff >= options.cacheTime) {
+            fm.remove(imageFile);
+            return null;
+          }
+        }
+        return fm.readImage(imageFile);
+      },
+      writeImage: (filePath, image) => fm.writeImage(fm.joinPath(cache, filePath), image)
+    }
+  };
+  
+  const getImage = async (url) => {
+    return await new Request(url).loadImage();
+  };
+  
+  // 获取图片，使用缓存
+  const getCacheImage = async (name, url) => {
+    const cache = useFileManager({ cacheTime: 24 });
+    const image = cache.readImage(name);
+    if (image) {
+      return image;
+    }
+    const res = await getImage(url);
+    cache.writeImage(name, res);
+    return res;
+  };
+  
+  /*
+   * Name: MyWidget
+   * Author: John Smith
+   * Date: 2022/11/11
+   * Version: 1.1
+   * Description: This is a widget that displays some information.
+   */
+  
+  // Color definitions
   logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
   widgetBgColor = Color.dynamic(
   new Color("#fefefe"), new Color("#1e1e1e"));
@@ -48,6 +141,8 @@ async function main() {
   barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
   progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
   
+  //=========> Create <=========//
+  
   const makeRequest = async (url) => {
     const request = new Request(url);
     request.method = 'GET';
@@ -59,7 +154,7 @@ async function main() {
   
   // Voice Package
   const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-  console.log(JSON.stringify(package, null, 2))
+  //console.log(JSON.stringify(package, null, 2))
   const {
     items: arr,
     total,
@@ -112,7 +207,7 @@ df.dateFormat = 'ddHHmm'
   const day1st = df.string(new Date());
 
   if (setting.init === false || dayNumber !== setting.dayNumber) {
-    settings = {
+    setting = {
       ...setting,
       dayNumber: dayNumber,
       flow: flow,
@@ -121,7 +216,7 @@ df.dateFormat = 'ddHHmm'
       voiceBalance: voiceBalance,
       init: true
     }
-    F_MGR.writeString(cacheFile, JSON.stringify(settings));
+    writeSettings();
   }
   
   const flow1st = setting.flow
@@ -136,13 +231,13 @@ df.dateFormat = 'ddHHmm'
   const barHeigth = 105;
   
   const phone = Device.screenSize().height;
-  const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
+  const image = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
 
   const isSmallWidget =  config.widgetFamily === 'small'
   if (config.runsInWidget && isSmallWidget) {
-    await createSmallWidget();
+    createSmallWidget();
   } else {
-    await createWidget();
+    createWidget();
   }
   
   
@@ -153,9 +248,10 @@ df.dateFormat = 'ddHHmm'
    */
   async function createWidget() {
     const widget = new ListWidget();
+    const bgImage = await getBgImagePath();
     if (F_MGR.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
-    } else if (setting.gradient.length !== 0) {
+    } else if (setting.gradient.length > 0) {
       const gradient = new LinearGradient();
       color = setting.gradient
       const items = color[Math.floor(Math.random()*color.length)];
@@ -190,7 +286,7 @@ df.dateFormat = 'ddHHmm'
     rightStack.addSpacer();
     let balanceText = rightStack.addText(balanceAvailable);
     balanceText.centerAlignText();
-    balanceText.textColor = Color.red();
+    balanceText.textColor = new Color(balanceColor);
     balanceText.font = new Font('Georgia-Bold', phone < 926 ? 20 : 25);
     rightStack.addSpacer();
     widget.addSpacer(phone < 926 ? 3 : 5)
@@ -472,15 +568,6 @@ df.dateFormat = 'ddHHmm'
     } else {
       await widget.presentSmall();
     }
-  }
-  
-  async function notify (title, body, url) {
-    let n = new Notification()
-    n.title = title
-    n.body = body
-    n.sound = 'accept'
-    if (url) n.openURL = url
-    return await n.schedule()
   }
   
   async function shadowImage(img) {
