@@ -10,8 +10,10 @@
 
 async function main() {
   const F_MGR = FileManager.local();
+  
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du12123');  
   F_MGR.createDirectory(path, true);  
+  
   const cacheFile = F_MGR.joinPath(path, 'setting.json');
   
   /**
