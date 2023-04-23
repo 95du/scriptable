@@ -154,7 +154,6 @@ async function main() {
   
   // Voice Package
   const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-  //console.log(JSON.stringify(package, null, 2))
   const {
     items: arr,
     total,
