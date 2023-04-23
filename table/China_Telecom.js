@@ -39,8 +39,8 @@ async function main() {
    * 存储当前设置
    * @param { JSON } string
    */
-  const writeSettings = async () => {
-    typeof setting === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(setting)) : null;
+  const writeSettings = async (settings) => {
+    typeof setting === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(settings)) : null;
     console.log(JSON.stringify(
       setting, null, 2)
     );
@@ -206,7 +206,7 @@ df.dateFormat = 'ddHHmm'
   const day1st = df.string(new Date());
 
   if (setting.init === false || dayNumber !== setting.dayNumber) {
-    setting = {
+    settings = {
       ...setting,
       dayNumber: dayNumber,
       flow: flow,
@@ -215,7 +215,7 @@ df.dateFormat = 'ddHHmm'
       voiceBalance: voiceBalance,
       init: true
     }
-    writeSettings();
+    writeSettings(settings);
   }
   
   const flow1st = setting.flow
