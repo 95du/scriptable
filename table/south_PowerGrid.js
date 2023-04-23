@@ -22,16 +22,6 @@ async function main() {
   };
   
   /**
-   * 获取背景图片存储目录路径
-   * @returns {string} - 目录路径
-   */
-  const getBgImagePath = () => {
-    const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
-    F_MGR.createDirectory(bgPath, true);
-    return F_MGR.joinPath(bgPath, Script.name() + '.jpg');
-  }
-  
-  /**
    * 读取储存的设置
    * @returns {object} - 设置对象
    */
@@ -68,6 +58,16 @@ async function main() {
     n.sound = 'alert'
     if (url) {n.openURL = url}
     return await n.schedule();
+  }
+  
+  /**
+   * 获取背景图片存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getBgImagePath = () => {
+    const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
+    F_MGR.createDirectory(bgPath, true);
+    return F_MGR.joinPath(bgPath, Script.name() + '.jpg');
   }
   
   /**
