@@ -196,11 +196,13 @@ async function main() {
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
-  
   // Get Balance
   const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
+
+
   // Get dayNumber
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
+  
   const df = new DateFormatter();
 df.dateFormat = 'ddHHmm'
   const day1st = df.string(new Date());
@@ -208,11 +210,11 @@ df.dateFormat = 'ddHHmm'
   if (setting.init === false || dayNumber !== setting.dayNumber) {
     settings = {
       ...setting,
-      dayNumber: dayNumber,
-      flow: flow,
-      flowBalance: flowBalance,
-      voice: voice,
-      voiceBalance: voiceBalance,
+      dayNumber,
+      flow,
+      flowBalance,
+      voice,
+      voiceBalance,
       init: true
     }
     writeSettings(settings);
