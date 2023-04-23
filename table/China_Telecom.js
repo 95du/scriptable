@@ -232,7 +232,8 @@ df.dateFormat = 'ddHHmm'
   
   const phone = Device.screenSize().height;
   const image = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
-
+  const bgImage = await getBgImagePath();
+  
   const isSmallWidget =  config.widgetFamily === 'small'
   if (config.runsInWidget && isSmallWidget) {
     createSmallWidget();
@@ -248,7 +249,6 @@ df.dateFormat = 'ddHHmm'
    */
   async function createWidget() {
     const widget = new ListWidget();
-    const bgImage = await getBgImagePath();
     if (F_MGR.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
     } else if (setting.gradient.length > 0) {
