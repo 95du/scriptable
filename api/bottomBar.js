@@ -80,7 +80,6 @@ const getLocation = async () => {
   }
 };
 
-
 /**
  * 获取天气信息
  * @param  {Type} paramName
@@ -160,7 +159,6 @@ const getPicture = async () => {
   const iconName = decodeURIComponent(appIconUrl.substring(appIconUrl.lastIndexOf("/") + 1));  
   return await getCacheImage(iconName, appIconUrl);
 };
-
 
 /**
  * 获取每日一句中英文及配图
