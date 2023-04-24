@@ -3,14 +3,25 @@
 // icon-color: deep-green; icon-glyph: comments;
 /**
 * 小组件作者：95度茅台
-* Version 1.1.0
-* 2022-12-25 15:30
+* Version 1.2.0
+* 2023-04-24 15:30
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
-* 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
-* 小机型修改第 10 行中的数字 65⚠️
+* ⚠️小机型修改第 152 行中的数字 63
 */
 
-const stackSize = new Size(0, 63);
+const fm = FileManager.local();
+const path = fm.joinPath(fm.documentsDirectory(), "bottomBar");
+fm.createDirectory(path, true);
+
+const cacheFile = fm.joinPath(path, 'setting.json');
+
+const uri = Script.name();
+const timeStamp = Date.now();
+
+const df = new DateFormatter();
+df.dateFormat = 'HH:mm';
+const GMT = (df.string(new Date()));
+
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
@@ -19,116 +30,121 @@ const textColor = Color.dynamic(
   new Color('#1E1E1E'), 
   new Color('#FEFEFE')
 );
-const timeStamp = Date.parse(
-  new Date()
-);
-const df = new DateFormatter();
-df.dateFormat = 'HH:mm';
-const GMT = (df.string(new Date()));
-const uri = Script.name();
-const F_MGR = FileManager.local();
-const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "bottomBar");
-const cacheFile = F_MGR.joinPath(folder, 'data.json');
-const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
 
-if (F_MGR.fileExists(cacheFile)) {
-  data = F_MGR.readString(cacheFile)
-  data = JSON.parse(data)
-  // 计算时长
-  const pushTime = (timeStamp - data.updateTime);
-  const duration = pushTime % (24 * 3600 * 1000);
-  const intervalTime = Math.floor(duration / (3600 * 1000));
-  if ( intervalTime <= 3 ) {
-    location = data;
-  } else {
-    try {
-      location = await Location.current();
-      F_MGR.writeString(cacheFile, JSON.stringify({ ...location, updateTime: timeStamp }));
-    } catch (error) {
-      location = data;
-    }
-  }
-  // Conversion GPS
-  try {
-    convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${location.longitude},${location.latitude}`);
-    widget = await createWidget();
-  } catch(e) {
-    console.error(e);
-  }
-}
+/**
+ * 获取背景图片存储目录路径
+ * @returns {image} - image
+ */
+const getBgImagePath = () => {
+  const bgImgPath = fm.joinPath(fm.documentsDirectory(), '95duBackground');
+  return fm.joinPath(bgImgPath, Script.name() + '.jpg');
+};
 
-// widget Initialization
-if (!F_MGR.fileExists(folder)) {
-  F_MGR.createDirectory(folder);
-  const location = await Location.current();
-  F_MGR.writeString(cacheFile, JSON.stringify({ ...location, updateTime: timeStamp }));
-  Safari.open('scriptable:///run/' + encodeURIComponent(uri));
-}
+/**
+ * 获取指定位置的天气信息
+ * @param {Object} opts
+ *  - {Object} location
+ *  - {String} url
+ * @returns {Object} 
+ */
+const getLocation = async () => {
+  const getCacheData = () => {
+    if (!fm.fileExists(cacheFile)) return null;
+    return JSON.parse(fm.readString(cacheFile));
+  };
 
-async function presentMenu() {
-  let alert = new Alert();
-  alert.title = 'iOS 16 负一屏底栏'
-  alert.message = "\n高仿微信通知信息样式\n内容显示未来两小时天气\n每日一句中英文";
-  alert.addDestructiveAction('更新代码');
-  alert.addDestructiveAction('重置所有');
-  alert.addAction('透明背景');
-  alert.addAction('预览组件');
-  alert.addAction('退出菜单');
-  mainMenu = await alert.presentAlert();
-  if (mainMenu === 1) {
-    await F_MGR.remove(folder);
-    if (F_MGR.fileExists(bgImage)) {
-      await F_MGR.remove(bgImage);
-    }
-  }
-  if (mainMenu === 2) {
-    await importModule(await downloadModule()).main();
-  }
-  if (mainMenu === 3) {
-    await widget.presentMedium();
-  }
-  if (mainMenu === 4) return;
-  if (mainMenu === 0) {
-    const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
-    const codeString = await reqUpdate.loadString();
-    const finish = new Alert();
-    if (codeString.indexOf("95度茅台") == -1) {
-      finish.title = "更新失败"
-      finish.addAction('OK')
-      await finish.presentAlert();
+  const setCacheData = (data) => {
+    fm.writeString(cacheFile, JSON.stringify({ ...data, updateTime: timeStamp }));
+  };
+
+  const cacheData = getCacheData();
+  if (cacheData) {
+    const pushTime = timeStamp - cacheData.updateTime;
+    const duration = pushTime % (24 * 3600 * 1000);
+    const intervalTime = Math.floor(duration / (3600 * 1000));
+    if (intervalTime <= 3) {
+      return cacheData;
     } else {
-      F_MGR.writeString(  
-        module.filename,
-        codeString
-      );
-      finish.title = "更新成功"
-      finish.addAction('OK')
-      await finish.presentAlert();
-      Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+      try {
+        const location = await Location.current();
+        setCacheData(location);
+        return location;
+      } catch (error) {
+        return cacheData;
+      }
     }
+  } else {
+    const location = await Location.current();
+    setCacheData(location);
+    return location;
   }
+};
+
+
+/**
+ * 获取天气信息
+ * @param  {Type} paramName
+ */
+const getWeather = async (opts) => {
+  convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${opts.location.longitude},${opts.location.latitude}`);
+  const coordinates = convert.locations.split(",");
+  const request = new Request(opts.url);
+  request.method = 'POST'
+  request.body = JSON.stringify({
+    common: {
+      platform: 'iPhone',
+      language: 'CN'
+    }, 
+    params: {
+      lat: coordinates[1],
+      lon: coordinates[0]
+    }
+  });
+  const response = await request.loadJSON();
+  return { title, content } = response.radarData;
 }
 
-
-async function createWidget() {
-  const widget = new ListWidget();
-  widget.backgroundImage = F_MGR.readImage(bgImage);
-  const picture = [
+/**
+ * 获取随机图标
+ * @returns {image} image
+ */
+const getPicture = async () => {
+  const images = [
     'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png',
     'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weather.png'
   ]
-  const items = picture[Math.floor(Math.random() * picture.length)];
-  weChat = await getImage(items);
-  const one = await getJson('http://open.iciba.com/dsapi');
-  // Next two hours
-  await get({'url': 'https://ssfc.api.moji.com/sfc/json/nowcast'})
+  return await getImage(images[Math.floor(Math.random() * images.length)]);
+}
+
+/**
+ * 获取每日一句中英文及配图
+ * @returns {Object} string
+ */
+const getOneWord = async () => {
+  const oneUrl = 'https://open.iciba.com/dsapi';
+  const oneJson = await getJson(oneUrl);
+  return { 
+    note: oneJson.note.length >= 21 ? oneJson.note : `${oneJson.note}\n${oneJson.content}`,
+    imgUrl: oneJson.fenxiang_img
+  }
+}
+
+/**
+ * 创建小组件
+ * @param {object} options
+ * @param {string} string
+ * @param {image} image
+ */
+const createWidget = async () => {
+  await getWeather({
+    'url': 'https://ssfc.api.moji.com/sfc/json/nowcast',
+    'location': await getLocation()
+  })
   
+  const { note, imgUrl } = await getOneWord();
   
-  /**
-  * Frame Layout
-  * Top Row Events
-  */
+  const widget = new ListWidget();
+  widget.backgroundImage = fm.readImage(getBgImagePath());
   widget.setPadding(0, 0, 0, 0);
   const eventStack = widget.addStack();
   eventStack.setPadding(15, 15, 15, 17);
@@ -136,10 +152,10 @@ async function createWidget() {
   eventStack.centerAlignContent();
   eventStack.backgroundColor = stackBackground;
   eventStack.cornerRadius = 23;
-  eventStack.size = stackSize;
+  eventStack.size = new Size(0, 63);
   
   // WeChat icon
-  const imageElement = eventStack.addImage(weChat);
+  const imageElement = eventStack.addImage(await getPicture());
   imageElement.imageSize = new Size(38, 38);
   imageElement.url = 'https://html5.moji.com/tpd/mojiweatheraggr/index.html#/home'
   eventStack.addSpacer(10);
@@ -170,71 +186,36 @@ async function createWidget() {
   
   /** 
   * Bottom Content
-  * One word
+  * @param {object} options
+  * @param {string} string
   */
   const oneStack = widget.addStack();
   oneStack.layoutHorizontally();
   oneStack.centerAlignContent();
   oneStack.addSpacer();
   oneStack.backgroundColor = stackBackground;
-  //const stackBgImage = await getImage(one.picture4);
-  //oneStack.backgroundImage = await shadowImage(stackBgImage)
   oneStack.setPadding(10, 18, 10, 18)
   oneStack.cornerRadius = 23;
   oneStack.size = new Size(0, 80);
   
-  const textElement = oneStack.addText(one.note.length >= 21 ? one.note : `${one.note}\n${one.content}`);
-  textElement.textColor = textColor
+  const textElement = oneStack.addText(note);
+  textElement.textColor = textColor;
   textElement.font = Font.boldSystemFont(14);
   textElement.textOpacity = 0.8;
-  textElement.url = one.fenxiang_img;
+  textElement.url = imgUrl;
   oneStack.addSpacer();
+  
+  if (config.runsInApp) {
+    await widget.presentMedium();
+  } else {
+    Script.setWidget(widget);
+    Script.complete();
+  }
   return widget;
 }
 
-if (config.runsInApp) {
-  await presentMenu();
-} else {
-  try {
-    Script.setWidget(widget);
-    Script.complete();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-async function downloadModule() {
-  const modulePath = F_MGR.joinPath(folder, 'image.js');
-  if (F_MGR.fileExists(modulePath)) {
-    return modulePath;
-  } else {
-    const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM='));
-    const moduleJs = await req.load().catch(() => {
-      return null;
-    });
-    if (moduleJs) {
-      F_MGR.write(modulePath, moduleJs);
-      return modulePath;
-    }
-  }
-}
-
-async function get(opts) {
-  const coordinates = convert.locations.split(",");
-  const request = new Request(opts.url);
-  request.method = 'POST'
-  request.body = JSON.stringify({
-    common: {
-      platform: 'iPhone',
-      language: 'CN'
-    }, 
-    params: {
-      lat: coordinates[1],
-      lon: coordinates[0]
-    }
-  });
-  const response = await request.loadJSON();
-  return { title, content } = response.radarData;
+async function runScriptable() {
+  Safari.open('scriptable:///run/' + encodeURIComponent(uri));
 }
 
 async function getJson(url) {
@@ -247,12 +228,77 @@ async function getImage(url) {
   return await r.loadImage();
 }
 
-async function shadowImage(img) {
-  let ctx = new DrawContext()
-  ctx.size = img.size
-  ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
-  // 图片遮罩颜色、透明度设置
-  ctx.setFillColor(new Color("#000000", 0.3))
-  ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-  return await ctx.getImage()
+const downloadModule = async (scriptName, url) => {
+  const modulePath = fm.joinPath(path, scriptName);
+  if (fm.fileExists(modulePath)) {
+    return modulePath;
+  } else {
+    const req = new Request(atob(url));
+    const moduleJs = await req.load().catch(() => {
+      return null;
+    });
+    if (moduleJs) {
+      fm.write(modulePath, moduleJs);
+      return modulePath;
+    }
+  }
 }
+
+const presentMenu = async() => {
+  let menuAlert = new Alert();
+  menuAlert.title = 'iOS 16 负一屏底栏'
+  menuAlert.message = "\n高仿微信通知信息样式\n内容显示未来两小时天气\n底部显示每日一句中英文";
+  menuAlert.addDestructiveAction('更新代码');
+  menuAlert.addDestructiveAction('重置所有');
+  menuAlert.addAction('透明背景');
+  menuAlert.addAction('组件商店');
+  menuAlert.addAction('预览组件');
+  menuAlert.addAction('退出菜单');
+  const mainMenu = await menuAlert.presentAlert();
+  if (mainMenu === 1) {
+    await fm.remove(path);
+    const bgImage = await getBgImagePath();
+    if (fm.fileExists(bgImage)) {
+      await fm.remove(bgImage);
+    }
+    await runScriptable();
+  }
+  if (mainMenu === 2) {
+    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).main()
+  }
+  if (mainMenu === 3) {
+    await importModule(await downloadModule('store.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW45NWR1U3RvcmUuanM=')).main();
+  }
+  if (mainMenu === 4) {
+    await createWidget();
+  }
+  if (mainMenu === 5) return;
+  if (mainMenu === 0) {
+    const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
+    const codeString = await reqUpdate.loadString();
+    const finish = new Alert();
+    if (codeString.indexOf("95度茅台") == -1) {
+      finish.title = "更新失败"
+      finish.addAction('OK')
+      await finish.presentAlert();
+    } else {
+      fm.writeString(  
+        module.filename,
+        codeString
+      );
+      finish.title = "更新成功"
+      finish.addAction('OK')
+      await finish.presentAlert();
+      await runScriptable();
+    }
+  }
+}
+
+const runWidget = async () => {
+  if (config.runsInApp) {
+    await presentMenu();
+  } else {
+    await createWidget();
+  }
+}
+await runWidget();
