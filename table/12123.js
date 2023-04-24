@@ -51,7 +51,10 @@ async function main() {
     return F_MGR.joinPath(bgImgPath, Script.name() + '.jpg');
   };
   
-  // Get boxjs Data
+  /**
+   * Get boxjs Data
+   * 依赖：Quantumult-X / Surge
+   */
   const getBoxjsData = async () => {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
