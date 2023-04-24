@@ -48,9 +48,6 @@ async function main() {
    */
   const getBgImagePath = () => {
     const bgImgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
-    F_MGR.createDirectory(
-      bgImgPath, true
-    );
     return F_MGR.joinPath(bgImgPath, Script.name() + '.jpg');
   };
   
