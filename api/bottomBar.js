@@ -6,7 +6,7 @@
 * Version 1.2.0
 * 2023-04-24 15:30
 * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
-* ⚠️小机型修改第 152 行中的数字 63
+* ⚠️小机型修改第 198 行中的数字 63
 */
 
 const fm = FileManager.local();
@@ -105,6 +105,49 @@ const getWeather = async (opts) => {
 }
 
 /**
+ * 获取图片并使用缓存
+ * @param {string} File Extension
+ * @returns {image} - Request
+ */
+const useFileManager = (options = {}) => {
+  const fm = FileManager.local();
+  const cache = fm.joinPath(path, 'cache_path');
+  fm.createDirectory(cache, true);
+    
+  return {
+    readImage: (filePath) => {
+      const imageFile = fm.joinPath(cache, filePath);
+      if (fm.fileExists(imageFile) && options.cacheTime) {
+        const createTime = fm.creationDate(imageFile).getTime();
+        const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
+        if (diff >= options.cacheTime) {
+          fm.remove(imageFile);
+          return null;
+        }
+      }
+      return fm.readImage(imageFile);
+    },
+    writeImage: (filePath, image) => fm.writeImage(fm.joinPath(cache, filePath), image)
+  }
+};
+  
+const getImage = async (url) => {
+  return await new Request(url).loadImage();
+};
+  
+// 获取图片，使用缓存
+const getCacheImage = async (name, url) => {
+  const cache = useFileManager({ cacheTime: 24 });
+  const image = cache.readImage(name);
+  if (image) {
+    return image;
+  }
+  const res = await getImage(url);
+  cache.writeImage(name, res);
+  return res;
+};
+
+/**
  * 获取随机图标
  * @returns {image} image
  */
@@ -113,8 +156,11 @@ const getPicture = async () => {
     'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png',
     'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weather.png'
   ]
-  return await getImage(images[Math.floor(Math.random() * images.length)]);
-}
+  const appIconUrl = images[Math.floor(Math.random() * images.length)];
+  const iconName = decodeURIComponent(appIconUrl.substring(appIconUrl.lastIndexOf("/") + 1));  
+  return await getCacheImage(iconName, appIconUrl);
+};
+
 
 /**
  * 获取每日一句中英文及配图
@@ -127,7 +173,7 @@ const getOneWord = async () => {
     note: oneJson.note.length >= 21 ? oneJson.note : `${oneJson.note}\n${oneJson.content}`,
     imgUrl: oneJson.fenxiang_img
   }
-}
+};
 
 /**
  * 创建小组件
@@ -212,21 +258,16 @@ const createWidget = async () => {
     Script.complete();
   }
   return widget;
-}
+};
 
 async function runScriptable() {
   Safari.open('scriptable:///run/' + encodeURIComponent(uri));
-}
+};
 
 async function getJson(url) {
   const req = await new Request(url)
   return await req.loadJSON();
-}
-
-async function getImage(url) {
-  const r = await new Request(url);
-  return await r.loadImage();
-}
+};
 
 const downloadModule = async (scriptName, url) => {
   const modulePath = fm.joinPath(path, scriptName);
@@ -242,7 +283,7 @@ const downloadModule = async (scriptName, url) => {
       return modulePath;
     }
   }
-}
+};
 
 const presentMenu = async() => {
   let menuAlert = new Alert();
@@ -292,7 +333,7 @@ const presentMenu = async() => {
       await runScriptable();
     }
   }
-}
+};
 
 const runWidget = async () => {
   if (config.runsInApp) {
