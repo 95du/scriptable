@@ -9,18 +9,11 @@
  */
 
 async function main() {
-  const cacheDirName = '95duJingDong_BaiTiao';
   const F_MGR = FileManager.local();
+  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duJingDong_BaiTiao');
+  F_MGR.createDirectory(path, true);
 
-  /**
-   * 获取电报机器人的数据存储目录路径
-   * @returns {string} - 目录路径
-   */
-  const getSettingPath = () => {
-    const mainPath = F_MGR.joinPath(F_MGR.documentsDirectory(), cacheDirName);
-    F_MGR.createDirectory(mainPath, true);
-    return F_MGR.joinPath(mainPath, 'setting.json', true);
-  };
+  const cacheFile =  F_MGR.joinPath(path, 'setting.json');
   
   /**
    * 获取背景图片存储目录路径
@@ -28,7 +21,6 @@ async function main() {
    */
   const getBgImagePath = () => {
     const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
-    F_MGR.createDirectory(bgPath, true);
     return F_MGR.joinPath(bgPath, Script.name() + '.jpg');
   }
   
@@ -42,14 +34,14 @@ async function main() {
     }
     return null;
   };
-  const setting = await getBotSettings(getSettingPath());
+  const setting = await getBotSettings(cacheFile);
   
   /**
    * 存储当前设置
    * @param { JSON } string
    */
   const writeSettings = async () => {
-    typeof setting === 'object' ? F_MGR.writeString(getSettingPath(), JSON.stringify(setting)) : null;
+    F_MGR.writeString(cacheFile, JSON.stringify(setting, null, 2));
     console.log(JSON.stringify(
       setting, null, 2)
     );
@@ -62,9 +54,7 @@ async function main() {
    */
   const useFileManager = (options = {}) => {
     const fm = FileManager.local();
-    const cacheDir = fm.joinPath(fm.documentsDirectory(), cacheDirName, options.cache || 'cache');
-    fm.createDirectory(cacheDir, true);
-    const cache = fm.joinPath(cacheDir, 'cache_path');
+    const cache = fm.joinPath(path, 'cache_path');
     fm.createDirectory(cache, true);
     
     return {
