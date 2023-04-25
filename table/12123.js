@@ -34,12 +34,10 @@ async function main() {
    * @param { JSON } string
    */
   const writeSettings = async (inObject) => {
-     if ( setting ) {
-       F_MGR.writeString(cacheFile, JSON.stringify(inObject));
-       console.log(JSON.stringify(
-         inObject, null, 2)
-       );
-     }
+     F_MGR.writeString(cacheFile, JSON.stringify(inObject));
+     console.log(JSON.stringify(
+       inObject, null, 2)
+     )
    };
   
   /**
