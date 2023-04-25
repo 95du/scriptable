@@ -83,7 +83,7 @@ async function main() {
   
   if (verifyToken === null || sign === null || !referer) {
     await getBoxjsData();
-  }
+  };
   
   /**
    * 获取请求数据
@@ -279,7 +279,7 @@ async function main() {
         new Color('#00000000')
       ]
       widget.backgroundGradient = gradient;
-    }
+    };
     
     // 调用违章查询函数
     const queryResult = await violationQuery();
@@ -329,7 +329,7 @@ async function main() {
       vioPointText.font = Font.mediumSystemFont(12);
       vioPointText.textColor = new Color('#484848');
       leftStack.addSpacer(3);
-    }
+    };
       
     // validPeriodEnd icon
     const dateStack = leftStack.addStack();
@@ -340,7 +340,7 @@ async function main() {
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(15, 15);
       dateStack.addSpacer(5);
-    }
+    };
       
     // validPeriodEndDate
     const updateTime = dateStack.addStack();
@@ -367,7 +367,7 @@ async function main() {
       barIconElement.tintColor = Color.green();
       barIconElement.imageSize = new Size(16, 16);
       barStack.addSpacer(4);
-    }
+    };
     // bar text
     const totalMonthBar = barStack.addText(nothing ? '无违章' : !success ? 'Sign 过期' : `${vioList.plateNumber}`);
     totalMonthBar.font = Font.mediumSystemFont(14);
@@ -435,7 +435,7 @@ async function main() {
       if ( success && detail ) {
         textAddress.url = photos;
       }
-    }
+    };
     textAddress.font = Font.mediumSystemFont(nothing || !success ? 11.5 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
@@ -451,19 +451,13 @@ async function main() {
     } else {
       Script.setWidget(widget);
       Script.complete();
-    }
+    };
     return widget;
   }
   
   /**-------------------------**/
      /** Request(url) json **/
   /**-------------------------**/
-  
-  if ((config.widgetFamily === 'medium' || config.runsInApp) && referer && imgArr.length > 0) {
-    createWidget();
-  } else {
-    createErrWidget();
-  }
   
   async function notify (title, body, url, opts = {}) {
     let n = new Notification()
@@ -472,7 +466,7 @@ async function main() {
     n.body = body
     if (url) n.openURL = url
     return await n.schedule()
-  }
+  };
   
   async function createErrWidget() {
     const widget = new ListWidget();
@@ -480,7 +474,7 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
-  }
+  };
   
   async function shadowImage(img) {
     let ctx = new DrawContext()
@@ -490,5 +484,14 @@ async function main() {
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage()
   };
+  
+  const runWidget = async () => {
+    if ((config.widgetFamily === 'medium' || config.runsInApp) && referer && imgArr.length > 0) {
+      createWidget();
+    } else {
+      createErrWidget();
+    }
+  };
+  await runWidget();
 }
 module.exports = { main }
