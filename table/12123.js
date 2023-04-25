@@ -65,7 +65,7 @@ async function main() {
       referer = boxjs_referer.val;
 
       if (verifyToken && referer) {
-        await writeSettings({
+        writeSettings({
           ...setting,
           sign,
           verifyToken,
