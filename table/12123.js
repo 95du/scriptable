@@ -93,7 +93,6 @@ async function main() {
     const invoke = await new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON();
     return { infoURL, productId, version, api1, api2, api3, api4, alipayUrl, statusUrl, detailsUrl, maybach } = invoke;
   };
-  await getGovData();
   
   /**
    * 获取远程图片
@@ -120,13 +119,15 @@ async function main() {
     await writeSettings(setting);
   };
   
-  if ( !imgArr?.length ) {
-    if (picture.length > 0) {
-      maybach = picture;
+  const loadPicture = async () => {
+    if ( !imgArr?.length ) {
+      if (picture.length > 0) {
+        maybach = picture;
+      }
+      maybach.forEach(async (item) => {
+        await downloadCarImage(item);
+      });
     }
-    maybach.forEach(async (item) => {
-      await downloadCarImage(item);
-    });
   }
   
   async function getRandomImage() {
@@ -485,6 +486,8 @@ async function main() {
   };
   
   const runWidget = async () => {
+    await getGovData();
+    await loadPicture();
     if ((config.widgetFamily === 'medium' || config.runsInApp) && referer && imgArr.length > 0) {
       createWidget();
     } else {
