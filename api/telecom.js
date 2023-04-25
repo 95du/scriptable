@@ -13,11 +13,10 @@
 
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "telecom");
-if (!F_MGR.fileExists(folder)) {
-  F_MGR.createDirectory(folder);
-}
+F_MGR.createDirectory(folder, true);
 
 const cacheFile = F_MGR.joinPath(folder, 'setting.json');
+
 if (F_MGR.fileExists(cacheFile)) {
   data = F_MGR.readString(cacheFile);
   setting = JSON.parse(data);
@@ -58,11 +57,7 @@ const makeRequest = async (url) => {
 
 // Voice Package
 const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-const {
-  items: arr,
-  total,
-  balance
-} = package;
+const { items: arr, total, balance } = package;
   
 if (!package.voiceAmount) {
   voiceAmount = '1';
@@ -104,13 +99,13 @@ if (newArr.length > 0) {
 const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
-// Get dayNumber
-const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-const df = new DateFormatter();
-df.dateFormat = 'ddHHmm'
-const day1st = df.string(new Date());
 
-// Daily Usages
+/**
+ * Get dayNumber
+ * Initial
+ * Daily dosage
+ */
+const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
 if (!F_MGR.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
   setting = {
     flow: flow,
@@ -128,16 +123,16 @@ const Step2nd = 85;
 const StepFin = 100;
 const barWidth = 15;
 const barHeigth = 105;
-const phone = Device.screenSize().height;
-// Logo image
-const image = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png').loadImage();
 
-const isSmallWidget =  config.widgetFamily === 'small'
-if (config.runsInWidget && isSmallWidget) {
-  await createSmallWidget();
-} else {
-  await createWidget();
-}
+const phone = Device.screenSize().height;
+
+const df = new DateFormatter();
+df.dateFormat = 'ddHHmm'
+const day1st = df.string(new Date());
+
+// Logo image
+const image = await new Request('http://mtw.so/6fyVNi').loadImage();
+
 
 /**
  * Create Medium Widget
@@ -453,3 +448,14 @@ async function createSmallWidget() {
     await widget.presentSmall();
   }
 }
+
+// config widget
+const runWidget = async () => {  
+  const isSmallWidget =  config.widgetFamily === 'small'
+  if (config.runsInWidget && isSmallWidget) {
+    await createSmallWidget();
+  } else {
+    await createWidget();
+  }
+}
+await runWidget();
