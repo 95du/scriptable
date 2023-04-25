@@ -109,32 +109,11 @@ async function main() {
     return res;
   };
   
-  /*
-   * Name: MyWidget
-   * Author: John Smith
-   * Date: 2022/11/11
-   * Version: 1.1
-   * Description: This is a widget that displays some information.
+  
+  /**
+   * 从用户套餐页面获取数据，并进行处理
+   * @returns {Promise<Object>} - 包含处理后的语音、流量和余额信息的对象
    */
-  
-  // Color definitions
-  logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
-  widgetBgColor = Color.dynamic(
-  new Color("#fefefe"), new Color("#1e1e1e"));
-  stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
-  barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
-  MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
-  SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
-  
-  // Small Widget Color
-  bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#1e1e1e'));  
-  bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
-  textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
-  barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
-  progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
-  
-  //=========> Create <=========//
-  
   const makeRequest = async (url) => {
     const request = new Request(url);
     request.method = 'GET';
@@ -146,11 +125,7 @@ async function main() {
   
   // Voice Package
   const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-  const {
-    items: arr,
-    total,
-    balance
-  } = package;
+  const { items: arr, total, balance } = package;
   
   if (!package.voiceAmount) {
     voiceAmount = '1';
@@ -192,13 +167,12 @@ async function main() {
   const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
 
 
-  // Get dayNumber
+  /**
+   * Get dayNumber
+   * Initial
+   * Daily dosage
+   */
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-  
-  const df = new DateFormatter();
-df.dateFormat = 'ddHHmm'
-  const day1st = df.string(new Date());
-
   if (setting.init === false || dayNumber !== setting.dayNumber) {
     await writeSettings({
       ...setting,
@@ -212,6 +186,24 @@ df.dateFormat = 'ddHHmm'
     return null;
   }
   
+  //=========> config <=========//
+  
+  // Color definitions
+  logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
+  widgetBgColor = Color.dynamic(
+  new Color("#fefefe"), new Color("#1e1e1e"));
+  stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
+  barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
+  MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
+  SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
+  
+  // Small Widget Color
+  bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#1e1e1e'));  
+  bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
+  textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
+  barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
+  progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
+  
   const flow1st = setting.flow
   const flow2nd = flow
   const voice1st = voice
@@ -224,15 +216,13 @@ df.dateFormat = 'ddHHmm'
   const barHeigth = 105;
   
   const phone = Device.screenSize().height;
+  
+  const df = new DateFormatter();
+df.dateFormat = 'ddHHmm'
+  const day1st = df.string(new Date());
+  
   const image = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
   const bgImage = await getBgImagePath();
-  
-  const isSmallWidget =  config.widgetFamily === 'small'
-  if (config.runsInWidget && isSmallWidget) {
-    await createSmallWidget();
-  } else {
-    await createWidget();
-  }
   
   
   /**
@@ -571,5 +561,22 @@ df.dateFormat = 'ddHHmm'
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']));
     return await ctx.getImage();
   }
+  
+  /*
+   * Name: MyWidget
+   * Author: John Smith
+   * Date: 2022/11/11
+   * Version: 1.1
+   * Description: This is a widget that displays some information.
+   */
+  const runWidget = async () => {
+    const isSmallWidget =  config.widgetFamily === 'small'
+    if (config.runsInWidget && isSmallWidget) {
+      await createSmallWidget();
+    } else {
+      await createWidget();
+    }
+  }
+  await runWidget();
 }
 module.exports = { main }
