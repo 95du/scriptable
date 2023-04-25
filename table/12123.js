@@ -75,6 +75,7 @@ async function main() {
         }
       }
     } catch (e) {
+      console.log(e + '\n或节点有问题')
       notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
     }
   };
