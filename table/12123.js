@@ -65,7 +65,7 @@ async function main() {
       referer = boxjs_referer.val;
 
       if (verifyToken && referer) {
-        writeSettings({
+        await writeSettings({
           ...setting,
           sign,
           verifyToken,
@@ -73,7 +73,7 @@ async function main() {
         })
         
         if (sign !== setting.sign && imgArr?.length) {
-          Timer.schedule(2000, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功')})
+          Timer.schedule(1500, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 储存成功')})
         }
       }
     } catch (e) {
