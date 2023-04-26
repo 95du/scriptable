@@ -118,10 +118,11 @@ async function main() {
     F_MGR.writeImage(cachePath, carImage);
     imgArr.push(imgKey);
     await writeSettings(setting);
+    await getRandomImage();
   };
   
-  if ( !imgArr?.length ) {
-    if (picture.length > 0) {
+  if ( !imgArr?.length || picture.length > imgArr.length) {
+    if (picture.length > imgArr.length) {
       maybach = picture;
     }
     maybach.forEach(async (item) => {
@@ -193,7 +194,7 @@ async function main() {
     };
     const issue = await requestInfo(api2, params);
     const issueArr = issue.data.vioCity.filter((item) => item.vioCount >= 1);
-    return getRandomItem(issueArr);
+    return await getRandomItem(issueArr);
   };
   
   // 获取违章对应的违法行为信息
