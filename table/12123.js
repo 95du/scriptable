@@ -296,7 +296,7 @@ async function main() {
      * @param {string} text
      * Cylindrical Bar Chart
      */
-    widget.setPadding(nothing || !success ? 19 : 15, 18, 15, 14);
+    widget.setPadding(nothing || !success ? 15 : 15, 18, 15, 14);
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     mainStack.centerAlignContent()
@@ -412,6 +412,7 @@ async function main() {
      * @param {string} string
      */
     const rightStack = mainStack.addStack();
+    rightStack.setPadding(nothing ? 15 : 0, 0, 10, 0)
     rightStack.layoutVertically();
     rightStack.addSpacer();
     // Car Logo
@@ -430,7 +431,7 @@ async function main() {
     const img = await getRandomImage();
     const imageCar = carImageStack.addImage(img);
     imageCar.imageSize = new Size(setting.carWidth, setting.carHeight);
-    rightStack.addSpacer();
+    rightStack.addSpacer(5);
   
     // Display Address
     const tipsStack = rightStack.addStack();
@@ -440,7 +441,7 @@ async function main() {
     if (nothing || !success) {
       textAddress = tipsStack.addText(setting.botStr);
     } else {
-      textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
+      textAddress = tipsStack.addText(`${vio.violationAddress}，${vio.violation}`);
       if ( success && detail ) {
         textAddress.url = photos;
       }
@@ -448,7 +449,7 @@ async function main() {
     textAddress.font = Font.mediumSystemFont(nothing || !success ? 11.5 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
-    if ( nothing ) {
+    if ( nothing || !success ) {
       rightStack.addSpacer();
     }
     
