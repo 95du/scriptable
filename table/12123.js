@@ -412,7 +412,7 @@ async function main() {
      * @param {string} string
      */
     const rightStack = mainStack.addStack();
-    rightStack.setPadding(nothing ? 15 : 0, 0, 10, 0)
+    rightStack.setPadding(nothing || !success ? 15 : 0, 0, 10, 0)
     rightStack.layoutVertically();
     rightStack.addSpacer();
     // Car Logo
