@@ -416,6 +416,7 @@ async function main() {
     rightStack.addSpacer();
     // Car Logo
     const carLogoStack = rightStack.addStack();
+    carIconStack.layoutHorizontally()
     carLogoStack.addSpacer();
     textPlate2 = carLogoStack.addText('交管12123');
     textPlate2.font = Font.boldSystemFont(14);
@@ -441,13 +442,15 @@ async function main() {
     } else {
       textAddress = tipsStack.addText(`${vio.violationAddress}，` + `${vio.violation}`);
       if ( success && detail ) {
-        textAddress.url = `${photos}`
+        textAddress.url = photos;
       }
     };
     textAddress.font = Font.mediumSystemFont(nothing || !success ? 11.5 : 11);
     textAddress.textColor = new Color('#484848');
     textAddress.centerAlignText();
-    //rightStack.addSpacer();
+    if ( nothing ) {
+      rightStack.addSpacer();
+    }
     
     // jump show status
     barStack2.url = statusUrl;
