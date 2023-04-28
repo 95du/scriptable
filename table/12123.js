@@ -119,6 +119,9 @@ async function main() {
     imgArr.push(imgKey);
     await writeSettings(setting);
     await getRandomImage();
+    if ( imgArr.length == 1 ) {
+      notify('获取成功', '初始化数据及储存车图片并使用缓存');  
+    }
   };
   
   if ( !imgArr?.length || picture.length > imgArr.length) {
