@@ -435,8 +435,10 @@ async function main() {
     rightStack.centerAlignContent();
     
     const carImageStack = rightStack.addStack();  
-    const violationText = `${vio.violationAddress}，${vio.violation}`
-    const length = nothing || !success ? tipsText.length <= 19 : violationText.length <= 19;
+    if ( success && detail ) {
+      violationText = `${vio.violationAddress}，${vio.violation}`
+    }
+    const length = nothing || !success ? setting.botStr.length <= 19 : violationText.length <= 19;
     carImageStack.setPadding(length ? -10 : -20, 5, 0, 0);
     carImageStack.size = new Size(setting.carStackWidth, 0);
     const img = await getRandomImage();
