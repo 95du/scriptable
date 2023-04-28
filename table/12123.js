@@ -320,7 +320,7 @@ async function main() {
     mainStack.centerAlignContent()
     
     const leftStack = mainStack.addStack();
-    leftStack.size = new Size(107, 0)
+    leftStack.size = new Size(setting.lrfeStackWidth, 0)
     leftStack.layoutVertically();
     leftStack.centerAlignContent();
 
