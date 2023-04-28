@@ -193,8 +193,12 @@ async function main() {
       _issueOrganization: plate,
     };
     const issue = await requestInfo(api2, params);
-    const issueArr = issue.data.vioCity.filter((item) => item.vioCount >= 1);
-    return await getRandomItem(issueArr);
+    try {
+      const issueArr = issue.data.vioCity.filter((item) => item.vioCount >= 1);
+      return await getRandomItem(issueArr);
+    } catch (e) {
+      console.log(e);
+    }
   };
   
   // 获取违章对应的违法行为信息
@@ -427,12 +431,11 @@ async function main() {
      * @param {string} string
      */
     const rightStack = mainStack.addStack();
-    rightStack.setPadding(-15, 5, 0, 0);
     rightStack.layoutVertically();
     rightStack.centerAlignContent();
     
-    const carImageStack = rightStack.addStack();
-    carImageStack.centerAlignContent();
+    const carImageStack = rightStack.addStack();  
+    carImageStack.setPadding(-15, 5, 0, 0);
     carImageStack.size = new Size(setting.carStackWidth, 0);
     const img = await getRandomImage();
     const imageCar = carImageStack.addImage(img);
