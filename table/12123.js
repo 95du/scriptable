@@ -435,7 +435,8 @@ async function main() {
     rightStack.centerAlignContent();
     
     const carImageStack = rightStack.addStack();  
-    carImageStack.setPadding(-15, 5, 0, 0);
+    const violationText = `${vio.violationAddress}，${vio.violation}`
+    carImageStack.setPadding(violationText.length <= 19 ? -10 : -20, 5, 0, 0);
     carImageStack.size = new Size(setting.carStackWidth, 0);
     const img = await getRandomImage();
     const imageCar = carImageStack.addImage(img);
@@ -450,7 +451,7 @@ async function main() {
     if (nothing || !success) {
      tipsText = tipsStack.addText(setting.botStr);
     } else {
-      tipsText = tipsStack.addText(`${vio.violationAddress}，${vio.violation}`);
+      tipsText = tipsStack.addText(violationText);
       if ( success && detail ) {
         tipsText.url = photos;
       }
