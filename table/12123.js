@@ -75,7 +75,7 @@ async function main() {
         }
       }
     } catch (e) {
-      console.log(e + '\n或网络有问题')
+      console.log(e + '或者网络有问题')
       notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
     }
   };
@@ -200,7 +200,7 @@ async function main() {
       const issueArr = issue.data.vioCity.filter((item) => item.vioCount >= 1);
       return await getRandomItem(issueArr);
     } catch (e) {
-      console.log(e);
+      console.log(e + 'h');
     }
   };
   
@@ -305,6 +305,7 @@ async function main() {
      */
     widget.setPadding(15, 18, 15, 15);
     const topStack = widget.addStack();
+    if ( detail && success ) topStack.setPadding(0, 0, 3, 0);
     topStack.layoutHorizontally();
     topStack.centerAlignContent()
     
