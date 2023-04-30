@@ -140,7 +140,7 @@ const downloadCarImage = async (item) => {
   await writeSettings(setting);
 };
 
-const loadPicture = async () => {  
+const loadPicture = async () => {
   if ( !setting.imgArr?.length ) {
     const cacheUrl = await new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json').loadJSON();
     const maybach = cacheUrl.maybach;
@@ -148,8 +148,7 @@ const loadPicture = async () => {
       await downloadCarImage(item);
     });
   }
-}
-await loadPicture();
+};
 
 /**
  * 随机获取缓存图片
@@ -347,15 +346,15 @@ async function createWidget() {
   const image = carLogoStack.addImage(carLogo);
   image.imageSize = new Size(27,27);
   image.tintColor = Color.dynamic(new Color('#000000'), new Color('#000000'));
-  rightStack.addSpacer(2)
+  rightStack.addSpacer(1);
     
   // Car image
   const carImageStack = rightStack.addStack();
-  carImageStack.setPadding(-20, 5, 0, 0);
+  carImageStack.setPadding(-25, 5, 0, 0);
   const img = await getRandomImage();
   const imageCar = carImageStack.addImage(img);
   imageCar.imageSize = new Size(225, 100);
-  rightStack.addSpacer(1);
+  rightStack.addSpacer();
 
   // show address
   const adrStack = rightStack.addStack();
@@ -463,7 +462,7 @@ async function createWidget() {
   if ( setting.coordinates ) {
     await getDistance();
     await pushMessage(mapUrl, longitude, latitude, distance);
-  }
+  };
   return widget;
 }
 
@@ -480,7 +479,7 @@ const argsParam = async () => {
     acc_off: '熄火'
   }
   if ( args ) {
-    const description = descriptions[args.plainTexts];
+    const description = descriptions[args.plainTexts[0]];
     return description || '未知';
   }
 };
@@ -493,6 +492,7 @@ if ( args.plainTexts[0] ) {
 /**-------------------------**/
 
 const runWidget = async () => {  
+  await loadPicture();
   if (config.runsInWidget) {
     const isMediumWidget = config.widgetFamily === 'medium';
     await (isMediumWidget ? getData().then(createWidget) : createErrorWidget());
@@ -500,7 +500,7 @@ const runWidget = async () => {
     await presentMenu();
   }
 }
-await runWidget()
+await runWidget();
   
 /**
  * 获取地理位置信息
