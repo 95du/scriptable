@@ -200,7 +200,7 @@ async function main() {
       const issueArr = issue.data.vioCity.filter((item) => item.vioCount >= 1);
       return await getRandomItem(issueArr);
     } catch (e) {
-      console.log(e + 'h');
+      console.log(e);
     }
   };
   
@@ -244,9 +244,9 @@ async function main() {
   
   // 获取随机数组元素
   const getRandomItem = async (array) => {
-  const infoRandom = array[Math.floor(Math.random() * array.length)];
-  return infoRandom;
-}
+    const infoRandom = array[Math.floor(Math.random() * array.length)];
+    return infoRandom;
+  }
 
   
   // 处理错误
@@ -284,10 +284,10 @@ async function main() {
       } else {
         color = setting.gradient;
       }
-      const items = color[Math.floor(Math.random() * color.length)];
+      const randomColor = await getRandomItem(color);
       gradient.locations = [0, 1]
       gradient.colors = [
-        new Color(items, Number(setting.transparency)),
+        new Color(randomColor, Number(setting.transparency)),
         new Color('#00000000')
       ]
       widget.backgroundGradient = gradient;
@@ -426,8 +426,7 @@ async function main() {
     const cumulativePoint = referer.match(/cumulativePoint=(\d{1,2}|undefined|null)/)[1];
     const totalMonthBar2 = barStack2.addText(`记${cumulativePoint === 'undefined' ? '0' : cumulativePoint}分`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
-    totalMonthBar2.textColor = new Color('#616161');  
-    
+    totalMonthBar2.textColor = new Color('#616161');
     
     /**
      * @param {Stack} rightStack
