@@ -355,10 +355,10 @@ async function main() {
     const billStack1 = billStack.addStack();
     billStack1.addSpacer();
     
-    //const lastMonth = ('0' + (new Date().getMonth() || 12)).slice(-2);
+    const lastMonth = ('0' + (new Date().getMonth() || 12)).slice(-2);
     const previousMonth = ('0' + (new Date().getMonth() - 1 || 12)).slice(-2);
 
-    const billText = billStack1.addText(`${Year}-${selectBill() ? monthDate : previousMonth}`)
+    const billText = billStack1.addText(`${Year}-${selectBill() ? lastMonth : previousMonth}`)
     billText.font = Font.mediumSystemFont(14);
     billText.textOpacity = 0.7;
     billStack.addSpacer(3);
