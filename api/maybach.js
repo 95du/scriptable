@@ -360,19 +360,24 @@ async function createWidget() {
   const adrStack = rightStack.addStack();
   adrStack.centerAlignContent();
   adrStack.size = new Size(226, 30);
-  const jmz = {};
-  jmz.GetLength = function(str) {
-    return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
-  };  
-  str = (jmz.GetLength(address));
-    
-  if ( str <= 35 ) {
-    textAddress = adrStack.addText(`${address} - ${pois[0].address} ${pois[0].distance} 米`)
-  } else if (str < 46) {
-    textAddress = adrStack.addText(`${address} - ${pois[0].address}`);
-  } else {
-    textAddress = adrStack.addText(address);
+  
+  try {
+    const jmz = {};
+    jmz.GetLength = function(str) {
+      return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
+    };  
+    const str = jmz.GetLength(address);
+    if ( str <= 35 ) {
+      textAddress = adrStack.addText(`${address} - ${pois[0].address} ${pois[0].distance} 米`)
+    } else if (str < 46) {
+      textAddress = adrStack.addText(`${address} - ${pois[0].address}`);
+    } else {
+      textAddress = adrStack.addText(address);
+    }
+  } catch (e) {
+    textAddress = adrStack.addText(address + ' - 当前位置属乡镇、高速路或无名路段 🚫');
   }
+  
   textAddress.font = Font.mediumSystemFont(11.3);
   textAddress.textColor = Color.black();
   textAddress.textOpacity = 0.7;
