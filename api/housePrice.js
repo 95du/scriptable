@@ -18,6 +18,7 @@ const imageSize = 150
 const uri = Script.name();
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "house");
+
 const cacheFile = F_MGR.joinPath(folder, 'data.json');
 const bgImage = F_MGR.joinPath(folder, uri + ".jpg");
 
@@ -239,7 +240,7 @@ async function addHouseMsg() {
       if (F_MGR.fileExists(cacheFile)) {
         await F_MGR.remove(cacheFile)
       }
-      obj = {
+      const obj = {
         cityID: cityID,
         num: num.id,
         name: num.rich_name.text,
@@ -266,7 +267,7 @@ async function getHouseMsg(obj) {
     notify(obj.name, `房屋价值${house.data.estimate_price_str}万，均价${pricing}元/平方。`);
   }
   // Consolidate data
-  object = {
+  const object = {
     ...obj,
     pricing: pricing,
     upDown: (obj.pricing) ? obj.pricing : pricing
@@ -282,7 +283,7 @@ async function getHouseMsg(obj) {
     F_MGR.writeString(cacheFile, JSON.stringify(object));
   }
   // output data
-  result = {
+  const result = {
     ...house.data,
     name: obj.name,
     pricing: pricing,
