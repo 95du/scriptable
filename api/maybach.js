@@ -131,6 +131,11 @@ async function inputCookie() {
   }
 }
 
+/**
+ * 获取图片并使用缓存
+ * @param {string} File Extension
+ * @returns {image} - Request
+ */
 const downloadCarImage = async (item) => {
   const carImage = await getImage(item);
   const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
@@ -158,7 +163,7 @@ async function getRandomImage() {
   const count = imgArr.length;
   const index = Math.floor(Math.random() * count);
   const cacheImgPath = path + '/' + imgArr[index];
-  return await F_MGR.readImage(cacheImgPath);
+  return img = await F_MGR.readImage(cacheImgPath);
 }
 
 
