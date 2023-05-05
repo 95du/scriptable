@@ -52,6 +52,7 @@ $.is_debug = $.getdata('is_debug');
         $.setdata($.amap_cookie, $.cookie_key);
         $.msg($.name + '_Cookie 获取成功', ``, $.amap_cookie);
       } else {
+        Pasteboard.copy($.amap_cookie)
         console.log(`无需更新 Cookie 🚫\n${$.amap_cookie}`);
       }
     }
