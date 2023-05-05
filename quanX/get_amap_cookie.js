@@ -1,3 +1,6 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: deep-brown; icon-glyph: cog;
 /*
 脚本名称：高德地图 Cookie
 更新时间：2023-02-19
@@ -43,7 +46,7 @@ $.is_debug = $.getdata('is_debug');
   }
   
   function GetCookie() {
-    if ($request && $request.url.indexOf("https://m5.amap.com/ws/feature/preheat/bootevent?ent=2") > -1 && $request.headers) {
+    if ($request && $request.url.indexOf("https://m5.amap.com/ws/feature/preheat") > -1 && $request.headers) {
       $.amap_cookie = $request['headers']['Cookie'] || $request['headers']['cookie'];
       if ($.amap_cookie !== $.boxjs_cookie) {
         $.setdata($.amap_cookie, $.cookie_key);
