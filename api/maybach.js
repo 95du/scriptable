@@ -126,7 +126,7 @@ async function inputCookie() {
   if ( input === -1 ) return;
   const cookie = alert.textFieldValue(0);
   if ( cookie ) {
-    await writeSettings({ cookie: cookie });
+    await writeSettings({ cookie: cookie, imgArr: [] });
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
 }
@@ -166,7 +166,7 @@ async function getRandomImage() {
   const count = imgArr.length;
   const index = Math.floor(Math.random() * count);
   const cacheImgPath = cache + '/' + imgArr[index];
-  return img = await F_MGR.readImage(cacheImgPath);
+  return await F_MGR.readImage(cacheImgPath);
 }
 
 
@@ -212,19 +212,19 @@ async function createWidget() {
   // Saved Json
   await getAddress();
   const runObj = {
-    updateTime: updateTime, 
-    address: address,
+    updateTime, 
+    address,
     run: owner,
     coordinates: `${longitude},${latitude}`,
     pushTime: Date.now(),
     parkingTime: GMT2,
-    cookie: cookie,
-    imgArr: []
+    cookie,
+    imgArr
   }
   // Initial Save
   if ( setting.run == undefined) {
     await writeSettings(runObj);
-    return;
+    await getRandomImage();
   }
   
   
