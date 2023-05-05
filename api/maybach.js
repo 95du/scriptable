@@ -136,10 +136,13 @@ async function inputCookie() {
  * @param {string} File Extension
  * @returns {image} - Request
  */
+const cache = F_MGR.joinPath(path, 'cachePath');
+F_MGR.createDirectory(cache, true);
+
 const downloadCarImage = async (item) => {
   const carImage = await getImage(item);
   const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
-  const cachePath = F_MGR.joinPath(path, imgKey);
+  const cachePath = F_MGR.joinPath(cache, imgKey);
   await F_MGR.writeImage(cachePath, carImage, { overwrite: true });
   imgArr.push(imgKey);
   await writeSettings(setting);
@@ -162,7 +165,7 @@ const loadPicture = async () => {
 async function getRandomImage() {
   const count = imgArr.length;
   const index = Math.floor(Math.random() * count);
-  const cacheImgPath = path + '/' + imgArr[index];
+  const cacheImgPath = cache + '/' + imgArr[index];
   return img = await F_MGR.readImage(cacheImgPath);
 }
 
@@ -501,12 +504,12 @@ if ( args.plainTexts[0] ) {
    /** Request(url) json **/
 /**-------------------------**/
 
-const runWidget = async () => {  
-  await loadPicture();
+const runWidget = async () => {
   if (config.runsInWidget) {
     const isMediumWidget = config.widgetFamily === 'medium';
     await (isMediumWidget ? getData().then(createWidget) : createErrorWidget());
   } else {
+    await loadPicture();
     await presentMenu();
   }
 }
