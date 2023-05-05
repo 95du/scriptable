@@ -472,7 +472,7 @@ async function main() {
     
     // jump show status
     barStack2.url = statusUrl;
-    text12123.url = 'tmri12123://'
+    topStack.url = 'tmri12123://'
     imageCar.url = detailsUrl;
     
     
