@@ -25,7 +25,7 @@ async function main() {
   const getSettings = (file) => {
     let setting = {};
     if (F_MGR.fileExists(file)) {
-      return { imei, token, run, coordinates, pushTime, imgArr } = JSON.parse(F_MGR.readString(file));
+      return { imei, password, token, run, coordinates, pushTime, imgArr, picture, aMapkey } = JSON.parse(F_MGR.readString(file));
     }
     return {}
   }
@@ -97,9 +97,12 @@ async function main() {
   };
   
   const loadPicture = async () => {
-    if ( !setting.imgArr?.length ) {
+    if ( !imgArr?.length || picture.length > imgArr.length) {
       const cacheUrl = await new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json').loadJSON();
-      const maybach = cacheUrl.maybach;
+      let maybach = cacheUrl.maybach;
+      if (picture.length > imgArr.length) {
+        maybach = picture;
+      }
       maybach.forEach(async (item) => {
         await downloadCarImage(item);
       });
@@ -141,7 +144,7 @@ async function main() {
     notify('Token已更新', data.token);
   };
   
-  
+  //
   const getTrackSegment = async () => {
     const params = {
       imeis: imei,
@@ -163,7 +166,7 @@ async function main() {
     }
   };
   
-  
+  //
   const getSpeed = async () => {
     const params = {
       imei,
@@ -184,7 +187,7 @@ async function main() {
     }
   };
   
-    
+  //
   const getData = async () => {
     const info = await Promise.all([loadPicture(), getTrackSegment(), getSpeed()]);
   
@@ -353,7 +356,11 @@ async function main() {
     
     const carLogoStack = rightStack.addStack();
     carLogoStack.addSpacer();
-    const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
+    if (setting.logo) {
+      carLogo = await getImage(setting.logo);
+    } else {
+      carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');  
+    }
     const image = carLogoStack.addImage(carLogo);
     image.imageSize = new Size(27,27);
     image.tintColor = Color.dynamic(new Color('#000000'), new Color('#000000'));
@@ -389,7 +396,7 @@ async function main() {
       Script.complete();
     };
     
-    if ( setting.coordinates ) {
+    if ( coordinates && aMapkey ) {
       await getDistance();
       await pushMessage(mapUrl, endLongitude, endLatitude, distance);
     };
@@ -403,13 +410,13 @@ async function main() {
    * 推送信息到微信
    */
   const getDistance = async () => {
-    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${endLongitude},${endLatitude}`).loadJSON();
+    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=${aMapkey}&origin_type=0&strategy=38&origin=${coordinates}&destination=${endLongitude},${endLatitude}`).loadJSON();
     return { distance } = fence.route.paths[0];
   };
   
   const pushMessage = async (mapUrl, endLongitude, endLatitude, distance) => {
-    const mapKey = 'https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png';
-    const mapPicUrl = `${mapKey},0:${endLongitude},${endLatitude}`;
+    const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${endLongitude},${endLatitude}`;
+    
     const driveAway = run !== 'HONDA' && distance > 20
     
     const timeAgo = new Date(Date.now() - pushTime);
@@ -471,7 +478,6 @@ async function main() {
   };
   
   /**-------------------------**/
-        /** runWidget **/
   
   const createErrorWidget = async () => {
     const widget = new ListWidget();
