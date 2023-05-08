@@ -25,7 +25,7 @@ async function main() {
   const getSettings = (file) => {
     let setting = {};
     if (F_MGR.fileExists(file)) {
-      return { imei, password, token, run, coordinates, pushTime, imgArr, picture, aMapkey } = JSON.parse(F_MGR.readString(file));
+      return { imei, password, token, run, coordinates, pushTime, imgArr, picture, aMapkey, weiChat } = JSON.parse(F_MGR.readString(file));
     }
     return {}
   }
@@ -94,6 +94,9 @@ async function main() {
     await F_MGR.writeImage(cachePath, carImage, { overwrite: true });
     imgArr.push(imgKey);
     await writeSettings(setting);
+    if ( imgArr.length == 1 ) {
+      notify('获取成功', '初始化数据及储存车图片并使用缓存');  
+    }
   };
   
   const loadPicture = async () => {
@@ -448,9 +451,17 @@ async function main() {
     }
   };
     
-  // 推送到微信
+  // 推送到微信，Scriptable通知
   const sendWechatMessage = async (description, url, picurl) => {
-    const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww9fc52b940c065e90&corpsecret=LoKjdd9BsLxzf7YS7KSOiK2WTWNaYNUhYiURA0mmOMw').loadJSON(); // accessToken
+    const driveAway = run !== 'HONDA' && distance > 20
+    if ( driveAway ) {
+      notify(`${status} ${GMT}`, `已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl);
+    } else {
+      notify(`${status}  ${GMT}`, endAddr, mapUrl);
+    };
+    
+    if ( !weiChat ) return;
+    const acc = await new Request(weiChat).loadJSON();
     const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
     request.method = 'POST'
     request.body = JSON.stringify({
@@ -466,14 +477,6 @@ async function main() {
         }]
       } // pushMessage to wiChat
     });
-      
-    // 推送通知
-    const driveAway = run !== 'HONDA' && distance > 20
-    if ( driveAway ) {
-      notify(`${status} ${GMT}`, `已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl);
-    } else {
-      notify(`${status}  ${GMT}`, endAddr, mapUrl);
-    }
     return request.loadJSON();
   };
   
