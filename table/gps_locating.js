@@ -144,7 +144,7 @@ async function main() {
     const { data } = await req.loadJSON();
     setting.token = data.token;
     await writeSettings(setting);
-    notify('Token已更新', data.token);
+    notify('登录成功', data.token);
   };
   
   //
