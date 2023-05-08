@@ -337,7 +337,7 @@ async function main() {
     const carIconStack = leftStack.addStack();
     carIconStack.layoutHorizontally()
     carIconStack.centerAlignContent()
-    const man = SFSymbol.named('car');
+    const man = SFSymbol.named('car.circle');
     const carIcon = carIconStack.addImage(man.image);
     carIcon.imageSize = new Size(15, 15);
     carIcon.tintColor = nothing || !success ? Color.blue() : Color.red();
