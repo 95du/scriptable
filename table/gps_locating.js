@@ -116,7 +116,7 @@ async function main() {
    * 随机获取缓存图片
    * @param {image} file
    */
-  async function getRandomImage() {
+ async function getRandomImage() {
     const count = imgArr.length;
     const index = Math.floor(Math.random() * count);
     const cacheImgPath = cache + '/' + imgArr[index];
@@ -196,7 +196,7 @@ async function main() {
   
     const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
-    const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${endLatitude},${endLongitude}&t=m`;
+    const mapUrl = `https://maps.apple.com/?q=${deviceName}&ll=${endLatitude},${endLongitude}&t=m`;
   
     const formatDate = (updateTime, format) => {
       const df = new DateFormatter();
@@ -210,7 +210,7 @@ async function main() {
       ...setting,
       updateTime,
       endAddr,
-      run: 'HONDA',
+      run: 'GPS',
       pushTime: Date.now(),
       parkingTime: GMT2,
       coordinates: `${endLongitude},${endLatitude}`
@@ -267,6 +267,7 @@ async function main() {
      * Cylindrical Bar Chart
      */
     const leftStack = mainStack.addStack();
+    leftStack.size = new Size(setting.lrfeStackWidth, 0);
     leftStack.layoutVertically();
     leftStack.addSpacer(7);
     
@@ -295,7 +296,7 @@ async function main() {
     const milStack = leftStack.addStack();
     milStack.layoutHorizontally();
     milStack.centerAlignContent();
-    const iconSymbol = SFSymbol.named('car');
+    const iconSymbol = SFSymbol.named('car.circle');
     const carIcon1 = milStack.addImage(iconSymbol.image);
     carIcon1.imageSize = new Size(16, 16);
     milStack.addSpacer(4);
@@ -328,23 +329,18 @@ async function main() {
   
     // Left Stack bar2
     const barStack2 = leftStack.addStack();
+    barStack2.size = new Size(83, 0);
     barStack2.layoutHorizontally();
     barStack2.centerAlignContent();
-    barStack2.setPadding(3, 10, 3, 10);
+    barStack2.setPadding(3, 0, 3, 0);
     barStack2.cornerRadius = 10;
-    barStack2.borderColor = Color.dynamic(new Color('#000000', 0.4), new Color('#000000', 0.4));
+    barStack2.borderColor = new Color('#000000', 0.4);
     barStack2.borderWidth = 2;
-    
-    const barIcon2 = SFSymbol.named('lock.shield.fill');
-    const barIconElement2 = barStack2.addImage(barIcon2.image);
-    barIconElement2.imageSize = new Size(16, 16);
-    barIconElement2.tintColor = Color.green();
-    barStack2.addSpacer(4);
     
     const statusText = barStack2.addText(`${highestSpeed} km·h`);
     statusText.font = Font.mediumSystemFont(14);
     statusText.textColor = Color.black();
-    statusText.textOpacity = 0.6;
+    statusText.textOpacity = 0.7;
     leftStack.addSpacer();
     
       
@@ -371,16 +367,17 @@ async function main() {
       
     // Car image
     const carImageStack = rightStack.addStack();
+    carImageStack.size = new Size(setting.carStackWidth, 0);
     carImageStack.setPadding(-25, 5, 0, 0);
     const img = await getRandomImage();
     const imageCar = carImageStack.addImage(img);
-    imageCar.imageSize = new Size(225, 100);
+    imageCar.imageSize = new Size(setting.carWidth, setting.carHeight);
     rightStack.addSpacer();
   
     // show address
     const adrStack = rightStack.addStack();
     adrStack.centerAlignContent();
-    adrStack.size = new Size(226, 30);
+    adrStack.size = new Size(setting.bottomSize, 30);
     const addressText = adrStack.addText(endAddr);
     addressText.font = Font.mediumSystemFont(11.3);
     addressText.textColor = Color.black();
@@ -420,14 +417,13 @@ async function main() {
   const pushMessage = async (mapUrl, endLongitude, endLatitude, distance) => {
     const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${endLongitude},${endLatitude}`;
     
-    const driveAway = run !== 'HONDA' && distance > 20
-    
     const timeAgo = new Date(Date.now() - pushTime);
     const hours = timeAgo.getUTCHours();
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
   
     // push data
+    const driveAway = run !== 'GPS' && distance > 20
     if ( driveAway ) {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       await writeSettings(runObj);
@@ -441,7 +437,7 @@ async function main() {
         });
       }
     } else {
-      if ( run !== 'HONDA' ) {
+      if ( run !== 'GPS' ) {
         await sendWechatMessage(`${status}  启动时间 ${GMT}`, mapUrl, mapPicUrl);
         await writeSettings(runObj);
       } else {
@@ -453,7 +449,7 @@ async function main() {
     
   // 推送到微信，Scriptable通知
   const sendWechatMessage = async (description, url, picurl) => {
-    const driveAway = run !== 'HONDA' && distance > 20
+    const driveAway = run !== 'GPS' && distance > 20
     if ( driveAway ) {
       notify(`${status} ${GMT}`, `已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl);
     } else {
