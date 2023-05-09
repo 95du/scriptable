@@ -384,7 +384,7 @@ async function main() {
     addressText.textOpacity = 0.7;
     addressText.centerAlignText();
     rightStack.addSpacer();
-    console.log(mapUrl)
+    
     // jump content
     addressText.url = mapUrl;
     imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
