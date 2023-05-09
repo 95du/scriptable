@@ -204,20 +204,17 @@ async function main() {
     }
   };
   
-  // 获取违章对应的违法行为信息
+  // 获取违章对应的违法行为信息  
   const getSurveils = async (vioList, issueData) => {
     const params = {
       internalOrder: vioList.internalOrder,
       plateType: 2,
       issueOrganization: issueData.issueOrganization,
     };
-    const surveils = await requestInfo(api3, params);
-    try {
-      return surveils.data.surveils;
-    } catch (e) {
-      console.log(e);
-    }
-  };
+    const surveils = await requestInfo(api3, params).catch(console.log);
+    return surveils ? surveils.data.surveils : [];
+  }; 
+
   
   // 获取违章详细信息
   const getViolationMsg = async (detail) => {
