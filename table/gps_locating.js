@@ -196,7 +196,7 @@ async function main() {
   
     const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
-    const mapUrl = `https://maps.apple.com/?q=${encodeURI(deviceName)}&ll=${endLatitude},${endLongitude}&t=m`;
+    const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${endLatitude},${endLongitude}&t=m`;
   
     const formatDate = (updateTime, format) => {
       const df = new DateFormatter();
