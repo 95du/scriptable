@@ -402,17 +402,20 @@ async function main() {
     return widget;
   }
   
-  
   /**
-   * Electronic Fence
-   * 判断run为HONDA触发电子围栏
-   * 推送信息到微信
+   * 获取两点间驾车路线规划的距离
+   * @returns {Promise<number>}
    */
   const getDistance = async () => {
     const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=${aMapkey}&origin_type=0&strategy=38&origin=${coordinates}&destination=${endLongitude},${endLatitude}`).loadJSON();
     return { distance } = fence.route.paths[0];
   };
-  
+ 
+  /**
+   * Electronic Fence
+   * 判断run为GPS触发电子围栏
+   * @returns {Promise<void>}
+   */
   const pushMessage = async (mapUrl, endLongitude, endLatitude, distance) => {
     const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${endLongitude},${endLatitude}`;
     
@@ -445,8 +448,11 @@ async function main() {
       }
     }
   };
-    
-  // 推送到微信，Scriptable通知
+
+ /**
+  * 推送消息到微信
+  * @returns {Promise} Promise
+  */
   const sendWechatMessage = async (description, url, picurl) => {
     const driveAway = run !== 'GPS' && distance > 20
     if ( driveAway ) {
