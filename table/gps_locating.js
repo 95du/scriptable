@@ -319,7 +319,7 @@ async function main() {
     const barIcon = SFSymbol.named(speed <= 5 ? 'location' : 'location.fill');
     const barIconElement = barStack.addImage(barIcon.image);
     barIconElement.imageSize = new Size(16, 16);
-    barIconElement.tintColor = speed <= 5 ? Color.purple() : Color.red();
+    barIconElement.tintColor = speed <= 5 ? Color.purple() : (speed > 5 && speed <= 100) ? Color.green() : Color.red();
     barStack.addSpacer(4);
     
     const speedText = barStack.addText(state);
