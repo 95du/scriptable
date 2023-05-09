@@ -212,7 +212,11 @@ async function main() {
       issueOrganization: issueData.issueOrganization,
     };
     const surveils = await requestInfo(api3, params);
-    return surveils.data.surveils;
+    try {
+      return surveils.data.surveils;
+    } catch (e) {
+      console.log(e);
+    }
   };
   
   // 获取违章详细信息
