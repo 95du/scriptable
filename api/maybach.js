@@ -24,7 +24,7 @@ const cacheFile = F_MGR.joinPath(path, 'setting.json');
 const getSettings = (file) => {
   let setting = {};
   if (F_MGR.fileExists(file)) {
-    return { cookie, run, coordinates, pushTime, imgArr } = JSON.parse(F_MGR.readString(file));
+    return { cookie, run, myPlate, coordinates, pushTime, imgArr } = JSON.parse(F_MGR.readString(file));
   }
   return {}
 }
@@ -44,11 +44,28 @@ const writeSettings = async (inObject) => {
    }
  }
 
+/**
+ * 弹出一个通知  
+ * @param {string} title
+ * @param {string} body
+ * @param {string} url
+ * @param {string} sound
+ */
+const notify = async ( title, body, url, opts = {} ) => {
+  let n = new Notification();
+  n = Object.assign(n, opts);
+  n.title = title
+  n.body = body
+  n.sound = 'piano_success'
+  if (url) n.openURL = url
+  return await n.schedule();
+};
+
 
 /**
  * 弹出菜单供用户选择进行操作
  */
-async function presentMenu() {
+const presentMenu = async () => {
   const title = 'Mercedes Maybach';
   const message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
   const destructiveActions = ['更新代码', '重置所有'];
@@ -116,7 +133,7 @@ async function presentMenu() {
   }
 }
 
-async function inputCookie() {
+const inputCookie = async () => {
   const alert = new Alert();
   alert.message = '输入 Cookie'
   alert.addTextField('高德地图Cookie');
@@ -130,6 +147,14 @@ async function inputCookie() {
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
 }
+
+/**
+ * 获取远程图片
+ * @returns {image} - image
+ */
+const getImage = async (url) => {
+  return await new Request(url).loadImage();
+};
 
 /**
  * 获取图片并使用缓存
@@ -169,6 +194,21 @@ async function getRandomImage() {
   return await F_MGR.readImage(cacheImgPath);
 }
 
+/**
+ * 获取地理位置信息
+ * @param {number} longitude - 经度
+ * @param {number} latitude - 纬度
+ * @returns {object} - 地理位置信息的对象，包含地址、停车时间等属性
+ */
+const getData = async () => {
+  const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
+  req.method = 'GET'
+  req.headers = { Cookie: cookie }
+  const res = await req.loadJSON();
+  if ( res.code == 1 ) {
+    return { speed, owner, longitude, latitude, updateTime } = res.data;
+  }
+};
 
 // Get address (aMap)
 const getAddress = async () => {
@@ -176,17 +216,30 @@ const getAddress = async () => {
   const poisArr = req.regeocode.pois;
   const poisData = poisArr.length > 0 ? poisArr : null;
   return { formatted_address: address, pois = poisData } = req.regeocode;
-}
+};
 
+
+/**
+ * 获取两点间驾车路线规划的距离
+ * @returns {Promise<number>} number
+ */ 
 const getDistance = async () => {
   const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`).loadJSON();
   return { distance } = fence.route.paths[0];
-}
+};
 
+/**
+ * 获取公用数据
+ * @returns {Object} 返回包含信息的对象
+ * @param {number} updateTime
+ * @returns {number} 返回停车时长（分钟)
+ * @param {string} format
+ */
+const getInfo = async () => {
+  await getData();
+  const info = await Promise.all([loadPicture(), getAddress()]);
 
-// Create Widget
-async function createWidget() {
-  const mapUrl = `https://maps.apple.com/?q=HONDA&ll=${latitude},${longitude}&t=m`;
+  const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent('琼A·849A8')}&ll=${latitude},${longitude}&t=m`;
   
   const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
@@ -200,17 +253,9 @@ async function createWidget() {
     df.dateFormat = format;
     return df.string(new Date(updateTime));
   };
-  const GMT = formatDate(
-    updateTime,
-    'yyyy-MM-dd HH:mm'
-  );
-  const GMT2 = formatDate(
-    updateTime,
-    'MM-dd HH:mm'
-  );
+  const GMT = formatDate(updateTime, 'yyyy-MM-dd HH:mm');
+  const GMT2 = formatDate(updateTime, 'MM-dd HH:mm');
   
-  // Saved Json
-  await getAddress();
   const runObj = {
     updateTime, 
     address,
@@ -220,15 +265,14 @@ async function createWidget() {
     parkingTime: GMT2,
     cookie,
     imgArr
-  }
-  // Initial Save
-  if ( setting.run == undefined) {
-    await writeSettings(runObj);
-    await getRandomImage();
-  }
-  
-  
-  // 显示小组件
+  };
+  return { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
+};
+
+
+//=========> Create <=========//
+
+const createWidget = async () => {
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient();
@@ -246,6 +290,15 @@ async function createWidget() {
     new Color('#00000000')
   ];
   widget.backgroundGradient = gradient;
+  
+  const { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
+
+  // Initial Save
+  if ( setting.run == undefined) {
+    await writeSettings(runObj);
+    await getRandomImage();
+  }
+  
   widget.setPadding(10, 10, 10, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
@@ -271,7 +324,7 @@ async function createWidget() {
   const benzStack = leftStack.addStack();
   benzStack.layoutHorizontally();
   benzStack.centerAlignContent();
-  const iconSymbol = SFSymbol.named('car');
+  const iconSymbol = SFSymbol.named('car.circle');
   const carIcon1 = benzStack.addImage(iconSymbol.image);
   carIcon1.imageSize = new Size(16, 16);
   benzStack.addSpacer(4);
@@ -323,7 +376,7 @@ async function createWidget() {
   barStack2.centerAlignContent();
   barStack2.setPadding(3, 10, 3, 10);
   barStack2.cornerRadius = 10;
-  barStack2.borderColor = Color.dynamic(new Color('#000000', 0.4), new Color('#000000', 0.4));
+  barStack2.borderColor = new Color('#000000', 0.4);
   barStack2.borderWidth = 2;
   
   const barIcon2 = SFSymbol.named('lock.shield.fill');
@@ -353,7 +406,6 @@ async function createWidget() {
   const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
   const image = carLogoStack.addImage(carLogo);
   image.imageSize = new Size(27,27);
-  image.tintColor = Color.dynamic(new Color('#000000'), new Color('#000000'));
   rightStack.addSpacer(1);
     
   // Car image
@@ -402,8 +454,8 @@ async function createWidget() {
   } else {
     Script.setWidget(widget);
     Script.complete();
-  }
-
+  };
+  
   /**
    * Electronic Fence
    * 判断run为HONDA触发电子围栏
@@ -412,14 +464,14 @@ async function createWidget() {
   const pushMessage = async (mapUrl, longitude, latitude, distance) => {
     const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
     const mapPicUrl = `${mapKey},0:${longitude},${latitude}`;
-    const driveAway = run !== 'HONDA' && distance > 20
     
     const timeAgo = new Date(Date.now() - pushTime);
     const hours = timeAgo.getUTCHours();
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
-
+  
     // push data
+    const driveAway = run !== 'HONDA' && distance > 20
     if ( driveAway ) {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       await writeSettings(runObj);
@@ -443,9 +495,19 @@ async function createWidget() {
     }
   };
   
-  // 推送到微信
+  /**
+  * 推送消息到微信
+  * @returns {Promise} Promise
+  */
   const sendWechatMessage = async (description, url, picurl) => {
-    const acc = await new Request('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4').loadJSON(); // accessToken
+    const driveAway = run !== 'HONDA' && distance > 20
+    if ( driveAway ) {
+      notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
+    } else {
+      notify(`${status}  ${GMT}`, address, mapUrl);
+    };
+    
+    const acc = await new Request(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ=')).loadJSON(); // accessToken
     const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
     request.method = 'POST'
     request.body = JSON.stringify({
@@ -461,14 +523,6 @@ async function createWidget() {
         }]
       } // pushMessage to wiChat
     });
-    
-    // 推送通知
-    const driveAway = run !== 'HONDA' && distance > 20
-    if ( driveAway ) {
-      notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
-    } else {
-      notify(`${status}  ${GMT}`, address, mapUrl);
-    }
     return request.loadJSON();
   };
   
@@ -477,8 +531,15 @@ async function createWidget() {
     await pushMessage(mapUrl, longitude, latitude, distance);
   };
   return widget;
-}
+};
 
+async function createErrorWidget() {
+  const widget = new ListWidget();
+  const text = widget.addText('用户未登录');
+  text.font = Font.systemFont(17);
+  text.centerAlignText();
+  Script.setWidget(widget);
+};
 
 /**-------------------------**/
    /** Request(url) json **/
@@ -507,49 +568,10 @@ if ( args.plainTexts[0] ) {
 const runWidget = async () => {
   if (config.runsInWidget) {
     const isMediumWidget = config.widgetFamily === 'medium';
-    await (isMediumWidget ? getData().then(createWidget) : createErrorWidget());
+    await (isMediumWidget && setting.cookie ? createWidget() : createErrorWidget());
   } else {
     await loadPicture();
     await presentMenu();
   }
 }
 await runWidget();
-  
-/**
- * 获取地理位置信息
- * @param {number} longitude - 经度
- * @param {number} latitude - 纬度
- * @returns {object} - 地理位置信息的对象，包含地址、停车时间等属性
- */
-async function getData() {
-  const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
-  req.method = 'GET'
-  req.headers = { Cookie: cookie }
-  const res = await req.loadJSON();
-  if ( res.code == 1 ) {
-    return { speed, owner, longitude, latitude, updateTime } = res.data;
-  }
-}
-
-async function notify ( title, body, url, opts = {} ) {
-  let n = new Notification();
-  n = Object.assign(n, opts);
-  n.title = title
-  n.body = body
-  n.sound = 'piano_success'
-  if (url) n.openURL = url
-  return await n.schedule();
-}
-
-async function getImage(url) {
-  const r = await new Request(url);
-  return await r.loadImage();
-}
-
-async function createErrorWidget() {
-  const widget = new ListWidget();
-  const text = widget.addText('仅支持中尺寸');
-  text.font = Font.systemFont(17);
-  text.centerAlignText();
-  Script.setWidget(widget);
-}
