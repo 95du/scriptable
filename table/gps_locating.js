@@ -196,7 +196,7 @@ async function main() {
   
     const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
-    const mapUrl = `https://maps.apple.com/?q=${deviceName}&ll=${endLatitude},${endLongitude}&t=m`;
+    const mapUrl = `https://maps.apple.com/?q=${encodeURI(deviceName)}&ll=${endLatitude},${endLongitude}&t=m`;
   
     const formatDate = (updateTime, format) => {
       const df = new DateFormatter();
@@ -384,7 +384,7 @@ async function main() {
     addressText.textOpacity = 0.7;
     addressText.centerAlignText();
     rightStack.addSpacer();
-    
+    console.log(mapUrl)
     // jump content
     addressText.url = mapUrl;
     imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
