@@ -25,7 +25,7 @@ async function main() {
   const getSettings = (file) => {
     let setting = {};
     if (F_MGR.fileExists(file)) {
-      return { imei, password, token, run, coordinates, pushTime, imgArr, picture, aMapkey, weiChat } = JSON.parse(F_MGR.readString(file));
+      return { imei, password, token, run, coordinates, pushTime, imgArr, picture, aMapkey, tokenUrl, touser, agentid } = JSON.parse(F_MGR.readString(file));
     }
     return {}
   }
@@ -180,7 +180,7 @@ async function main() {
     
     const req = new Request('https://app.tutuiot.com/locator-app/redis/getGps');
     req.method = 'POST'
-    req.body = requestBody
+    req.body = requestBody;
     try {
       const { data } = await req.loadJSON();
       return { speed } = data;
@@ -362,7 +362,6 @@ async function main() {
     }
     const image = carLogoStack.addImage(carLogo);
     image.imageSize = new Size(27,27);
-    image.tintColor = Color.dynamic(new Color('#000000'), new Color('#000000'));
     rightStack.addSpacer(1);
       
     // Car image
@@ -428,7 +427,7 @@ async function main() {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       await writeSettings(runObj);
     } else if ( speed <= 5 ) {
-      const duration = updateTime === setting.updateTime ? 240 : 10;
+      const duration = updateTime === setting.updateTime ? 0 : 10;
       if (moment >= duration) {
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         await writeSettings({
@@ -456,13 +455,13 @@ async function main() {
       notify(`${status}  ${GMT}`, endAddr, mapUrl);
     };
     
-    if ( !weiChat ) return;
-    const acc = await new Request(weiChat).loadJSON();
+    if ( !setting.tokenUrl ) return;
+    const acc = await new Request(tokenUrl).loadJSON();
     const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
     request.method = 'POST'
     request.body = JSON.stringify({
-      touser: 'ZuYingHao',
-      agentid: '1000006',
+      touser,
+      agentid,
       msgtype: 'news',
       news: {
         articles: [{
@@ -473,6 +472,7 @@ async function main() {
         }]
       } // pushMessage to wiChat
     });
+    console.log('信息已推送到微信');
     return request.loadJSON();
   };
   
