@@ -37,13 +37,13 @@ async function main() {
    * @param { JSON } string
    */
   const writeSettings = async (inObject) => {
-     if ( setting ) {
-       F_MGR.writeString(cacheFile, JSON.stringify(inObject), null, 2);
-       console.log(JSON.stringify(
-         inObject, null, 2)
-      );
-     }
-   }
+    if ( setting ) {
+      F_MGR.writeString(cacheFile, JSON.stringify(inObject), null, 2);
+      console.log(JSON.stringify(
+        inObject, null, 2
+      ));
+    }
+  }
   
   /**
    * 获取背景图片存储目录路径
@@ -313,7 +313,7 @@ async function main() {
     barStack.centerAlignContent();
     barStack.setPadding(3, 10, 3, 10);
     barStack.cornerRadius = 10;
-    barStack.borderColor = new Color(speed <= 5 ? '#AB47BC' : '#FF1744', 0.7);
+    barStack.borderColor = new Color(speed <= 5 ? '#AB47BC' : (speed > 5 && speed <= 100) ? '#34C579' : '#FF1744', 0.7);
     barStack.borderWidth = 2;
     
     const barIcon = SFSymbol.named(speed <= 5 ? 'location' : 'location.fill');
