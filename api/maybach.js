@@ -427,25 +427,25 @@ const createWidget = async () => {
     };  
     const str = jmz.GetLength(address);
     if ( str <= 35 ) {
-      textAddress = adrStack.addText(`${address} - ${pois[0].address} ${pois[0].distance} 米`)
+      addressText = adrStack.addText(`${address} - ${pois[0].address} ${pois[0].distance} 米`)
     } else if (str < 46) {
-      textAddress = adrStack.addText(`${address} - ${pois[0].address}`);
+      addressText = adrStack.addText(`${address} - ${pois[0].address}`);
     } else {
-      textAddress = adrStack.addText(address);
+      addressText = adrStack.addText(address);
     }
   } catch (e) {
-    textAddress = adrStack.addText(address + ' - 当前位置属乡镇、高速路或无名路段 🚫');
+    addressText = adrStack.addText(address + ' - 当前位置属乡镇、高速路或无名路段 🚫');
   }
   
-  textAddress.font = Font.mediumSystemFont(11.3);
-  textAddress.textColor = Color.black();
-  textAddress.textOpacity = 0.7;
-  textAddress.centerAlignText();
+  addressText.font = Font.mediumSystemFont(11.3);
+  addressText.textColor = Color.black();
+  addressText.textOpacity = 0.7;
+  addressText.centerAlignText();
   rightStack.addSpacer();
   
   // jump content
   barStack2.url = 'amapuri://WatchFamily/myFamily';
-  textAddress.url = mapUrl;
+  addressText.url = mapUrl;
   imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
   
   if ( !config.runsInWidget ) {  
@@ -572,8 +572,6 @@ if ( args.plainTexts[0] ) {
   return await argsParam();
 }
 
-/**-------------------------**/
-   /** Request(url) json **/
 /**-------------------------**/
 
 const runWidget = async () => {
