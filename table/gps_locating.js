@@ -496,7 +496,7 @@ async function main() {
     
   const createErrorWidget = async () => {
     const widget = new ListWidget();
-    const text = widget.addText('仅支持中尺寸');
+    const text = widget.addText('仅支持中小尺寸');
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
