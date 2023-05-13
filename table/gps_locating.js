@@ -484,6 +484,16 @@ async function main() {
   
   /**-------------------------**/
   
+  // 创建小号组件
+  createSmallWidget = async () => {
+    const widget = new ListWidget();
+    widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${endLongitude},${endLatitude}`);
+    widget.url = mapUrl;
+    Script.setWidget(widget);
+    Script.complete();
+    return widget;  
+  }
+    
   const createErrorWidget = async () => {
     const widget = new ListWidget();
     const text = widget.addText('仅支持中尺寸');
@@ -493,12 +503,7 @@ async function main() {
   }
   
   const runWidget = async () => {
-    const isMediumWidget = config.widgetFamily === 'medium';
-    if (isMediumWidget || !config.runsInWidget) {
-      await createWidget();
-    } else {
-      await createErrorWidget();
-    }
+    await (config.runsInApp || config.widgetFamily === 'medium' ? createWidget() : config.widgetFamily === 'small' ? createSmallWidget() : createErrorWidget());
   }
   await runWidget();
 }
