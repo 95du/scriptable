@@ -36,13 +36,11 @@ const setting = await getSettings(cacheFile);
  * @param { JSON } string
  */
 const writeSettings = async (inObject) => {
-   if ( setting ) {
-     F_MGR.writeString(cacheFile, JSON.stringify(inObject), null, 2);
-     console.log(JSON.stringify(
-       inObject, null, 2)
-    );
-   }
- }
+  F_MGR.writeString(cacheFile, JSON.stringify(inObject), null, 2);
+  console.log(
+    JSON.stringify(inObject, null, 2)
+  )
+};
 
 /**
  * 弹出一个通知  
@@ -51,13 +49,9 @@ const writeSettings = async (inObject) => {
  * @param {string} url
  * @param {string} sound
  */
-const notify = async ( title, body, url, opts = {} ) => {
-  let n = new Notification();
-  n = Object.assign(n, opts);
-  n.title = title
-  n.body = body
-  n.sound = 'piano_success'
-  if (url) n.openURL = url
+const notify = async (title, body, url, opts = {}) => {
+  const n = Object.assign(new Notification(), { title, body, sound: 'piano_success', ...opts });
+  if (url) n.openURL = url;
   return await n.schedule();
 };
 
@@ -106,7 +100,6 @@ const presentMenu = async () => {
       break;
     case 4:
       if ( !setting.cookie ) return;
-      await getData();
       await createWidget();
       break;
     case 5:
@@ -200,24 +193,26 @@ async function getRandomImage() {
  * @param {number} latitude - 纬度
  * @returns {object} - 地理位置信息的对象，包含地址、停车时间等属性
  */
-const getData = async () => {
+const getLastLocation = async () => {
   const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
   req.method = 'GET'
   req.headers = { Cookie: cookie }
-  const res = await req.loadJSON();
-  if ( res.code == 1 ) {
-    return { speed, owner, longitude, latitude, updateTime } = res.data;
+  const { code, data } = await req.loadJSON();
+  if ( code === 1 ) {
+    return { speed, owner, longitude, latitude, updateTime } = data;
   }
 };
 
-// Get address (aMap)
+/**
+ * @description 获取指定经纬度的地址信息和周边POI点信息
+ * @returns {Promise<object>} 包含formatted_address和pois的对象
+ */
 const getAddress = async () => {
   const req = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
   const poisArr = req.regeocode.pois;
   const poisData = poisArr.length > 0 ? poisArr : null;
   return { formatted_address: address, pois = poisData } = req.regeocode;
 };
-
 
 /**
  * 获取两点间驾车路线规划的距离
@@ -236,7 +231,7 @@ const getDistance = async () => {
  * @param {string} format
  */
 const getInfo = async () => {
-  await getData();
+  await getLastLocation();
   const info = await Promise.all([loadPicture(), getAddress()]);
 
   const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent('琼A·849A8')}&ll=${latitude},${longitude}&t=m`;
@@ -299,13 +294,17 @@ const createWidget = async () => {
     await getRandomImage();
   }
   
+  /**
+   * @param {number} padding
+   * @returns {WidgetStack} 
+   */
   widget.setPadding(10, 10, 10, 15);
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
   mainStack.addSpacer();
-    
+
   /**
-   * Left Stack
+   * Create left stack
    * @param {image} SFSymbol
    * @param {string} text
    * Cylindrical Bar Chart
@@ -329,7 +328,7 @@ const createWidget = async () => {
   carIcon1.imageSize = new Size(16, 16);
   benzStack.addSpacer(4);
   
-  const vehicleModelText = benzStack.addText('Mercedes');
+  const vehicleModelText = benzStack.addText('Mercedes S');
   vehicleModelText.font = Font.mediumSystemFont(14);
   vehicleModelText.textColor = Color.black();
   vehicleModelText.textOpacity = 0.7;
@@ -393,7 +392,7 @@ const createWidget = async () => {
   
     
   /**
-   * right Stack
+   * Create right Stack
    * @param {image} image
    * @param {string} address
    */
@@ -469,8 +468,7 @@ const createWidget = async () => {
     const hours = timeAgo.getUTCHours();
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
-  
-    // push data
+    
     const driveAway = run !== 'HONDA' && distance > 20
     if ( driveAway ) {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
@@ -533,9 +531,22 @@ const createWidget = async () => {
   return widget;
 };
 
+// 创建小号组件
+createSmallWidget = async () => {
+  const widget = new ListWidget();
+  await getLastLocation();
+  widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`);
+  
+  const { mapUrl } = await getInfo();
+  widget.url = mapUrl;
+  Script.setWidget(widget);
+  Script.complete();
+  return widget;  
+}
+
 async function createErrorWidget() {
   const widget = new ListWidget();
-  const text = widget.addText('用户未登录');
+  const text = widget.addText('不支持大号组件');
   text.font = Font.systemFont(17);
   text.centerAlignText();
   Script.setWidget(widget);
@@ -566,12 +577,10 @@ if ( args.plainTexts[0] ) {
 /**-------------------------**/
 
 const runWidget = async () => {
-  if (config.runsInWidget) {
-    const isMediumWidget = config.widgetFamily === 'medium';
-    await (isMediumWidget && setting.cookie ? createWidget() : createErrorWidget());
+  if (config.runsInWidget && setting.cookie) {
+    await (config.widgetFamily === 'medium' ? createWidget() : config.widgetFamily === 'small' ? createSmallWidget() : createErrorWidget());
   } else {
-    await loadPicture();
-    await presentMenu();
+    await Promise.all([loadPicture(), presentMenu()]);
   }
 }
 await runWidget();
