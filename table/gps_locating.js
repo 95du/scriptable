@@ -216,7 +216,7 @@ async function main() {
       coordinates: `${endLongitude},${endLatitude}`
     };
     return { info, state, status, mapUrl, GMT, GMT2, runObj };
-  }
+  };
   
   const { info, state, status, mapUrl, GMT, GMT2, runObj } = await getData();
 
