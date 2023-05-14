@@ -455,8 +455,8 @@ async function main() {
       Script.setWidget(widget);
       Script.complete();
     } else {
-      await widget.presentMedium()
-    }
+      await widget.presentMedium();
+    };
     return widget;
   }
   
