@@ -4,8 +4,8 @@
 /**
  * 小组件作者: 95度茅台
  * Version 1.0.0
- * 2023-05-01
- * 模拟电子围栏，显示车速，位置等
+ * 2023-05-17
+ * 澳门六合彩开奖结果
  */
 
 
@@ -54,6 +54,10 @@ async function main() {
     new Color('#FFFFFF', 0.3)
   );
   
+  /**
+   * 获取网络图片
+   * @param {Image} url
+   */
   const getImage = async (url) => {
     return await new Request(url).loadImage();
   };
