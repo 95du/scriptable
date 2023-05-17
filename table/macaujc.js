@@ -3,7 +3,7 @@
 // icon-color: purple; icon-glyph: bowling-ball;
 /**
  * 小组件作者: 95度茅台
- * Version 1.0.0
+ * Version 1.0.1
  * 2023-05-17
  * 澳门六合彩开奖结果
  */
