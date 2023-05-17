@@ -10,17 +10,58 @@
 
 
 async function main() {
-  const fetchData = async (url) => {
-    try {
-      const req = await new Request(url).loadJSON();
-      return req[0];
-    } catch (error) {
-      console.error(error);
+  const fm = FileManager.local();
+  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_macaujc');
+  const cache = fm.joinPath(mainPath, 'cacheData');
+  fm.createDirectory(cache, true);
+  
+  /**
+   * 写入读取json字符串并使用缓存
+   * @param {string} File Extension
+   * @param {Image} Basr64 
+   * @returns {string} - Request
+   */
+  const useFileManager = (cacheTime) => {
+    return {
+      readString: (fileName) => {
+        const filePath = fm.joinPath(cache, fileName);
+        if (fm.fileExists(filePath) && cacheTime < 21) {
+          return fm.readString(filePath);
+        }
+        return null;
+      },
+      writeString: (fileName, content) => fm.writeString(fm.joinPath(cache, fileName), content)
     }
   };
   
+  /**
+   * 获取json字符串
+   * @param {string} json
+   */
+  const getString = async (url) => {
+    try {
+      const request = await new Request(url).loadJSON();
+      return request[0];
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+  
+  const getCacheString = async (jsonFileName, jsonFileUrl) => {
+    const cacheTime = new Date().getHours();
+    const cache = useFileManager(cacheTime);
+    const jsonString = cache.readString(jsonFileName);
+    if (jsonString) {
+      return jsonString;
+    }
+    const response = await getString(jsonFileUrl);
+    cache.writeString(jsonFileName, JSON.stringify(response));
+    return JSON.stringify(response);
+  };
+  
   const processData = (data) => {
-    const { openCode, zodiac, wave, expect } = data;
+    const { openCode, zodiac, wave, expect } = JSON.parse(data);
     const openCodeArr = openCode.split(",");
     const zodiacArr = zodiac.split(",");
     const waveArr = wave.split(",");
@@ -28,8 +69,8 @@ async function main() {
   };
   
   const [macaujc1, macaujc2] = await Promise.all([
-    fetchData('https://www.macaumarksix.com/api/macaujc.com'),
-    fetchData('https://www.macaumarksix.com/api/macaujc2.com')
+    getCacheString('macaujc.json', 'https://www.macaumarksix.com/api/macaujc.com'),
+    getCacheString('macaujc2.json', 'https://www.macaumarksix.com/api/macaujc2.com'),
   ]);
   
   const { openCodeArr, zodiacArr, waveArr, expect} = processData(macaujc1);
