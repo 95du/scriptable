@@ -37,7 +37,9 @@ async function main() {
     green: '#34C759',
     blue: '#0061FF',
     red: '#FF0000',
-    orange: '#FF9500'
+    orange: '#FF9500',
+    purple: '#9D64FF',
+    yellow: '#FFA300'
   };
   
   const colorCode = waveArr.map((name) => { return colorHex[name] });
@@ -89,7 +91,7 @@ async function main() {
     
     const expectText2 = titleStack.addText(expect);
     expectText2.font = Font.mediumSystemFont(17);
-    expectText2.textColor = Color.red()
+    expectText2.textColor = Color.red();
     
     const expectText3 = titleStack.addText(' 期');
     expectText3.font = Font.mediumSystemFont(15);
@@ -222,7 +224,7 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
-  }
+  };
   
   const runWidget = async () => {
     await (config.runsInApp || config.widgetFamily === 'medium' ? createWidget() : errorWidget());
