@@ -11,9 +11,12 @@
 
 async function main() {
   const fetchData = async (url) => {
-    const req = await new Request(url).loadJSON();
-    if (req.length < 1) console.log("no data available");
-    return req[0];
+    try {
+      const req = await new Request(url).loadJSON();
+      return req[0];
+    } catch (error) {
+      console.error(error);
+    }
   };
   
   const processData = (data) => {
