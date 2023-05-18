@@ -86,7 +86,7 @@ async function main() {
         spac: 3,
         logoImage: 'http://mtw.so/5ZaunR',
         text1: `红包 ${redEnvelope.balance}`,
-        text2: `即将过期 ${redEnvelope.balance}`,  
+        text2: `即将过期 ${!redEnvelope.expiredBalance ? '0.00' : redEnvelope.expiredBalance}`,  
         lightColor: '#FF0000',
         darkColor: '#FFBF00'
       }
