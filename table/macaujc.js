@@ -49,7 +49,9 @@ async function main() {
   };
   
   const getCacheString = async (jsonFileName, jsonFileUrl) => {
-    const cacheTime = new Date().getHours();
+    const df = new DateFormatter();
+    df.dateFormat = 'HH';
+    const cacheTime = df.string(new Date());
     const cache = useFileManager(cacheTime);
     const jsonString = cache.readString(jsonFileName);
     if (jsonString) {
