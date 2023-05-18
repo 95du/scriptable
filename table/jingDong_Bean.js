@@ -77,7 +77,7 @@ async function main() {
         darkColor: '#FFBF00'
       }
     } else if (index === 2) {
-      const redEnvelope = await redPackage('https://wq.jd.com/user/info/QueryUserRedEnvelopesV2?type=1&orgFlag=JD_PinGou_New&page=1&cashRedType=1&redBalanceFlag=1&channel=3&sceneval=2&g_login_type=1');
+      const redEnvelope = await redPackage('https://api.m.jd.com/api?functionId=redPacket&appid=jd-cphdeveloper-m&body=%7B%22type%22%3A1%2C%22redBalanceFlag%22%3A1%2C%22page%22%3A1%2C%22tenantCode%22%3A%22jgm%22%2C%22bizModelCode%22%3A%226%22%2C%22bizModeClientType%22%3A%22M%22%2C%22externalLoginType%22%3A%221%22%7D&loginType=2&client=m&sceneval=2&g_login_type=1&g_ty=ajax&appCode=ms0ca95114');
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fwqs.jd.com%2Fmy%2Fredpacket.shtml%3Fsceneval%3D2%26jxsid%3D16780988595962555448%22%7D'
       setting.randomIndex = 3;
       val = {
@@ -86,7 +86,7 @@ async function main() {
         spac: 3,
         logoImage: 'http://mtw.so/5ZaunR',
         text1: `红包 ${redEnvelope.balance}`,
-        text2: `即将过期 ${redEnvelope.expiredBalance}`,  
+        text2: `即将过期 ${redEnvelope.balance}`,  
         lightColor: '#FF0000',
         darkColor: '#FFBF00'
       }
@@ -385,7 +385,7 @@ async function main() {
       Cookie: cookie
     }
     const res = await req.loadJSON();
-    return res.data;
+    return res.result;
   }
   
   async function farmProgress(url) {
