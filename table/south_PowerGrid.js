@@ -95,7 +95,7 @@ async function main() {
   
   // 获取图片，使用缓存
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ cacheTime: 24 });
+    const cache = useFileManager({ cacheTime: 1024 });
     const image = cache.readImage(name);
     if (image) {
       return image;
