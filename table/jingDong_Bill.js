@@ -251,7 +251,7 @@ async function main() {
     const nameStack = leftStack.addStack();
     nameStack.layoutHorizontally();
     nameStack.centerAlignContent();
-    const nameIcon = await getCacheImage('name.png', 'http://m.360buyimg.com/mobilecms/jfs/t21250/351/1000721513/1891/9bfe1d6c/5b1e3870Nee820e5e.png');
+    const nameIcon = await getCacheImage('name.png', 'https://img30.360buyimg.com/jdmonitor/jfs/t1/149551/5/31020/4346/64240e05F08360629/7759ad228a05f6cf.png');
     const nameIconElement = nameStack.addImage(nameIcon);
     nameIconElement.imageSize = new Size(16, 16);
     nameStack.addSpacer(5);
