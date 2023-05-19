@@ -492,10 +492,7 @@ async function main() {
       const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
       if (status === '1') {
         setting.signData = res.data
-        F_MGR.writeString(
-          getSettingPath(),
-          JSON.stringify(setting)
-        );
+        F_MGR.writeString(cacheFile, JSON.stringify(setting));
         if (dailyAward) {
           notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
         } else {
