@@ -206,7 +206,7 @@ async function main() {
       ]
       widget.backgroundGradient = gradient;
     } else {
-      widget.backgroundColor = Color.dynamic(new Color('#FFE5B4', 0.5), new Color('#1e1e1e'));
+      widget.backgroundColor = Color.dynamic(new Color('#fefefe', 0.5), new Color('#1e1e1e'));
     }
     
     
