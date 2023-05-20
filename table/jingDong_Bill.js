@@ -502,10 +502,7 @@ async function main() {
       return res.data;
     } else {
       setting.code = 3;
-      F_MGR.writeString(
-        getSettingPath(),
-        JSON.stringify(setting)
-      );
+      F_MGR.writeString(cacheFile, JSON.stringify(setting));
       notify(res.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
     }
   }
