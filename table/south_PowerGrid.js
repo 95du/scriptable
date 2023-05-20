@@ -472,7 +472,11 @@ async function main() {
       await Run();
     }
     if (config.widgetFamily === 'medium' || config.runsInApp) {
-      await (setting.code === 0 ? createWidget() : createErrWidget());
+      try {
+        await (setting.code === 0 ? createWidget() : createErrWidget());  
+      } catch (e) {
+        await runWidget();
+      }
     } else {
       await smallrWidget();
     }
