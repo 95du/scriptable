@@ -104,7 +104,7 @@ async function main() {
   );
   
   const isSmallScreen = Device.screenSize().height < 926;
-  const gap = {
+  const adapt = {
     top: isSmallScreen ? 6 : 10,
     middle: isSmallScreen ? 5 : 8,
     padding: isSmallScreen ? 0 : 5,
@@ -130,7 +130,7 @@ async function main() {
     };
     
     widget.backgroundColor = widgetBgColor;
-    widget.setPadding(10, gap.padding, 10, gap.padding);
+    widget.setPadding(10, adapt.padding, 10, adapt.padding);
     const titleStack = widget.addStack();
     titleStack.layoutHorizontally();
     titleStack.centerAlignContent();
@@ -152,7 +152,7 @@ async function main() {
     expectText3.font = Font.mediumSystemFont(15);
     
     titleStack.addSpacer();
-    widget.addSpacer(gap.top);
+    widget.addSpacer(adapt.top);
     
     // openCodeArr
     const mainStack1 = widget.addStack();
@@ -182,7 +182,7 @@ async function main() {
       const barStack = codeStack.addStack();
       barStack.layoutHorizontally();
       barStack.centerAlignContent();
-      barStack.size = new Size(gap.size, 30);
+      barStack.size = new Size(adapt.size, 30);
       
       barStack.backgroundColor = new Color(colorCode[i]);
       barStack.cornerRadius = 8;
@@ -203,7 +203,7 @@ async function main() {
     };
     
     // 绘制分割线
-    widget.addSpacer(gap.middle);
+    widget.addSpacer(adapt.middle);
     const context = new DrawContext()
     context.size = new Size(150, 0.5);
     context.opaque = false;
@@ -245,7 +245,7 @@ async function main() {
       const barStack2 = codeStack2.addStack();
       barStack2.layoutHorizontally();
       barStack2.centerAlignContent();
-      barStack2.size = new Size(gap.size, 30);
+      barStack2.size = new Size(adapt.size, 30);
       barStack2.backgroundColor = new Color(colorCode2[i]);
       barStack2.cornerRadius = 8;
      
