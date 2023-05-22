@@ -50,7 +50,9 @@ const getBgImagePath = () => {
 const getLocation = async () => {
   const getCacheData = () => {
     if (!fm.fileExists(cacheFile)) return null;
-    return JSON.parse(fm.readString(cacheFile));
+    return JSON.parse(
+      fm.readString(cacheFile)
+    );
   };
 
   const setCacheData = (data) => {
@@ -101,15 +103,14 @@ const getWeather = async (opts) => {
   });
   const response = await request.loadJSON();
   return { title, content } = response.radarData;
-}
+};
 
 /**
  * 获取图片并使用缓存
  * @param {string} File Extension
  * @returns {image} - Request
  */
-const useFileManager = (options = {}) => {
-  const fm = FileManager.local();
+const useFileManager = ( options = {} ) => {
   const cache = fm.joinPath(path, 'cache_path');
   fm.createDirectory(cache, true);
     
@@ -148,7 +149,7 @@ const getCacheImage = async (name, url) => {
 
 /**
  * 获取随机图标
- * @returns {image} image
+ * @returns {string} url
  */
 const getPicture = async () => {
   const images = [
@@ -181,9 +182,9 @@ const getOneWord = async () => {
  */
 const createWidget = async () => {
   await getWeather({
-    'url': 'https://ssfc.api.moji.com/sfc/json/nowcast',
-    'location': await getLocation()
-  })
+    url: 'https://ssfc.api.moji.com/sfc/json/nowcast',
+    location: await getLocation()
+  });
   
   const { note, imgUrl } = await getOneWord();
   
@@ -254,7 +255,7 @@ const createWidget = async () => {
   } else {
     Script.setWidget(widget);
     Script.complete();
-  }
+  };
   return widget;
 };
 
@@ -339,5 +340,5 @@ const runWidget = async () => {
   } else {
     await createWidget();
   }
-}
+};
 await runWidget();
