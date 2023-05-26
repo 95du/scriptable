@@ -162,7 +162,7 @@ async function main() {
       const { data } = await req.loadJSON();
       return { deviceName, endAddr, updateTime, totalTime, endTime, mileage, highestSpeed, averageSpeed, endLongitude, endLatitude } = data.list[0];
     } catch (e) {
-      notify('获取数据失败⚠️', '新设备无行车/位置记录。');
+      notify('获取数据失败⚠️', '新设备无行车/位置记录，或token已过期。');
       console.log(e);
       await fetchToken();
     }
