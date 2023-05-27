@@ -13,7 +13,9 @@ async function main() {
   const fm = FileManager.local();
   const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_macaujc');
   const cache = fm.joinPath(mainPath, 'cacheData');
-  fm.createDirectory(cache, true);
+  if (!fm.fileExists(cache)) {
+    fm.createDirectory(cache);
+  };
   
   /**
    * 写入读取json字符串并使用缓存
@@ -25,7 +27,12 @@ async function main() {
     return {
       readString: (fileName) => {
         const filePath = fm.joinPath(cache, fileName);
-        if (fm.fileExists(filePath) && cacheTime < 21) {
+        const fileTime = fm.creationDate(filePath).getTime();
+        const checkToday = (timestamp) => {
+          return new Date(timestamp).toDateString() === new Date().toDateString();
+        };
+        
+        if (fm.fileExists(filePath) && cacheTime < 21 && checkToday(fileTime) == true) {
           return fm.readString(filePath);
         }
         return null;
