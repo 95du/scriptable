@@ -197,14 +197,10 @@ async function main() {
   
     const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${endLatitude},${endLongitude}&t=m`;
   
-    const formatDate = (updateTime, format) => {
-      const df = new DateFormatter();
-      df.dateFormat = format;
-      return df.string(new Date(updateTime));
-    };
-    const GMT = formatDate(updateTime, 'yyyy-MM-dd HH:mm');
-    const GMT2 = formatDate(updateTime, 'MM-dd HH:mm');
-  
+    const GMT = updateTime.match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/)[0];
+
+    const GMT2 = updateTime.match(/-(\d{2}-\d{2}\s\d{2}:\d{2})/)[1];
+    
     const runObj = {
       ...setting,
       updateTime,
