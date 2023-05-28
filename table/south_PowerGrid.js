@@ -475,7 +475,7 @@ async function main() {
       try {
         await (setting.code === 0 ? createWidget() : createErrWidget());  
       } catch (e) {
-        await runWidget();
+        console.log(e)
       }
     } else {
       await smallrWidget();
