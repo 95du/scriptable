@@ -207,12 +207,12 @@ async function main() {
     // 绘制分割线
     widget.addSpacer(adapt.middle);
     const context = new DrawContext()
-    context.size = new Size(150, 0.5);
+    context.size = new Size(150, 0.3);
     context.opaque = false;
     context.respectScreenScale = true;
     context.setFillColor(contextColor);
     const path = new Path();
-    path.addRoundedRect(new Rect(0, 0, 150, 0.4), 3, 2);
+    path.addRoundedRect(new Rect(0, 0, 150, 0.2), 3, 2);
     context.addPath(path);
     context.fillPath();
     context.setFillColor(contextColor);
