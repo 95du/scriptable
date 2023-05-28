@@ -278,7 +278,7 @@ const createWidget = async () => {
     "#99CCCC",
     "#BCBBBB"
   ];
-  const items = color[Math.floor(Math.random()*color.length)];
+  const items = color[Math.floor(Math.random() * color.length)];
   gradient.locations = [0, 1];
   gradient.colors = [
     new Color(items, 0.5),
@@ -404,7 +404,7 @@ const createWidget = async () => {
   carLogoStack.addSpacer();
   const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
   const image = carLogoStack.addImage(carLogo);
-  image.imageSize = new Size(27,27);
+  image.imageSize = new Size(27, 27);
   rightStack.addSpacer(1);
     
   // Car image
@@ -534,10 +534,10 @@ const createWidget = async () => {
 // 创建小号组件
 createSmallWidget = async () => {
   const widget = new ListWidget();
-  await getLastLocation();
+  const { mapUrl } = await getInfo();
+  
   widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`);
   
-  const { mapUrl } = await getInfo();
   widget.url = mapUrl;
   Script.setWidget(widget);
   Script.complete();
@@ -560,7 +560,7 @@ const argsParam = async () => {
   const descriptions = {
     fortification_on: '解锁',
     fortification_off: '锁定',
-    acc_on: await getData(),
+    acc_on: await getLastLocation(),
     acc_off: '熄火'
   }
   if ( args ) {
