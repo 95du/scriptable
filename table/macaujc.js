@@ -27,12 +27,7 @@ async function main() {
     return {
       readString: (fileName) => {
         const filePath = fm.joinPath(cache, fileName);
-        const fileTime = fm.creationDate(filePath).getTime();
-        const checkToday = (timestamp) => {
-          return new Date(timestamp).toDateString() === new Date().toDateString();
-        };
-        
-        if (fm.fileExists(filePath) && cacheTime < 21 && checkToday(fileTime) !== true) {
+        if (fm.fileExists(filePath) && cacheTime < 21) {
           return fm.readString(filePath);
         }
         return null;
