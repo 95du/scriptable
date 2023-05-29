@@ -206,7 +206,6 @@ async function main() {
     
     const { longitude, latitude } = await getMapUrl();
     const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${latitude},${longitude}&t=m`;
-    //const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${endLatitude},${endLongitude}&t=m`;
     
     const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
@@ -224,11 +223,10 @@ async function main() {
     };
     return { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, runObj };
   };
-  
-  const { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, runObj } = await getData();
 
   //=========> Create <=========//
-  
+  const { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, runObj } = await getData();
+
   const createWidget = async () => {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
