@@ -194,15 +194,18 @@ async function main() {
     const conversion = new Request(`https://restapi.amap.com/v3/assistant/coordinate/convert?coordsys=gps&output=json&key=${aMapkey}&locations=${endLongitude},${endLatitude}`);
     const convert = await conversion.loadJSON();
     const locations = convert.locations.split(",");
-    const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${locations[1]},${locations[0]}&t=m`;
-    return mapUrl;
+    return { 
+      longitude: Number(locations[0]).toFixed(6),
+      latitude: Number(locations[1]).toFixed(6)
+    }
   };
 
   //
   const getData = async () => {
     const info = await Promise.all([loadPicture(), getTrackSegment(), getSpeed()]);
     
-    const mapUrl = await getMapUrl();
+    const { longitude, latitude } = await getMapUrl();
+    const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${latitude},${longitude}&t=m`;
     //const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${endLatitude},${endLongitude}&t=m`;
     
     const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
@@ -219,10 +222,10 @@ async function main() {
       parkingTime: GMT2,
       coordinates: `${endLongitude},${endLatitude}`
     };
-    return { info, state, status, mapUrl, GMT, GMT2, runObj };
+    return { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, runObj };
   };
   
-  const { info, state, status, mapUrl, GMT, GMT2, runObj } = await getData();
+  const { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, runObj } = await getData();
 
   //=========> Create <=========//
   
@@ -491,7 +494,7 @@ async function main() {
   // 创建小号组件
   createSmallWidget = async () => {
     const widget = new ListWidget();
-    widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${endLongitude},${endLatitude}`);
+    widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`);
     widget.url = mapUrl;
     Script.setWidget(widget);
     Script.complete();
