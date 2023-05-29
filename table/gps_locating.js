@@ -190,15 +190,24 @@ async function main() {
   };
   
   //
+  const getMapUrl = async () => {
+    const conversion = new Request(`https://restapi.amap.com/v3/assistant/coordinate/convert?coordsys=gps&output=json&key=${aMapkey}&locations=${endLongitude},${endLatitude}`);
+    const convert = await conversion.loadJSON();
+    const locations = convert.locations.split(",");
+    const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${locations[1]},${locations[0]}&t=m`;
+    return mapUrl;
+  };
+
+  //
   const getData = async () => {
     const info = await Promise.all([loadPicture(), getTrackSegment(), getSpeed()]);
-  
+    
+    const mapUrl = await getMapUrl();
+    //const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${endLatitude},${endLongitude}&t=m`;
+    
     const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
-    const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${endLatitude},${endLongitude}&t=m`;
-  
     const GMT = updateTime.match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/)[0];
-
     const GMT2 = updateTime.match(/-(\d{2}-\d{2}\s\d{2}:\d{2})/)[1];
     
     const runObj = {
