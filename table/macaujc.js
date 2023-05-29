@@ -23,7 +23,7 @@ async function main() {
    * @param {Image} Basr64 
    * @returns {string} - Request
    */
-  const useFileManager = (cacheTime) => {
+  const useFileManager = ( cacheTime ) => {
     return {
       readString: (fileName) => {
         const filePath = fm.joinPath(cache, fileName);
@@ -77,7 +77,7 @@ async function main() {
     getCacheString('macaujc2.json', 'https://www.macaumarksix.com/api/macaujc2.com'),
   ]);
   
-  const { openCodeArr, zodiacArr, waveArr, expect} = processData(macaujc1);
+  const { openCodeArr, zodiacArr, waveArr, expect } = processData(macaujc1);
   
   const { openCodeArr: openCodeArr2, zodiacArr: zodiacArr2, waveArr: waveArr2 } = processData(macaujc2);
   
