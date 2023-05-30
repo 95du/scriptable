@@ -176,7 +176,6 @@ async function main() {
       token
     };
     const requestBody = Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
-    
     const req = new Request('https://app.tutuiot.com/locator-app/redis/getGps');
     req.method = 'POST'
     req.body = requestBody;
@@ -194,7 +193,6 @@ async function main() {
     const conversion = new Request(`https://restapi.amap.com/v3/assistant/coordinate/convert?coordsys=gps&output=json&key=${aMapkey}&locations=${endLongitude},${endLatitude}`);
     const convert = await conversion.loadJSON();
     const locations = convert.locations.split(",");
-
     return { 
       longitude: Number(locations[0]).toFixed(6),
       latitude: Number(locations[1]).toFixed(6)
