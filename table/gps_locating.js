@@ -273,14 +273,14 @@ async function main() {
     const leftStack = mainStack.addStack();
     leftStack.size = new Size(setting.lrfeStackWidth, 0);
     leftStack.layoutVertically();
-    leftStack.addSpacer(7);
+    leftStack.addSpacer();
     
     const plateStack = leftStack.addStack();
     const plateText = plateStack.addText(deviceName);
     plateText.font = Font.mediumSystemFont(19);
     plateText.textColor = Color.black();
     plateText.textOpacity = 0.9;
-    leftStack.addSpacer(5);
+    leftStack.addSpacer(3);
     
     // Update Time
     const dateStack = leftStack.addStack();
@@ -309,7 +309,7 @@ async function main() {
     mileageText.font = Font.mediumSystemFont(14);
     mileageText.textColor = Color.black();
     mileageText.textOpacity = 0.7;
-    leftStack.addSpacer(20);
+    leftStack.addSpacer(22);
     
     // Left Stack bar
     const barStack = leftStack.addStack();
@@ -381,7 +381,18 @@ async function main() {
     const adrStack = rightStack.addStack();
     adrStack.centerAlignContent();
     adrStack.size = new Size(setting.bottomSize, 30);
-    const addressText = adrStack.addText(endAddr);
+    
+    const jmz = {};
+    jmz.GetLength = function(str) {
+      return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
+    };  
+    const str = jmz.GetLength(endAddr);
+    if ( str <= 35 ) {
+      addressText = adrStack.addText(endAddr + ' - 当前位置属乡村、高速路或无名路段 🚫');
+    } else {
+      addressText = adrStack.addText(endAddr);
+    };
+    
     addressText.font = Font.mediumSystemFont(11.3);
     addressText.textColor = Color.black();
     addressText.textOpacity = 0.7;
