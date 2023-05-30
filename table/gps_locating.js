@@ -194,6 +194,7 @@ async function main() {
     const conversion = new Request(`https://restapi.amap.com/v3/assistant/coordinate/convert?coordsys=gps&output=json&key=${aMapkey}&locations=${endLongitude},${endLatitude}`);
     const convert = await conversion.loadJSON();
     const locations = convert.locations.split(",");
+
     return { 
       longitude: Number(locations[0]).toFixed(6),
       latitude: Number(locations[1]).toFixed(6)
@@ -219,7 +220,7 @@ async function main() {
       run: 'GPS',
       pushTime: Date.now(),
       parkingTime: GMT2,
-      coordinates: `${endLongitude},${endLatitude}`
+      coordinates: `${longitude},${latitude}`
     };
     return { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, runObj };
   };
@@ -402,7 +403,7 @@ async function main() {
     
     if ( coordinates && aMapkey ) {
       await getDistance();
-      await pushMessage(mapUrl, endLongitude, endLatitude, distance);
+      await pushMessage(mapUrl, longitude, latitude, distance);
     };
     return widget;
   }
@@ -412,7 +413,7 @@ async function main() {
    * @returns {Promise<number>}
    */
   const getDistance = async () => {
-    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=${aMapkey}&origin_type=0&strategy=38&origin=${coordinates}&destination=${endLongitude},${endLatitude}`).loadJSON();
+    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=${aMapkey}&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`).loadJSON();
     return { distance } = fence.route.paths[0];
   };
  
@@ -421,8 +422,8 @@ async function main() {
    * 判断run为GPS触发电子围栏
    * @returns {Promise<void>}
    */
-  const pushMessage = async (mapUrl, endLongitude, endLatitude, distance) => {
-    const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${endLongitude},${endLatitude}`;
+  const pushMessage = async (mapUrl, longitude, latitude, distance) => {
+    const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`;
     
     const timeAgo = new Date(Date.now() - pushTime);
     const hours = timeAgo.getUTCHours();
