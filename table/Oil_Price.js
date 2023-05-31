@@ -87,7 +87,7 @@ async function main() {
     barStack.borderWidth = 3
     //Text Color
     const titleText = barStack.addText(`${setting.province}油价`);
-    dynamic = ['#FFBF00', '#FF9500'];
+    dynamic = ['#FFBF00', '#34C759'];
     titleText.textColor = new Color(dynamic[parseInt(Math.random() * dynamic.length)]);
     titleText.font = Font.boldSystemFont(16);
     titleText.centerAlignText();
