@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-brown; icon-glyph: gas-pump;
+// icon-color: cyan; icon-glyph: gas-pump;
 /**
  * 小组件作者: 95度茅台
  * Oil price
@@ -87,7 +87,7 @@ async function main() {
     barStack.borderWidth = 3
     //Text Color
     const titleText = barStack.addText(`${setting.province}油价`);
-    dynamic = ['#FFBF00', '#34C759'];
+    dynamic = ['#FFBF00', '#FF9500'];
     titleText.textColor = new Color(dynamic[parseInt(Math.random() * dynamic.length)]);
     titleText.font = Font.boldSystemFont(16);
     titleText.centerAlignText();
