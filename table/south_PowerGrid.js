@@ -419,7 +419,10 @@ async function main() {
         draw.fillPath();
       
         const currPath = new Path();
-        const isPercent = totalPower / total;
+        let isPercent = totalPower / total;
+        if (isPercent > 1) {
+          isPercent = 1
+        }
         currPath.addEllipse(new Rect((tempBarWidth - tempBarHeight) * isPercent, 0, tempBarHeight, tempBarHeight));
         draw.addPath(currPath);
         // progressColor
@@ -447,15 +450,15 @@ async function main() {
         setting.updateTime = Date.now();
       }
     }
-    await arrearsNotice();
-    await writeSettings();
+    arrearsNotice();
+    writeSettings();
     
     // 组件实例
-    if (config.runsInWidget) {
+    if (!config.runsInWidget) {
+      await widget.presentMedium();
+    } else {
       Script.setWidget(widget);
       Script.complete();
-    } else {
-      await widget.presentMedium();
     };
     return widget;
   }
