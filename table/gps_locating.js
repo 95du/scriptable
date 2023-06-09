@@ -393,7 +393,7 @@ async function main() {
       addressText = adrStack.addText(endAddr);
     };
     
-    addressText.font = Font.mediumSystemFont(11);
+    addressText.font = Font.mediumSystemFont(11.2);
     addressText.textColor = Color.black();
     addressText.textOpacity = 0.7;
     addressText.centerAlignText();
