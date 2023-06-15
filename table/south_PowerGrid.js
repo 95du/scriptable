@@ -331,7 +331,7 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText('预计缴 ' + (arrears / total * totalPower).toFixed(2));
+    const quotaText2 = quotaStack3.addText('预计 ' + (arrears / total * totalPower).toFixed(2));
     quotaText2.font = Font.boldSystemFont(14);
     quotaText2.textOpacity = 0.7;
     quotaStack3.addSpacer();
