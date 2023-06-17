@@ -135,7 +135,7 @@ async function main() {
       videoText.widthWeight = 0.3;
       videoText.centerAligned();
       videoText.onTap = async () => {
-        await Safari.openInApp(atob('aHR0cHM6Ly9zd2VpeGluZmlsZS5oaXNlbnNlLmNvbS9tZWRpYS9NMDAvNzIvNUEvQ2g0RnlHT1l0dy1BSTI4Q0FPRDkzNDk1Y2hVMzMxLm1wNA=='),false);
+        await Safari.openInApp(atob('aHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjQ4ZGIwNGIwY2NmNmMxZjdlNzFkY2I4X3VwbG9hZC5tcDQ='),false);
       };
       table.addRow(videoRow);
       
