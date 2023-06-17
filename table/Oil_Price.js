@@ -7,6 +7,7 @@
  * UITable Version 1.0.0
  * 2023-01-03 11:30
  */
+
 async function main() {
   const uri = Script.name();
   const F_MGR = FileManager.local();
@@ -109,7 +110,7 @@ async function main() {
     dataStack2.addSpacer();
     // bar
     const barStack1 = dataStack2.addStack();
-    barStack1.setPadding(8, 8, 8, 8);
+    barStack1.setPadding(8, 15, 8, 15);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
     barStack1.borderColor = new Color('#D50000', 0.8);
