@@ -424,7 +424,7 @@ async function main() {
   
   const runWidget = async () => {  
     if (config.widgetFamily === 'medium' || config.runsInApp) {
-      await (setting.code === 0 ? getData().then(createWidget) : createErrorWidget());
+      await (setting.code === 0 ? getData().then(createWidget) : createErrWidget());
     } else {
       await smallrWidget();
     }
