@@ -91,16 +91,16 @@ async function main() {
       // interval 2
       await gapRow(table);
   
-      // videoRow
-      const videoRow = new UITableRow();
-      videoRow.height = 70;
-      const videoText = videoRow.addButton('Animusic HD Pipe Dreams Video');
-      videoText.widthWeight = 0.3;
-      videoText.centerAligned();
-      videoText.onTap = async () => {
-        await Safari.openInApp(atob('aHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjQ4ZGIwNGIwY2NmNmMxZjdlNzFkY2I4X3VwbG9hZC5tcDQ='), false);
+      // telegramRow
+      const telegramRow = new UITableRow();
+      telegramRow.height = 70;
+      const telegram = telegramRow.addButton('加入 Scriptable 小组件交流群');
+      telegram.widthWeight = 0.3;
+      telegram.centerAligned();
+      telegram.onTap = async () => {
+        Safari.openInApp('https://t.me/+CpAbO_q_SGo2ZWE1', false);
       };
-      table.addRow(videoRow);
+      table.addRow(telegramRow);
   
       // bottom interval
       const bottom = new UITableRow();
