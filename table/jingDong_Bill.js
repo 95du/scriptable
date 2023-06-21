@@ -145,7 +145,6 @@ async function main() {
     }
   }
   
-  
   // inRank & outRank
   const Run = async () => {
     if (statistics === 0) {
@@ -323,7 +322,7 @@ async function main() {
     midLeftStack.addSpacer(7);
     
     const inStack2 = midLeftStack.addStack();
-    const inAmountText = inStack2.addText(income.totalAmount);
+    const inAmountText = inStack2.addText(income.responseCode == 00000 ? income.totalAmount : '0.00');
     inAmountText.font = Font.boldSystemFont(20);
     inAmountText.leftAlignText();
     inAmountText.textOpacity = 0.9;
@@ -355,7 +354,7 @@ async function main() {
 
     const outStack2 = midRightStack.addStack();
     outStack2.addSpacer();
-    const outAmountText = outStack2.addText(expend.totalAmount)
+    const outAmountText = outStack2.addText(expend.responseCode == 00000 ? expend.totalAmount : '0.00');
     outAmountText.font = Font.boldSystemFont(20);
     outAmountText.rightAlignText();
     outAmountText.textOpacity = 0.9;
@@ -464,7 +463,7 @@ async function main() {
       await smallrWidget();
     }
   }
-  runWidget();
+  await runWidget();
   
   /**-------------------------**/
      /** Request(url) json **/
