@@ -137,7 +137,7 @@ const getImage = async (url) => {
   
 // 获取图片，使用缓存
 const getCacheImage = async (name, url) => {
-  const cache = useFileManager({ cacheTime: 24 });
+  const cache = useFileManager({ cacheTime: 1024 });
   const image = cache.readImage(name);
   if (image) {
     return image;
@@ -186,7 +186,12 @@ const createWidget = async () => {
     location: await getLocation()
   });
   
-  const { note, imgUrl } = await getOneWord();
+  try {
+    const { note, imgUrl } = await getOneWord();
+  } catch {
+    note = '暂无内容'
+    imgUrl = 'https://html5.moji.com/tpd/mojiweatheraggr/index.html#/home'
+  }
   
   const widget = new ListWidget();
   widget.backgroundImage = fm.readImage(getBgImagePath());
@@ -264,8 +269,7 @@ async function runScriptable() {
 };
 
 async function getJson(url) {
-  const req = await new Request(url)
-  return await req.loadJSON();
+  return await new Request(url).loadJSON();
 };
 
 const downloadModule = async (scriptName, url) => {
@@ -299,7 +303,7 @@ const presentMenu = async() => {
     await fm.remove(path);
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
-      await fm.remove(bgImage);
+      fm.remove(bgImage);
     }
     await runScriptable();
   }
