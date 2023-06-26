@@ -186,12 +186,7 @@ const createWidget = async () => {
     location: await getLocation()
   });
   
-  try {
-    const { note, imgUrl } = await getOneWord();
-  } catch {
-    note = '暂无内容'
-    imgUrl = 'https://html5.moji.com/tpd/mojiweatheraggr/index.html#/home'
-  }
+  const { note, imgUrl } = await getOneWord();
   
   const widget = new ListWidget();
   widget.backgroundImage = fm.readImage(getBgImagePath());
