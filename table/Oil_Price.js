@@ -17,17 +17,10 @@ async function main() {
   const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
   const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
   
-  try {  
-    const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-    forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
-  } catch(e) { 
-    console.log(e)
-    forecast = setting.oil;
-  }
-  
   if (F_MGR.fileExists(cacheFile)) {
-    data = F_MGR.readString(cacheFile);
-    setting = JSON.parse(data);
+    setting = JSON.parse(
+      F_MGR.readString(cacheFile)
+    );
     if (setting.oil === undefined) {
       F_MGR.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
       setting = JSON.parse(
@@ -38,7 +31,16 @@ async function main() {
     req.method = 'POST'
     req.body = `region=${setting.province}`
     const res = await req.loadJSON();
-    oil = res.data
+    oil = res.data;
+    
+    try {  
+      const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
+      forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+    } catch(e) { 
+      console.log(e);
+      forecast = setting.oil;
+    }
+    
     widget = await createWidget(oil);
   }
   
