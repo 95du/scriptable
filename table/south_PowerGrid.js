@@ -357,19 +357,19 @@ async function main() {
     
     const lastMonth = ('0' + (new Date().getMonth() || 12)).slice(-2);
     const previousMonth = ('0' + (new Date().getMonth() - 1 || 12)).slice(-2);
-
-    const billText = billStack1.addText(`${Year}-${selectBill() ? lastMonth : previousMonth}`)
+  
+    const billText = billStack1.addText(`${Year}-${Number.isFinite(selectBill()) ? lastMonth : previousMonth}`);
     billText.font = Font.mediumSystemFont(14);
     billText.textOpacity = 0.7;
     billStack.addSpacer(3);
     
-    billStack2 = billStack.addStack();
+    const billStack2 = billStack.addStack();
     billStack2.addSpacer();
     const bill = billStack2.addText(total + ' °');
     bill.font = Font.boldSystemFont(18);
     billStack.addSpacer(3);
     
-    billStack3 = billStack.addStack();
+    const billStack3 = billStack.addStack();
     billStack3.addSpacer();
     const billText2 = billStack3.addText(arrears); 
     billText2.font = Font.boldSystemFont(14);
