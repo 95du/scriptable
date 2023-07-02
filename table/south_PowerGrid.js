@@ -357,8 +357,8 @@ async function main() {
     
     const lastMonth = ('0' + (new Date().getMonth() || 12)).slice(-2);
     const previousMonth = ('0' + (new Date().getMonth() - 1 || 12)).slice(-2);
-  
-    const billText = billStack1.addText(`${Year}-${Number.isFinite(selectBill()) ? lastMonth : previousMonth}`);
+    
+    const billText = billStack1.addText(`${Year}-${pay > 0 ? lastMonth : previousMonth}`);
     billText.font = Font.mediumSystemFont(14);
     billText.textOpacity = 0.7;
     billStack.addSpacer(3);
