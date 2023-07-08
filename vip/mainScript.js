@@ -609,7 +609,7 @@ async function main() {
     /** 头像结束 **/
     
     body {
-      margin: 73px 0;
+      margin: 85px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
