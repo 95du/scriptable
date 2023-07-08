@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = '组件商店'
@@ -565,6 +565,19 @@ async function main() {
       padding: 0 10px;
     }
     
+    .popup-title {
+      text-align: center;
+      font-size: 20px;
+      margin-top: -18px;
+      margin-bottom: 5px;
+      font-weight: 420;
+    }
+    
+    .update-content {
+      text-align: center;
+      font-size: 16px;
+    }
+    
     /** 头像开始 **/
     
     .form-item-auth {
@@ -597,13 +610,8 @@ async function main() {
     
     /** 头像结束 **/
     
-    * {
-      -webkit-user-select: none;
-      user-select: none;
-    }
-    
     body {
-      margin: 75px 0;
+      margin: 85px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -611,11 +619,6 @@ async function main() {
       line-height: 1.42857143;
       color: #333;
       background: #f2f2f7;
-    }
-    
-    input {
-      -webkit-user-select: auto;
-      user-select: auto;
     }
 
     button {
@@ -644,19 +647,6 @@ async function main() {
       border-radius: var(--card-radius);
       border-radius: 12px;
       overflow: hidden;
-    }
-    
-    .popup-title {
-      text-align: center;
-      font-size: 20px;
-      margin-top: -18px;
-      margin-bottom: 5px;
-      font-weight: 420;
-    }
-    
-    .update-content {
-      text-align: center;
-      font-size: 16px;
     }
     
     .custom-iframe {
@@ -880,8 +870,7 @@ async function main() {
           label.appendChild(button);
         }
         label.addEventListener('click', (e) => {
-          const { name } = item;
-          invoke(name, item);
+          invoke(item.name, item);
         });
       } else {
         const input = document.createElement("input")
@@ -1109,7 +1098,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         case 'effect':
           const view = new WebView();
           view.loadURL('https://gitcode.net/4qiao/framework/raw/master/img/picture/Example.png');
-          await view.present();
+          view.present();
           break;
       };
       await injectListener();
