@@ -596,7 +596,7 @@ async function main() {
     .form-item-auth-desc {
       margin: 0px 12px;
       font-size: 14px;
-      font-weight: 400;
+      font-weight: 380;
     }
     
     .form-label-author-avatar {
@@ -1094,7 +1094,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           break;
         case 'effect':
           const view = new WebView();
-          view.loadURL('https://gitcode.net/4qiao/framework/raw/master/img/picture/Example.png');
+          await view.loadURL('https://gitcode.net/4qiao/framework/raw/master/img/picture/Example.png');
           view.present();
           break;
       };
