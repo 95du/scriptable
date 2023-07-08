@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-main()
+
 async function main() {
   const uri = Script.name();
   const scriptName = '组件商店'
@@ -1075,9 +1075,8 @@ document.getElementById('telegram').addEventListener('click', () => {
         await clearCache();
       } else if (code !== 'telegram' && data.scrUrl) {
         const { label } = data;
-        const fm = FileManager.iCloud();
-
         try {
+          const fm = FileManager.iCloud();
           const script = await new Request(data.scrUrl).loadString();
           fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
           Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
