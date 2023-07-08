@@ -362,7 +362,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -75%;
+      top: -78%;
     }
     
     .modal-backdrop {
@@ -942,6 +942,11 @@ document.getElementById('telegram').addEventListener('click', () => {
       invoke('telegram');
     });    
     
+    // 延迟加载图片?
+    const myGif = document.querySelector('.full-width-image');
+    myGif.src = myGif.getAttribute('data-src');  
+    myGif.removeAttribute('data-src');
+    
   })()`;
 
     // 主菜单头像信息
@@ -949,7 +954,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       const avatarHtml = `    
       <div class="list">
         <form class="list__body" action="javascript:void(0);">
-          <img class="full-width-image" data-src="${rootUrl}img/picture/widget.gif" />
+          <img class="full-width-image signin-loader" data-src="${rootUrl}img/picture/widget.gif" />
           <label class="but form-item-auth form-item--link">
             <div class="form-label">
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
@@ -963,12 +968,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             </div>
           </label>
         </form>
-      </div>  
-      <script>
-        const myGif = document.querySelector('.full-width-image');
-        myGif.src = myGif.getAttribute('data-src');  
-        myGif.removeAttribute('data-src');
-      </script>`;
+      </div>`;
       
       const popup = `      
       <div class="modal fade" id="u_sign" role="dialog">
