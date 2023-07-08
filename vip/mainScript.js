@@ -583,7 +583,7 @@ async function main() {
       align-items: center;
       justify-content: space-between;
       min-height: 3.8em;
-      padding: 0.5em 18px;
+      padding: 0.8em 18px;
       position: relative;
     }
     
@@ -606,10 +606,21 @@ async function main() {
       border: 1px solid #F6D377;
     }
     
+    .centered-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 0px;
+    }
+    
+    .full-width-image {
+      width: 100%;
+    }
+    
     /** 头像结束 **/
     
     body {
-      margin: 85px 0;
+      margin: 70px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -938,13 +949,13 @@ document.getElementById('telegram').addEventListener('click', () => {
       const avatarHtml = `    
       <div class="list">
         <form class="list__body" action="javascript:void(0);">
-          <label class="but form-item-auth form-item--link" >
+          <img class="full-width-image" data-src="${rootUrl}img/picture/widget.gif" />
+          <label class="but form-item-auth form-item--link">
             <div class="form-label">
-              <img class="signin-loader form-label-author-avatar" src="${authorAvatar}"/>
-              <div id="telegram">
+              <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
+              <div id="telegram" >
                 <div class="form-item-auth-name">95度茅台</div>
-                <div class="form-item-auth-desc">加入 Scriptable小 组件交流群
-                </div>
+                <div class="form-item-auth-desc">加入 Scriptable小 组件交流群</div>
               </div>
             </div>
             <div class="form-label">
@@ -952,7 +963,12 @@ document.getElementById('telegram').addEventListener('click', () => {
             </div>
           </label>
         </form>
-      </div> `;
+      </div>  
+      <script>
+        const myGif = document.querySelector('.full-width-image');
+        myGif.src = myGif.getAttribute('data-src');  
+        myGif.removeAttribute('data-src');
+      </script>`;
       
       const popup = `      
       <div class="modal fade" id="u_sign" role="dialog">
