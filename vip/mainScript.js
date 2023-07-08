@@ -42,8 +42,6 @@ async function main() {
    */
   const DEFAULT_SETTINGS = {
     version,
-    update: true,
-    topStyle: true,
     music: true,
     bufferTime: 240
   };
