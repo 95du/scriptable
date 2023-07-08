@@ -1,20 +1,22 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: red; icon-glyph: cloud-download-alt;
+// icon-color: pink; icon-glyph: cloud-download-alt;
 /**
-* 框架修改自：@DmYY
-* DmYY订阅地址：https://raw.githubusercontent.com/dompling/Scriptable/master/install.json
-* 感谢 @LSP 的帮助
-* LSP订阅地址：https://gitcode.net/enoyee/scriptable/-/raw/master/install/package.json
-* 95度茅台订阅地址 : https://gitcode.net/4qiao/framework/raw/master/scriptable/install.json
-⚠️ 如运行报错，在 iCloud 里的 Scriptable 文件夹删除 95duSub
-*/
+ * 组件名称: 小组件商店
+ * 小组件作者: 95度茅台
+ * Version 1.0.0
+ * 2023-07-07
+ */
 
-const scriptName = '95duSub';
-const scriptUrl = atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5TY3JpcHQuanM=');
+const scriptName = '95du_store';
+const scriptUrl = atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci9hcGkvbWFpbl85NWR1U2NyaXB0Lmpz');
+const fm = FileManager.local();
+const runPath = fm.joinPath(fm.documentsDirectory(), scriptName);
+if (!fm.fileExists(runPath)) {
+  fm.createDirectory(runPath);
+}
 
-const fm = FileManager.iCloud();
-const moduleDir = fm.joinPath(fm.documentsDirectory(), scriptName);
+const moduleDir = fm.joinPath(fm.documentsDirectory(), `${scriptName}/Running`);
 if (!fm.fileExists(moduleDir)) {
   fm.createDirectory(moduleDir);
 }
@@ -22,14 +24,13 @@ if (!fm.fileExists(moduleDir)) {
 const modulePath = await downloadModule(scriptName, scriptUrl);
 if (modulePath != null) {
   const importedModule = importModule(modulePath);
-  await importedModule.main();
+  importedModule.main();
 }
-
 
 async function downloadModule(scriptName, scriptUrl) {
   const date = new Date();
   const df = new DateFormatter();
-  df.dateFormat = 'yyyyMMddHHmm';
+  df.dateFormat = 'yyyyMMddHH';
   const moduleFilename = df.string(date).toString() + '.js';
   const modulePath = fm.joinPath(moduleDir, moduleFilename);
   if (fm.fileExists(modulePath)) {
@@ -49,6 +50,7 @@ async function downloadModule(scriptName, scriptUrl) {
       }
       return modulePath;
     } else {
+      console.log('Failed to download new module. Using latest local version: ' + moduleLatestFile);
       return (moduleLatestFile != null) ? fm.joinPath(moduleDir, moduleLatestFile) : null;
     }
   }
