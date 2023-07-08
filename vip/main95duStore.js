@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = '组件商店'
@@ -611,7 +611,7 @@ async function main() {
     /** 头像结束 **/
     
     body {
-      margin: 85px 0;
+      margin: 73px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -1129,7 +1129,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         items: [
           {
             label: '中国电信_2',
-            desc: '剩余余额、流量和语音',
+            desc: '剩余流量、流量和余额',
             rightDesc: '1.0.5',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleTelecom.js',
@@ -1159,7 +1159,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         items: [
           {
             label: '中国电信',
-            desc: '剩余余额、流量和语音',
+            desc: '剩余流量、流量和余额',
             rightDesc: '1.0.3',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/bottomBar.js',
