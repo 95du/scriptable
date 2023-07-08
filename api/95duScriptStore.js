@@ -9,7 +9,7 @@
  */
 
 const scriptName = '95du_store';
-const scriptUrl = atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci9hcGkvbWFpbl85NWR1U2NyaXB0Lmpz');
+const scriptUrl = atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlLy0vcmF3L21hc3Rlci92aXAvbWFpbjk1ZHVTdG9yZS5qcw==');
 const fm = FileManager.local();
 const runPath = fm.joinPath(fm.documentsDirectory(), scriptName);
 if (!fm.fileExists(runPath)) {
