@@ -611,7 +611,7 @@ async function main() {
     /** 头像结束 **/
     
     body {
-      margin: 85px 0;
+      margin: 73px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -1075,9 +1075,8 @@ document.getElementById('telegram').addEventListener('click', () => {
         await clearCache();
       } else if (code !== 'telegram' && data.scrUrl) {
         const { label } = data;
-        const fm = FileManager.iCloud();
-
         try {
+          const fm = FileManager.iCloud();
           const script = await new Request(data.scrUrl).loadString();
           fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
           Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
@@ -1129,7 +1128,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         items: [
           {
             label: '中国电信_2',
-            desc: '剩余余额、流量和语音',
+            desc: '剩余流量、流量和余额',
             rightDesc: '1.0.5',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleTelecom.js',
@@ -1159,7 +1158,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         items: [
           {
             label: '中国电信',
-            desc: '剩余余额、流量和语音',
+            desc: '剩余流量、流量和余额',
             rightDesc: '1.0.3',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/bottomBar.js',
