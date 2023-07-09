@@ -273,6 +273,11 @@ async function main() {
       `${rootUrl}img/icon/4qiao.png`
     ));
     
+    const gifImage = await toBase64(await getCacheImage(
+      `gifImage.gif`,
+      `${rootUrl}img/picture/widget.gif`
+    ));
+    
     const scripts = ['jquery.min.js', 'bootstrap.min.js', 'loader.js'];
     const scriptTags = await Promise.all(scripts.map(async (script) => {
       const content = await getCacheString(script, `${rootUrl}web/${script}`);
@@ -940,25 +945,20 @@ async function main() {
       
 document.getElementById('telegram').addEventListener('click', () => {
       invoke('telegram');
-    });    
-    
-    // 延迟加载图片?
-    const myGif = document.querySelector('.full-width-image');
-    myGif.src = myGif.getAttribute('data-src');  
-    myGif.removeAttribute('data-src');
+    });
     
   })()`;
 
     // 主菜单头像信息
     const mainMenuTop = async () => {
-      const avatarHtml = `    
+      const avatarHtml = `      
       <div class="list">
         <form class="list__body" action="javascript:void(0);">
-          <img class="full-width-image signin-loader" data-src="${rootUrl}img/picture/widget.gif" />
+          <img class="full-width-image signin-loader" src="${gifImage}" data-src="${rootUrl}img/picture/widget.gif">
           <label class="but form-item-auth form-item--link">
             <div class="form-label">
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
-              <div id="telegram" >
+              <div id="telegram">
                 <div class="form-item-auth-name">95度茅台</div>
                 <div class="form-item-auth-desc">加入 Scriptable小 组件交流群</div>
               </div>
@@ -968,7 +968,14 @@ document.getElementById('telegram').addEventListener('click', () => {
             </div>
           </label>
         </form>
-      </div>`;
+      </div>
+      <script>
+        function loadImages() {
+          const myGif = document.querySelector('.full-width-image');
+          myGif.src = myGif.getAttribute('data-src');
+        }
+        setTimeout(loadImages, 2000);
+      </script>`;
       
       const popup = `      
       <div class="modal fade" id="u_sign" role="dialog">
