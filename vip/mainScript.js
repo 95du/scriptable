@@ -1,12 +1,12 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = '组件商店'
-  const version = '1.0.0'
-  const updateDate = '2023年07月07日'
+  const version = '1.0.1'
+  const updateDate = '2023年07月09日'
   
   const rootUrl = atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9mcmFtZXdvcmsvcmF3L21hc3Rlci8=');
 
@@ -983,12 +983,12 @@ document.getElementById('telegram').addEventListener('click', () => {
       <div class="list">
         <form class="list__body" action="javascript:void(0);">
           <img class="full-width-image signin-loader" src="${gifImage}" data-src="${rootUrl}img/picture/widget.gif">
-          <label class="but form-item-auth form-item--link">
+          <label class="form-item-auth form-item--link">
             <div class="form-label">
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
               <div id="telegram">
                 <div class="form-item-auth-name">95度茅台</div>
-                <div class="form-item-auth-desc">加入 Scriptable小 组件交流群</div>
+                <a class="but form-item-auth-desc">点击加入 Scriptable小 组件交流群</a>
               </div>
             </div>
             <div class="form-label">
