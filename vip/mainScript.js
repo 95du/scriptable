@@ -43,7 +43,7 @@ async function main() {
   const DEFAULT_SETTINGS = {
     version,
     music: true,
-    bufferTime: 240
+    bufferTime: 150
   };
   
   const getSettings = (file) => {
@@ -257,6 +257,7 @@ async function main() {
     const {
       formItems = [],
       head,
+      avatarInfo,
       $ = 'https://www.imarkr.com'
     } = options;
     
@@ -457,26 +458,12 @@ async function main() {
       --this-bg: linear-gradient(135deg, #59c3fb 10%, #268df7 100%);
     }
     
-    .jb-cyan {
-      --this-bg: linear-gradient(140deg, #039ab3 10%, #58dbcf 90%);
-    }
-    
     .jb-green,.order-type-5 .pay-tag {
       --this-bg: linear-gradient(135deg, #60e464 10%, #5cb85b 100%);
     }
     
     .jb-purple,.order-type-6 .pay-tag {
       --this-bg: linear-gradient(135deg, #f98dfb 10%, #ea00f9 100%);
-    }
-    
-    .jb-vip1,.order-type-4 .pay-tag {
-      --this-bg: linear-gradient(25deg, #eabe7b 10%, #f5e3c7 70%, #edc788 100%);
-      --this-color: #866127;
-    }
-    
-    .jb-vip2,.order-type-8 .pay-tag {
-      --this-bg: linear-gradient(317deg, #4d4c4c 30%, #7b7b7b 70%, #5f5c5c 100%);
-      --this-color: #ddd;
     }
     
     .tab-nav-theme li:before, .title-h-center:before, .title-h-left:before, .title-theme:before, .wp-posts-content>h1.has-text-align-center:before, .wp-posts-content>h1.wp-block-heading:before, .wp-posts-content>h1:not([class]):before, .wp-posts-content>h2.has-text-align-center:before, .wp-posts-content>h2.wp-block-heading:before, .wp-posts-content>h2:not([class]):before, .wp-posts-content>h3.has-text-align-center:before, .wp-posts-content>h3.wp-block-heading:before, .wp-posts-content>h3:not([class]):before, .wp-posts-content>h4.has-text-align-center:before, .wp-posts-content>h4.wp-block-heading:before, .wp-posts-content>h4:not([class]):before, .zib-widget>h3:before {
@@ -667,24 +654,23 @@ async function main() {
       height: 0px;
     }
     
+    .form-item,
     .from-music {
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 16px;
-      min-height: 2.2em;
-      padding: 0.3em 20px 0.3em 8px;
       position: relative;
     }
     
     .form-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 16px;
       min-height: 3.8em;
       padding: 0.3em 20px;
-      position: relative;
+    }
+    
+    .from-music {
+      min-height: 2.2em;
+      padding: 0.3em 20px 0.3em 8px;
     }
     
     .form-item + .form-item::before {
@@ -784,6 +770,15 @@ async function main() {
       text-decoration: none;
     }
     
+    .preview.loading {
+      pointer-events: none;
+    }
+    
+    .icon-loading {
+      display: inline-block;
+      animation: 1s linear infinite spin;
+    }
+    
     @keyframes spin {
       0% {
         transform: rotate(0);
@@ -833,11 +828,14 @@ async function main() {
     const createFormItem = ( item ) => {
       const value = settings[item.name] ?? item.default ?? null
       formData[item.name] = value;
-      const label = document.createElement("label");
-      const className = item.type === 'cell' || item.type === 'switch' ? "from-music" : "form-item";
-      label.className = className;
+      
+      const label = document.createElement("label");  
+      label.classList.add("form-item");
+      if (item.type !== 'button') {
+        label.classList.add("from-music");
+      }
       label.dataset.name = item.name;
-        
+      
       const div = document.createElement("div");
       div.className = 'form-label';
       label.appendChild(div);
@@ -863,7 +861,7 @@ async function main() {
       }
       div.appendChild(divWrapper);
       
-      if ( item.type === 'cell' || item.type === 'button' ) {
+      if ( item.type === 'cell' || item.type === 'button' || item.type === 'page' ) {
         if ( item.rightDesc ) {
           const desc = document.createElement("div");
           desc.className = 'form-item-right-desc';
@@ -871,8 +869,7 @@ async function main() {
           label.appendChild(desc);
         }
         
-        label.classList.add('form-item--link');
-        if (item.type === 'cell') {
+        if ( item.type === 'cell' || item.type === 'page' ) {
           const icon = document.createElement('i');
           icon.className = 'iconfont icon-arrow_right'
           label.appendChild(icon);
@@ -884,7 +881,9 @@ async function main() {
           label.appendChild(button);
         }
         label.addEventListener('click', (e) => {
-          invoke(item.name, item);
+          const { name } = item;
+          const methodName = name === 'effect' ? 'itemClick' : name;
+          invoke(methodName, item);
         });
       } else {
         const input = document.createElement("input")
@@ -911,7 +910,7 @@ async function main() {
       return label;
     };
   
-    const createList = (list, title) => {
+    const createList = ( list, title ) => {
       const fragment = document.createDocumentFragment()
   
       let elBody;
@@ -920,10 +919,10 @@ async function main() {
           const grouped = createList(item.items, item.label)
           fragment.appendChild(grouped)
         } else {
-          if (!elBody) {
+          if ( !elBody ) {
             const groupDiv = fragment.appendChild(document.createElement('div'))
             groupDiv.className = 'list'
-            if (title) {
+            if ( title ) {
               const elTitle = groupDiv.appendChild(document.createElement('div'))
               elTitle.className = 'list__header'
               elTitle.textContent = title
@@ -939,6 +938,35 @@ async function main() {
     };
     const fragment = createList(formItems);
     document.getElementById('settings').appendChild(fragment);
+    
+    /** loading **/  
+    const toggleLoading = (e) => {
+      const target = e.currentTarget;
+      target.classList.add('loading')
+      const icon = target.querySelector('.iconfont');
+      const className = icon.className;
+      icon.className = 'iconfont icon-loading';
+    
+      const listener = (event) => {
+        if (event.detail.code) {
+          target.classList.remove('loading');
+          icon.className = className;
+          window.removeEventListener(
+            'JWeb', listener
+          );
+        }
+      };
+      window.addEventListener('JWeb', listener);
+    };
+    
+    document.querySelectorAll('.form-item').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const item = e.currentTarget.dataset.name;
+        if ( item === 'page' || btn.classList.contains('from-music') || item === 'effect' ) {
+          toggleLoading(e);
+        }
+      });
+    });
     document.getElementById('clearCache').addEventListener('click', () => {
       invoke('clearCache');
     });
@@ -977,6 +1005,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         setTimeout(loadImages, 2000);
       </script>`;
       
+      //弹窗
       const popup = `      
       <div class="modal fade" id="u_sign" role="dialog">
         <div class="modal-dialog">
@@ -1038,7 +1067,25 @@ document.getElementById('telegram').addEventListener('click', () => {
       `
     };
     
-    // HTML
+    // 组件效果图
+    const previewEffectImgHtml = async () => {
+      const previewImgUrl = [  
+        `${rootUrl}img/picture/Example.png`,
+        `${rootUrl}img/picture/Example_1.png`
+      ];
+      const previewImgs = await Promise.all(previewImgUrl.map(async (item) => {
+        const imgName = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
+        const previewImg = await toBase64(await getCacheImage(imgName, item));
+        return previewImg;
+      }));
+      return `
+        <div>
+          ${previewImgs.map((img) => `<img src="${img}">`).join('')}
+        </div>
+      `
+    };
+    
+    /** HTML **/
     const html =`
     <html>
       <head>
@@ -1047,7 +1094,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         <style>${style}</style>
       </head>
       <body class="${themeColor}-theme nav-fixed site-layout-1">
-        ${await mainMenuTop()}
+        ${avatarInfo ? await mainMenuTop() : await previewEffectImgHtml()}
         ${head || ''}
         <section id="settings">
         </section>
@@ -1115,11 +1162,33 @@ document.getElementById('telegram').addEventListener('click', () => {
           Object.assign(settings, data);
           writeSettings(settings);
           break;
-        case 'effect':
-          const view = new WebView();
-          await view.loadURL('https://gitcode.net/4qiao/framework/raw/master/img/picture/Example.png');
-          view.present();
+        case 'itemClick':
+          if (data.type === 'page') {
+            const item = (() => {
+              const find = (i) => {
+                for (const el of i) {
+                  if (el.name === data.name) return el
+                  if (el.type === 'group') {
+                    const r = find(el.items);
+                    if (r) return r
+                  }
+                }
+                return null
+              };
+              return find(formItems)
+            })();
+            await renderAppView(item, false, { settings });
+          } else {
+            await onItemClick?.(data, { settings });
+          }
           break;
+      };
+      // Remove Event Listener
+      if ( event ) {
+        webView.evaluateJavaScript(
+          "window.dispatchEvent(new CustomEvent('JWeb', { detail: { code: 'finishLoading' } }))",
+          false
+        );
       };
       await injectListener();
     };
@@ -1132,6 +1201,7 @@ document.getElementById('telegram').addEventListener('click', () => {
   
   // 主菜单
   await renderAppView({
+    avatarInfo: true,
     formItems: [
       {
         type: 'group',
@@ -1139,7 +1209,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '组件效果图',
             name: 'effect',
-            type: 'cell'
+            type: 'page'
           }
         ]
       },
