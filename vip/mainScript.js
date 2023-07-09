@@ -368,7 +368,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -78%;
+      top: -83%;
     }
     
     .modal-backdrop {
@@ -607,6 +607,7 @@ async function main() {
     
     .full-width-image {
       width: 100%;
+      height: 225px;
     }
     
     /** 头像结束 **/
