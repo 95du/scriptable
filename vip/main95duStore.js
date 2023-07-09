@@ -715,7 +715,7 @@ async function main() {
     
     .form-label-title {
       margin-left: 12px;
-      font-weight: 400;
+      font-weight: 420;
     }
     
     .form-label-desc {
