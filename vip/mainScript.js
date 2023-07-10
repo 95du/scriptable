@@ -720,7 +720,7 @@ async function main() {
     
     .form-label-desc {
       margin: 0px 12px;
-      font-size: 12px;
+      font-size: 13px;
       color: #86868b;
     }
     
@@ -1274,7 +1274,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           },
           {
             label: '负一屏底栏',
-            desc: '高仿通知样式，未来两小时天气',
+            desc: '显示未来两小时天气',
             rightDesc: '1.2.0',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/bottomBar.js',
@@ -1282,7 +1282,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           },
           {
             label: '南网在线',
-            desc: '昨日用电量，月用电量，账单',
+            desc: '昨日用电量，账单',
             rightDesc: '1.0.1',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_south_PowerGrid.js',
@@ -1306,7 +1306,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           },
           {
             label: '澳门六合彩',
-            desc: '新旧版澳门六合彩每日开奖结果',
+            desc: '新旧版每日开奖结果',
             rightDesc: '1.0.2',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
@@ -1320,7 +1320,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         items: [
           {
             label: 'JD_刘强冬',
-            desc: '京豆、白条额度、农场、签到等',
+            desc: '京豆、农场、签到等',
             rightDesc: '1.0.5',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleJD.js',
@@ -1328,7 +1328,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           },
           {
             label: '京东收支账单',
-            desc: '京东收支账单、白条、总资产',
+            desc: '每月收支账单、白条',
             rightDesc: '1.0.3',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleJD_Bill.js',
@@ -1344,7 +1344,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           },
           {
             label: '京东小金库',
-            desc: '资产，累积收益等',
+            desc: '资产，累积收益',
             rightDesc: '1.0.0',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_jd_finance.js',
@@ -1366,7 +1366,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         items: [
           {
             label: 'JD_SchemeUrl',
-            desc: '跳转京东App指定页面URL',
+            desc: '跳转京东App指定页面',
             rightDesc: '1.0.0',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/jd_schemeUrl.js',
