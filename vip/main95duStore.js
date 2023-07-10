@@ -368,7 +368,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -83%;
+      top: -82%;
     }
     
     .modal-backdrop {
@@ -563,9 +563,14 @@ async function main() {
       font-weight: 420;
     }
     
-    .update-content {
+    .update-version {
       text-align: center;
       font-size: 16px;
+    }
+    
+    .update-content {
+      margin-left: 12px;
+      font-weight: 400;
     }
     
     /** 头像开始 **/
@@ -1018,12 +1023,12 @@ document.getElementById('telegram').addEventListener('click', () => {
               <div class="title-h-center fa-2x popup-title">
                 ${scriptName}
               </div>
-              <a class="muted-color px30 update-content">
+              <a class="muted-color px30 update-version">
                 <div class="but">
                   Version ${version}
                 </div>
               </a><br>
-              <div class="form-label-title"> <li>${updateDate}&nbsp;🔥</li> <li>Scriptable桌面小组件</li> <li>更多组件敬请期待</li>
+              <div class="update-content"> <li>${updateDate}&nbsp;🔥</li> <li>Scriptable桌面小组件</li> <li>性能优化，改进用户体验</li>
               </div>
             </div>
             <div class="box-body">
