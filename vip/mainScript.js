@@ -313,6 +313,7 @@ async function main() {
       --color-primary: #007aff;
       --divider-color: rgba(60,60,67,0.36);
       --card-background: #fff;
+      --desc-background: #86868b;
       --card-radius: 10px;
       --list-header-color: rgba(60,60,67,0.6);
     }
@@ -361,14 +362,14 @@ async function main() {
     
     .modal-open .modal {
       overflow-x: hidden;
-      overflow-y: auto;
+      /* overflow-y: auto; 纵向滑动 */
     }
     
-    .modal-dialog {
+   .modal-dialog {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -82%;
+      top: -133%; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -389,7 +390,11 @@ async function main() {
       opacity: .5;
     }
     
-    /* style 间隔 f04494 */    
+    .modal-open {
+      overflow: hidden;
+    }
+    
+    /* 弹窗 body f04494 */    
     
     body {
       --theme-color: #ff6800;
@@ -454,16 +459,17 @@ async function main() {
       --this-bg: linear-gradient(135deg, #f59f54 10%, #ff6922 100%);
     }
     
-    .jb-blue,.order-type-7 .pay-tag {
-      --this-bg: linear-gradient(135deg, #59c3fb 10%, #268df7 100%);
-    }
-    
     .jb-green,.order-type-5 .pay-tag {
       --this-bg: linear-gradient(135deg, #60e464 10%, #5cb85b 100%);
     }
     
     .jb-purple,.order-type-6 .pay-tag {
       --this-bg: linear-gradient(135deg, #f98dfb 10%, #ea00f9 100%);
+    }
+    
+    .jb-vip1,.order-type-4 .pay-tag {  
+      --this-bg: linear-gradient(25deg, #eabe7b 10%, #f5e3c7 70%, #edc788 100%);
+      --this-color: #866127;
     }
     
     .tab-nav-theme li:before, .title-h-center:before, .title-h-left:before, .title-theme:before, .wp-posts-content>h1.has-text-align-center:before, .wp-posts-content>h1.wp-block-heading:before, .wp-posts-content>h1:not([class]):before, .wp-posts-content>h2.has-text-align-center:before, .wp-posts-content>h2.wp-block-heading:before, .wp-posts-content>h2:not([class]):before, .wp-posts-content>h3.has-text-align-center:before, .wp-posts-content>h3.wp-block-heading:before, .wp-posts-content>h3:not([class]):before, .wp-posts-content>h4.has-text-align-center:before, .wp-posts-content>h4.wp-block-heading:before, .wp-posts-content>h4:not([class]):before, .zib-widget>h3:before {
@@ -726,7 +732,7 @@ async function main() {
     .form-label-desc {
       margin: 0px 12px;
       font-size: 13px;
-      color: #86868b;
+      color: var(--desc-background);
     }
     
     input[type='checkbox'][role='switch'] {
@@ -776,6 +782,66 @@ async function main() {
       text-decoration: none;
     }
     
+    /* AppStore 样式 */
+    .app {
+      background: var(--card-background);
+      border-radius: var(--card-radius);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  
+    .app-head {
+      display: flex;
+      padding: 18px 20px;
+    }
+    
+    .app-icon {
+      width: 60px;
+      height: 60px;
+      background: #eee;
+      border-radius: 13px;
+      object-fit: cover;
+    }
+    
+    .app-right {
+      margin-left: 1em;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .app-name {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .app-desc {
+      font-size: 0.85em;
+      color: var(--desc-background);
+    }
+    
+    .app-score {
+      font-size: 0.75em;
+      color: var(--desc-background);
+    }
+    
+    .app-imgs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 0.7rem;
+      padding: 0 1.25rem 1.125rem 1.25rem;
+    }
+    
+    .app-img {
+      width: 100%;
+      aspect-ratio: 392 / 848;
+      background: #eee;
+      border-radius: 0.8rem;
+      object-fit: cover;
+    }
+    /* AppStore 结束 */
+    
     .preview.loading {
       pointer-events: none;
     }
@@ -801,8 +867,9 @@ async function main() {
         --card-background: #1c1c1e;
         --list-header-color: rgba(235,235,245,0.6);
         --checkbox: #454545;
+        --desc-background: darkGrey;
       }
-        
+      
       .white-theme, .dark-theme {
         --blur-bg: rgba(50, 51, 53, 0.8);
       }
@@ -868,18 +935,16 @@ async function main() {
       div.appendChild(divWrapper);
       
       if ( item.type === 'cell' || item.type === 'button' || item.type === 'page' ) {
-        if ( item.rightDesc ) {
-          const desc = document.createElement("div");
-          desc.className = 'form-item-right-desc';
-          desc.innerText = item.rightDesc;
-          label.appendChild(desc);
-        }
-        
         if ( item.type === 'cell' || item.type === 'page' ) {
           const icon = document.createElement('i');
           icon.className = 'iconfont icon-arrow_right'
           label.appendChild(icon);
         } else {
+          const desc = document.createElement("div");
+          desc.className = 'form-item-right-desc';
+          desc.innerText = item.rightDesc;
+          label.appendChild(desc);
+          
           const button = document.createElement('button');
           button.name = 'button';
           button.innerText = '获取';
@@ -916,36 +981,81 @@ async function main() {
       return label;
     };
   
-    const createList = ( list, title ) => {
-      const fragment = document.createDocumentFragment()
-  
+    // 创建列表
+    const createList = (list, title) => {
+      const fragment = document.createDocumentFragment();
       let elBody;
+      let isHeaderAdded = false;
+    
       for (const item of list) {
         if (item.type === 'group') {
-          const grouped = createList(item.items, item.label)
-          fragment.appendChild(grouped)
+          const grouped = createList(item.items, item.label);
+          fragment.appendChild(grouped);
+        } else if (item.type === 'app') {
+          const groupDiv = fragment.appendChild(document.createElement('div'));
+          groupDiv.className = 'list';
+    
+          if ( title && !isHeaderAdded ) {
+            const elTitle = groupDiv.appendChild(document.createElement('div'));
+            elTitle.className = 'list__header';
+            elTitle.textContent = title;
+            isHeaderAdded = true;
+          }
+    
+          elBody = groupDiv.appendChild(document.createElement('div'));
+          elBody.className = 'list__body';
+    
+          const { name, desc, date, appUrl, images } = item.data;
+          const app = elBody.appendChild(document.createElement('div'));
+          app.className = 'app';
+          app.innerHTML =
+          \`<div class="app-head">
+            <img class="app-icon" src="\${appUrl}"></img>
+            <div class="app-right">
+              <div>
+                <div class="app-name">\${name}</div>
+                <div class="app-desc">\${desc}</div>
+                <div class="app-score">\${date}</div>
+              </div>
+              <button class="iconfont icon-arrow_bottom">获取</button>
+            </div>
+          </div>
+          <div class="app-imgs">
+          \${images.map((img) => (
+            \`<img class="app-img" src="\${img}"></img>\`
+          )).join('')}
+          </div>\`
+
+          const button = app.querySelector('.icon-arrow_bottom');
+          button.addEventListener('click', (e) => {
+            invoke('widget', item);
+          });
         } else {
           if ( !elBody ) {
-            const groupDiv = fragment.appendChild(document.createElement('div'))
-            groupDiv.className = 'list'
+            const groupDiv = fragment.appendChild(document.createElement('div'));
+            groupDiv.className = 'list';
+            
             if ( title ) {
-              const elTitle = groupDiv.appendChild(document.createElement('div'))
-              elTitle.className = 'list__header'
-              elTitle.textContent = title
+              const elTitle = groupDiv.appendChild(document.createElement('div'));
+              elTitle.className = 'list__header';
+              elTitle.textContent = title;
             }
-            elBody = groupDiv.appendChild(document.createElement('div'))
-            elBody.className = 'list__body'
+    
+            elBody = groupDiv.appendChild(document.createElement('div'));
+            elBody.className = 'list__body';
           }
-          const label = createFormItem(item)
-          elBody.appendChild(label)
+    
+          const label = createFormItem(item);
+          elBody.appendChild(label);
         }
       }
-      return fragment
+      return fragment;
     };
+    
     const fragment = createList(formItems);
     document.getElementById('settings').appendChild(fragment);
     
-    /** loading **/  
+    /** 加载动画 loading **/  
     const toggleLoading = (e) => {
       const target = e.currentTarget;
       target.classList.add('loading')
@@ -994,11 +1104,11 @@ document.getElementById('telegram').addEventListener('click', () => {
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
               <div id="telegram">
                 <div class="form-item-auth-name">95度茅台</div>
-                <a class="but form-item-auth-desc">点击加入 Scriptable小 组件交流群</a>
+                <a class="but form-item-auth-desc">加入 Scriptable小 组件交流群</a>
               </div>
             </div>
             <div class="form-label">
-              <i class="iconfont icon-arrow_right"></i>
+              <button class="jb-vip1">更多</button>
             </div>
           </label>
         </form>
@@ -1033,7 +1143,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             </div>
             <div class="box-body">
               <div id="sign-in">
-                <button type="button" class="but radius jb-yellow padding-lg btn-block" id="clearCache">
+                <button class="but radius jb-yellow padding-lg btn-block" id="clearCache">
                   清除缓存
                 </button>
               </div>
@@ -1066,7 +1176,6 @@ document.getElementById('telegram').addEventListener('click', () => {
       
       return `
         ${settings.music === true ? music : ''}
-        <!-- 弹窗 -->
         ${avatarHtml}
         ${popup}
         ${scriptTags.join('\n')}
@@ -1220,6 +1329,44 @@ document.getElementById('telegram').addEventListener('click', () => {
         ]
       },
       {
+        label: '最新发布',
+        type: 'group',
+        items: [
+          {
+            label: '爱奇艺',
+            type: 'app',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
+            data: {
+              name: '爱奇艺',
+              desc: '看电视剧，看电影',
+              date: '2023年7月10日',
+              appUrl: 'https://is3-ssl.mzstatic.com/image/thumb/Purple126/v4/b5/6a/b8/b56ab8b2-db40-9d45-484f-1af8f7e4fd71/AppIcon-0-0-1x_U007emarketing-0-0-0-6-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
+              images: [
+                'https://is2-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/02/37/bd/0237bd1d-8ab3-4602-1d47-14bc30577d79/5e1e7912-04ec-474f-9fb8-9932735247ab_1-1.jpg/392x696bb.jpg',
+                'https://is4-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/12/a4/39/12a43978-48f0-7a7b-6b7b-1716ede92542/c3ead916-3c00-423e-b325-c61df528e3f7_2-1.jpg/392x696bb.jpg',
+                'https://is3-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/f5/ad/17/f5ad1714-cc8d-aada-5e2f-81e7c143065c/fcc55071-68ec-429d-a826-737a7098feb5_3-1.jpg/392x696bb.jpg'
+              ]
+            }
+          },
+          {
+            label: 'Telegram',
+            type: 'app',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
+            data: {
+              name: 'Telegram Messenger',
+              desc: '看电视剧，看电影',
+              date: '2023年7月10日',
+              appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/98/6a/c3/986ac383-e560-d26e-5c00-eaf1336e9c18/AppIconLLC-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
+              images: [
+                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/b1/99/ae/b199ae04-cde7-f283-371f-59d06df51629/pr_source.png/392x696bb.png',
+                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/3c/a5/b5/3ca5b5f6-f2a3-b50f-f96d-f9ffb7aabfb7/pr_source.png/392x696bb.png',
+                'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/fd/f2/18/fdf218e9-be34-bfdb-3468-6253e6c68561/pr_source.png/392x696bb.png'
+              ]
+            }
+          }
+        ]
+      },
+      {
         label: '新版组件',
         type: 'group',
         items: [
@@ -1266,7 +1413,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             desc: '违章信息，累积记分',
             rightDesc: '1.2.5',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/bottomBar.js',
+            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/violation.js',
             icon: `${rootUrl}img/icon/12123.png`
           },
           {
@@ -1320,7 +1467,29 @@ document.getElementById('telegram').addEventListener('click', () => {
         ]
       },
       {
-        label: '京东系列组件',
+        label: '最近更新',
+        type: 'group',
+        items: [
+          {
+            name: '微博',
+            type: 'app',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
+            data: {
+              name: '微博',
+              desc: '随时随地，发现新鲜事',
+              date: '2023年7月10日',
+              appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/41/9d/7f/419d7fdf-805f-a9d4-6e8e-d86312d798f5/WeiboAppIcon-0-0-1x_U007emarketing-0-0-0-4-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
+              images: [
+                'https://is3-ssl.mzstatic.com/image/thumb/Purple122/v4/02/8b/2c/028b2c1e-57a3-9a10-eb70-800c0616abbb/519f3dcf-5436-431b-ba6b-bf5708af05a3__U753b_U677f_4.png/392x696bb.png',
+                'https://is1-ssl.mzstatic.com/image/thumb/Purple112/v4/6c/80/e9/6c80e9c2-26ab-a5c0-1197-d77c23f14d9f/97e9763f-d66e-4bc8-b08e-21f894a98057__U753b_U677f_3.png/392x696bb.png',
+                'https://is5-ssl.mzstatic.com/image/thumb/Purple122/v4/24/55/be/2455be5c-947f-b9ed-0c09-d7bda7bec8dc/fb19b674-298e-445a-bd28-0d15c8ee6ce6__U753b_U677f_5.png/392x696bb.png'
+              ]
+            }
+          },
+        ]
+      },
+      {
+        label: '京东系列',
         type: 'group',
         items: [
           {
