@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = '组件商店'
@@ -437,13 +437,13 @@ async function main() {
       padding: .3em 1em;
     }
     
-    .b-blue,.b-blue-2,.b-cyan,.b-gray,.b-green,.b-purple,.b-red,.b-theme,.b-yellow,.jb-blue,.jb-cyan,.jb-green,.jb-pink,.jb-purple,.jb-red,.jb-vip1,.jb-vip2,.jb-yellow {
+    .b-blue,.b-blue-2,.b-cyan,.b-gray,.b-green,.b-purple,.b-red,.b-theme,.b-yellow,.jb-blue,.jb-cyan,.jb-green,.jb-pink,.jb-purple,.jb-red,.jb-vip,.jb-vip2,.jb-yellow {
       color: var(--this-color);
       background: var(--this-bg);
       --this-color: #fff;
     }
     
-    .jb-blue,.jb-cyan,.jb-green,.jb-pink,.jb-purple,.jb-red,.jb-vip1,.jb-vip2,.jb-yellow {
+    .jb-blue,.jb-cyan,.jb-green,.jb-pink,.jb-purple,.jb-red,.jb-vip,.jb-vip2,.jb-yellow {
       border: none;
     }
     
@@ -467,7 +467,7 @@ async function main() {
       --this-bg: linear-gradient(135deg, #f98dfb 10%, #ea00f9 100%);
     }
     
-    .jb-vip1,.order-type-4 .pay-tag {  
+    .jb-vip,.order-type-4 .pay-tag {  
       --this-bg: linear-gradient(25deg, #eabe7b 10%, #f5e3c7 70%, #edc788 100%);
       --this-color: #866127;
     }
@@ -592,7 +592,7 @@ async function main() {
     
     .form-item-auth-name {
       margin: 0px 12px;
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 420;
     }
     
@@ -1108,17 +1108,14 @@ document.getElementById('telegram').addEventListener('click', () => {
               </div>
             </div>
             <div class="form-label">
-              <button class="jb-vip1">更多</button>
+              <button class="jb-vip">更多</button>
             </div>
           </label>
         </form>
       </div>
       <script>
-        function loadImages() {
-          const myGif = document.querySelector('.full-width-image');
-          myGif.src = myGif.getAttribute('data-src');
-        }
-        setTimeout(loadImages, 2000);
+        const myGif = document.querySelector('.full-width-image');
+        myGif.src = myGif.getAttribute('data-src');
       </script>`;
       
       //弹窗
@@ -1256,7 +1253,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       const { code, data } = event;
       if (code === 'clearCache' && fm.fileExists(cache)) {
         await clearCache();
-      } else if (code !== 'telegram' && data.scrUrl) {
+      } else if (code !== 'telegram' && data) {
         const { label } = data;
         try {
           const fm = FileManager.iCloud();
@@ -1271,7 +1268,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       
       switch (code) {
         case 'telegram':
-          Safari.openInApp('https://t.me/+CpAbO_q_SGo2ZWE1', false);
+          Timer.schedule(300, false, () => { Safari.openInApp('https://t.me/+CpAbO_q_SGo2ZWE1', false) });
           break;
         case 'changeSettings':
           Object.assign(settings, data);
@@ -1471,7 +1468,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         type: 'group',
         items: [
           {
-            name: '微博',
+            label: '微博',
             type: 'app',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
             data: {
