@@ -1112,7 +1112,7 @@ document.getElementById('telegram').addEventListener('click', () => {
               </div>
             </div>
             <div class="form-label">
-              <button class="but jb-vip" >更多</button>
+              <button class="but jb-vip" >Vip</button>
             </div>
           </label>
         </form>
@@ -1139,7 +1139,7 @@ document.getElementById('telegram').addEventListener('click', () => {
                   Version ${version}
                 </div>
               </a><br>
-              <div class="update-content"> <li>${updateDate}&nbsp;🔥</li> <li>Scriptable桌面小组件</li> <li>性能优化，改进用户体验</li>
+              <div class="update-content"> <li>${updateDate}&nbsp;</li> <li>Scriptable桌面小组件</li> <li>性能优化，改进用户体验</li>
               </div>
             </div>
             <div class="box-body">
