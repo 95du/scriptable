@@ -369,7 +369,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -133%; /* 弹窗位置 */
+      top: -138%; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -722,6 +722,8 @@ async function main() {
     
     .form-label-img {
       height: 45px;
+      border-radius: 12px;
+      border: 1px solid var(--solid-color, #eee);
     }
     
     .form-label-title {
@@ -800,6 +802,7 @@ async function main() {
       height: 60px;
       background: #eee;
       border-radius: 13px;
+      border: 1px solid var(--solid-color, #eee);
       object-fit: cover;
     }
     
@@ -829,7 +832,7 @@ async function main() {
     .app-imgs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      column-gap: 0.7rem;
+      column-gap: 0.5rem;
       padding: 0 1.25rem 1.125rem 1.25rem;
     }
     
@@ -867,6 +870,7 @@ async function main() {
         --card-background: #1c1c1e;
         --list-header-color: rgba(235,235,245,0.6);
         --checkbox: #454545;
+        --solid-color: #1c1c1e;
         --desc-background: darkGrey;
       }
       
@@ -1027,7 +1031,7 @@ async function main() {
           \${images.map((img) => (
             \`<img class="app-img" src="\${img}"></img>\`
           )).join('')}
-          </div>\`
+          </div>\`;
 
           const button = app.querySelector('.icon-arrow_bottom');
           button.addEventListener('click', (e) => {
