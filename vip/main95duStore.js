@@ -950,6 +950,9 @@ async function main() {
           button.innerText = '获取';
           button.className = 'iconfont icon-arrow_bottom';
           label.appendChild(button);
+          button.addEventListener('click', () => {
+            button.style.color = 'darkGray';
+          });
         }
         label.addEventListener('click', (e) => {
           const { name } = item;
@@ -1028,6 +1031,7 @@ async function main() {
 
           const button = app.querySelector('.icon-arrow_bottom');
           button.addEventListener('click', (e) => {
+            button.style.color = 'darkGray';
             invoke('widget', item);
           });
         } else {
