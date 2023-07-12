@@ -801,7 +801,7 @@ async function main() {
       width: 60px;
       height: 60px;
       background: #eee;
-      border-radius: 13px;
+      border-radius: 15px;
       border: 1px solid var(--solid-color, #eee);
       object-fit: cover;
     }
@@ -1116,7 +1116,7 @@ document.getElementById('telegram').addEventListener('click', () => {
               </div>
             </div>
             <div class="form-label">
-              <button class="but jb-vip" >Vip</button>
+              <button class="but jb-vip">Vip</button>
             </div>
           </label>
         </form>
