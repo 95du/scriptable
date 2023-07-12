@@ -4,7 +4,7 @@
 
 async function main() {
   const uri = Script.name();
-  const scriptName = '组件商店'
+  const scriptName = 'Script Store'
   const version = '1.0.1'
   const updateDate = '2023年07月09日'
   
@@ -494,7 +494,7 @@ async function main() {
     }
     
     .title-h-center:hover:before,.title-h-left:hover:before {
-      width: 80px;
+      width: 112px;
     }
     
     .modal {
@@ -1112,7 +1112,7 @@ document.getElementById('telegram').addEventListener('click', () => {
               </div>
             </div>
             <div class="form-label">
-              <button class="jb-vip">更多</button>
+              <button class="but jb-vip" >Vip</button>
             </div>
           </label>
         </form>
@@ -1139,7 +1139,7 @@ document.getElementById('telegram').addEventListener('click', () => {
                   Version ${version}
                 </div>
               </a><br>
-              <div class="update-content"> <li>${updateDate}&nbsp;🔥</li> <li>Scriptable桌面小组件</li> <li>性能优化，改进用户体验</li>
+              <div class="update-content"> <li>${updateDate}&nbsp;</li> <li>Scriptable桌面小组件</li> <li>性能优化，改进用户体验</li>
               </div>
             </div>
             <div class="box-body">
