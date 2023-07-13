@@ -370,7 +370,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -136.5%; /* 弹窗位置 */
+      top: -138%; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -664,7 +664,7 @@ async function main() {
     /* 跳转提示框结束 */
     
     body {
-      margin: 50px 0;
+      margin: 70px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
