@@ -370,7 +370,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -138.5%; /* 弹窗位置 */
+      top: -136.5%; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -664,7 +664,7 @@ async function main() {
     /* 跳转提示框结束 */
     
     body {
-      margin: 65px 0;
+      margin: 50px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -1154,7 +1154,7 @@ document.getElementById('telegram').addEventListener('click', () => {
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
               <div id="telegram">
                 <div class="form-item-auth-name">95度茅台</div>
-                <a class="but form-item-auth-desc">加入 Scriptable小 组件交流群</a>
+                <a class="but form-item-auth-desc">Scriptable 小组件交流群</a>
               </div>
             </div>
             <div class="form-label">
