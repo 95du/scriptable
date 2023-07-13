@@ -370,7 +370,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -138%; /* 弹窗位置 */
+      top: -136.5%; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -664,7 +664,7 @@ async function main() {
     /* 跳转提示框结束 */
     
     body {
-      margin: 70px 0;
+      margin: 50px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -1021,9 +1021,9 @@ async function main() {
             item.type === 'switch'
             ? e.target.checked
             : e.target.value;
+          invoke('changeSettings', formData);
           // 播放器开关
           !formData.music ? iframe.src = '' : iframe.src = iframe.getAttribute('data-src');
-          invoke('changeSettings', formData);
         });
         label.appendChild(input);
       }
@@ -1408,7 +1408,7 @@ document.getElementById('telegram').addEventListener('click', () => {
               images: [
                 'https://is2-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/02/37/bd/0237bd1d-8ab3-4602-1d47-14bc30577d79/5e1e7912-04ec-474f-9fb8-9932735247ab_1-1.jpg/392x696bb.jpg',
                 'https://is4-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/12/a4/39/12a43978-48f0-7a7b-6b7b-1716ede92542/c3ead916-3c00-423e-b325-c61df528e3f7_2-1.jpg/392x696bb.jpg',
-                'https://is3-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/f5/ad/17/f5ad1714-cc8d-aada-5e2f-81e7c143065c/fcc55071-68ec-429d-a826-737a7098feb5_3-1.jpg/392x696bb.jpg'
+                'https://is3-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/f4/5b/c1/f45bc177-6ecd-3978-68b2-e7cc047b09c5/08426e2d-7823-40ec-a3a4-8892bac21c14_2-1.jpg/392x696bb.jpg'
               ]
             }
           },
@@ -1427,7 +1427,7 @@ document.getElementById('telegram').addEventListener('click', () => {
                 'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/fd/f2/18/fdf218e9-be34-bfdb-3468-6253e6c68561/pr_source.png/392x696bb.png'
               ]
             }
-          }
+          },
         ]
       },
       {
