@@ -645,7 +645,7 @@ async function main() {
     }
     
     .popup.show {
-      top: 1%;
+      top: 1.25%;
       opacity: 1;
     }
     
@@ -1021,7 +1021,9 @@ async function main() {
             item.type === 'switch'
             ? e.target.checked
             : e.target.value;
-          invoke('changeSettings', formData)
+          // 播放器开关
+          !formData.music ? iframe.src = '' : iframe.src = iframe.getAttribute('data-src');
+          invoke('changeSettings', formData);
         });
         label.appendChild(input);
       }
