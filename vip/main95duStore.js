@@ -561,6 +561,7 @@ async function main() {
       padding: 0 10px;
     }
     
+    /* 弹窗 content */
     .popup-title {
       text-align: center;
       font-size: 20px;
@@ -569,12 +570,12 @@ async function main() {
       font-weight: 420;
     }
     
-    .update-version {
+    .popup-version {
       text-align: center;
       font-size: 16px;
     }
     
-    .update-content {
+    .popup-content {
       margin-left: 12px;
       font-weight: 400;
     }
@@ -721,9 +722,9 @@ async function main() {
     }
     
     .form-label-img {
-      height: 45px;
+      height: 46px;
       border-radius: 12px;
-      border: 1px solid var(--solid-color, #eee);
+      border: 1px solid var(--solid-color, #ddd);
     }
     
     .form-label-title {
@@ -875,7 +876,7 @@ async function main() {
       }
       
       .white-theme, .dark-theme {
-        --blur-bg: rgba(50, 51, 53, 0.8);
+        --blur-bg: rgba(50,51,53,0.8);
       }
     
       body {
@@ -1107,7 +1108,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       <div class="list">
         <form class="list__body" action="javascript:void(0);">
           <img class="full-width-image signin-loader" src="${gifImage}" data-src="${rootUrl}img/picture/widget.gif">
-          <label class="form-item-auth form-item--link">
+          <div class="form-item-auth form-item--link">
             <div class="form-label">
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
               <div id="telegram">
@@ -1116,14 +1117,21 @@ document.getElementById('telegram').addEventListener('click', () => {
               </div>
             </div>
             <div class="form-label">
-              <button class="but jb-vip">Vip</button>
+              <button id="vip" class="but jb-vip">Vip</button>
             </div>
-          </label>
+          </div>
         </form>
       </div>
       <script>
         const myGif = document.querySelector('.full-width-image');
         myGif.src = myGif.getAttribute('data-src');
+        
+        const btnVip = document.querySelector('#vip');
+        btnVip.addEventListener('click', (e) => {
+          e.preventDefault();
+          invoke('vip');
+          window.location.href = 'https://scriptore.imarkr.com';
+        });
       </script>`;
       
       //弹窗
@@ -1138,12 +1146,12 @@ document.getElementById('telegram').addEventListener('click', () => {
               <div class="title-h-center fa-2x popup-title">
                 ${scriptName}
               </div>
-              <a class="muted-color px30 update-version">
+              <a class="muted-color px30 popup-version">
                 <div class="but">
                   Version ${version}
                 </div>
               </a><br>
-              <div class="update-content"> <li>${updateDate}&nbsp;</li> <li>Scriptable桌面小组件</li> <li>性能优化，改进用户体验</li>
+              <div class="popup-content"> <li>${updateDate}&nbsp;</li> <li>Scriptable桌面小组件</li> <li>性能优化，改进用户体验</li>
               </div>
             </div>
             <div class="box-body">
