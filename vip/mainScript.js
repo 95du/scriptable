@@ -370,7 +370,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: 72px;
-      top: -136.5%; /* 弹窗位置 */
+      top: -138.5%; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -664,7 +664,7 @@ async function main() {
     /* 跳转提示框结束 */
     
     body {
-      margin: 50px 0;
+      margin: 65px 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -1158,7 +1158,7 @@ document.getElementById('telegram').addEventListener('click', () => {
               </div>
             </div>
             <div class="form-label">
-              <button id="vip" class="but jb-vip">Vip</button>
+              <button id="plus" class="but jb-vip">PLUS</button>
               <div id="popup" class="popup"><p>加载中 ...</p>
               </div>
             </div>
@@ -1168,7 +1168,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       <script>
         const myGif = document.querySelector('.full-width-image');
         myGif.src = myGif.getAttribute('data-src');
-        document.querySelector('#vip').addEventListener('click', (e) => {
+        document.querySelector('#plus').addEventListener('click', (e) => {
           e.preventDefault();
           const popupTips = document.getElementById("popup").classList;
           popupTips.add("show", "fd");
@@ -1177,7 +1177,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             setTimeout(() => popupTips.remove("show"), 1000);
           }, 1800);
           
-          invoke('vip');
+          invoke('plus');
           //window.location.href = 'https://scriptore.imarkr.com';
         });
       </script>`;
@@ -1331,7 +1331,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       }
       
       switch (code) {
-        case 'vip':
+        case 'plus':
           Timer.schedule(1000, false, () => { Safari.openInApp('https://scriptore.imarkr.com', false) });
           break;
         case 'telegram':
