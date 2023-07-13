@@ -208,6 +208,7 @@ async function main() {
     }
   };
   
+      
   /**
    * 获取css，js字符串并使用缓存
    * @param {string} string
@@ -581,7 +582,6 @@ async function main() {
     }
     
     /** 头像开始 **/
-    
     .form-item-auth {
       display: flex;
       align-items: center;
@@ -621,8 +621,47 @@ async function main() {
       width: 100%;
       height: 225px;
     }
-    
     /** 头像结束 **/
+    
+    /* 跳转提示框开始 */  
+    .popup {
+      position: fixed;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #1B9AF1;
+      font-size: 14px;
+      color: #fff;
+      border-radius: 50px;
+      padding: 10px;
+      width: 130px;
+      height: 20px;
+      opacity: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      transition: top 0.7s ease-in-out, opacity 0.5s ease-in-out;
+    }
+    
+    .popup.show {
+      top: 1%;
+      opacity: 1;
+    }
+    
+    .fd {
+      animation: fd 0.15s ease-in-out;
+    }
+    
+    @keyframes fd {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    /* 跳转提示框结束 */
     
     body {
       margin: 70px 0;
@@ -1118,6 +1157,8 @@ document.getElementById('telegram').addEventListener('click', () => {
             </div>
             <div class="form-label">
               <button id="vip" class="but jb-vip">Vip</button>
+              <div id="popup" class="popup"><p>加载中 ...</p>
+              </div>
             </div>
           </div>
         </form>
@@ -1125,12 +1166,17 @@ document.getElementById('telegram').addEventListener('click', () => {
       <script>
         const myGif = document.querySelector('.full-width-image');
         myGif.src = myGif.getAttribute('data-src');
-        
-        const btnVip = document.querySelector('#vip');
-        btnVip.addEventListener('click', (e) => {
+        document.querySelector('#vip').addEventListener('click', (e) => {
           e.preventDefault();
+          const popupTips = document.getElementById("popup").classList;
+          popupTips.add("show", "fd");
+          setTimeout(() => {
+            popupTips.remove("fd");
+            setTimeout(() => popupTips.remove("show"), 1000);
+          }, 1800);
+          
           invoke('vip');
-          window.location.href = 'https://scriptore.imarkr.com';
+          //window.location.href = 'https://scriptore.imarkr.com';
         });
       </script>`;
       
@@ -1283,6 +1329,9 @@ document.getElementById('telegram').addEventListener('click', () => {
       }
       
       switch (code) {
+        case 'vip':
+          Timer.schedule(1000, false, () => { Safari.openInApp('https://scriptore.imarkr.com', false) });
+          break;
         case 'telegram':
           Timer.schedule(300, false, () => { Safari.openInApp('https://t.me/+CpAbO_q_SGo2ZWE1', false) });
           break;
