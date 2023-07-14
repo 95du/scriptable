@@ -43,7 +43,8 @@ async function main() {
   const DEFAULT_SETTINGS = {
     version,
     music: true,
-    bufferTime: 150
+    bufferTime: 150,
+    effect: true
   };
   
   const getSettings = (file) => {
@@ -881,10 +882,6 @@ async function main() {
     }
     /* AppStore 结束 */
     
-    .preview.loading {
-      pointer-events: none;
-    }
-    
     .icon-loading {
       display: inline-block;
       animation: 1s linear infinite spin;
@@ -1312,7 +1309,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       const { code, data } = event;
       if (code === 'clearCache' && fm.fileExists(cache)) {
         await clearCache();
-      } else if (code !== 'telegram' && data) {
+      } else if ( data ) {
         const { label } = data;
         try {
           const fm = FileManager.iCloud();
@@ -1383,7 +1380,8 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '组件效果图',
             name: 'effect',
-            type: 'page'
+            type: 'page',
+            default: true
           }
         ]
       },
