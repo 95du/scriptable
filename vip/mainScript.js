@@ -1413,7 +1413,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
             data: {
               name: 'Telegram Messenger',
-              desc: '看电视剧，看电影',
+              desc: '社交',
               date: '2023年7月10日',
               appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/98/6a/c3/986ac383-e560-d26e-5c00-eaf1336e9c18/AppIconLLC-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
               images: [
