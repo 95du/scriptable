@@ -318,10 +318,6 @@ async function main() {
       --card-radius: 10px;
       --list-header-color: rgba(60,60,67,0.6);
     }
-      
-    td, th {
-      padding: 0;
-    }
     
     .btn-block {
       display: block;
@@ -369,8 +365,8 @@ async function main() {
    .modal-dialog {
       position: relative;
       width: auto;
-      margin: 72px;
-      top: -137%; /* 弹窗位置 */
+      margin: 78px;
+      top: -138%; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -430,7 +426,7 @@ async function main() {
     }
     
     .box-body,.box-header {
-      padding: 20px 20 15px 20;
+      padding: 20px 20px 10px 20px;
     }
     
     .badg.radius,.but.radius,.radius>.but {
@@ -664,7 +660,7 @@ async function main() {
     /* 跳转提示框结束 */
     
     body {
-      margin: 62px 0;
+      margin: ${!settings.music ? '70px' : '62px'} 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -1154,7 +1150,8 @@ document.getElementById('telegram').addEventListener('click', () => {
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
               <div id="telegram">
                 <div class="form-item-auth-name">95度茅台</div>
-                <a class="but form-item-auth-desc">Scriptable 小组件交流群</a>
+                <a class="but form-item-auth-desc">Scriptable 小组件交流群            
+                </a>
               </div>
             </div>
             <div class="form-label">
@@ -1186,7 +1183,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       const popup = `      
       <div class="modal fade" id="u_sign" role="dialog">
         <div class="modal-dialog">
-          <div class="sign zib-widget blur-bg relative">
+          <div class="zib-widget blur-bg relative">
             <div id="appleHub" class="box-body sign-logo">
               <img src="${appleHub}" class="lazyload">
             </div>
@@ -1204,9 +1201,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             </div>
             <div class="box-body">
               <div id="sign-in">
-                <button class="but radius jb-yellow padding-lg btn-block" id="clearCache">
-                  清除缓存
-                </button>
+                <button class="but radius jb-yellow btn-block" id="clearCache">清除缓存</button>
               </div>
             </div>
             <p class="social-separator separator separator-center">95度茅台</p>
@@ -1269,7 +1264,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         <link rel="stylesheet" href="//at.alicdn.com/t/c/font_3772663_kmo790s3yfq.css" type="text/css">
         <style>${style}</style>
       </head>
-      <body class="${themeColor}-theme nav-fixed site-layout-1">
+      <body class="${themeColor}-theme site-layout-1">
         ${avatarInfo ? await mainMenuTop() : await previewEffectImgHtml()}
         ${head || ''}
         <section id="settings">
