@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -661,7 +661,7 @@ async function main() {
     /* 跳转提示框结束 */
     
     body {
-      margin: ${!settings.music ? '70px' : '62px'} 0;
+      margin: ${!settings.music ? '70px' : '60px'} 0;
       -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
@@ -1389,22 +1389,6 @@ document.getElementById('telegram').addEventListener('click', () => {
         label: '最新发布',
         type: 'group',
         items: [
-          {
-            label: '爱奇艺',
-            type: 'app',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
-            data: {
-              name: '爱奇艺',
-              desc: '看电视剧，看电影',
-              date: '2023年7月10日',
-              appUrl: 'https://is3-ssl.mzstatic.com/image/thumb/Purple126/v4/b5/6a/b8/b56ab8b2-db40-9d45-484f-1af8f7e4fd71/AppIcon-0-0-1x_U007emarketing-0-0-0-6-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
-              images: [
-                'https://is2-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/02/37/bd/0237bd1d-8ab3-4602-1d47-14bc30577d79/5e1e7912-04ec-474f-9fb8-9932735247ab_1-1.jpg/392x696bb.jpg',
-                'https://is4-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/12/a4/39/12a43978-48f0-7a7b-6b7b-1716ede92542/c3ead916-3c00-423e-b325-c61df528e3f7_2-1.jpg/392x696bb.jpg',
-                'https://is3-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/f4/5b/c1/f45bc177-6ecd-3978-68b2-e7cc047b09c5/08426e2d-7823-40ec-a3a4-8892bac21c14_2-1.jpg/392x696bb.jpg'
-              ]
-            }
-          },
           {
             label: 'Telegram',
             type: 'app',
