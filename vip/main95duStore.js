@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1386,28 +1386,6 @@ document.getElementById('telegram').addEventListener('click', () => {
         ]
       },
       {
-        label: '最新发布',
-        type: 'group',
-        items: [
-          {
-            label: 'Telegram',
-            type: 'app',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
-            data: {
-              name: 'Telegram Messenger',
-              desc: '社交',
-              date: '2023年7月10日',
-              appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/98/6a/c3/986ac383-e560-d26e-5c00-eaf1336e9c18/AppIconLLC-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
-              images: [
-                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/b1/99/ae/b199ae04-cde7-f283-371f-59d06df51629/pr_source.png/392x696bb.png',
-                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/3c/a5/b5/3ca5b5f6-f2a3-b50f-f96d-f9ffb7aabfb7/pr_source.png/392x696bb.png',
-                'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/fd/f2/18/fdf218e9-be34-bfdb-3468-6253e6c68561/pr_source.png/392x696bb.png'
-              ]
-            }
-          },
-        ]
-      },
-      {
         label: '新版组件',
         type: 'group',
         items: [
@@ -1435,6 +1413,28 @@ document.getElementById('telegram').addEventListener('click', () => {
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleOilPrice.js',
             icon: `${rootUrl}img/icon/oilPrice2.png`
           }
+        ]
+      },
+      {
+        label: '最新发布',
+        type: 'group',
+        items: [
+          {
+            label: 'Telegram',
+            type: 'app',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
+            data: {
+              name: 'Telegram Messenger',
+              desc: '社交',
+              date: '2023年7月10日',
+              appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/98/6a/c3/986ac383-e560-d26e-5c00-eaf1336e9c18/AppIconLLC-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
+              images: [
+                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/b1/99/ae/b199ae04-cde7-f283-371f-59d06df51629/pr_source.png/392x696bb.png',
+                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/3c/a5/b5/3ca5b5f6-f2a3-b50f-f96d-f9ffb7aabfb7/pr_source.png/392x696bb.png',
+                'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/fd/f2/18/fdf218e9-be34-bfdb-3468-6253e6c68561/pr_source.png/392x696bb.png'
+              ]
+            }
+          },
         ]
       },
       {
