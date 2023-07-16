@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -660,6 +660,19 @@ async function main() {
     }
     /* 跳转提示框结束 */
     
+    /* 打字机动画 */  
+    .typing-indicator {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: #000;
+      margin-left: 8px;
+      vertical-align: middle;
+      animation: typing-dot 0.4s infinite;
+    }
+    /* 打字机动画结束 */
+    
     body {
       margin: ${!settings.music ? '70px' : '60px'} 0;
       -webkit-font-smoothing: antialiased;
@@ -1147,8 +1160,7 @@ document.getElementById('telegram').addEventListener('click', () => {
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
               <div id="telegram">
                 <div class="form-item-auth-name">95度茅台</div>
-                <a class="but form-item-auth-desc">Scriptable 小组件交流群            
-                </a>
+                <a class="but form-item-auth-desc chat-message"></a>
               </div>
             </div>
             <div class="form-label">
@@ -1174,6 +1186,20 @@ document.getElementById('telegram').addEventListener('click', () => {
           invoke('plus');
           //window.location.href = 'https://scriptore.imarkr.com';
         });
+        
+        const message = 'Scriptable 组件脚本交流群.';
+        const chatMessage = document.querySelector(".chat-message");
+        chatMessage.textContent = ''
+        
+        let currentChar = 0;
+        function typeNextChar() {
+          if (currentChar < message.length) {
+            chatMessage.textContent += message[currentChar++];
+            chatMessage.scrollTop = chatMessage.scrollHeight;
+            setTimeout(typeNextChar, 150);
+          }
+        }
+        typeNextChar();
       </script>`;
       
       //弹窗
@@ -1182,13 +1208,13 @@ document.getElementById('telegram').addEventListener('click', () => {
         <div class="modal-dialog">
           <div class="zib-widget blur-bg relative">
             <div id="appleHub" class="box-body sign-logo">
-              <img src="${appleHub}" class="lazyload">
+              <img src="${appleHub}">
             </div>
             <div class="box-body">
-              <div class="title-h-center fa-2x popup-title">
+              <div class="title-h-center popup-title">
                 ${scriptName}
               </div>
-              <a class="muted-color px30 popup-version">
+              <a id="version" class="popup-version">
                 <div class="but">
                   Version ${version}
                 </div>
