@@ -435,7 +435,7 @@ async function main() {
       padding: .3em 1em;
     }
     
-    .b-blue,.b-blue-2,.b-cyan,.b-gray,.b-green,.b-purple,.b-red,.b-theme,.b-yellow,.jb-blue,.jb-cyan,.jb-green,.jb-pink,.jb-purple,.jb-red,.jb-vip,.jb-vip2,.jb-yellow {
+    .jb-blue,.jb-cyan,.jb-green,.jb-pink,.jb-purple,.jb-red,.jb-vip,.jb-vip2,.jb-yellow {
       color: var(--this-color);
       background: var(--this-bg);
       --this-color: #fff;
@@ -469,8 +469,8 @@ async function main() {
       --this-bg: linear-gradient(25deg, #eabe7b 10%, #f5e3c7 70%, #edc788 100%);
       --this-color: #866127;
     }
-    
-    .tab-nav-theme li:before, .title-h-center:before, .title-h-left:before, .title-theme:before, .wp-posts-content>h1.has-text-align-center:before, .wp-posts-content>h1.wp-block-heading:before, .wp-posts-content>h1:not([class]):before, .wp-posts-content>h2.has-text-align-center:before, .wp-posts-content>h2.wp-block-heading:before, .wp-posts-content>h2:not([class]):before, .wp-posts-content>h3.has-text-align-center:before, .wp-posts-content>h3.wp-block-heading:before, .wp-posts-content>h3:not([class]):before, .wp-posts-content>h4.has-text-align-center:before, .wp-posts-content>h4.wp-block-heading:before, .wp-posts-content>h4:not([class]):before, .zib-widget>h3:before {
+      
+    .title-h-center:before {
       position: absolute;
       content: "";
       width: 40px;
@@ -486,13 +486,13 @@ async function main() {
       transition: 0.4s;
     }
     
-    .tab-nav-theme li, .title-h-center, .title-h-left, .wp-posts-content>h1.has-text-align-center, .wp-posts-content>h1.wp-block-heading, .wp-posts-content>h1:not([class]), .wp-posts-content>h2.has-text-align-center, .wp-posts-content>h2.wp-block-heading, .wp-posts-content>h2:not([class]), .wp-posts-content>h3.has-text-align-center, .wp-posts-content>h3.wp-block-heading, .wp-posts-content>h3:not([class]), .wp-posts-content>h4.has-text-align-center, .wp-posts-content>h4.wp-block-heading, .wp-posts-content>h4:not([class]), .zib-widget>h3 {
+    .title-h-center {
       position: relative;
-      padding-bottom: 8px;
+      padding-bottom: 7px;
     }
     
-    .title-h-center:hover:before,.title-h-left:hover:before {
-      width: 112px;
+    .title-h-center:hover:before {
+      width: 100px;
     }
     
     .modal {
