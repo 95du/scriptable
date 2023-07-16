@@ -1006,7 +1006,7 @@ async function main() {
         }
         label.addEventListener('click', (e) => {
           const { name } = item;
-          const methodName = name === 'effect' ? 'itemClick' : name;
+          const methodName = name === 'effect' ? 'itemClick' : '';
           invoke(methodName, item);
         });
       } else {
@@ -1335,7 +1335,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       const { code, data } = event;
       if (code === 'clearCache' && fm.fileExists(cache)) {
         await clearCache();
-      } else if ( data ) {
+      } else if ( data.type === 'button' || data.type === 'app' ) {
         const { label } = data;
         try {
           const fm = FileManager.iCloud();
@@ -1357,7 +1357,9 @@ document.getElementById('telegram').addEventListener('click', () => {
           break;
         case 'changeSettings':
           Object.assign(settings, data);
-          writeSettings(settings);
+          if (data.name) {
+            writeSettings(settings);
+          }
           break;
         case 'itemClick':
           if (data.type === 'page') {
