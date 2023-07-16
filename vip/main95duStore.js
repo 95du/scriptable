@@ -1006,7 +1006,7 @@ async function main() {
         }
         label.addEventListener('click', (e) => {
           const { name } = item;
-          const methodName = name === 'effect' ? 'itemClick' : '';
+          const methodName = name === 'effect' ? 'itemClick' : name;
           invoke(methodName, item);
         });
       } else {
@@ -1335,16 +1335,18 @@ document.getElementById('telegram').addEventListener('click', () => {
       const { code, data } = event;
       if (code === 'clearCache' && fm.fileExists(cache)) {
         await clearCache();
-      } else if ( data.type === 'button' || data.type === 'app' ) {
-        const { label } = data;
-        try {
-          const fm = FileManager.iCloud();
-          const script = await new Request(data.scrUrl).loadString();
-          fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
-          Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
-        } catch (e) {
-          console.log(e)
-          notify(label + ' ⚠️', '获取失败，请检查网络是否通畅');
+      } else if (data) {
+        if ( data.type === 'button' || data.type === 'app' ) {
+          const { label } = data;
+          try {
+            const fm = FileManager.iCloud();
+            const script = await new Request(data.scrUrl).loadString();
+            fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
+            Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
+          } catch (e) {
+            console.log(e)
+            notify(label + ' ⚠️', '获取失败，请检查网络是否通畅');
+          }
         }
       }
       
@@ -1357,9 +1359,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           break;
         case 'changeSettings':
           Object.assign(settings, data);
-          if (data.name) {
-            writeSettings(settings);
-          }
+          writeSettings(settings);
           break;
         case 'itemClick':
           if (data.type === 'page') {
