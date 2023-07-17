@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1165,7 +1165,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             </div>
             <div class="form-label">
               <button id="plus" class="but jb-vip">PLUS</button>
-              <div id="popup" class="popup"><p>加载中 ...</p>
+              <div id="popup" class="popup"><p>加载中...</p>
               </div>
             </div>
           </div>
@@ -1182,9 +1182,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             popupTips.remove("fd");
             setTimeout(() => popupTips.remove("show"), 1000);
           }, 1800);
-          
           invoke('plus');
-          //window.location.href = 'https://scriptore.imarkr.com';
         });
         
         const message = 'Scriptable 组件脚本交流群.';
@@ -1348,7 +1346,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             notify(label + ' ⚠️', '获取失败，请检查网络是否通畅');
           }
         }
-      }
+      };
       
       switch (code) {
         case 'plus':
@@ -1491,7 +1489,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             rightDesc: '1.2.0',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/bottomBar.js',
-            icon: `${rootUrl}img/icon/map.gif`
+            icon: `${rootUrl}img/icon/oilPrice2.png`
           },
           {
             label: '负一屏底栏',
