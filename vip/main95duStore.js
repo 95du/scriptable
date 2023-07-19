@@ -263,6 +263,8 @@ async function main() {
       $ = 'https://www.imarkr.com'
     } = options;
     
+    const screenSize = Device.screenSize().height;
+    
     // themeColor
     const [themeColor, logoColor] = Device.isUsingDarkAppearance() ? ['dark', 'white'] : ['white', 'black'];
 
@@ -366,8 +368,8 @@ async function main() {
    .modal-dialog {
       position: relative;
       width: auto;
-      margin: 78px;
-      top: -119.6%; /* 弹窗位置 */
+      margin: ${Device.screenSize().height < 926 ? '62px' : '78px'};
+      top: ${Device.screenSize().height < 926 ? '-129.6%' : '-119.6%'}; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -930,7 +932,7 @@ async function main() {
       }
     }`;
     
-    //
+    // Java Script
     const js =`
     (() => {
     const settings = ${JSON.stringify({
@@ -1615,7 +1617,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           },
           {
             label: '清空回收站',
-            desc: '一键清空Scriptable回收站',
+            desc: '清空Scriptable回收站',
             rightDesc: '1.0.1',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/cleanTrash.js',
