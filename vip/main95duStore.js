@@ -710,7 +710,6 @@ async function main() {
       margin-bottom: 30px;
       background: var(--card-background);
       border-radius: var(--card-radius);
-      border-radius: 12px;
       overflow: hidden;
     }
     
@@ -840,7 +839,6 @@ async function main() {
     .app {
       background: var(--card-background);
       border-radius: var(--card-radius);
-      border-radius: 12px;
       overflow: hidden;
     }
   
@@ -987,6 +985,7 @@ async function main() {
       div.appendChild(divWrapper);
       
       if ( item.type === 'cell' || item.type === 'button' || item.type === 'page' ) {
+        
         if ( item.type === 'cell' || item.type === 'page' ) {
           const icon = document.createElement('i');
           icon.className = 'iconfont icon-arrow_right'
@@ -1002,10 +1001,8 @@ async function main() {
           button.innerText = '获取';
           button.className = 'iconfont icon-arrow_bottom';
           label.appendChild(button);
-          button.addEventListener('click', () => {
-            button.style.color = 'darkGray';
-          });
-        }
+          button.addEventListener('click', () => { button.style.color = 'darkGray' })
+        };
         label.addEventListener('click', (e) => {
           const { name } = item;
           const methodName = name === 'effect' ? 'itemClick' : name;
@@ -1474,7 +1471,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             desc: '剩余流量、流量和余额',
             rightDesc: '1.0.3',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/bottomBar.js',
+            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/telecom.js',
             icon: `${rootUrl}img/icon/telecom.png`
           },
           {
