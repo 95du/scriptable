@@ -44,7 +44,6 @@ async function main() {
   // User Information
   const info = await getJson('https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2');
   const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
-  const order = await getLogistics('https://wq.jd.com/bases/wuliudetail/notify?sceneval=2&sceneval=2&g_login_type=1&callback');
   
   const Run = async () => {
     if (index === 0) {
@@ -202,7 +201,7 @@ async function main() {
     const jdNumStack = nameStack.addStack();
     jdNumStack.layoutHorizontally();
     jdNumStack.centerAlignContent();
-    const jdou = await getImage('http://mtw.so/5K9zGv');
+    const jdou = await getImage('https://m.360buyimg.com/njmobilecms/jfs/t23452/19/1797778090/8622/14e40996/5b69974eN9880f531.png');
     const jdouIcon = jdNumStack.addImage(jdou);
     jdouIcon.imageSize = new Size(16, 16);
     jdNumStack.addSpacer(3);
@@ -413,6 +412,7 @@ async function main() {
     return res.resultData.data;
   }
   
+  // 物流
   async function getLogistics(url) {
     const req = new Request(url)
     req.method = 'GET'
