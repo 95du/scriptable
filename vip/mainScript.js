@@ -251,7 +251,21 @@ async function main() {
   const toBase64 = async (img) => {
     return `data:image/png;base64,${Data.fromPNG(img).toBase64String()}`
   };
-
+  
+  // 获取预览图片
+  const fetchImages = async () => {
+    const imageUrls = [
+      // imageUrls
+    ];
+    const images = await Promise.all(
+      imageUrls.map(async (imageUrl, index) => {
+        const imageName = `picture${index + 1}.png`;
+        return await toBase64(await getCacheImage(imageName, imageUrl));
+      })
+    );
+    return images;
+  };
+  
   
   // ====== web start ======= //
   
@@ -447,27 +461,27 @@ async function main() {
       border: none;
     }
     
-    .jb-red,.order-type-9 .pay-tag {
+    .jb-red {
       --this-bg: linear-gradient(135deg, #fd7a64 10%, #fb2d2d 100%);
     }
     
-    .jb-pink,.order-type-2 .pay-tag {
+    .jb-pink {
       --this-bg: linear-gradient(135deg, #ff5e7f 30%, #ff967e 100%);
     }
     
-    .jb-yellow,.order-type-3 .pay-tag {
+    .jb-yellow{
       --this-bg: linear-gradient(135deg, #f59f54 10%, #ff6922 100%);
     }
     
-    .jb-green,.order-type-5 .pay-tag {
+    .jb-green {
       --this-bg: linear-gradient(135deg, #60e464 10%, #5cb85b 100%);
     }
     
-    .jb-purple,.order-type-6 .pay-tag {
+    .jb-purple {
       --this-bg: linear-gradient(135deg, #f98dfb 10%, #ea00f9 100%);
     }
     
-    .jb-vip,.order-type-4 .pay-tag {  
+    .jb-vip {  
       --this-bg: linear-gradient(25deg, #eabe7b 10%, #f5e3c7 70%, #edc788 100%);
       --this-color: #866127;
     }
@@ -1445,18 +1459,18 @@ document.getElementById('telegram').addEventListener('click', () => {
         type: 'group',
         items: [
           {
-            label: 'Telegram',
+            label: '车辆_GPS',
             type: 'app',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
             data: {
-              name: 'Telegram Messenger',
-              desc: '社交',
+              name: '车辆定位（ GPS ）',
+              desc: '桌面小组件',
               date: '2023年7月10日',
-              appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/98/6a/c3/986ac383-e560-d26e-5c00-eaf1336e9c18/AppIconLLC-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
+              appUrl: 'https://is5-ssl.mzstatic.com/image/thumb/Purple126/v4/ce/f7/db/cef7db26-5d5c-46f6-69eb-a567791be8bf/AppIcon-ZhiAnXing-0-0-1x_U007emarketing-0-0-0-5-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
               images: [
-                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/b1/99/ae/b199ae04-cde7-f283-371f-59d06df51629/pr_source.png/392x696bb.png',
-                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/3c/a5/b5/3ca5b5f6-f2a3-b50f-f96d-f9ffb7aabfb7/pr_source.png/392x696bb.png',
-                'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/fd/f2/18/fdf218e9-be34-bfdb-3468-6253e6c68561/pr_source.png/392x696bb.png'
+                'https://is3-ssl.mzstatic.com/image/thumb/PurpleSource114/v4/6c/8a/fa/6c8afa2e-7719-b53f-7478-7810987b3e00/3c647b6a-3d67-4bf3-87d9-2b1dcda00a62_1.png/392x696bb.png',
+                'https://is2-ssl.mzstatic.com/image/thumb/PurpleSource124/v4/a7/9d/90/a79d9099-668c-d587-cc32-e15bfbd04d6e/29e0a192-f793-4917-9961-402484ee2bd0_2.png/392x696bb.png',
+                'https://is2-ssl.mzstatic.com/image/thumb/PurpleSource124/v4/27/53/d1/2753d127-7fb0-14a5-8af8-0cb3470a8e6b/9aff51bb-4936-45b7-9d51-8beabd6073de_3.png/392x696bb.png'
               ]
             }
           },
@@ -1533,22 +1547,22 @@ document.getElementById('telegram').addEventListener('click', () => {
         ]
       },
       {
-        label: '最近更新',
+        label: '社交媒体',
         type: 'group',
         items: [
           {
-            label: '微博',
+            label: 'Telegram',
             type: 'app',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
             data: {
-              name: '微博',
-              desc: '随时随地，发现新鲜事',
+              name: 'Telegram Messenger',
+              desc: '社交',
               date: '2023年7月10日',
-              appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/41/9d/7f/419d7fdf-805f-a9d4-6e8e-d86312d798f5/WeiboAppIcon-0-0-1x_U007emarketing-0-0-0-4-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
+              appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/98/6a/c3/986ac383-e560-d26e-5c00-eaf1336e9c18/AppIconLLC-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
               images: [
-                'https://is3-ssl.mzstatic.com/image/thumb/Purple122/v4/02/8b/2c/028b2c1e-57a3-9a10-eb70-800c0616abbb/519f3dcf-5436-431b-ba6b-bf5708af05a3__U753b_U677f_4.png/392x696bb.png',
-                'https://is1-ssl.mzstatic.com/image/thumb/Purple112/v4/6c/80/e9/6c80e9c2-26ab-a5c0-1197-d77c23f14d9f/97e9763f-d66e-4bc8-b08e-21f894a98057__U753b_U677f_3.png/392x696bb.png',
-                'https://is5-ssl.mzstatic.com/image/thumb/Purple122/v4/24/55/be/2455be5c-947f-b9ed-0c09-d7bda7bec8dc/fb19b674-298e-445a-bd28-0d15c8ee6ce6__U753b_U677f_5.png/392x696bb.png'
+                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/b1/99/ae/b199ae04-cde7-f283-371f-59d06df51629/pr_source.png/392x696bb.png',
+                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/3c/a5/b5/3ca5b5f6-f2a3-b50f-f96d-f9ffb7aabfb7/pr_source.png/392x696bb.png',
+                'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/fd/f2/18/fdf218e9-be34-bfdb-3468-6253e6c68561/pr_source.png/392x696bb.png'
               ]
             }
           },
