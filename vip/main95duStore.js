@@ -998,30 +998,34 @@ async function main() {
       }
       div.appendChild(divWrapper);
       
-      if ( item.type === 'cell' || item.type === 'button' || item.type === 'page' ) {
-        
-        if ( item.type === 'cell' || item.type === 'page' ) {
-          const icon = document.createElement('i');
-          icon.className = 'iconfont icon-arrow_right'
-          label.appendChild(icon);
-        } else {
-          const desc = document.createElement("div");
-          desc.className = 'form-item-right-desc';
-          desc.innerText = item.rightDesc;
-          label.appendChild(desc);
-          
-          const button = document.createElement('button');
-          button.name = 'button';
-          button.innerText = '获取';
-          button.className = 'iconfont icon-arrow_bottom';
-          label.appendChild(button);
-          button.addEventListener('click', () => { button.style.color = 'darkGray' })
-        };
-        label.addEventListener('click', (e) => {
+      if (['cell', 'button', 'page'].includes(item.type)) {
+        const labelClickHandler = ( e ) => {
           const { name } = item;
           const methodName = name === 'effect' ? 'itemClick' : name;
           invoke(methodName, item);
-        });
+        };
+        label.addEventListener('click', labelClickHandler);
+
+        const addIconOrDesc = () => {
+          if (['cell', 'page'].includes(item.type)) {
+            const icon = document.createElement('i');
+            icon.className = 'iconfont icon-arrow_right';
+            label.appendChild(icon);
+          } else {
+            const desc = document.createElement("div");
+            desc.className = 'form-item-right-desc';
+            desc.innerText = item.rightDesc;
+            label.appendChild(desc);
+      
+            const button = document.createElement('button');
+            button.name = 'button';
+            button.innerText = '获取';
+            button.className = 'iconfont icon-arrow_bottom';
+            label.appendChild(button)
+            button.addEventListener('click', () => { button.style.color = 'darkGray'; });
+          }
+        };
+        addIconOrDesc();
       } else {
         const input = document.createElement("input")
         input.className = 'form-item__input'
@@ -1290,7 +1294,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       `
     };
     
-    /** HTML **/
+    // =======  HTML  =======//
     const html =`
     <html>
       <head>
