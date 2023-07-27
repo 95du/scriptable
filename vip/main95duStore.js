@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
 ()
-async function  {
+async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
   const version = '1.0.1'
