@@ -1,8 +1,8 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-()
-async function () {
+
+async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
   const version = '1.0.1'
@@ -15,13 +15,13 @@ async function () {
    * @returns {string} - string
    */
   const fm = FileManager.local();
-  const Path = fm.joinPath(fm.documentsDirectory(), '95du_store');
+  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_store');
   
   const getSettingPath = () => {
-    if (!fm.fileExists(Path)) {
-      fm.createDirectory(Path);
+    if (!fm.fileExists(mainPath)) {
+      fm.createDirectory(mainPath);
     }
-    return fm.joinPath(Path, 'setting.json');
+    return fm.joinPath(mainPath, 'setting.json');
   };
 
   /**
@@ -117,7 +117,7 @@ async function () {
     const html = `
       <img id="sourceImg" src="data:image/png;base64,${imgData}" />
       <img id="silhouetteImg" src="" />
-      <canvas id="Canvas" />`;
+      <canvas id="mainCanvas" />`;
       
     const js = `
       const canvas = document.createElement("canvas");
@@ -186,7 +186,7 @@ async function () {
    * @param {Image} Base64 
    * @returns {string} - Request
    */
-  const cache = fm.joinPath(Path, 'cache_path');
+  const cache = fm.joinPath(mainPath, 'cache_path');
   fm.createDirectory(cache, true);
   
   const useFileManager = ({ cacheTime } = {}) => {
@@ -413,11 +413,11 @@ async function () {
     body {
       --theme-color: #ff6800;
       --focus-color: var(--theme-color);
-      ---color: #4e5358;
-      ---shadow: rgba(116, 116, 116, 0.08);
-      ---bg-color: #fff;
-      ---border-color: rgba(50, 50, 50, 0.06);
-      ---radius: 25px;
+      --main-color: #4e5358;
+      --main-shadow: rgba(116, 116, 116, 0.08);
+      --main-bg-color: #fff;
+      --main-border-color: rgba(50, 50, 50, 0.06);
+      --main-radius: 25px;
       --blur-bg: rgba(255, 255, 255, 0.75);
     }
     
@@ -429,10 +429,10 @@ async function () {
     
     .zib-widget {
       clear: both;
-      background: var(---bg-color);
+      background: var(--main-bg-color);
       padding: 15px;
-      box-shadow: 0 0 10px var(---shadow);
-      border-radius: var(---radius);
+      box-shadow: 0 0 10px var(--main-shadow);
+      border-radius: var(--main-radius);
       margin-bottom: 20px;
     }
     
@@ -520,8 +520,8 @@ async function () {
     }
     
     .modal-content {
-      border-radius: var(---radius);
-      background: var(---bg-color);
+      border-radius: var(--main-radius);
+      background: var(--main-bg-color);
       border: none;
     }
     
@@ -548,7 +548,7 @@ async function () {
     
     .separator::after,.separator::before {
       content: "";
-      background: var(---border-color);
+      background: var(--main-border-color);
       max-width: 23%;
       height: 1px;
       margin: 0 1em;
@@ -1167,7 +1167,7 @@ document.getElementById('telegram').addEventListener('click', () => {
   })()`;
 
     // 主菜单头像信息
-    const MenuTop = async () => {
+    const mainMenuTop = async () => {
       const avatarHtml = `      
       <div class="list">
         <form class="list__body" action="javascript:void(0);">
@@ -1303,7 +1303,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         <style>${style}</style>
       </head>
       <body class="${themeColor}-theme site-layout-1">
-        ${avatarInfo ? MenuTop() : await previewEffectImgHtml()}
+        ${avatarInfo ? await mainMenuTop() : await previewEffectImgHtml()}
         ${head || ''}
         <section id="settings">
         </section>
@@ -1654,4 +1654,4 @@ document.getElementById('telegram').addEventListener('click', () => {
     ]
   }, true);
 }
-module.exports = {  }
+module.exports = { main }
