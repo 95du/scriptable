@@ -15,13 +15,13 @@ async function () {
    * @returns {string} - string
    */
   const fm = FileManager.local();
-  const Path = fm.joinPath(fm.documentsDirectory(), '95du_store');
+  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_store');
   
   const getSettingPath = () => {
-    if (!fm.fileExists(Path)) {
-      fm.createDirectory(Path);
+    if (!fm.fileExists(mainPath)) {
+      fm.createDirectory(mainPath);
     }
-    return fm.joinPath(Path, 'setting.json');
+    return fm.joinPath(mainPath, 'setting.json');
   };
 
   /**
@@ -117,7 +117,7 @@ async function () {
     const html = `
       <img id="sourceImg" src="data:image/png;base64,${imgData}" />
       <img id="silhouetteImg" src="" />
-      <canvas id="Canvas" />`;
+      <canvas id="mainCanvas" />`;
       
     const js = `
       const canvas = document.createElement("canvas");
@@ -186,7 +186,7 @@ async function () {
    * @param {Image} Base64 
    * @returns {string} - Request
    */
-  const cache = fm.joinPath(Path, 'cache_path');
+  const cache = fm.joinPath(mainPath, 'cache_path');
   fm.createDirectory(cache, true);
   
   const useFileManager = ({ cacheTime } = {}) => {
@@ -1167,7 +1167,7 @@ document.getElementById('telegram').addEventListener('click', () => {
   })()`;
 
     // 主菜单头像信息
-    const MenuTop = async () => {
+    const mainMenuTop = async () => {
       const avatarHtml = `      
       <div class="list">
         <form class="list__body" action="javascript:void(0);">
