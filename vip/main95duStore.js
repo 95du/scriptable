@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-()
+
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1303,7 +1303,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         <style>${style}</style>
       </head>
       <body class="${themeColor}-theme site-layout-1">
-        ${avatarInfo ? MenuTop() : await previewEffectImgHtml()}
+        ${avatarInfo ? await mainMenuTop() : await previewEffectImgHtml()}
         ${head || ''}
         <section id="settings">
         </section>
