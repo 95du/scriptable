@@ -66,6 +66,16 @@ async function main() {
         color = setting.gradient
       }
       const items = color[Math.floor(Math.random()*color.length)];
+      
+      // 渐变角度
+      const angle = setting.angle ?? 90
+      const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
+      const x = 0.5 + 0.5 * Math.cos(radianAngle);
+      const y = 0.5 + 0.5 * Math.sin(radianAngle);
+      gradient.startPoint = new Point(1 - x, y);
+      gradient.endPoint = new Point(x, 1 - y);
+      // 渐变角度
+      
       gradient.locations = [0, 1]
       gradient.colors = [
         new Color(items, Number(setting.transparency)),
