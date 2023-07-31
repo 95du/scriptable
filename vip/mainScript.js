@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -613,7 +613,7 @@ async function main() {
     .form-item-auth-desc {
       margin: 0px 12px;
       font-size: 14px;
-      font-weight: 380;
+      color: var(--desc-background);
     }
     
     .form-label-author-avatar {
