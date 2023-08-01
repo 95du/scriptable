@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -233,6 +233,10 @@ async function main() {
    * 获取网络图片并使用缓存
    * @param {Image} url
    */
+  const toBase64 = (img) => {
+    return `data:image/png;base64,${Data.fromPNG(img).toBase64String()}`
+  };
+    
   const getImage = async (url) => {
     return await new Request(url).loadImage();
   };
@@ -241,15 +245,11 @@ async function main() {
     const cache = useFileManager();
     const image = cache.readImage(name);
     if ( image ) {
-      return image;
+      return toBase64(image);
     }
     const img = await getImage(url);
     cache.writeImage(name, img);
-    return img;
-  };
-  
-  const toBase64 = async (img) => {
-    return `data:image/png;base64,${Data.fromPNG(img).toBase64String()}`
+    return toBase64(img);
   };
   
   // 获取预览图片
@@ -260,15 +260,14 @@ async function main() {
     const images = await Promise.all(
       imageUrls.map(async (imageUrl, index) => {
         const imageName = `picture${index + 1}.png`;
-        return await toBase64(await getCacheImage(imageName, imageUrl));
+        return await getCacheImage(imageName, imageUrl);
       })
     );
-    return images;
+    return images;// toBase64(img)
   };
   
   
   // ====== web start ======= //
-  
   const renderAppView = async (options) => {
     const {
       formItems = [],
@@ -282,20 +281,20 @@ async function main() {
     // themeColor
     const [themeColor, logoColor] = Device.isUsingDarkAppearance() ? ['dark', 'white'] : ['white', 'black'];
 
-    const appleHub = await toBase64(await getCacheImage(
+    const appleHub = await getCacheImage(
       `${logoColor}.png`,
       `${rootUrl}img/picture/appleHub_${logoColor}.png`
-    ));
+    );
     
-    const authorAvatar = await toBase64(fm.fileExists(getAvatarImg()) ? fm.readImage(getAvatarImg()) : await getCacheImage(
+    const authorAvatar = fm.fileExists(getAvatarImg()) ? await toBase64(fm.readImage(getAvatarImg()) ) : await getCacheImage(
       'author.png',
       `${rootUrl}img/icon/4qiao.png`
-    ));
+    );
     
-    const gifImage = await toBase64(await getCacheImage(
+    const gifImage = await getCacheImage(
       `gifImage.gif`,
       `${rootUrl}img/picture/widget.gif`
-    ));
+    );
     
     const scripts = ['jquery.min.js', 'bootstrap.min.js', 'loader.js'];
     const scriptTags = await Promise.all(scripts.map(async (script) => {
@@ -312,7 +311,7 @@ async function main() {
         } else if (typeof icon === 'string') {
           const name = decodeURIComponent(icon.substring(icon.lastIndexOf("/") + 1));
           const image = await getCacheImage(name, icon);
-          item.icon = await toBase64(image);
+          item.icon = image;
         }
       }
     };
@@ -1284,7 +1283,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       ];
       const previewImgs = await Promise.all(previewImgUrl.map(async (item) => {
         const imgName = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
-        const previewImg = await toBase64(await getCacheImage(imgName, item));
+        const previewImg = await getCacheImage(imgName, item);
         return previewImg;
       }));
       return `
