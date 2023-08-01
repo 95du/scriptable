@@ -1201,7 +1201,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           invoke('plus');
         });
         
-        const message = 'Scriptable 组件脚本交流群.';
+        const message = 'Scriptable 组件脚本交流群';
         const chatMessage = document.querySelector(".chat-message");
         chatMessage.textContent = ''
         
