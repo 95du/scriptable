@@ -121,6 +121,30 @@ async function main() {
     return await F_MGR.readImage(cacheImgPath);
   };
   
+  /**  
+   * 获取网络图片并使用缓存
+   * @param {Image} url
+   */
+  const useFileManager = ({ cacheTime } = {}) => {
+    return {
+      readImage: (filePath) => {
+        const imgPath = F_MGR.joinPath(cache, filePath);
+        return F_MGR.fileExists(imgPath) ? F_MGR.readImage(imgPath) : null;
+      },
+      writeImage: (filePath, image) => F_MGR.writeImage(F_MGR.joinPath(cache, filePath), image)
+    }
+  };
+    
+  const getCacheImage = async (name, url) => {
+    const cache = useFileManager();
+    const image = cache.readImage(name);
+    if ( image ) {
+      return image;
+    }
+    const img = await getImage(url);
+    cache.writeImage(name, img);
+    return img;
+  };
   
   /**
    * 获取地理位置信息
@@ -360,9 +384,9 @@ async function main() {
     const carLogoStack = rightStack.addStack();
     carLogoStack.addSpacer();
     if (setting.logo) {
-      carLogo = await getImage(setting.logo);
+      carLogo = await getCacheImage('newLogo.png', setting.logo);
     } else {
-      carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');  
+      carLogo = await getCacheImage('maybachLogo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');  
     }
     const image = carLogoStack.addImage(carLogo);
     image.imageSize = new Size(27,27);
