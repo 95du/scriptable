@@ -492,7 +492,7 @@ df.dateFormat = 'ddHHmm'
     }
     
     const width = 130
-    const height = 10
+    const height = 8
     
     const logoImage = 
     widget.addImage(image);
