@@ -188,6 +188,31 @@ async function getRandomImage() {
 }
 
 /**
+ * 获取网络图片并使用缓存
+ * @param {Image} url
+ */
+const useFileManager = ({ cacheTime } = {}) => {
+  return {
+    readImage: (filePath) => {
+      const imgPath = F_MGR.joinPath(cache, filePath);
+      return F_MGR.fileExists(imgPath) ? F_MGR.readImage(imgPath) : null;
+    },
+    writeImage: (filePath, image) => F_MGR.writeImage(F_MGR.joinPath(cache, filePath), image)
+  }
+};
+  
+const getCacheImage = async (name, url) => {
+  const cache = useFileManager();
+  const image = cache.readImage(name);
+  if ( image ) {
+    return image;
+  }
+  const img = await getImage(url);
+  cache.writeImage(name, img);
+  return img;
+};
+
+/**
  * 获取地理位置信息
  * @param {number} longitude - 经度
  * @param {number} latitude - 纬度
@@ -402,7 +427,7 @@ const createWidget = async () => {
   
   const carLogoStack = rightStack.addStack();
   carLogoStack.addSpacer();
-  const carLogo = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
+  const carLogo = await getCacheImage('maybachLogo.png' ,'https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
   const image = carLogoStack.addImage(carLogo);
   image.imageSize = new Size(27, 27);
   rightStack.addSpacer(1);
@@ -535,9 +560,7 @@ const createWidget = async () => {
 createSmallWidget = async () => {
   const widget = new ListWidget();
   const { mapUrl } = await getInfo();
-  
   widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`);
-  
   widget.url = mapUrl;
   Script.setWidget(widget);
   Script.complete();
