@@ -291,10 +291,7 @@ async function main() {
       `${rootUrl}img/icon/4qiao.png`
     );
     
-    const gifImage = await getCacheImage(
-      `gifImage.gif`,
-      `${rootUrl}img/picture/widget.gif`
-    );
+    const gifImage = await getCacheImage('gifImage.gif', `${rootUrl}img/picture/widget.gif`);
     
     const scripts = ['jquery.min.js', 'bootstrap.min.js', 'loader.js'];
     const scriptTags = await Promise.all(scripts.map(async (script) => {
@@ -1099,7 +1096,7 @@ async function main() {
 
           const button = app.querySelector('.icon-arrow_bottom');
           button.addEventListener('click', (e) => {
-            button.style.color = 'darkGray';
+            button.style.color = 'darkGrey';
             invoke('widget', item);
           });
         } else {
@@ -1255,7 +1252,8 @@ document.getElementById('telegram').addEventListener('click', () => {
       const songId = [
         '8fk9B72BcV2',
         '8duPZb8BcV2',
-        '6pM373bBdV2'
+        '6pM373bBdV2',
+        '6NJHhd6BeV2'
       ];
       const randomId = songId[Math.floor(Math.random() * songId.length)];
       const music = `
