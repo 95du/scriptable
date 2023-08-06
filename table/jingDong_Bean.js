@@ -83,7 +83,7 @@ async function main() {
         leading: -3,
         imageSize: 42,
         spac: 3,
-        logoImage: 'http://mtw.so/5ZaunR',
+        logoImage: 'https://kjimg10.360buyimg.com/jr_image/jfs/t1/53657/7/23721/4026/63f4926cFd5b41d13/dcbf2725b8a4a2af.png',
         text1: `红包 ${redEnvelope.balance}`,
         text2: `即将过期 ${!redEnvelope.expiredBalance ? '0.00' : redEnvelope.expiredBalance}`,  
         lightColor: '#FF0000',
@@ -433,7 +433,7 @@ async function main() {
   
   async function createErrWidget() {
     const widget = new ListWidget();
-    const image = await getImage('http://mtw.so/5Zca3L');
+    const image = await getImage('https://sweixinfile.hisense.com/media/M00/74/90/Ch4FyGQBrGCAHcTVAAETxYKQRgE931.png');
     const widgetImage = widget.addImage(image);
     widgetImage.imageSize = new Size(50, 50);
     widgetImage.centerAlignImage();
