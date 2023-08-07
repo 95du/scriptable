@@ -193,11 +193,11 @@ async function getRandomImage() {
  */
 const useFileManager = ({ cacheTime } = {}) => {
   return {
-    readImage: (filePath) => {
-      const imgPath = F_MGR.joinPath(cache, filePath);
+    readImage: (fileName) => {
+      const imgPath = F_MGR.joinPath(cache, fileName);
       return F_MGR.fileExists(imgPath) ? F_MGR.readImage(imgPath) : null;
     },
-    writeImage: (filePath, image) => F_MGR.writeImage(F_MGR.joinPath(cache, filePath), image)
+    writeImage: (fileName, image) => F_MGR.writeImage(F_MGR.joinPath(cache, fileName), image)
   }
 };
   
