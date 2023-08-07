@@ -6,7 +6,7 @@
  * 随机自动切换多个小组件
  * Version 1.1.5
  * 2023-03-23 15:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
  * 例如: https://gitcode.net/4qiao/scriptable/raw/master/api/housePrice.js
  * https://gitcode.net/4qiao/scriptable/raw/master/api/telecom.js
  */
