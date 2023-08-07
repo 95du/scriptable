@@ -115,8 +115,8 @@ const useFileManager = ( options = {} ) => {
   fm.createDirectory(cache, true);
     
   return {
-    readImage: (filePath) => {
-      const imageFile = fm.joinPath(cache, filePath);
+    readImage: (fileName) => {
+      const imageFile = fm.joinPath(cache, fileName);
       if (fm.fileExists(imageFile) && options.cacheTime) {
         const createTime = fm.creationDate(imageFile).getTime();
         const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
@@ -127,7 +127,7 @@ const useFileManager = ( options = {} ) => {
       }
       return fm.readImage(imageFile);
     },
-    writeImage: (filePath, image) => fm.writeImage(fm.joinPath(cache, filePath), image)
+    writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
   }
 };
   
