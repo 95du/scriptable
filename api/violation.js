@@ -6,7 +6,7 @@
  * 小组件作者：95度茅台
  * 获取Token作者: @FoKit
  * 版本: Version 1.3.0
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
 
 获取Token重写:
 https://gitcode.net/4qiao/scriptable/raw/master/quanX/getToken_12123.sgmodule
