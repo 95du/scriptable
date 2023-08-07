@@ -5,7 +5,7 @@
 * 小组件作者：95度茅台
 * Version 1.2.0
 * 2023-04-24 15:30
-* Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+* Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
 * ⚠️小机型修改第 198 行中的数字 63
 */
 
