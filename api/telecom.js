@@ -7,7 +7,7 @@
  * Version 1.2.5 
 修复每日用量错误问题 ( 每月1日自动清零 )
  * 2023-03-01 14:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
  * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  */
 
@@ -58,7 +58,7 @@ const makeRequest = async (url) => {
 // Voice Package
 const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
 const { items: arr, total, balance } = package;
-  
+
 if (!package.voiceAmount) {
   voiceAmount = '1';
   voiceBalance = '0';
