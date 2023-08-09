@@ -433,7 +433,7 @@ async function main() {
   
   async function createErrWidget() {
     const widget = new ListWidget();
-    const image = await getImage('https://sweixinfile.hisense.com/media/M00/74/90/Ch4FyGQBrGCAHcTVAAETxYKQRgE931.png');
+    const image = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/user.png');
     const widgetImage = widget.addImage(image);
     widgetImage.imageSize = new Size(50, 50);
     widgetImage.centerAlignImage();
