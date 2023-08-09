@@ -42,8 +42,7 @@ async function main() {
    */
   const DEFAULT_SETTINGS = {
     version,
-    music: true,
-    bufferTime: 150,
+    bufferTime: 240,
     effect: true
   };
   
@@ -457,24 +456,8 @@ async function main() {
       border: none;
     }
     
-    .jb-red {
-      --this-bg: linear-gradient(135deg, #fd7a64 10%, #fb2d2d 100%);
-    }
-    
-    .jb-pink {
-      --this-bg: linear-gradient(135deg, #ff5e7f 30%, #ff967e 100%);
-    }
-    
     .jb-yellow{
       --this-bg: linear-gradient(135deg, #f59f54 10%, #ff6922 100%);
-    }
-    
-    .jb-green {
-      --this-bg: linear-gradient(135deg, #60e464 10%, #5cb85b 100%);
-    }
-    
-    .jb-purple {
-      --this-bg: linear-gradient(135deg, #f98dfb 10%, #ea00f9 100%);
     }
     
     .jb-vip {  
@@ -687,7 +670,7 @@ async function main() {
     
     body {
       margin: ${!settings.music ? '70px' : '60px'} 0;
-      -webkit-font-smoothing: antialiased;
+     -webkit-font-smoothing: antialiased;
       font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
       accent-color: var(--color-primary);
       font-size: 14px;
@@ -959,14 +942,12 @@ async function main() {
     
     const formData = {};
     const createFormItem = ( item ) => {
-      const value = settings[item.name] ?? item.default ?? null
+      const value = settings[item.name] ?? item.default
       formData[item.name] = value;
       
       const label = document.createElement("label");  
       label.classList.add("form-item");
-      if (item.type !== 'button') {
-        label.classList.add("from-music");
-      }
+      if (item.type !== 'button') label.classList.add("from-music");
       label.dataset.name = item.name;
       
       const div = document.createElement("div");
@@ -1146,10 +1127,8 @@ async function main() {
     
     document.querySelectorAll('.form-item').forEach((btn) => {
       btn.addEventListener('click', (e) => {
-        const item = e.currentTarget.dataset.name;
-        if ( item === 'page' || btn.classList.contains('from-music') || item === 'effect' ) {
-          toggleLoading(e);
-        }
+        const name = e.currentTarget.dataset.name;
+        if (name === 'effect' || btn.classList.contains('from-music')) { toggleLoading(e) }
       });
     });
     document.getElementById('clearCache').addEventListener('click', () => {
