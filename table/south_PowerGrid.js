@@ -180,7 +180,7 @@ async function main() {
       ]
       widget.backgroundGradient = gradient
     } else if (Appearance == false) {
-      widget.backgroundImage = await getCacheImage("bg.jpeg", 'http://mtw.so/60NF6g');
+      widget.backgroundImage = await getCacheImage("bg.jpeg", 'https://gitcode.net/4qiao/framework/raw/master/img/picture/background_image.jpeg');
     } else {
       const baiTiaoUrl = [
         'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg.png',
