@@ -12,12 +12,9 @@
 const fm = FileManager.local();
 const path = fm.joinPath(fm.documentsDirectory(), "bottomBar");
 fm.createDirectory(path, true);
-
 const cacheFile = fm.joinPath(path, 'setting.json');
 
-const uri = Script.name();
 const timeStamp = Date.now();
-
 const df = new DateFormatter();
 df.dateFormat = 'HH:mm';
 const GMT = (df.string(new Date()));
@@ -142,9 +139,9 @@ const getCacheImage = async (name, url) => {
   if (image) {
     return image;
   }
-  const res = await getImage(url);
-  cache.writeImage(name, res);
-  return res;
+  const img = await getImage(url);
+  cache.writeImage(name, img);
+  return img;
 };
 
 /**
@@ -260,7 +257,7 @@ const createWidget = async () => {
 };
 
 async function runScriptable() {
-  Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+  Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
 };
 
 async function getJson(url) {
@@ -333,11 +330,19 @@ const presentMenu = async() => {
   }
 };
 
-const runWidget = async () => {
+async function createErrorWidget() {
+  const widget = new ListWidget();
+  const text = widget.addText('仅支持中尺寸');
+  text.font = Font.systemFont(17);
+  text.centerAlignText();
+  Script.setWidget(widget);
+};
+
+const runWidget = async () => {  
   if (config.runsInApp) {
     await presentMenu();
   } else {
-    await createWidget();
+    config.widgetFamily === 'medium' ? await createWidget() : await createErrorWidget();
   }
 };
 await runWidget();
