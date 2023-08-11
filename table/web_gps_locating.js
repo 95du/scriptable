@@ -4,7 +4,7 @@
 /**
  * 小组件作者: 95度茅台
  * Version 1.0.0
- * 2023-05-01
+ * 2023-08-12
  * 模拟电子围栏，显示车速，位置等
  */
 
@@ -271,6 +271,15 @@ async function main() {
         color = setting.gradient;
       }
       const randomColor = color[Math.floor(Math.random() * color.length)];
+      
+      // 渐变角度
+      const angle = setting.angle;
+      const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
+      const x = 0.5 + 0.5 * Math.cos(radianAngle);
+      const y = 0.5 + 0.5 * Math.sin(radianAngle);
+      gradient.startPoint = new Point(1 - x, y);
+      gradient.endPoint = new Point(x, 1 - y);
+      
       gradient.locations = [0, 1]
       gradient.colors = [
         new Color(randomColor, Number(setting.transparency)),
