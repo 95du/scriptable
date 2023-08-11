@@ -1441,11 +1441,11 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '车辆_GPS',
             type: 'app',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_GPS.js',
             data: {
               name: '车辆定位（ GPS ）',
               desc: '桌面小组件',
-              date: '2023年7月10日',
+              date: '2023年8月12日',
               appUrl: 'https://is5-ssl.mzstatic.com/image/thumb/Purple126/v4/ce/f7/db/cef7db26-5d5c-46f6-69eb-a567791be8bf/AppIcon-ZhiAnXing-0-0-1x_U007emarketing-0-0-0-5-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
               images: [
                 'https://is3-ssl.mzstatic.com/image/thumb/PurpleSource114/v4/6c/8a/fa/6c8afa2e-7719-b53f-7478-7810987b3e00/3c647b6a-3d67-4bf3-87d9-2b1dcda00a62_1.png/392x696bb.png',
