@@ -1533,7 +1533,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: 'Telegram',
             type: 'app',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_GPS.js',
             data: {
               name: 'Telegram Messenger',
               desc: '社交',
