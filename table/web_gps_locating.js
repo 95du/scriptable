@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: purple; icon-glyph: car;
+// icon-color: cyan; icon-glyph: car;
 /**
  * 小组件作者: 95度茅台
  * Version 1.0.0
@@ -356,7 +356,7 @@ async function main() {
     const barIcon = SFSymbol.named(speed <= 5 ? 'location' : 'location.fill');
     const barIconElement = barStack.addImage(barIcon.image);
     barIconElement.imageSize = new Size(16, 16);
-    barIconElement.tintColor = speed <= 5 ? Color.purple() : (speed > 5 && speed <= 100) ? Color.green() : Color.red();
+    barIconElement.tintColor = speed <= 5 ? Color.purple() : (speed > 5 && speed <= 100) ? Color.blue() : Color.red();
     barStack.addSpacer(4);
     
     const speedText = barStack.addText(state);
