@@ -165,8 +165,8 @@ async function main() {
     req.body = requestBody;
     const { data } = await req.loadJSON();
     setting.token = data.token;
-    await writeSettings(setting);
-    notify('登录成功', data.token);
+    writeSettings(setting);
+    notify('登录成功', !aMapkey ? '需填写高德地图key，用于转换坐标。' : data.token);
   };
   
   //
