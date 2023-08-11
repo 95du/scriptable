@@ -82,7 +82,7 @@ async function main() {
    * @param {string} File Extension
    * @returns {image} - Request
    */
-  const cache = fm.joinPath(path, 'cachePath');
+  const cache = fm.joinPath(path, 'cache_carImg');
   fm.createDirectory(cache, true);
   
   const downloadCarImage = async (item) => {
@@ -92,8 +92,8 @@ async function main() {
     await fm.writeImage(cachePath, carImage, { overwrite: true });
     imgArr.push(imgKey);
     await writeSettings(setting);
-    if ( imgArr.length == 1 ) {
-      notify('获取成功', '初始化数据及储存车图片并使用缓存');  
+    if ( imgArr.length === 1 ) {
+      notify('获取成功', '初始化数据及获取GPS设备信息。');
     }
   };
   
