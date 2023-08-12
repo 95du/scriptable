@@ -37,7 +37,7 @@ async function main() {
    * @param { JSON } string
    */
   const writeSettings = async (inObject) => {
-    fm.writeString(cacheFile, JSON.stringify(inObject), null, 2);
+    fm.writeString(cacheFile, JSON.stringify(inObject, null, 2));
     console.log(JSON.stringify(
       inObject, null, 2
     ));
