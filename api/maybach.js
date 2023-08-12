@@ -36,7 +36,7 @@ const setting = await getSettings(cacheFile);
  * @param { JSON } string
  */
 const writeSettings = async (inObject) => {
-  F_MGR.writeString(cacheFile, JSON.stringify(inObject), null, 2);
+  F_MGR.writeString(cacheFile, JSON.stringify(inObject, null, 2));
   console.log(
     JSON.stringify(inObject, null, 2)
   )
@@ -499,7 +499,7 @@ const createWidget = async () => {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
     } else if ( speed <= 5 ) {
-      const duration = updateTime == setting.updateTime ? 240 : 10;
+      const duration = updateTime == setting.updateTime ? 0 : 10;
       if (moment >= duration) {
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         writeSettings({ ...runObj, run: speed });
