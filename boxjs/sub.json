@@ -126,8 +126,8 @@
         "高德地图 Cookie"
       ],
       "icons": [
-        "http://mtw.so/67jE9d",
-        "http://mtw.so/67jE9d"
+        "https://gitcode.net/4qiao/framework/raw/master/img/icon/aMap.png",
+        "https://gitcode.net/4qiao/framework/raw/master/img/icon/aMap.png"
       ],
       "keys": [
         "amap_cookie"
@@ -138,6 +138,31 @@
           "name": "Cookie",
           "val": "",
           "type": "text",
+          "desc": ""
+        }
+      ]
+    },
+    {
+      "id": "request_url",
+      "name": "京东豆苗",
+      "author": "@95du",
+      "descs_html": [
+        "京东豆苗 Request_Url"
+      ],
+      "icons": [
+        "http://mtw.so/5CDDy8",
+        "http://mtw.so/5CDDy8"
+      ],
+      "keys": [
+        "request_url"
+      ],
+      "settings": [
+        {
+          "id": "request_url",
+          "name": "url_body",
+          "val": "",
+          "type": "textarea",
+          "rows": 8,
           "desc": ""
         }
       ]
