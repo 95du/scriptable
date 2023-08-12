@@ -136,7 +136,7 @@ const inputCookie = async () => {
   if ( input === -1 ) return;
   const cookie = alert.textFieldValue(0);
   if ( cookie ) {
-    await writeSettings({ cookie: btoa(cookie), imgArr: [] });
+    writeSettings({ cookie: btoa(cookie), imgArr: [] });
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
 }
@@ -497,23 +497,20 @@ const createWidget = async () => {
     const driveAway = run !== 'HONDA' && distance > 20
     if ( driveAway ) {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
-      await writeSettings(runObj);
+      writeSettings(runObj);
     } else if ( speed <= 5 ) {
       const duration = updateTime == setting.updateTime ? 240 : 10;
       if (moment >= duration) {
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
-        await writeSettings({
-          ...runObj,
-          run: speed
-        });
+        writeSettings({ ...runObj, run: speed });
       }
     } else {
       if ( run !== 'HONDA' ) {
         await sendWechatMessage(`${status}  启动时间 ${GMT}`, mapUrl, mapPicUrl);
-        await writeSettings(runObj);
+        writeSettings(runObj);
       } else {
         await sendWechatMessage(`${status}  更新时间 ${GMT}`, mapUrl, mapPicUrl);
-        await writeSettings(runObj);
+        writeSettings(runObj);
       }
     }
   };
