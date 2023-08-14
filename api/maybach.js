@@ -10,10 +10,10 @@
  */
 
 const uri = Script.name();
-const F_MGR = FileManager.local();
-const path = F_MGR.joinPath(F_MGR.documentsDirectory(), 'mercedes');
-F_MGR.createDirectory(path, true);
-const cacheFile = F_MGR.joinPath(path, 'setting.json');
+const fm = FileManager.local();
+const path = fm.joinPath(fm.documentsDirectory(), 'mercedes');
+fm.createDirectory(path, true);
+const cacheFile = fm.joinPath(path, 'setting.json');
 
 
 /**
@@ -23,8 +23,8 @@ const cacheFile = F_MGR.joinPath(path, 'setting.json');
  */
 const getSettings = (file) => {
   let setting = {};
-  if (F_MGR.fileExists(file)) {
-    return { cookie, run, myPlate, coordinates, pushTime, imgArr } = JSON.parse(F_MGR.readString(file));
+  if (fm.fileExists(file)) {
+    return { cookie, run, myPlate, coordinates, pushTime, imgArr } = JSON.parse(fm.readString(file));
   }
   return {}
 }
@@ -36,7 +36,7 @@ const setting = await getSettings(cacheFile);
  * @param { JSON } string
  */
 const writeSettings = async (inObject) => {
-  F_MGR.writeString(cacheFile, JSON.stringify(inObject, null, 2));
+  fm.writeString(cacheFile, JSON.stringify(inObject, null, 2));
   console.log(
     JSON.stringify(inObject, null, 2)
   )
@@ -76,7 +76,7 @@ const presentMenu = async () => {
   }
 
   const alert = showAlert(
-    title, 
+    title,
     message
   );
   for (const action of destructiveActions) {
@@ -89,7 +89,7 @@ const presentMenu = async () => {
   const response = await alert.presentAlert();
   switch (response) {
     case 1:
-      F_MGR.remove(path);
+      fm.remove(path);
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
       break;
     case 2:
@@ -106,10 +106,10 @@ const presentMenu = async () => {
       return;
     case 0:
       const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
-      const iCloudInUse = F_MGR.isFileStoredIniCloud(module.filename);
+      const iCloudInUse = fm.isFileStoredIniCloud(module.filename);
       const finish = showAlert();
       if (codeString.includes('95度茅台' || 'HONDA') && iCloudInUse) {
-        F_MGR.writeString(
+        fm.writeString(
           module.filename, 
           codeString
         );
@@ -154,16 +154,16 @@ const getImage = async (url) => {
  * @param {string} File Extension
  * @returns {image} - Request
  */
-const cache = F_MGR.joinPath(path, 'cachePath');
-F_MGR.createDirectory(cache, true);
+const cache = fm.joinPath(path, 'cachePath');
+fm.createDirectory(cache, true);
 
 const downloadCarImage = async (item) => {
   const carImage = await getImage(item);
   const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
-  const cachePath = F_MGR.joinPath(cache, imgKey);
-  await F_MGR.writeImage(cachePath, carImage, { overwrite: true });
+  const cachePath = fm.joinPath(cache, imgKey);
+  fm.writeImage(cachePath, carImage, { overwrite: true });
   imgArr.push(imgKey);
-  await writeSettings(setting);
+  writeSettings(setting);
 };
 
 const loadPicture = async () => {
@@ -184,7 +184,7 @@ async function getRandomImage() {
   const count = imgArr.length;
   const index = Math.floor(Math.random() * count);
   const cacheImgPath = cache + '/' + imgArr[index];
-  return await F_MGR.readImage(cacheImgPath);
+  return fm.readImage(cacheImgPath);
 }
 
 /**
@@ -194,10 +194,10 @@ async function getRandomImage() {
 const useFileManager = ({ cacheTime } = {}) => {
   return {
     readImage: (fileName) => {
-      const imgPath = F_MGR.joinPath(cache, fileName);
-      return F_MGR.fileExists(imgPath) ? F_MGR.readImage(imgPath) : null;
+      const imgPath = fm.joinPath(cache, fileName);
+      return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
     },
-    writeImage: (fileName, image) => F_MGR.writeImage(F_MGR.joinPath(cache, fileName), image)
+    writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
   }
 };
   
@@ -315,7 +315,7 @@ const createWidget = async () => {
 
   // Initial Save
   if ( setting.run == undefined) {
-    await writeSettings(runObj);
+    writeSettings(runObj);
     await getRandomImage();
   }
   
