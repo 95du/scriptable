@@ -286,7 +286,7 @@ const getInfo = async () => {
     cookie,
     imgArr
   };
-  return { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
+  return { info, state, status, mapUrl, parkingTime, GMT, GMT2, ...runObj };
 };
 
 
@@ -311,7 +311,7 @@ const createWidget = async () => {
   ];
   widget.backgroundGradient = gradient;
   
-  const { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
+  const { info, state, status, mapUrl, parkingTime, GMT, GMT2, ...runObj } = await getInfo();
 
   // Initial Save
   if ( setting.run == undefined) {
