@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -42,7 +42,6 @@ async function main() {
    */
   const DEFAULT_SETTINGS = {
     version,
-    bufferTime: 240,
     effect: true
   };
   
@@ -188,23 +187,19 @@ async function main() {
   const cache = fm.joinPath(mainPath, 'cache_path');
   fm.createDirectory(cache, true);
   
-  const useFileManager = ({ cacheTime } = {}) => {
+  const useFileManager = () => {
     return {
       readString: (fileName) => {
         const filePath = fm.joinPath(cache, fileName);
-        const currentTime = (new Date()).getTime();
-        if (fm.fileExists(filePath) && cacheTime && ((currentTime - fm.creationDate(filePath).getTime()) / ( 60 * 60 * 1000 )) <= cacheTime) {
-          return fm.readString(filePath);
-        }
-        return null;
+        return fm.readString(filePath);
       },
       writeString: (fileName, content) => fm.writeString(fm.joinPath(cache, fileName), content),  
       // cache Image
-      readImage: (filePath) => {
-        const imgPath = fm.joinPath(cache, filePath);
+      readImage: (fileName) => {
+        const imgPath = fm.joinPath(cache, fileName);
         return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
       },
-      writeImage: (filePath, image) => fm.writeImage(fm.joinPath(cache, filePath), image)
+      writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
     }
   };
   
@@ -218,7 +213,7 @@ async function main() {
   };
   
   const getCacheString = async (cssFileName, cssFileUrl) => {
-    const cache = useFileManager({ cacheTime: settings.bufferTime });
+    const cache = useFileManager();
     const cssString = cache.readString(cssFileName);
     if (cssString) {
       return cssString;
@@ -999,7 +994,7 @@ async function main() {
             button.innerText = '获取';
             button.className = 'iconfont icon-arrow_bottom';
             label.appendChild(button)
-            button.addEventListener('click', () => { button.style.color = 'darkGray'; });
+            button.addEventListener('click', () => button.style.color = 'darkGray' );
           }
         };
         addIconOrDesc();
@@ -1293,8 +1288,7 @@ document.getElementById('telegram').addEventListener('click', () => {
     // 清除缓存
     const clearCache = async () => {
       const action = await generateAlert(
-        title = '清除缓存',
-        message = '是否确定删除所有缓存？\n离线内容及图片均会被清除。',
+        '清除缓存', '是否确定删除所有缓存？\n离线内容及图片均会被清除。',
         options = ['取消', '清除']
       );
       if ( action == 1 ) {
