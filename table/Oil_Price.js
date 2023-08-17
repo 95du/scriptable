@@ -9,29 +9,24 @@
  */
 
 async function main() {
-  const uri = Script.name();
-  const F_MGR = FileManager.local();
-  const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duOilPrice");
-  const cacheFile = F_MGR.joinPath(folder, 'setting.json');
-  // Background image path  
-  const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duBackground");
-  const bgImage = F_MGR.joinPath(bgPath, uri + ".jpg");
+  const fm = FileManager.local();
+  const folder = fm.joinPath(fm.documentsDirectory(), "95duOilPrice");
+  const cacheFile = fm.joinPath(folder, 'setting.json');
   
-  if (F_MGR.fileExists(cacheFile)) {
-    setting = JSON.parse(
-      F_MGR.readString(cacheFile)
+  // Background image path  
+  const bgPath = fm.joinPath(fm.documentsDirectory(), "95duBackground");
+  const bgImage = fm.joinPath(bgPath, Script.name() + ".jpg");
+  
+  if (fm.fileExists(cacheFile)) {
+    const setting = JSON.parse(
+      fm.readString(cacheFile)
     );
-    if (setting.oil === undefined) {
-      F_MGR.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
-      setting = JSON.parse(
-        F_MGR.readString(cacheFile)
-      );
-    }
+    
     const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));  
     req.method = 'POST'
     req.body = `region=${setting.province}`
     const res = await req.loadJSON();
-    oil = res.data;
+    const oil = res.data;
     
     try {  
       const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
@@ -39,18 +34,25 @@ async function main() {
     } catch(e) { 
       console.log(e);
       forecast = setting.oil;
+    };
+    
+    if (setting.oil === undefined) {
+      fm.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
+      const setting = JSON.parse(
+        fm.readString(cacheFile)
+      );
     }
     
-    widget = await createWidget(oil);
+    widget = await createWidget(setting, oil);
   }
   
-  async function createWidget(oil) {
+  async function createWidget(setting, oil) {
     const value = 6 - setting.interval
     const wide = 8 - setting.interval
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
-    if (F_MGR.fileExists(bgImage)) {
-      widget.backgroundImage = F_MGR.readImage(bgImage);
+    if (fm.fileExists(bgImage)) {
+      widget.backgroundImage = fm.readImage(bgImage);
     } else {
       const gradient = new LinearGradient();
       colorArr = setting.gradient.length
@@ -68,7 +70,7 @@ async function main() {
       const items = color[Math.floor(Math.random()*color.length)];
       
       // 渐变角度
-      const angle = setting.angle ?? 90
+      const angle = 90
       const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
       const x = 0.5 + 0.5 * Math.cos(radianAngle);
       const y = 0.5 + 0.5 * Math.sin(radianAngle);
@@ -132,7 +134,7 @@ async function main() {
     barStack1.borderWidth = 2.5
     // bar text
     const oilTipsText = barStack1.addText(forecast);
-    oilTipsText.textColor = F_MGR.fileExists(bgImage) ? Color.white() : new Color('#5e5e5e');
+    oilTipsText.textColor = fm.fileExists(bgImage) ? Color.white() : new Color('#5e5e5e');
     oilTipsText.font = Font.boldSystemFont(13);
     oilTipsText.centerAlignText();
     dataStack2.addSpacer();
@@ -221,7 +223,7 @@ async function main() {
       notice.title = `${setting.province}油价涨跌调整‼️`
       notice.body = forecast
       notice.schedule();
-      F_MGR.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
+      fm.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
     }
   } catch(error) {
     console.log(error);
