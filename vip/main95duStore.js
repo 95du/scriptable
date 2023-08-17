@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1525,7 +1525,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         type: 'group',
         items: [
           {
-            label: 'Telegram',
+            label: '车辆_GPS定位',
             type: 'app',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_GPS.js',
             data: {
