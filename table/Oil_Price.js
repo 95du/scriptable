@@ -65,7 +65,7 @@ async function main() {
       const items = color[Math.floor(Math.random()*color.length)];
       
       // 渐变角度
-      const angle = 90
+      const angle = setting.angle || 90
       const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
       const x = 0.5 + 0.5 * Math.cos(radianAngle);
       const y = 0.5 + 0.5 * Math.sin(radianAngle);
