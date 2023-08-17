@@ -38,7 +38,7 @@ async function main() {
     
     if (setting.oil === undefined) {
       fm.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
-      setting = JSON.parse(
+      const setting = JSON.parse(
         fm.readString(cacheFile)
       );
     }
