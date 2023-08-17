@@ -12,16 +12,15 @@ async function main() {
   const fm = FileManager.local();
   const folder = fm.joinPath(fm.documentsDirectory(), "95duOilPrice");
   const cacheFile = fm.joinPath(folder, 'setting.json');
+  if (fm.fileExists(cacheFile)) {
+    setting = JSON.parse(fm.readString(cacheFile));
+  }
   
   // Background image path  
   const bgPath = fm.joinPath(fm.documentsDirectory(), "95duBackground");
   const bgImage = fm.joinPath(bgPath, Script.name() + ".jpg");
   
-  if (fm.fileExists(cacheFile)) {
-    const setting = JSON.parse(
-      fm.readString(cacheFile)
-    );
-    
+  const getData = async () => {
     const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));  
     req.method = 'POST'
     req.body = `region=${setting.province}`
@@ -35,18 +34,13 @@ async function main() {
       console.log(e);
       forecast = setting.oil;
     };
-    
-    if (setting.oil === undefined) {
-      fm.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
-      const setting = JSON.parse(
-        fm.readString(cacheFile)
-      );
-    }
-    
-    widget = await createWidget(setting, oil);
+    return { oil }
   }
   
-  async function createWidget(setting, oil) {
+  
+  async function createWidget() {
+    const { oil } = await getData();
+
     const value = 6 - setting.interval
     const wide = 8 - setting.interval
     const widget = new ListWidget();
@@ -70,7 +64,7 @@ async function main() {
       const items = color[Math.floor(Math.random()*color.length)];
       
       // 渐变角度
-      const angle = 90
+      const angle = setting.angle || 90
       const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
       const x = 0.5 + 0.5 * Math.cos(radianAngle);
       const y = 0.5 + 0.5 * Math.sin(radianAngle);
@@ -83,7 +77,7 @@ async function main() {
         new Color(items, Number(setting.transparency)),
         new Color('#00000000')
       ]
-      widget.backgroundGradient = gradient
+      widget.backgroundGradient = gradient;
     }
      
       
@@ -201,11 +195,13 @@ async function main() {
     totalMonthBar8.font = Font.mediumSystemFont(14);
     totalMonthBar8.textColor = new Color('#FFFFFF');
     dataStack.addSpacer();
+    
     return widget;
-  }
+  };
   
   const isMediumWidget =  config.widgetFamily === 'medium'
   if (!config.runsInWidget) {
+    widget = await createWidget();
     await widget.presentMedium();
   } else {
     if (isMediumWidget) {
@@ -217,7 +213,7 @@ async function main() {
   }
   
   try {
-    if (forecast.length !== setting.oil.length) {
+    if (forecast !== setting.oil) {
       const notice = new Notification()
       notice.sound = 'alert'
       notice.title = `${setting.province}油价涨跌调整‼️`
