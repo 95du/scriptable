@@ -12,7 +12,7 @@ async function main() {
   const fm = FileManager.local();
   const folder = fm.joinPath(fm.documentsDirectory(), "95duOilPrice");
   const cacheFile = fm.joinPath(folder, 'setting.json');
-  if (fm.fileExists(cacheFile)) {
+  if (fm.fileExists(cacheFile)) { 
     setting = JSON.parse(fm.readString(cacheFile));
   }
   
@@ -20,27 +20,28 @@ async function main() {
   const bgPath = fm.joinPath(fm.documentsDirectory(), "95duBackground");
   const bgImage = fm.joinPath(bgPath, Script.name() + ".jpg");
   
-  const getData = async () => {
-    const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));  
-    req.method = 'POST'
-    req.body = `region=${setting.province}`
-    const res = await req.loadJSON();
-    const oil = res.data;
+  const req = new Request(atob('aHR0cHM6Ly9teXM0cy5jbi92My9vaWwvcHJpY2U='));  
+  req.method = 'POST'
+  req.body = `region=${setting.province}`
+  const res = await req.loadJSON();
+  const oil = res.data;
     
-    try {  
-      const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-      forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
-    } catch(e) { 
-      console.log(e);
-      forecast = setting.oil;
-    };
-    return { oil }
-  }
-  
+  try {  
+    const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
+    forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+  } catch(e) { 
+    console.log(e);
+    forecast = setting.oil;
+  };
+    
+  if (setting.oil === undefined) {
+    fm.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
+    setting = JSON.parse(
+      fm.readString(cacheFile)
+    )
+  };
   
   async function createWidget() {
-    const { oil } = await getData();
-
     const value = 6 - setting.interval
     const wide = 8 - setting.interval
     const widget = new ListWidget();
@@ -64,7 +65,7 @@ async function main() {
       const items = color[Math.floor(Math.random()*color.length)];
       
       // 渐变角度
-      const angle = setting.angle || 90
+      const angle = 90
       const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
       const x = 0.5 + 0.5 * Math.cos(radianAngle);
       const y = 0.5 + 0.5 * Math.sin(radianAngle);
@@ -77,7 +78,7 @@ async function main() {
         new Color(items, Number(setting.transparency)),
         new Color('#00000000')
       ]
-      widget.backgroundGradient = gradient;
+      widget.backgroundGradient = gradient
     }
      
       
@@ -199,21 +200,8 @@ async function main() {
     return widget;
   };
   
-  const isMediumWidget =  config.widgetFamily === 'medium'
-  if (!config.runsInWidget) {
-    widget = await createWidget();
-    await widget.presentMedium();
-  } else {
-    if (isMediumWidget) {
-      Script.setWidget(widget);
-      Script.complete();
-    } else {
-      createErrorWidget();
-    }
-  }
-  
   try {
-    if (forecast !== setting.oil) {
+    if (forecast.length !== setting.oil.length) {
       const notice = new Notification()
       notice.sound = 'alert'
       notice.title = `${setting.province}油价涨跌调整‼️`
@@ -241,6 +229,22 @@ async function main() {
     ctx.setFillColor(new Color("#000000", 0.3))
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage()
-  }
+  };
+  
+  const runWidget = async () => {
+    const widget = await createWidget();
+    const isMediumWidget =  config.widgetFamily === 'medium'
+    if (!config.runsInWidget) {
+      await widget.presentMedium();
+    } else {
+      if (isMediumWidget) {
+        Script.setWidget(widget);
+        Script.complete();
+      } else {
+        createErrorWidget();
+      }
+    }
+  };
+  runWidget();
 }
 module.exports = { main }
