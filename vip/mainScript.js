@@ -80,12 +80,12 @@ async function main() {
    * @returns {String} string
    */
   const updateVersionNotice = () => {
-    const newVersion = version !== settings.version ? '.signin-loader' : undefined;
-    if (newVersion) {
+    if ( version !== settings.version ) {
       settings.version = version;
       writeSettings(settings);
+      return '.signin-loader';
     }
-    return newVersion;
+    return null
   };
   
   /**
