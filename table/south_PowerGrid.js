@@ -138,11 +138,11 @@ async function main() {
     }
     
     // levelColor loop
-    if ( loop == 0 ) {
+    if ( loop === 0 ) {
       setting.loop = 1
       levelColor = '#34C579'
       barColor = new Color(levelColor, 0.6);
-    } else if ( loop == 1 ) {
+    } else if ( loop === 1 ) {
       setting.loop = 0
       levelColor = '#4FC3F7'
       barColor = new Color(levelColor, 0.6);
@@ -338,7 +338,7 @@ async function main() {
     middleStack.addSpacer();
     
     const gooseUrl = [
-      'http://mtw.so/67LhN1'];
+      'https://sweixinfile.hisense.com/media/M00/75/2C/Ch4FyWQoaJOAFvSdAAG9-M1eIU0735.png'];
     const gooseItems = gooseUrl[Math.floor(Math.random() * gooseUrl.length)];
     const gooseIcon = await getCacheImage('gose.png', gooseItems)
     const gooseIconElement = middleStack.addImage(gooseIcon);
