@@ -481,7 +481,7 @@ async function main() {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
     } else if ( speed <= 5 ) {
-      const duration = updateTime === setting.updateTime ? interval || 240 : 10
+      const duration = updateTime === setting.updateTime ? interval || 240 : 10;
       if (moment >= duration) {
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         writeSettings({ ...runObj, run: speed });
