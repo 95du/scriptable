@@ -232,7 +232,9 @@ async function main() {
     const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent(deviceName)}&ll=${latitude},${longitude}&t=m`;
     
     const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
-  
+    
+    const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
+    
     const GMT = updateTime.match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/)[0];
     const GMT2 = updateTime.match(/-(\d{2}-\d{2}\s\d{2}:\d{2})/)[1];
     
@@ -245,15 +247,15 @@ async function main() {
       parkingTime: GMT2,
       coordinates: `${longitude},${latitude}`
     };
-    return { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, runObj };
+    return { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, textColor, runObj };
   };
 
   //=========> Create <=========//
-  const { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, runObj } = await getData();
+  const { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, textColor, runObj } = await getData();
 
   const createWidget = async () => {
     const widget = new ListWidget();
-    widget.backgroundColor = Color.white();
+    widget.backgroundColor = new Color(setting.solidColor);
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = fm.readImage(bgImage);
@@ -281,11 +283,11 @@ async function main() {
       gradient.startPoint = new Point(1 - x, y);
       gradient.endPoint = new Point(x, 1 - y);
       
-      gradient.locations = [0, 1]
+      gradient.locations = [0, 1];
       gradient.colors = [
         new Color(randomColor, Number(setting.transparency)),
         new Color('#00000000')
-      ]
+      ];
       widget.backgroundGradient = gradient;
     };
     
@@ -312,7 +314,7 @@ async function main() {
     const plateStack = leftStack.addStack();
     const plateText = plateStack.addText(deviceName);
     plateText.font = Font.mediumSystemFont(19);
-    plateText.textColor = Color.black();
+    plateText.textColor = new Color(setting.titleColor);
     plateText.textOpacity = 0.9;
     leftStack.addSpacer(3);
     
@@ -327,7 +329,7 @@ async function main() {
     
     const updateTimeText = dateStack.addText(GMT2);
     updateTimeText.font = Font.mediumSystemFont(13);
-    updateTimeText.textColor = Color.black();
+    updateTimeText.textColor = textColor;
     updateTimeText.textOpacity = 0.7;
     leftStack.addSpacer(3)
     
@@ -341,7 +343,7 @@ async function main() {
     
     const mileageText = milStack.addText(`${mileage} km`);
     mileageText.font = Font.mediumSystemFont(14);
-    mileageText.textColor = Color.black();
+    mileageText.textColor = textColor;
     mileageText.textOpacity = 0.7;
     leftStack.addSpacer(22);
     
@@ -428,7 +430,7 @@ async function main() {
     };
     
     addressText.font = Font.mediumSystemFont(11.2);
-    addressText.textColor = Color.black();
+    addressText.textColor = textColor;
     addressText.textOpacity = 0.7;
     addressText.centerAlignText();
     rightStack.addSpacer();
