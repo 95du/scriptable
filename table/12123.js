@@ -280,7 +280,8 @@ async function main() {
           "#4FC3F7",
           "#66CCFF",
           "#99CCCC",
-          "#BCBBBB"
+          "#BCBBBB",
+          "#A0BACB"
         ]
       } else {
         color = setting.gradient;
