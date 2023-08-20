@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -257,7 +257,7 @@ async function main() {
         return await getCacheImage(imageName, imageUrl);
       })
     );
-    return images;// toBase64(img)
+    return toBase64(images);
   };
   
   
@@ -301,8 +301,7 @@ async function main() {
           item.icon = await loadSF2B64(name, color);
         } else if (typeof icon === 'string') {
           const name = decodeURIComponent(icon.substring(icon.lastIndexOf("/") + 1));
-          const image = await getCacheImage(name, icon);
-          item.icon = image;
+          item.icon = await getCacheImage(name, icon);
         }
       }
     };
@@ -985,7 +984,6 @@ async function main() {
             label.appendChild(icon);
           } else {
             const cntr = document.createElement('div');
-            //cntr.className = 'form-item-right-container';
             
             const button = document.createElement('button');
             button.name = 'button';
@@ -1107,7 +1105,7 @@ async function main() {
     
     /** 加载动画 loading **/  
     const toggleLoading = (e) => {
-      const target = e.currentTarget;
+      const target = e.currentTarget
       target.classList.add('loading')
       const icon = target.querySelector('.iconfont');
       const className = icon.className;
@@ -1325,18 +1323,16 @@ document.getElementById('telegram').addEventListener('click', () => {
       const { code, data } = event;
       if (code === 'clearCache' && fm.fileExists(cache)) {
         await clearCache();
-      } else if (data) {
-        if ( data.type === 'button' || data.type === 'app' ) {
-          const { label } = data;
-          try {
-            const fm = FileManager.iCloud();
-            const script = await new Request(data.scrUrl).loadString();
-            fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
-            Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
-          } catch (e) {
-            console.log(e)
-            notify(label + ' ⚠️', '获取失败，请检查网络是否通畅');
-          }
+      } else if ( data?.type === 'button' || data?.type === 'app' ) {
+        const { label } = data;
+        try {
+          const fm = FileManager.iCloud();
+          const script = await getString(data.scrUrl);
+          fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
+          Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
+        } catch (e) {
+          console.log(e)
+          notify(label + ' ⚠️', '获取失败，请检查网络是否通畅');
         }
       };
       
