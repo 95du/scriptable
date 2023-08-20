@@ -42,7 +42,8 @@ async function main() {
    */
   const DEFAULT_SETTINGS = {
     version,
-    effect: true
+    effect: true,
+    music: true
   };
   
   const getSettings = (file) => {
@@ -1624,8 +1625,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '背景音乐',
             name: 'music',
-            type: 'switch',
-            default: true
+            type: 'switch'
           }
         ]
       }
