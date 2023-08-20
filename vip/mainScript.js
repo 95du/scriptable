@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -743,11 +743,11 @@ async function main() {
     }
     
     .form-item-right-desc {
-      font-size: 16px;
+      font-size: 14px;
       color: #86868b;
-      margin: 0 6px 0 auto;
+      /* margin: 0 6px 0 auto; */
       max-width: 100px;
-      max-height: 25px;
+      max-height: 15px;
       overflow: hidden;
       text-overflow: ellipsis;
       display: flex;
@@ -969,7 +969,7 @@ async function main() {
         divWrapper.appendChild(divDesc);
       }
       div.appendChild(divWrapper);
-      
+        
       if (['cell', 'button', 'page'].includes(item.type)) {
         const labelClickHandler = ( e ) => {
           const { name } = item;
@@ -977,24 +977,29 @@ async function main() {
           invoke(methodName, item);
         };
         label.addEventListener('click', labelClickHandler);
-
+      
         const addIconOrDesc = () => {
           if (['cell', 'page'].includes(item.type)) {
             const icon = document.createElement('i');
             icon.className = 'iconfont icon-arrow_right';
             label.appendChild(icon);
           } else {
-            const desc = document.createElement("div");
-            desc.className = 'form-item-right-desc';
-            desc.innerText = item.rightDesc;
-            label.appendChild(desc);
-      
+            const cntr = document.createElement('div');
+            //cntr.className = 'form-item-right-container';
+            
             const button = document.createElement('button');
             button.name = 'button';
             button.innerText = '获取';
             button.className = 'iconfont icon-arrow_bottom';
-            label.appendChild(button)
-            button.addEventListener('click', () => button.style.color = 'darkGray' );
+            cntr.appendChild(button);
+            
+            const desc = document.createElement("div");
+            desc.className = 'form-item-right-desc';
+            desc.innerText = item.rightDesc;
+            cntr.appendChild(desc);
+            button.addEventListener('click', () => button.style.color = 'darkGray');
+      
+            label.appendChild(cntr);
           }
         };
         addIconOrDesc();
