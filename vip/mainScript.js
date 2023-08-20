@@ -185,7 +185,10 @@ async function main() {
    * @returns {string} - Request
    */
   const cache = fm.joinPath(mainPath, 'cache_path');
-  fm.createDirectory(cache, true);
+  if (!fm.fileExists(cache)) {
+    notify('正在加载...', '初始化数据，请稍等 15 秒。');
+    fm.createDirectory(cache);
+  };
   
   const useFileManager = () => {
     return {
