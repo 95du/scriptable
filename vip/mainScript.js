@@ -1299,11 +1299,11 @@ document.getElementById('telegram').addEventListener('click', () => {
     // 清除缓存
     const clearCache = async () => {
       const action = await generateAlert(
-        '清除缓存', '是否确定删除所有缓存？\n离线内容及图片均会被清除。',
+        '清除缓存', '是否确定删除所有缓存？\n离线数据及图片均会被清除。',
         options = ['取消', '清除']
       );
       if ( action == 1 ) {
-        fm.remove(cache);
+        fm.remove(mainPath);
         Safari.open('scriptable:///run/' + encodeURIComponent(uri));
       }
     };
