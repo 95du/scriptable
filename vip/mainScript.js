@@ -295,11 +295,15 @@ async function main() {
     
     for (const i of formItems) {
       for (const item of i.items) {
+        if (item.data) {
+          const { name, appUrl } = item.data;
+          item.icon = await getCacheImage(name, appUrl);
+        };
         const { icon } = item;
-        if (typeof icon === 'object' && icon.name) {
+        if (icon?.name) {
           const {name, color} = icon;
           item.icon = await loadSF2B64(name, color);
-        } else if (typeof icon === 'string') {
+        } else if (icon?.startsWith('https')) {
           const name = decodeURIComponent(icon.substring(icon.lastIndexOf("/") + 1));
           item.icon = await getCacheImage(name, icon);
         }
