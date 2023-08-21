@@ -274,8 +274,6 @@ async function main() {
       $ = 'https://www.imarkr.com'
     } = options;
     
-    const screenSize = Device.screenSize().height;
-    
     // themeColor
     const [themeColor, logoColor] = Device.isUsingDarkAppearance() ? ['dark', 'white'] : ['white', 'black'];
 
@@ -380,7 +378,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: ${Device.screenSize().height < 926 ? '62px' : '78px'};
-      top: ${Device.screenSize().height < 926 ? '-129.6%' : '-119.6%'}; /* 弹窗位置 */
+      top: ${Device.screenSize().height < 926 ? '-130.6%' : '-120.6%'}; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -1331,7 +1329,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       const { code, data } = event;
       if (code === 'clearCache' && fm.fileExists(cache)) {
         await clearCache();
-      } else if ( data?.type === 'button' || data?.type === 'app' ) {
+      } else if (data?.type === 'button' || data?.type === 'app') {
         const { label } = data;
         try {
           const fm = FileManager.iCloud();
