@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1190,7 +1190,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           if (currentChar < message.length) {
             chatMessage.textContent += message[currentChar++];
             chatMessage.scrollTop = chatMessage.scrollHeight;
-            setTimeout(typeNextChar, 150);
+            setTimeout(typeNextChar, 100);
           }
         }
         typeNextChar();
