@@ -128,7 +128,7 @@ async function main() {
     barStack1.borderColor = new Color('#D50000', 0.8);
     barStack1.borderWidth = 2.5
     // bar text
-    const oilTipsText = barStack1.addText(forecast);
+    const oilTipsText = barStack1.addText(forecast.length < 45 ? forecast + '，大家互相转告油价调整信息' : forecast);
     oilTipsText.textColor = fm.fileExists(bgImage) ? Color.white() : new Color('#5e5e5e');
     oilTipsText.font = Font.boldSystemFont(13);
     oilTipsText.centerAlignText();
