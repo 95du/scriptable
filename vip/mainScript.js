@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -187,7 +187,7 @@ async function main() {
    */
   const cache = fm.joinPath(mainPath, 'cache_path');
   if (!fm.fileExists(cache)) {
-    notify('正在初始化...', '缓存图片及加载数据，请稍等 15 秒。');
+    notify('正在初始化...', '缓存图片及加载数据，请等待 15 秒。');
     fm.createDirectory(cache);
   };
   
@@ -1482,7 +1482,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             desc: '每日油价，油价预警',
             rightDesc: '1.2.0',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/bottomBar.js',
+            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/oils.js',
             icon: `${rootUrl}img/icon/oilPrice2.png`
           },
           {
