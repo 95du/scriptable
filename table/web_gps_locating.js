@@ -380,7 +380,7 @@ async function main() {
     
     const statusText = barStack2.addText(`${highestSpeed} km·h`);
     statusText.font = Font.mediumSystemFont(14);
-    statusText.textColor = Color.black();
+    statusText.textColor = textColor;
     statusText.textOpacity = 0.7;
     leftStack.addSpacer();
     
