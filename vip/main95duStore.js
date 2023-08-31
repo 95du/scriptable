@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1411,7 +1411,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         items: [
           {
             label: '中国电信_2',
-            desc: '剩余流量、流量和余额',
+            desc: '剩余流量、语音和余额',
             rightDesc: '1.0.5',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleTelecom.js',
@@ -1463,7 +1463,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         items: [
           {
             label: '中国电信',
-            desc: '剩余流量、流量和余额',
+            desc: '剩余流量、语音和余额',
             rightDesc: '1.0.3',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/telecom.js',
