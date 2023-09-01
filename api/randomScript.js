@@ -7,12 +7,14 @@
  * Version 1.1.5
  * 2023-03-23 15:30
  * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
- * 例如: https://gitcode.net/4qiao/scriptable/raw/master/api/housePrice.js
- * https://gitcode.net/4qiao/scriptable/raw/master/api/telecom.js
+ *
+ * 例如: https://gitcode.net/4qiao/framework/raw/master/mian/module12123.js
  */
 
-const get = await new Request(atob(
+if (config.runsInApp) {
+  getData = await new Request(atob(
 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3JhbmRvbS5qc29u')).loadJSON();
+}
 
 const F_MGR = FileManager.local();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), 'randomScript');
@@ -27,12 +29,12 @@ const readCacheFile = () => {
     const data = F_MGR.readString(cacheFile);
     return JSON.parse(data);
   } else {
-    return get.script;
+    return getData.script;
   }
 };
-const script = readCacheFile();
 
 // Get scriptUrl
+const script = readCacheFile();
 const scriptUrl = script[Math.floor(Math.random() * script.length)];
 const modulePath = await downloadModule(scriptUrl);
 if ( modulePath != null ) {
@@ -57,7 +59,7 @@ async function notify (title, body, url, opts = {}) {
 async function downloadModule() {
   const modulePath = F_MGR.joinPath(folder, 'random.js');
   if (F_MGR.fileExists(modulePath)) {  
-    await F_MGR.remove(modulePath);
+    F_MGR.remove(modulePath);
   }
   const req = new Request(scriptUrl);
   let moduleJs = await req.loadString().catch(() => {
@@ -79,7 +81,7 @@ module.exports = { main }`
 async function presentMenu() {
   let alert = new Alert();
   alert.title = "随机切换小组件"
-  alert.message = get.version;
+  alert.message = getData.version;
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
   alert.addAction('更多组件');
@@ -90,7 +92,7 @@ async function presentMenu() {
   response = await alert.presentAlert();
   if ( response === 1 ) {
     if (F_MGR.fileExists(folder)) {
-      await F_MGR.remove(folder);
+      F_MGR.remove(folder);
       notify('已重置数据', '请重新添加小组件URL');  
     }
   }
@@ -109,7 +111,7 @@ async function presentMenu() {
   }
   if ( response === 6 ) return;
   if ( response === 0 ) {
-    const codeString = await new Request(get.update).loadString();
+    const codeString = await new Request(getData.update).loadString();
     if ( codeString.indexOf('95度茅台' ) == -1) {
       notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
@@ -117,7 +119,6 @@ async function presentMenu() {
         module.filename,
         codeString
       );
-      notify('小组件更新成功', '');
       const uri = Script.name();
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
@@ -127,7 +128,7 @@ async function presentMenu() {
 async function downloadScripts() {
   const modulePath = F_MGR.joinPath(folder, 'store.js');
   if (F_MGR.fileExists(modulePath)) {
-    await F_MGR.remove(modulePath)
+    F_MGR.remove(modulePath);
   }
   const req = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW45NWR1U3RvcmUuanM='));
   const moduleJs = await req.load().catch(() => {
