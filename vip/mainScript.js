@@ -1330,11 +1330,13 @@ document.getElementById('telegram').addEventListener('click', () => {
       if (code === 'clearCache' && fm.fileExists(cache)) {
         await clearCache();
       } else if (data?.type === 'button' || data?.type === 'app') {
-        const { label } = data;
+        const { label, scrUrl, rightDesc } = data;
         try {
           const fm = FileManager.iCloud();
-          const script = await getString(data.scrUrl);
+          const script = await getString(scrUrl);
           fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
+          Pasteboard.copy(scrUrl);
+          notify(`已拷贝（ ${label} ），可用于随机组件`, scrUrl);
           Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
         } catch (e) {
           console.log(e)
