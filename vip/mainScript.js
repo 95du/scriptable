@@ -1336,7 +1336,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           const script = await getString(scrUrl);
           fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
           Pasteboard.copy(scrUrl);
-          notify(`已拷贝（ ${label} ），可用于随机组件`, scrUrl);
+          notify(`已拷贝（${label}）可用于随机组件`, scrUrl);
           Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
         } catch (e) {
           console.log(e)
