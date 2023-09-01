@@ -5,7 +5,7 @@
  * 小组件作者：95度茅台
  * Version 1.0.0
  * 2023-03-07 14:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
 
 ==============================
  * 获取网页链接方法: 
@@ -158,9 +158,7 @@ async function downloadModule() {
 }
 
 async function getImage(url) {
-  const r = await new Request(url);
-  return await 
-  r.loadImage();
+  return await new Request(url).loadImage();
 }
 
 if (config.runsInApp) {
