@@ -30,7 +30,7 @@ async function main() {
    * 存储当前设置
    * @param { JSON } string
    */
-  const writeSettings = async () => {
+  const writeSettings = async (setting) => {
     F_MGR.writeString(cacheFile, JSON.stringify(setting, null, 2));
     console.log(JSON.stringify(
       setting, null, 2)
@@ -451,7 +451,7 @@ async function main() {
       }
     }
     arrearsNotice();
-    writeSettings();
+    writeSettings(setting);
     
     // 组件实例
     if (!config.runsInWidget) {
@@ -499,10 +499,6 @@ async function main() {
     if (res.sta == 00) {
       let countArr = res.data.length;
       setting.count = countArr == 1 ? countArr - 1 : setting.count > 0 ? setting.count - 1 : countArr - 1;
-      F_MGR.writeString(
-        cacheFile,  
-        JSON.stringify(setting)
-      );
       
       return {  
         userName: name,
