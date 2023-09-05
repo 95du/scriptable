@@ -215,12 +215,20 @@ async function main() {
   
   //
   const getMapUrl = async () => {
-    const conversion = new Request(`https://restapi.amap.com/v3/assistant/coordinate/convert?coordsys=gps&output=json&key=${aMapkey}&locations=${endLongitude},${endLatitude}`);
-    const convert = await conversion.loadJSON();
-    const locations = convert.locations.split(",");
-    return { 
-      longitude: Number(locations[0]).toFixed(6),
-      latitude: Number(locations[1]).toFixed(6)
+    try {
+      const conversion = new Request(`https://restapi.amap.com/v3/assistant/coordinate/convert?coordsys=gps&output=json&key=${aMapkey}&locations=${endLongitude},${endLatitude}`);
+      const convert = await conversion.loadJSON();
+      const locations = convert.locations.split(",");
+      return { 
+        longitude: Number(locations[0]).toFixed(6),
+        latitude: Number(locations[1]).toFixed(6)
+      }
+    } catch (err) {
+      notify('获取坐标错误 ⚠️', '需填写高德地图 web 服务类型 key。');
+      return {
+        longitude: 116.48482,
+        latitude: 39.94858
+      }
     }
   };
 
