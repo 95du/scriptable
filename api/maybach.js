@@ -224,7 +224,7 @@ const getLastLocation = async () => {
   req.headers = { Cookie: atob(cookie) }
   const { code, data } = await req.loadJSON();
   if ( code === 1 ) {
-    return { speed, owner, longitude, latitude, updateTime } = data;
+    return { speed, owner, heading, channel, longitude, latitude, updateTime } = data;
   }
 };
 
@@ -301,7 +301,8 @@ const createWidget = async () => {
     "#4FC3F7",
     "#66CCFF",
     "#99CCCC",
-    "#BCBBBB"
+    "#BCBBBB",
+    "#A0BACB"
   ];
   const items = color[Math.floor(Math.random() * color.length)];
   gradient.locations = [0, 1];
@@ -339,7 +340,7 @@ const createWidget = async () => {
   leftStack.addSpacer();
   
   const plateStack = leftStack.addStack();
-  const plateText = plateStack.addText(parkingTime <= 3 ? 'Maybach🚦' : '琼A·849A8');
+  const plateText = plateStack.addText('琼A·849A8');
   plateText.font = Font.mediumSystemFont(19);
   plateText.textColor = Color.black();
   plateText.textOpacity = 0.9;
@@ -353,7 +354,7 @@ const createWidget = async () => {
   carIcon1.imageSize = new Size(16, 16);
   benzStack.addSpacer(4);
   
-  const vehicleModelText = benzStack.addText('Mercedes S');
+  const vehicleModelText = benzStack.addText(String(heading));
   vehicleModelText.font = Font.mediumSystemFont(14);
   vehicleModelText.textColor = Color.black();
   vehicleModelText.textOpacity = 0.7;
@@ -430,13 +431,13 @@ const createWidget = async () => {
   const carLogo = await getCacheImage('maybachLogo.png' ,'https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
   const image = carLogoStack.addImage(carLogo);
   image.imageSize = new Size(27, 27);
+  image.tintColor = parkingTime < 3 ? Color.blue() : Color.black();
   rightStack.addSpacer(1);
     
   // Car image
   const carImageStack = rightStack.addStack();
   carImageStack.setPadding(-25, 5, 0, 0);
-  const img = await getRandomImage();
-  const imageCar = carImageStack.addImage(img);
+  const imageCar = carImageStack.addImage(await getRandomImage());
   imageCar.imageSize = new Size(225, 100);
   rightStack.addSpacer();
 
@@ -499,7 +500,7 @@ const createWidget = async () => {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
     } else if ( speed <= 5 ) {
-      const duration = updateTime == setting.updateTime ? 240 : 10;
+      const duration = updateTime == setting.updateTime ? 300 : 10;
       if (moment >= duration) {
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         writeSettings({ ...runObj, run: speed });
