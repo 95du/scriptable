@@ -11,6 +11,7 @@
 async function main() {
   const fm = FileManager.local();
   const folder = fm.joinPath(fm.documentsDirectory(), "95duOilPrice");
+  
   const cacheFile = fm.joinPath(folder, 'setting.json');
   if (fm.fileExists(cacheFile)) { 
     setting = JSON.parse(fm.readString(cacheFile));
@@ -71,7 +72,6 @@ async function main() {
       const y = 0.5 + 0.5 * Math.sin(radianAngle);
       gradient.startPoint = new Point(1 - x, y);
       gradient.endPoint = new Point(x, 1 - y);
-      // 渐变角度
       
       gradient.locations = [0, 1]
       gradient.colors = [
@@ -80,7 +80,11 @@ async function main() {
       ]
       widget.backgroundGradient = gradient
     }
-     
+    
+    // 更新时间
+    const df = new DateFormatter();
+    df.dateFormat = 'MM-dd HH:mm';
+    const GMT = df.string(new Date())
       
     // 灵动岛
     widget.setPadding(7, 7, 7, 7);
@@ -128,7 +132,7 @@ async function main() {
     barStack1.borderColor = new Color('#D50000', 0.8);
     barStack1.borderWidth = 2.5
     // bar text
-    const oilTipsText = barStack1.addText(forecast.length < 45 ? forecast + '，大家互相转告油价调整信息' : forecast);
+    const oilTipsText = barStack1.addText((forecast.length < 45 ? `${forecast}，大家互相转告油价调整信息` : forecast) + `【 ${GMT} 】`);
     oilTipsText.textColor = fm.fileExists(bgImage) ? Color.white() : new Color('#5e5e5e');
     oilTipsText.font = Font.boldSystemFont(13);
     oilTipsText.centerAlignText();
