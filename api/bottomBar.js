@@ -17,7 +17,7 @@ const cacheFile = fm.joinPath(path, 'setting.json');
 const timeStamp = Date.now();
 const df = new DateFormatter();
 df.dateFormat = 'HH:mm';
-const GMT = (df.string(new Date()));
+const GMT = df.string(new Date());
 
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
