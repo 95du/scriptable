@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1268,10 +1268,9 @@ document.getElementById('telegram').addEventListener('click', () => {
         return previewImg;
       }));
       return `
-        <div>
-          ${previewImgs.map((img) => `<img src="${img}">`).join('')}
-        </div>
-      `
+      <div>
+        ${previewImgs.map((img) => `<img src="${img}">`).join('')}
+      </div>`
     };
     
     // =======  HTML  =======//
@@ -1556,7 +1555,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         type: 'group',
         items: [
           {
-            label: 'JD_刘强冬',
+            label: '京东',
             desc: '京豆、农场、签到等',
             rightDesc: '1.0.5',
             type: 'button',
