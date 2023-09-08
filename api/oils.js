@@ -18,7 +18,9 @@ const wide = 8 //小机型改成 6
 try {
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
   forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
-} catch(e) { console.log(e) }
+} catch(e) { 
+  console.log(e);
+}
 
 const F_MGR = FileManager.iCloud();
 const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "oil");
@@ -78,7 +80,11 @@ async function createWidget(oil) {
   ]
   widget.backgroundGradient = gradient
    
-    
+  // 更新时间
+  const df = new DateFormatter();
+  df.dateFormat = 'MM-dd HH:mm';
+  const GMT = df.string(new Date());
+  
   // 灵动岛
   widget.setPadding(7, 7, 7, 7);
   const mainStack = widget.addStack();
@@ -125,7 +131,7 @@ async function createWidget(oil) {
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
   // bar text
-  const oilTipsText = barStack1.addText(!forecast ? data.alert : forecast);
+  const oilTipsText = barStack1.addText((forecast.length < 45 ? `${forecast}，大家互相转告油价调整信息` : forecast) + `【 ${GMT} 】`);
   oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
   oilTipsText.centerAlignText();
