@@ -80,7 +80,7 @@ module.exports = { main }`
 
 async function presentMenu() {
   let alert = new Alert();
-  alert.title = "随机切换小组件"
+  alert.title = "\n随机切换小组件"
   alert.message = getData.version;
   alert.addDestructiveAction('更新代码');
   alert.addDestructiveAction('重置所有');
@@ -88,8 +88,8 @@ async function presentMenu() {
   alert.addDestructiveAction('删减脚本');
   alert.addAction('添加组件');
   alert.addAction('预览组件');
-  alert.addAction('取消操作');
-  response = await alert.presentAlert();
+  alert.addCancelAction('取消');
+  response = await alert.presentSheet();
   if ( response === 1 ) {
     if (F_MGR.fileExists(folder)) {
       F_MGR.remove(folder);
