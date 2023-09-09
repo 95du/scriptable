@@ -282,15 +282,15 @@ const downloadModule = async (scriptName, url) => {
 
 const presentMenu = async() => {
   let menuAlert = new Alert();
-  menuAlert.title = 'iOS 16 负一屏底栏'
-  menuAlert.message = "\n高仿微信通知信息样式\n内容显示未来两小时天气\n底部显示每日一句中英文";
+  //menuAlert.title = 'iOS 16 负一屏底栏'
+  menuAlert.message = "\n【 iOS 16 负一屏底栏 】\n高仿微信通知信息样式，内容显示未来两小时天气，\n底部显示每日一句中英文";
   menuAlert.addDestructiveAction('更新代码');
   menuAlert.addDestructiveAction('重置所有');
   menuAlert.addAction('透明背景');
   menuAlert.addAction('组件商店');
   menuAlert.addAction('预览组件');
-  menuAlert.addAction('退出菜单');
-  const mainMenu = await menuAlert.presentAlert();
+  menuAlert.addCancelAction('取消');
+  const mainMenu = await menuAlert.presentSheet();
   if (mainMenu === 1) {
     await fm.remove(path);
     const bgImage = await getBgImagePath();
