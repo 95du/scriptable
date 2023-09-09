@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1155,7 +1155,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             <div class="form-label">
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
               <div id="telegram">
-                <div class="form-item-auth-name">95度茅台</div>
+                <div class="form-item-auth-name">95du丶茅台</div>
                 <a class="but form-item-auth-desc chat-message"></a>
               </div>
             </div>
