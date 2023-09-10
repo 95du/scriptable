@@ -80,7 +80,6 @@ module.exports = { main }`
 
 async function presentMenu() {
   const alert = new Alert();
-  alert.title = "\n随机切换小组件";
   alert.message = getData.version;
   const actions = [
     '更新代码', '重置所有', '更多组件', '删减脚本', '添加组件', '预览组件'
