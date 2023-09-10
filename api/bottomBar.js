@@ -281,8 +281,7 @@ const downloadModule = async (scriptName, url) => {
 };
 
 const presentMenu = async() => {
-  let menuAlert = new Alert();
-  //menuAlert.title = 'iOS 16 负一屏底栏'
+  const menuAlert = new Alert();
   menuAlert.message = "\n【 iOS 16 负一屏底栏 】\n高仿微信通知信息样式，内容显示未来两小时天气，\n底部显示每日一句中英文";
   menuAlert.addDestructiveAction('更新代码');
   menuAlert.addDestructiveAction('重置所有');
