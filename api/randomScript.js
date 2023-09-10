@@ -79,17 +79,19 @@ module.exports = { main }`
 }
 
 async function presentMenu() {
-  let alert = new Alert();
-  alert.title = "\n随机切换小组件"
+  const alert = new Alert();
+  alert.title = "\n随机切换小组件";
   alert.message = getData.version;
-  alert.addDestructiveAction('更新代码');
-  alert.addDestructiveAction('重置所有');
-  alert.addAction('更多组件');
-  alert.addDestructiveAction('删减脚本');
-  alert.addAction('添加组件');
-  alert.addAction('预览组件');
+  const actions = [
+    '更新代码', '重置所有', '更多组件', '删减脚本', '添加组件', '预览组件'
+  ];
+
+  actions.forEach(( action, index ) => {
+  alert[ index === 0 || index === 1 || index === 3 ? 'addDestructiveAction' : 'addAction' ](action);
+  });
   alert.addCancelAction('取消');
-  response = await alert.presentSheet();
+  
+  const response = await alert.presentSheet();
   if ( response === 1 ) {
     if (F_MGR.fileExists(folder)) {
       F_MGR.remove(folder);
@@ -123,7 +125,7 @@ async function presentMenu() {
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));
     }
   }
-}
+};
 
 async function downloadScripts() {
   const modulePath = F_MGR.joinPath(folder, 'store.js');
