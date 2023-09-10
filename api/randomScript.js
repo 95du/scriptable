@@ -39,7 +39,7 @@ const scriptUrl = script[Math.floor(Math.random() * script.length)];
 const modulePath = await downloadModule(scriptUrl);
 if ( modulePath != null ) {
   if ( config.runsInWidget ) {
-    const importedModule = importModule(modulePath);
+    const importedModule = await importModule(modulePath);
     await importedModule.main();
   } else {
     await presentMenu();
