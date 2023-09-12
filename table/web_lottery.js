@@ -11,7 +11,7 @@
 
 async function main() {
   const fm = FileManager.local();
-  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_macaujc_2');
+  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_lottery');
   const cache = fm.joinPath(mainPath, 'cache_data');
   if (!fm.fileExists(cache)) {
     fm.createDirectory(cache);
