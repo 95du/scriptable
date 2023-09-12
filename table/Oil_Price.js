@@ -87,7 +87,7 @@ async function main() {
     const GMT = df.string(new Date())
       
     // 灵动岛
-    widget.setPadding(7, 7, 7, 7);
+    widget.setPadding(10, 10, 10, 10);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     mainStack.centerAlignContent();
