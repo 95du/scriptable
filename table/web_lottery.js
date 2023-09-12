@@ -33,7 +33,7 @@ async function main() {
   
   // 在桌面小组件添加Parameter参数
   const param = args.widgetParameter;
-  const _lotteryType = {
+  const _lotteryType = { 
     ssq: 0, dlt: 1, kl8: 2, pl3: 3, fc3d: 4, qxc: 5, qlc: 6, pl5: 7
   }
 
@@ -69,7 +69,7 @@ async function main() {
   const getString = async (url) => {
     try {
       const { data } = await new Request(url).loadJSON();
-      if (param !== null && _lotteryType[param]) {
+      if (param !== null && typeof _lotteryType[param] === 'number') {
         return data[_lotteryType[param]];  
       }
       data.splice(2, 1);
