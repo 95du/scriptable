@@ -111,9 +111,6 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   // 系统版本
   const systemVersion =  Device.systemVersion().match(/\d+/)[0];
   
-  // 时间转换星期
-  const dayOfWeek = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"][new Date(openTime).getDay()];
-  
   // 数字转换为开奖状态
   const todayOpenStatus = todayOpen === 0 ? '未到时间' : todayOpen === 1 ? '今晚开奖' : '已开奖';
   
@@ -122,6 +119,15 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   
   // lotteryType
   const type = lotteryType === 'qlc' ? 3.5 : lotteryType === 'pl5' || lotteryType === 'pl3' || lotteryType === 'fc3d' ? 14 : 4
+  
+  // 时间转换星期
+  function getWeekday(dateString) {
+    const daysOfWeek = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+    const date = new Date(dateString);
+    return daysOfWeek[date.getDay()];
+  }
+
+  const dayOfWeek = getWeekday(openTime.split(" ")[0]);
   
   // 转换亿万单位
   function formatAmount(original) {
@@ -249,7 +255,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     expectText4.textOpacity = 0.5;
     titleStack.addSpacer(6);
     
-    const expectText5 = titleStack.addText(String(dayOfWeek))
+    const expectText5 = titleStack.addText(dayOfWeek);
     expectText5.font = Font.mediumSystemFont(15);
     expectText5.textOpacity = 0.5;
     
@@ -277,7 +283,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
       barStack.size = new Size(adapt.size, lotteryType === 'qlc' ? 35 : 40);
       
       barStack.backgroundColor = new Color(colorCode[i]);
-      barStack.cornerRadius = systemVersion === 14 ? 10 : 50;
+      barStack.cornerRadius = systemVersion === '14' ? setting.radius || 10 : 50;
      
       const openCodeText = barStack.addText(item);
       openCodeText.font = Font.mediumSystemFont(adapt.font);
