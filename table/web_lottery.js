@@ -160,7 +160,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     purple: '#9D64FF',
     yellow: '#FFA300',
     skyBlue: '#0096FF',
-    pink: '#FF4EFF'
+    pink: '#FF79FF'
   };
   
   const colorArr = ['blue', 'orange', 'red', 'green', 'purple', 'skyBlue', 'yellow', 'pink'];
