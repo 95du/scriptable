@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: purple; icon-glyph: bowling-ball;
+// icon-color: brown; icon-glyph: bowling-ball;
 /**
  * 小组件作者: 95度茅台
  * Version 1.0.0
@@ -290,7 +290,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     context.respectScreenScale = true;
     context.setFillColor(contextColor);
     const path = new Path();
-    path.addRoundedRect(new Rect(0, 0, 150, 0.2), 3, 2);
+    path.addRoundedRect(new Rect(0, 0, 150, 0.3), 3, 2);
     context.addPath(path);
     context.fillPath();
     context.setFillColor(contextColor);
