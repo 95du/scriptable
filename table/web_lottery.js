@@ -122,11 +122,12 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   
   // 时间转换星期
   function getWeekday(dateString) {
-    const daysOfWeek = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+    const daysOfWeek = [
+      "周日", "周一", "周二", "周三", "周四", "周五", "周六"
+    ];
     const date = new Date(dateString);
     return daysOfWeek[date.getDay()];
-  }
-
+  };
   const dayOfWeek = getWeekday(openTime.split(" ")[0]);
   
   // 转换亿万单位
@@ -147,7 +148,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
    */ 
   const getRandomValues = (arr, num) => {
     return [...arr].sort(() => Math.random() - 0.5).slice(0, num);
-  }
+  };
   
   const colorHex = {
     green: '#34C759',
