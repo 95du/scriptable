@@ -47,7 +47,7 @@ async function main() {
     return {
       readString: (fileName) => {
         const filePath = fm.joinPath(cache, fileName);
-        if (fm.fileExists(filePath) && cacheTime < 20 && !config.runsInApp) {
+        if (fm.fileExists(filePath) && cacheTime < 20 && setting.useCache && !config.runsInApp) {
           return fm.readString(filePath);
         }
         return null;
