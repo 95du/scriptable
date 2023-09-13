@@ -108,6 +108,9 @@ async function main() {
 getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   const { openCodeArr, openTime, lastNumbers, lotteryName, frequency, officeOpenTime, todayOpen, issue, lotteryType, poolAmount } = processData(macaujc);
   
+  // 系统版本
+  const systemVersion =  Device.systemVersion().match(/\d+/)[0];
+  
   // 时间转换星期
   const dayOfWeek = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"][new Date(openTime).getDay()];
   
@@ -246,7 +249,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     expectText4.textOpacity = 0.5;
     titleStack.addSpacer(6);
     
-    const expectText5 = titleStack.addText(dayOfWeek);
+    const expectText5 = titleStack.addText(String(dayOfWeek))
     expectText5.font = Font.mediumSystemFont(15);
     expectText5.textOpacity = 0.5;
     
@@ -274,7 +277,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
       barStack.size = new Size(adapt.size, lotteryType === 'qlc' ? 35 : 40);
       
       barStack.backgroundColor = new Color(colorCode[i]);
-      barStack.cornerRadius = 50;
+      barStack.cornerRadius = systemVersion === 14 ? 10 : 50;
      
       const openCodeText = barStack.addText(item);
       openCodeText.font = Font.mediumSystemFont(adapt.font);
