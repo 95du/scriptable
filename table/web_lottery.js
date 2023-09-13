@@ -283,7 +283,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
       barStack.size = new Size(adapt.size, lotteryType === 'qlc' ? 35 : 40);
       
       barStack.backgroundColor = new Color(colorCode[i]);
-      barStack.cornerRadius = systemVersion === '14' ? setting.radius || 10 : 50;
+      barStack.cornerRadius = systemVersion === '14' ? setting.radius : 50;
      
       const openCodeText = barStack.addText(item);
       openCodeText.font = Font.mediumSystemFont(adapt.font);
