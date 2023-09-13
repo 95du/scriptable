@@ -160,10 +160,10 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     purple: '#9D64FF',
     yellow: '#FFA300',
     skyBlue: '#0096FF',
-    pink: '#FF79FF'
+    cyan: '#00C4B6'
   };
   
-  const colorArr = ['blue', 'orange', 'red', 'green', 'purple', 'skyBlue', 'yellow', 'pink'];
+  const colorArr = ['blue', 'orange', 'red', 'green', 'purple', 'skyBlue', 'yellow', 'cyan'];
   const randomValues = getRandomValues(colorArr, 8);
   
   const colorCode = randomValues.map((name) => { return colorHex[name] });
