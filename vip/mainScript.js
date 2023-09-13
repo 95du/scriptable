@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: purple; icon-glyph: cog;
+// icon-color: orange; icon-glyph: cog;
 
 async function main() {
   const uri = Script.name();
@@ -187,7 +187,7 @@ async function main() {
    */
   const cache = fm.joinPath(mainPath, 'cache_path');
   if (!fm.fileExists(cache)) {
-    notify('正在初始化...', '缓存图片及加载数据，请等待 15 秒。');
+    notify('正在初始化...', '首次运行需缓存图片及加载数据，请等待 15 秒。');
     fm.createDirectory(cache);
   };
   
@@ -1410,6 +1410,14 @@ document.getElementById('telegram').addEventListener('click', () => {
         label: '新版组件',
         type: 'group',
         items: [
+          {
+            label: '开奖结果',
+            desc: '体育彩票、福彩彩票',
+            rightDesc: '1.0.0',
+            type: 'button',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_lottery.js',
+            icon: `${rootUrl}img/icon/lottery.png`
+          },
           {
             label: '中国电信_2',
             desc: '剩余流量、语音和余额',
