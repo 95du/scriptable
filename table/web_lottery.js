@@ -166,7 +166,9 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   const colorArr = ['blue', 'orange', 'red', 'green', 'purple', 'skyBlue', 'yellow', 'cyan'];
   const randomValues = getRandomValues(colorArr, 8);
   
-  const colorCode = randomValues.map((name) => { return colorHex[name] });
+  const colorCode = randomValues.map((name) => { 
+    return colorHex[name]
+  });
   
  /**  
   * 弹出一个通知
@@ -287,7 +289,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
       barStack.size = new Size(adapt.size, lotteryType === 'qlc' ? 35 : 40);
       
       barStack.backgroundColor = new Color(colorCode[i]);
-      barStack.cornerRadius = systemVersion === '14' ? setting.radius : 50;
+      barStack.cornerRadius = systemVersion >= 16 ? 50 : setting.radius;
      
       const openCodeText = barStack.addText(item);
       openCodeText.font = Font.mediumSystemFont(adapt.font);
