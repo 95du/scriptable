@@ -20,7 +20,7 @@ async function main() {
    */
   const getBotSettings = (file) => {
     if (F_MGR.fileExists(file)) {
-      return { loop, token, gap, location, avatarImage } = JSON.parse(F_MGR.readString(file));
+      return { loop, token, gap, location, avatarImage, radius } = JSON.parse(F_MGR.readString(file));
     }
     return null;
   };
@@ -190,8 +190,7 @@ async function main() {
       const randomBackgroundImage = await getCacheImage(bgImageName, bgImageURL);
       widget.backgroundImage = randomBackgroundImage;
       widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
-    }
-    
+    };
     
     /** 
     * @param {image} image
@@ -208,11 +207,13 @@ async function main() {
     avatarStack.layoutHorizontally();
     avatarStack.centerAlignContent();
     const avatarStack2 = avatarStack.addStack();
-    const iconSymbol = await getCacheImage('avatar.jpeg', avatarImage);
+    
+    const name = decodeURIComponent(avatarImage.substring(avatarImage.lastIndexOf("/") + 1));
+    const iconSymbol = await getCacheImage(name, avatarImage);
     const avatarIcon = avatarStack2.addImage(iconSymbol);
-    avatarIcon.imageSize = new Size(50, 50);
+    avatarIcon.imageSize = new Size(Number(radius), Number(radius));
     if ( avatarImage.indexOf('png') == -1 ) {
-      avatarStack2.cornerRadius = 50;
+      avatarStack2.cornerRadius = Number(radius);
       avatarStack2.borderWidth = 3;
       avatarStack2.borderColor = new Color('#FFBF00');
     }
