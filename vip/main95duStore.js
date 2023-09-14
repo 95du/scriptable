@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1505,7 +1505,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '南网在线',
             desc: '昨日用电量，账单',
-            rightDesc: '1.0.1',
+            rightDesc: '1.0.2',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_south_PowerGrid.js',
             icon: `${rootUrl}img/icon/electric.png`
