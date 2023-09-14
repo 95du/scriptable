@@ -208,8 +208,8 @@ async function main() {
     avatarStack.centerAlignContent();
     const avatarStack2 = avatarStack.addStack();
     
-    const name = decodeURIComponent(avatarImage.substring(avatarImage.lastIndexOf("/") + 1));
-    const iconSymbol = await getCacheImage(name, avatarImage);
+    const imgName = decodeURIComponent(avatarImage.substring(avatarImage.lastIndexOf("/") + 1));
+    const iconSymbol = await getCacheImage(imgName, avatarImage);
     const avatarIcon = avatarStack2.addImage(iconSymbol);
     avatarIcon.imageSize = new Size(Number(radius), Number(radius));
     if ( avatarImage.indexOf('png') == -1 ) {
