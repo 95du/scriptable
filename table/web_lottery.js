@@ -318,6 +318,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const botStack = widget.addStack();
     botStack.layoutHorizontally();
     botStack.centerAlignContent();
+    botStack.url = `https://m.zhuying.com/baidu/jjcx?lotteryType=${lotteryType}`;
     botStack.addSpacer();
   
     const bottomText = botStack.addText('奖池 ');
@@ -346,7 +347,6 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     barStack.setPadding(3, 8, 3, 8);
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
-    
     barStack.backgroundColor = new Color(staColor);
     barStack.cornerRadius = 8;
      
