@@ -146,8 +146,8 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   /**
    * @param {string[]} arr
    * @param {number} num
-   * @returns {string[]}
-   */ 
+   * @returns {string[]} color
+   */
   const getRandomValues = (arr, num) => {
     return [...arr].sort(() => Math.random() - 0.5).slice(0, num);
   };
@@ -238,6 +238,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const titleStack = widget.addStack();
     titleStack.layoutHorizontally();
     titleStack.centerAlignContent();
+    titleStack.setPadding(0, 2, 0, 0)
     titleStack.addSpacer();
     
     const titleText = titleStack.addText(`[  ${lotteryName}  ]`);
