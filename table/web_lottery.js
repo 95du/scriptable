@@ -20,6 +20,17 @@ async function main() {
   const cacheFile =  fm.joinPath(mainPath, 'setting.json');
   
   /**
+   * 存储当前设置
+   * @param { JSON } string
+   */
+  const writeSettings = async (setting) => {
+    fm.writeString(cacheFile, JSON.stringify(setting, null, 2));
+    console.log(JSON.stringify(
+      setting, null, 2)
+    );
+  };
+  
+  /**
    * 读取储存的设置
    * @returns {object} - 设置对象
    */
@@ -183,11 +194,6 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     return await n.schedule();
   };
   
-  const widgetBgColor = Color.dynamic(
-    new Color("#fefefe"),
-    new Color("#1e1e1e")
-  );
-  
   const contextColor = Color.dynamic(
     new Color('#48484b', 0.3),
     new Color('#FFFFFF', 0.3)
@@ -226,7 +232,8 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   //=========> Create <=========//
   const createWidget = async () => {
     const widget = new ListWidget();
-    widget.backgroundColor = widgetBgColor;
+    
+    widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
     
     widget.backgroundImage = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png');
     
@@ -318,7 +325,6 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const botStack = widget.addStack();
     botStack.layoutHorizontally();
     botStack.centerAlignContent();
-    botStack.url = `https://m.zhuying.com/baidu/jjcx?lotteryType=${lotteryType}`;
     botStack.addSpacer();
   
     const bottomText = botStack.addText('奖池 ');
@@ -354,6 +360,13 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     openCodeText.font = Font.mediumSystemFont(14);
     openCodeText.textColor = Color.white();
     botStack.addSpacer();
+    
+    // 开奖结果通知
+    if (setting.issue !== issue && todayOpen === 2 && param === null) {
+      notify(`[  ${lotteryName}  ]`, `第 ${issue.substring(4)} 期，开奖结果: ${openCodeArr.join(' ')}`);
+      setting.issue = issue;
+      writeSettings(setting);
+    };
     
     if (config.runsInApp) {
       await widget.presentMedium();
