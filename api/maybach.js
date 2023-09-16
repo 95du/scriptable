@@ -15,7 +15,6 @@ const path = fm.joinPath(fm.documentsDirectory(), 'mercedes');
 fm.createDirectory(path, true);
 const cacheFile = fm.joinPath(path, 'setting.json');
 
-
 /**
  * 读取储存的设置
  * @param {string} file - JSON
@@ -60,33 +59,19 @@ const notify = async (title, body, url, opts = {}) => {
  * 弹出菜单供用户选择进行操作
  */
 const presentMenu = async () => {
-  const title = 'Mercedes Maybach';
-  const message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
-  const destructiveActions = ['更新代码', '重置所有'];
-  const actions = ['家人地图', '输入凭证', '预览组件', '退出菜单'];
+  const alert = new Alert();
+  alert.message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
+  
+  const actions = ['更新代码', '重置所有', '家人地图', '输入凭证', '预览组件'];
 
-  const showAlert = (
-    title,
-    message
-  ) => {
-    let alert = new Alert();
-    alert.title = title;
-    alert.message = message;
-    return alert;
-  }
-
-  const alert = showAlert(
-    title,
-    message
-  );
-  for (const action of destructiveActions) {
-    alert.addDestructiveAction(action);
-  }
-  for (const action of actions) {
-    alert.addAction(action);
-  }
-
-  const response = await alert.presentAlert();
+  actions.forEach(( action, index ) => {
+  alert[ index === 0 || index === 1 
+    ? 'addDestructiveAction'
+    : 'addAction' ](action);
+  });
+  alert.addCancelAction('取消');
+  
+  const response = await alert.presentSheet();
   switch (response) {
     case 1:
       fm.remove(path);
@@ -315,7 +300,7 @@ const createWidget = async () => {
   const { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
 
   // Initial Save
-  if ( setting.run == undefined) {
+  if ( !setting.run ) {
     writeSettings(runObj);
     await getRandomImage();
   }
@@ -354,7 +339,7 @@ const createWidget = async () => {
   carIcon1.imageSize = new Size(16, 16);
   benzStack.addSpacer(4);
   
-  const vehicleModelText = benzStack.addText(String(heading));
+  const vehicleModelText = benzStack.addText(String(heading.toFixed(6)));
   vehicleModelText.font = Font.mediumSystemFont(14);
   vehicleModelText.textColor = Color.black();
   vehicleModelText.textOpacity = 0.7;
@@ -431,7 +416,7 @@ const createWidget = async () => {
   const carLogo = await getCacheImage('maybachLogo.png' ,'https://gitcode.net/4qiao/scriptable/raw/master/img/car/maybachLogo.png');
   const image = carLogoStack.addImage(carLogo);
   image.imageSize = new Size(27, 27);
-  image.tintColor = parkingTime < 3 ? Color.blue() : Color.black();
+  image.tintColor = Color.black();
   rightStack.addSpacer(1);
     
   // Car image
@@ -500,7 +485,7 @@ const createWidget = async () => {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
     } else if ( speed <= 5 ) {
-      const duration = updateTime == setting.updateTime ? 300 : 10;
+      const duration = updateTime === setting.updateTime ? 300 : 10;
       if (moment >= duration) {
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         writeSettings({ ...runObj, run: speed });
@@ -558,12 +543,12 @@ const createWidget = async () => {
 createSmallWidget = async () => {
   const widget = new ListWidget();
   const { mapUrl } = await getInfo();
-  widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`);
+  widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`);
   widget.url = mapUrl;
   Script.setWidget(widget);
   Script.complete();
   return widget;  
-}
+};
 
 async function createErrorWidget() {
   const widget = new ListWidget();
@@ -590,7 +575,7 @@ const argsParam = async () => {
   }
 };
 if ( args.plainTexts[0] ) {
-  return await argsParam();
+  return JSON.stringify(await argsParam(), null, 4);
 }
 
 /**-------------------------**/
@@ -601,5 +586,5 @@ const runWidget = async () => {
   } else {
     await Promise.all([loadPicture(), presentMenu()]);
   }
-}
+};
 await runWidget();
