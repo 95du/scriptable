@@ -2,10 +2,10 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: brown; icon-glyph: bowling-ball;
 /**
- * 小组件作者: 95度茅台
- * Version 1.0.0
- * 2023-09-13
- * 全国彩票开奖结果
+ * 组件作者: 95度茅台
+ * 组件名称: 全国彩开奖结果
+ * 组件版本: Version 1.0.2
+ * 发布时间: 2023-09-17
  */
 
 
@@ -17,7 +17,7 @@ async function main() {
     fm.createDirectory(cache);
   };
   
-  const cacheFile =  fm.joinPath(mainPath, 'setting.json');
+  const cacheFile =  fm.joinPath(mainPath, 'setting.json')
   
   /**
    * 存储当前设置
@@ -120,22 +120,23 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   const { openCodeArr, openTime, lastNumbers, lotteryName, frequency, officeOpenTime, todayOpen, issue, lotteryType, poolAmount } = processData(macaujc);
   
   /**
-   * 系统版本
+   * iOS 系统版本
    * 获取跳转页面ID
-   * 数字转换为开奖状态
-   * 开奖状态颜色
+   * 数字转换为开奖状态、颜色
    * lotteryType
    */
   const systemVersion =  Device.systemVersion().match(/\d+/)[0];
   
-  const mapping = {
+  const gameId = {
     ssq: 101, dlt: 201, pl3: 202, fc3d: 102, qxc: 204, qlc: 104, pl5: 203
   };
-  const gameId = mapping[lotteryType];
   
-  const todayOpenStatus = todayOpen === 0 ? '未到时间' : todayOpen === 1 ? '今晚开奖' : '已开奖';
-  
-  const staColor = todayOpen === 0 ? '#666666' : todayOpen === 1 ? '#FF6800' : '#34c759';
+  const statusMap = {
+    0: { todayOpenStatus: '未到时间', staColor: '#666666' },
+    1: { todayOpenStatus: '今晚开奖', staColor: '#FF6800' },
+    2: { todayOpenStatus: '已开奖', staColor: '#34c759' },
+  };
+  const { todayOpenStatus, staColor } = statusMap[todayOpen];
   
   const type = lotteryType === 'qlc' ? 3.5 : lotteryType === 'pl5' || lotteryType === 'pl3' || lotteryType === 'fc3d' ? 14 : 4
   
@@ -180,7 +181,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     cyan: '#00C4B6'
   };
   
-  const colorArr = ['blue', 'orange', 'red', 'green', 'purple', 'skyBlue', 'yellow', 'cyan'];
+  const colorArr = [ 'blue', 'orange', 'red', 'green', 'purple', 'skyBlue', 'yellow', 'cyan' ];
   const randomValues = getRandomValues(colorArr, 8);
   
   const colorCode = randomValues.map((name) => { 
@@ -331,7 +332,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const botStack = widget.addStack();
     botStack.layoutHorizontally();
     botStack.centerAlignContent();
-    botStack.url = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId}`;
+    botStack.url = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId[lotteryType]}`;
     botStack.addSpacer();
   
     const bottomText = botStack.addText('奖池 ');
