@@ -121,11 +121,17 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   
   /**
    * 系统版本
+   * 获取跳转页面ID
    * 数字转换为开奖状态
    * 开奖状态颜色
    * lotteryType
-   */ 
+   */
   const systemVersion =  Device.systemVersion().match(/\d+/)[0];
+  
+  const mapping = {
+    ssq: 101, dlt: 201, pl3: 202, fc3d: 102, qxc: 204, qlc: 104, pl5: 203
+  };
+  const gameId = mapping[lotteryType];
   
   const todayOpenStatus = todayOpen === 0 ? '未到时间' : todayOpen === 1 ? '今晚开奖' : '已开奖';
   
@@ -325,6 +331,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const botStack = widget.addStack();
     botStack.layoutHorizontally();
     botStack.centerAlignContent();
+    botStack.url = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId}`;
     botStack.addSpacer();
   
     const bottomText = botStack.addText('奖池 ');
