@@ -82,9 +82,9 @@ async function main() {
    */
   const updateVersionNotice = () => {
     if ( version !== settings.version ) {
+      return '.signin-loader';
       settings.version = version;
       writeSettings(settings);
-      return '.signin-loader';
     }
     return null
   };
@@ -1229,7 +1229,8 @@ document.getElementById('telegram').addEventListener('click', () => {
         setTimeout(function() {
           $('${updateVersionNotice()}').click();
         }, 1200);
-        window._win = { uri: 'https://zibll.com/wp-content/themes/zibll', loading: '0' };
+        // https://zibll.com
+        window._win = { uri: 'https://bbs.applehub.cn/wp-content/themes/zibll', loading: '95du' };
       </script>`;
       
       const songId = [
@@ -1413,7 +1414,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '开奖结果',
             desc: '体育彩票、福彩彩票',
-            rightDesc: '1.0.0',
+            rightDesc: '1.0.2',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_lottery.js',
             icon: `${rootUrl}img/icon/lottery.png`
