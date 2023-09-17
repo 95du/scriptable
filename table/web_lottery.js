@@ -125,7 +125,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
    * 数字转换为开奖状态、颜色
    * lotteryType
    */
-  const systemVersion =  Device.systemVersion().match(/\d+/)[0];
+  const systemVersion =  Device.systemVersion().match(/\d+/)[0]; // 用于修改弧度
   
   const gameId = {
     ssq: 101, dlt: 201, pl3: 202, fc3d: 102, qxc: 204, qlc: 104, pl5: 203
@@ -234,8 +234,8 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     cache.writeImage(name, img);
     return img;
   };
-  
-  
+
+
   //=========> Create <=========//
   const createWidget = async () => {
     const widget = new ListWidget();
@@ -258,6 +258,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const titleText = titleStack.addText(`[  ${lotteryName}  ]`);
     titleText.centerAlignText();
     titleText.font = Font.boldSystemFont(18);
+    
     titleStack.addSpacer();
     
     const expectText1 = titleStack.addText('第 ');
@@ -332,7 +333,6 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const botStack = widget.addStack();
     botStack.layoutHorizontally();
     botStack.centerAlignContent();
-    botStack.url = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId[lotteryType]}`;
     botStack.addSpacer();
   
     const bottomText = botStack.addText('奖池 ');
@@ -362,6 +362,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
     barStack.backgroundColor = new Color(staColor);
+    barStack.url = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId[lotteryType]}`;
     barStack.cornerRadius = 8;
      
     const openCodeText = barStack.addText(todayOpenStatus);
