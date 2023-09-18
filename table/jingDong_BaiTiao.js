@@ -211,7 +211,7 @@ async function main() {
     topStack.centerAlignContent();
     
     const levelStack = topStack.addStack();
-    levelStack.setPadding(-5, 0, 0, 0); // 后加调整
+    levelStack.setPadding(-5, 0, -3, 0); // 后加调整
     levelStack.layoutHorizontally();
     levelStack.centerAlignContent();
     
@@ -249,7 +249,7 @@ async function main() {
     const jdImage = await getCacheImage('jdWord.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const jdIcon = beneStack.addImage(jdImage);
     jdIcon.imageSize = new Size(35, 35);
-    topStack.addSpacer(-5); // 5
+    topStack.addSpacer(1); // 5
     
     const pointStack = topStack.addStack();
     pointStack.layoutHorizontally();
