@@ -376,7 +376,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     
     // 开奖结果通知
     if (setting.issue !== issue && todayOpen === 2 && param === null) {
-      notify(`全国彩 [ ${lotteryName} ] 💥`, `第 ${issue.substring(4)} 期，开奖结果: ${openCodeArr.join(' ')}`);
+      notify(`[  ${lotteryName}  ] 💥`, `第 ${issue.substring(4)} 期，开奖结果: ${openCodeArr.join(' ')}`);
       setting.issue = issue;
       writeSettings(setting);
     };
