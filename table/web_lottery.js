@@ -110,9 +110,13 @@ async function main() {
    * @returns {object} - string
    */
   const processData = (data) => {
-    const { firstNumbers, lastNumbers = '', ...rest } = JSON.parse(data);
-    const openCodeArr = [...firstNumbers.split(','), ...lastNumbers.split(',').filter(num => num !== '')];
-    return { openCodeArr, ...rest };
+    try {
+      const { firstNumbers, lastNumbers = '', ...rest } = JSON.parse(data);
+      const openCodeArr = [...firstNumbers.split(','), ...lastNumbers.split(',').filter(num => num !== '')];
+      return { openCodeArr, ...rest }
+    } catch (e) {
+      console.log(e);
+    }
   };
   
   const macaujc = await 
