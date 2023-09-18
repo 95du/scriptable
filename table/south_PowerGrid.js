@@ -111,10 +111,12 @@ async function main() {
   */
   const getYearMonth = async () => {
     const Year = new Date().getFullYear();
+    
     const df = new DateFormatter();
     df.dateFormat = 'MM';
     const Month = (df.string(new Date()));
-    const year = Month == 1 ? Year - 1 : Year;  
+    
+    const year = Month === 1 ? (Year - 1) : Year;  
     return { Year, Month, year }
   }
   const { Year, Month, year } = await getYearMonth();
@@ -153,16 +155,16 @@ async function main() {
     const ele = await selectEleBill();
     if ( ele ) {  
       pay = ele.electricBillPay;
-      const bill = ele.billUserAndYear[0];
-      monthDate = bill.startMonthDate.split('.')[0];
-      total = bill.totalPower;
-      arrears = bill.totalElectricity;
+      const { startMonthDate, totalPower, totalElectricity, electricityBillYearMonth } = ele.billUserAndYear[0];
+      formattedDate = electricityBillYearMonth.replace(/^(\d{4})(\d{2})$/, '$1-$2');
+      monthDate = startMonthDate.split('.')[0];
+      total = totalPower;
+      arrears = totalElectricity;
     }
   };
   
   
   //=========> Create <=========//
-  
   async function createWidget() {
     const widget = new ListWidget();
     const bgImage = await getBgImagePath();
@@ -265,7 +267,6 @@ async function main() {
     }
     topStack.addSpacer(5);
     
-    
     const pointStack = topStack.addStack();
     pointStack.layoutHorizontally();
     pointStack.centerAlignContent();
@@ -356,10 +357,7 @@ async function main() {
     const billStack1 = billStack.addStack();
     billStack1.addSpacer();
     
-    const lastMonth = ('0' + (new Date().getMonth() || 12)).slice(-2);
-    const previousMonth = ('0' + (new Date().getMonth() - 1 || 12)).slice(-2);
-    
-    const billText = billStack1.addText(`${Year}-${pay > 0 ? lastMonth : previousMonth}`);
+    const billText = billStack1.addText(formattedDate);
     billText.font = Font.mediumSystemFont(14);
     billText.textOpacity = 0.7;
     billStack.addSpacer(3);
@@ -381,7 +379,6 @@ async function main() {
     if (location == 1) {
       await progressBar();
     }
-    
     
     /** 
     * progressBar Stack
@@ -491,7 +488,6 @@ async function main() {
      /** Request(url) json **/
   /**-------------------------**/
   
-  
   async function userInfo() {
     const req = new Request('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers')
     req.method = 'POST'
@@ -508,37 +504,35 @@ async function main() {
         eleCustNumber: number,
       } = res.data[setting.count];
     }
-  }
+  };
+  
+  // 每月用电
+  async function makeRequest(url, requestBody) {
+    const req = new Request(url);
+    req.method = 'POST';
+    req.headers = headers;
+    req.body = JSON.stringify(requestBody);
+    return await req.loadJSON();
+  };
   
   async function getMonthData() {
-    // queryMeteringPoint  
-    const point = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryMeteringPoint');
-    point.method = 'POST'
-    point.headers = headers;
-    point.body = JSON.stringify({
+    const pointResponse = await makeRequest(
+      'https://95598.csg.cn/ucs/ma/zt/charge/queryMeteringPoint', {
       areaCode: code,
-      eleCustNumberList: [
-        {
-          areaCode: code,
-          eleCustId: id
-        }
-      ]
+      eleCustNumberList: [{ areaCode: code, eleCustId: id }]
     });
-    const p = await point.loadJSON();
     // Month & Yesterday
-    const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint')
-    req.method = 'POST'
-    req.headers = headers;
-    req.body = JSON.stringify({
+    const { meteringPointId } = pointResponse.data[0];
+    const monthResponse = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint', {
       eleCustId: id,
       areaCode: code,
       yearMonth: Year + Month,
-      meteringPointId: p.data[0].meteringPointId
+      meteringPointId
     });
-    const m = await req.loadJSON();
-    return m.data;
-  }
+    return monthResponse.data;
+  };
   
+  // 余额
   async function getBalance() {
     const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus');  
     req.method = 'POST'
@@ -547,10 +541,10 @@ async function main() {
       areaCode: code,
       eleCustId: id
     });
-    const bal = await req.loadJSON();
-    return bal.data[0].balance;
-  }
+    return (await req.loadJSON()).data[0].balance;
+  };
   
+  // 账单
   async function getEleBill() {
     const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryCharges');
     elecBill.method = 'POST'
@@ -579,26 +573,26 @@ async function main() {
       }
     } else {
       return {
-        pay: pay = '0',
-        total: total = '0.00',
-        arrears: arrears = '0.00'
+        pay: '0',
+        total: '0.00',
+        arrears: '0.00'
       }
     }
-  }
+  };
   
   async function selectEleBill() {
     const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
-    req.method = 'POST'
+    req.method = 'POST';
     req.headers = headers;
-    req.body = JSON.stringify({
+    req.body = JSON.stringify({ 
       electricityBillYear: year,
       areaCode: code,
       eleCustId: id
     });
-    const res = await req.loadJSON();
-    return res.data;
-  }
+    return (await req.loadJSON()).data;
+  };
   
+  // 组件设置功能
   async function shadowImage(img) {
     let ctx = new DrawContext()
     ctx.size = img.size
@@ -606,7 +600,7 @@ async function main() {
     ctx.setFillColor(new Color("#000000", Number(setting.masking)));
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage()
-  }
+  };
   
   async function smallrWidget() {
     const widget = new ListWidget();
@@ -615,11 +609,11 @@ async function main() {
     text.centerAlignText();
     Script.setWidget(widget);
     Script.complete();
-  }
+  };
   
   async function createErrWidget() {
     const widget = new ListWidget();
-    const image = await getCacheImage('gose.png', 'http://mtw.so/67LhN1');
+    const image = await getCacheImage('gose.png', 'https://sweixinfile.hisense.com/media/M00/75/2C/Ch4FyWQoaJOAFvSdAAG9-M1eIU0735.png');
     const widgetImage = widget.addImage(image);
     widgetImage.imageSize = new Size(50, 50);
     widgetImage.centerAlignImage();
@@ -628,6 +622,6 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
-  }
+  };
 }
 module.exports = { main }
