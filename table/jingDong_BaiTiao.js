@@ -211,6 +211,7 @@ async function main() {
     topStack.centerAlignContent();
     
     const levelStack = topStack.addStack();
+    levelStack.setPadding(-5, 0, 0, 0); // 后加调整
     levelStack.layoutHorizontally();
     levelStack.centerAlignContent();
     
@@ -243,8 +244,12 @@ async function main() {
     benefitText2.font = Font.boldSystemFont(13);
     benefitText2.textOpacity = 0.7;
     barStack.addSpacer(5);
-    topStack.addSpacer(5);
+    beneStack.addSpacer(); // 调整
     
+    const jdImage = await getCacheImage('jdWord.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
+    const jdIcon = beneStack.addImage(jdImage);
+    jdIcon.imageSize = new Size(35, 35);
+    topStack.addSpacer(-5); // 5
     
     const pointStack = topStack.addStack();
     pointStack.layoutHorizontally();
@@ -320,7 +325,6 @@ async function main() {
     gooseIconElement.imageSize = bgImageName == 'whiteGoose.png' ? new Size(55, 55) : new Size(52, 52);
     middleStack.addSpacer();
     
-    
     const billStack = middleStack.addStack();    
     billStack.layoutVertically();  
     billStack.centerAlignContent();
@@ -349,7 +353,6 @@ async function main() {
     if (location == 1) {
       await progressBar();
     }
-    
     
     /** 
     * progressBar Stack
