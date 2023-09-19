@@ -6,7 +6,6 @@
  * 小组件名称: 中国电信余量
  * Version 1.0.0
  * 2023-01-17 14:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
 async function main() {
@@ -213,7 +212,7 @@ async function main() {
   const Step2nd = 85;
   const StepFin = 100;
   const barWidth = 15;
-  const barHeigth = 105;
+  const barHeigth = (flow < 85 && voice < 85) ? 108 : 105;
   
   const phone = Device.screenSize().height;
   
