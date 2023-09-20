@@ -267,7 +267,7 @@ async function main() {
   
   async function createWidget() {
     const widget = new ListWidget();
-    widget.backgroundColor = Color.white();
+    
     const bgImage = await getBgImagePath();
     if (F_MGR.fileExists(bgImage)) {
       widget.backgroundImage = F_MGR.readImage(bgImage);
@@ -301,7 +301,8 @@ async function main() {
         new Color(randomColor, Number(setting.transparency)),
         new Color('#00000000')
       ]
-      widget.backgroundGradient = gradient;
+      widget.backgroundGradient = gradient;  
+      widget.backgroundColor = Color.white();
     };
     
     // 调用违章查询函数
@@ -385,7 +386,7 @@ async function main() {
     // 
     const updateTime = dateStack.addStack();
     const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(\d{4}-\d{2}-\d{2})&/)[1] : `${vio.violationTime}`);
-    textUpdateTime.font = Font.mediumSystemFont(nothing ? 13 : 12);
+    textUpdateTime.font = Font.mediumSystemFont(nothing ? 13 : 11.8);
     textUpdateTime.textColor = new Color('#484848');
     leftStack.addSpacer();
     
