@@ -396,7 +396,6 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const bottomText1 = botStack.addText(formatAmount(poolAmount));
     bottomText1.font = Font.mediumSystemFont(15);
     bottomText1.textColor = Color.red();
-    bottomText1.textColor = textColor
     bottomText1.textOpacity = 0.7;
     botStack.addSpacer();
     
