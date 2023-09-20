@@ -352,7 +352,7 @@ async function main() {
     const carIcon = carIconStack.addImage(man.image);
     carIcon.imageSize = new Size(15, 15);
     carIcon.tintColor = nothing || !success ? Color.blue() : Color.red();
-    carIconStack.addSpacer(4.5);
+    carIconStack.addSpacer(5);
     
     // 
     const vehicleModel = carIconStack.addStack();
@@ -385,7 +385,7 @@ async function main() {
     // 
     const updateTime = dateStack.addStack();
     const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(\d{4}-\d{2}-\d{2})&/)[1] : `${vio.violationTime}`);
-    textUpdateTime.font = Font.mediumSystemFont(nothing ? 13 : 11.5);
+    textUpdateTime.font = Font.mediumSystemFont(nothing ? 13 : 12);
     textUpdateTime.textColor = new Color('#484848');
     leftStack.addSpacer();
     
