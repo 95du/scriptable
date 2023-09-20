@@ -52,6 +52,15 @@ async function main() {
     return fm.joinPath(bgImgPath, Script.name() + '.jpg');
   };
   
+  async function shadowImage(img) {
+    let ctx = new DrawContext();
+    ctx.size = img.size
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+    return await ctx.getImage()
+  };
+  
   /**
    * 弹出一个通知  
    * @param {string} title
@@ -266,7 +275,7 @@ async function main() {
     widget.backgroundColor = new Color(setting.solidColor);
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
-      widget.backgroundImage = fm.readImage(bgImage);
+      widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
     } else {
       const gradient = new LinearGradient();
       colorArr = setting.gradient.length
