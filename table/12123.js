@@ -316,8 +316,11 @@ async function main() {
      * Cylindrical Bar Chart
      */
     widget.setPadding(15, 18, 15, 15);
+    if (nothing || !success) {
+      widget.addSpacer(3);
+    }
     const topStack = widget.addStack();
-    if ( detail && success ) topStack.setPadding(0, 0, 3, 0);
+    if ( detail && success ) topStack.setPadding(0, 0, 3, 0)
     topStack.layoutHorizontally();
     topStack.centerAlignContent()
     
