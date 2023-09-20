@@ -267,30 +267,19 @@ async function main() {
     return { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, textColor, runObj };
   };
 
+  
   //=========> Create <=========//
   const { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, textColor, runObj } = await getData();
 
   const createWidget = async () => {
     const widget = new ListWidget();
-    widget.backgroundColor = new Color(setting.solidColor);
+    
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
     } else {
       const gradient = new LinearGradient();
-      colorArr = setting.gradient.length
-      if (colorArr === 0) {
-        color = [
-          "#82B1FF",
-          "#4FC3F7",
-          "#66CCFF",
-          "#99CCCC",
-          "#BCBBBB",
-          "#A0BACB"
-        ]
-      } else {
-        color = setting.gradient;
-      }
+      const color = setting.gradient.length > 0 ? setting.gradient : [setting.rangeColor];
       const randomColor = color[Math.floor(Math.random() * color.length)];
       
       // 渐变角度
@@ -306,7 +295,8 @@ async function main() {
         new Color(randomColor, Number(setting.transparency)),
         new Color('#00000000')
       ];
-      widget.backgroundGradient = gradient;
+      widget.backgroundGradient = gradient;  
+      widget.backgroundColor = new Color(setting.solidColor);
     };
     
     if ( !setting.run ) {
