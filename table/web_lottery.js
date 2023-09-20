@@ -193,7 +193,12 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   };
   const { todayOpenStatus, staColor } = statusMap[todayOpen];
   
-  const type = lotteryType === 'qlc' ? 3.5 : lotteryType === 'pl5' || lotteryType === 'pl3' || lotteryType === 'fc3d' ? 14 : 4
+  const type = {  
+    'qlc': 3.5,
+    'pl5': 13.5,
+    'pl3': 24,
+    'fc3d': 24
+  }[lotteryType] || 4;
   
   // 时间转换星期
   function getWeekday(dateString) {
@@ -253,9 +258,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   
   const isSmallScreen = Device.screenSize().height < 926;
   const adapt = {
-    top: isSmallScreen ? 8 : 12,
-    middle: isSmallScreen ? 5 : 8,
-    padding: isSmallScreen ? 0 : 5,
+    middle: isSmallScreen ? 12 : 15,
     font: lotteryType === 'qlc' ? 18 : 20,
     size: isSmallScreen ? (lotteryType === 'qlc' ? 32 : 38) : (lotteryType === 'qlc' ? 35 : 40),
   };
@@ -296,12 +299,11 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
      * @param {number} padding
      * @returns {WidgetStack} 
      */
-    widget.setPadding(10, adapt.padding, 10, adapt.padding);
+    widget.setPadding(10, 5, 10, 5);
     const titleStack = widget.addStack();
     titleStack.layoutHorizontally();
     titleStack.centerAlignContent();
-    titleStack.setPadding(0, 2, 0, 0)
-    titleStack.addSpacer();
+    titleStack.setPadding(0, 15, 0, 15);
     
     const titleText = titleStack.addText(`[  ${lotteryName}  ]`);
     titleText.centerAlignText();
@@ -320,7 +322,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const expectText3 = titleStack.addText(' 期');
     expectText3.font = Font.mediumSystemFont(16);
     expectText3.textColor = textColor;
-    titleStack.addSpacer(6);
+    titleStack.addSpacer(10);
     
     const dateText = titleStack.addText(openTime.split(" ")[0]);
     dateText.font = Font.mediumSystemFont(16);
@@ -333,19 +335,19 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     weekText.textColor = textColor;
     weekText.textOpacity = 0.5;
     
-    titleStack.addSpacer();
-    widget.addSpacer(adapt.top);
+    widget.addSpacer(adapt.middle);
     
     // openCodeArr
     const mainStack1 = widget.addStack();
     mainStack1.layoutHorizontally();
     mainStack1.addSpacer();
-  
+    
     const codeStack = mainStack1.addStack();
     codeStack.layoutHorizontally();
     codeStack.centerAlignContent();
     mainStack1.addSpacer();
-    widget.addSpacer(8);
+    
+    widget.addSpacer(5);// 线底部
     
     for (let i = 0; i < openCodeArr.length; i++) {
       const item = openCodeArr[i];
@@ -366,7 +368,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     };
     
     // 绘制分割线
-    widget.addSpacer(adapt.middle);
+    widget.addSpacer(12);
     const context = new DrawContext()
     context.size = new Size(150, 0.5);
     context.opaque = false;
@@ -379,19 +381,20 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     context.setFillColor(contextColor);
     const drawLine = widget.addImage(context.getImage());
     drawLine.centerAlignImage();
-    widget.addSpacer(18);
     
-    // 奖池 开奖日期等
+    widget.addSpacer(adapt.middle);
+    
+    // 底部信息
     const botStack = widget.addStack();
     botStack.layoutHorizontally();
     botStack.centerAlignContent();
-    botStack.addSpacer();
+    botStack.setPadding(0, 15, 0, 15)
   
-    const bottomText = botStack.addText('奖池 ');
+    const bottomText = botStack.addText('奖池');
     bottomText.font = Font.mediumSystemFont(15);
     bottomText.textColor = textColor;
     bottomText.textOpacity = 0.5;
-    botStack.addSpacer(1);
+    botStack.addSpacer(3);
     
     const bottomText1 = botStack.addText(formatAmount(poolAmount));
     bottomText1.font = Font.mediumSystemFont(15);
@@ -422,7 +425,6 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const openCodeText = barStack.addText(todayOpenStatus);
     openCodeText.font = Font.mediumSystemFont(14);
     openCodeText.textColor = Color.white();
-    botStack.addSpacer();
     
     // 开奖结果通知
     if (setting.issue !== issue && todayOpen === 2 && param === null) {
