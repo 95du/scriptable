@@ -4,7 +4,7 @@
 /**
  * 组件作者: 95度茅台
  * 组件名称: 全国彩开奖结果
- * 组件版本: Version 1.0.2
+ * 组件版本: Version 1.0.3
  * 发布时间: 2023-09-17
  */
 
@@ -18,6 +18,12 @@ async function main() {
   };
   
   const cacheFile =  fm.joinPath(mainPath, 'setting.json')
+  
+  // 在桌面小组件添加Parameter参数
+  const param = args.widgetParameter;
+  const _lotteryType = { 
+    ssq: 0, dlt: 1, kl8: 2, pl3: 3, fc3d: 4, qxc: 5, qlc: 6, pl5: 7
+  };
   
   /**
    * 存储当前设置
@@ -42,12 +48,37 @@ async function main() {
   };
   const setting = await getBotSettings(cacheFile);
   
-  // 在桌面小组件添加Parameter参数
-  const param = args.widgetParameter;
-  const _lotteryType = { 
-    ssq: 0, dlt: 1, kl8: 2, pl3: 3, fc3d: 4, qxc: 5, qlc: 6, pl5: 7
-  }
-
+  /**
+   * 获取背景图片存储目录路径
+   * @returns {string} - 目录路径
+   */
+  const getBgImagePath = () => {
+    const bgImgPath = fm.joinPath(fm.documentsDirectory(), '95duBackground');
+    return fm.joinPath(bgImgPath, Script.name() + '.jpg');
+  };
+  
+  async function shadowImage(img) {
+    let ctx = new DrawContext();
+    ctx.size = img.size
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+    return await ctx.getImage()
+  };
+  
+  /**  
+  * 弹出一个通知
+  * @param {string} title
+  * @param {string} body
+  * @param {string} url
+  * @param {string} sound
+  */
+  const notify = async (title, body, url, opts = {}) => {
+    const n = Object.assign(new Notification(), { title, body, sound: 'piano_success', ...opts });
+    if (url) n.openURL = url;
+    return await n.schedule();
+  };
+  
   /**
    * 写入读取json字符串并使用缓存
    * @param {string} File Extension
@@ -71,8 +102,28 @@ async function main() {
       },
       writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
     }
+  };  
+  
+  /**
+   * 获取网络图片
+   * @param {Image} url
+   */
+  const getImage = async (url) => {
+    return await new Request(url).loadImage();
   };
-
+  
+  // 获取图片，使用缓存
+  const getCacheImage = async (name, url) => {
+    const cache = useFileManager({ cacheTime: 24 });
+    const image = cache.readImage(name);
+    if (image) {
+      return image;
+    }
+    const img = await getImage(url);
+    cache.writeImage(name, img);
+    return img;
+  };
+  
   /**
    * 获取json字符串
    * @param {string} json
@@ -106,7 +157,7 @@ async function main() {
   };
   
   /**
-   * @param {string} data - JSON data to be processed.
+   * @param {string} - string
    * @returns {object} - string
    */
   const processData = (data) => {
@@ -192,23 +243,13 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     return colorHex[name]
   });
   
- /**  
-  * 弹出一个通知
-  * @param {string} title
-  * @param {string} body
-  * @param {string} url
-  * @param {string} sound
-  */
-  const notify = async (title, body, url, opts = {}) => {
-    const n = Object.assign(new Notification(), { title, body, sound: 'piano_success', ...opts });
-    if (url) n.openURL = url;
-    return await n.schedule();
-  };
-  
+  // 其他配置
   const contextColor = Color.dynamic(
     new Color('#48484b', 0.3),
     new Color('#FFFFFF', 0.3)
   );
+  
+  const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
   
   const isSmallScreen = Device.screenSize().height < 926;
   const adapt = {
@@ -219,34 +260,37 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     size: isSmallScreen ? (lotteryType === 'qlc' ? 32 : 38) : (lotteryType === 'qlc' ? 35 : 40),
   };
   
-  /**
-   * 获取网络图片
-   * @param {Image} url
-   */
-  const getImage = async (url) => {
-    return await new Request(url).loadImage();
-  };
   
-  // 获取图片，使用缓存
-  const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ cacheTime: 24 });
-    const image = cache.readImage(name);
-    if (image) {
-      return image;
-    }
-    const img = await getImage(url);
-    cache.writeImage(name, img);
-    return img;
-  };
-
-
   //=========> Create <=========//
   const createWidget = async () => {
     const widget = new ListWidget();
     
-    widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
-    
-    widget.backgroundImage = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png');
+    const bgImage = await getBgImagePath();
+    if (fm.fileExists(bgImage)) {
+      widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
+    } else if (!setting.solidColor) {
+      const gradient = new LinearGradient();
+      const color = setting.gradient.length > 0 ? setting.gradient : [setting.rangeColor];
+      const randomColor = color[Math.floor(Math.random() * color.length)];
+      
+      // 渐变角度
+      const angle = setting.angle;
+      const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
+      const x = 0.5 + 0.5 * Math.cos(radianAngle);
+      const y = 0.5 + 0.5 * Math.sin(radianAngle);
+      gradient.startPoint = new Point(1 - x, y);
+      gradient.endPoint = new Point(x, 1 - y);
+      
+      gradient.locations = [0, 1];
+      gradient.colors = [
+        new Color(randomColor, Number(setting.transparency)),
+        new Color('#00000000')
+      ];
+      widget.backgroundGradient = gradient;
+    } else {
+      widget.backgroundColor = Color.dynamic(new Color("#fefefe"), new Color('#111111'));
+      widget.backgroundImage = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png');
+    };
     
     /**
      * @param {number} padding
@@ -262,10 +306,11 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const titleText = titleStack.addText(`[  ${lotteryName}  ]`);
     titleText.centerAlignText();
     titleText.font = Font.boldSystemFont(18);
-    
+    titleText.textColor = Color.dynamic(new Color(setting.titleColor), Color.white());
     titleStack.addSpacer();
     
     const expectText1 = titleStack.addText('第 ');
+    expectText1.textColor = textColor;
     expectText1.font = Font.mediumSystemFont(16);
     
     const expectText2 = titleStack.addText(issue.substring(4));
@@ -274,15 +319,18 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     
     const expectText3 = titleStack.addText(' 期');
     expectText3.font = Font.mediumSystemFont(16);
+    expectText3.textColor = textColor;
     titleStack.addSpacer(6);
     
     const dateText = titleStack.addText(openTime.split(" ")[0]);
     dateText.font = Font.mediumSystemFont(16);
+    dateText.textColor = textColor;
     dateText.textOpacity = 0.5;
     titleStack.addSpacer(6);
     
     const weekText = titleStack.addText(dayOfWeek);
     weekText.font = Font.mediumSystemFont(15);
+    weekText.textColor = textColor;
     weekText.textOpacity = 0.5;
     
     titleStack.addSpacer();
@@ -341,17 +389,20 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   
     const bottomText = botStack.addText('奖池 ');
     bottomText.font = Font.mediumSystemFont(15);
+    bottomText.textColor = textColor;
     bottomText.textOpacity = 0.5;
     botStack.addSpacer(1);
     
     const bottomText1 = botStack.addText(formatAmount(poolAmount));
     bottomText1.font = Font.mediumSystemFont(15);
     bottomText1.textColor = Color.red();
+    bottomText1.textColor = textColor
     bottomText1.textOpacity = 0.7;
     botStack.addSpacer();
     
     const bottomText2 = botStack.addText(frequency);
     bottomText2.font = Font.mediumSystemFont(15);
+    bottomText2.textColor = textColor
     bottomText2.textOpacity = 0.5;
     botStack.addSpacer(5);
     
@@ -389,8 +440,8 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     };
     return widget;
   };
-  
   //=========> Create <=========//
+  
   const errorWidget = async () => {
     const widget = new ListWidget();
     const text = widget.addText('仅支持中尺寸');
