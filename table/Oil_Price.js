@@ -83,7 +83,7 @@ async function main() {
     
     // 更新时间
     const df = new DateFormatter();
-    df.dateFormat = 'MM-dd HH:mm';
+    df.dateFormat = 'HH:mm';
     const GMT = df.string(new Date())
       
     // 灵动岛
@@ -126,7 +126,7 @@ async function main() {
     dataStack2.addSpacer();
     // bar
     const barStack1 = dataStack2.addStack();
-    barStack1.setPadding(8, 15, 8, 15);
+    barStack1.setPadding(8, 12, 8, 12);
     barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
     barStack1.cornerRadius = 10
     barStack1.borderColor = new Color('#D50000', 0.8);
