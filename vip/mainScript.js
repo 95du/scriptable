@@ -1225,7 +1225,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           </div>
         </div>
       </div>
-      <script type="text/javascript">
+      <script>
         setTimeout(function() {
           $('${updateVersionNotice()}').click();
         }, 1200);
@@ -1414,7 +1414,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '开奖结果',
             desc: '体育彩票、福彩彩票',
-            rightDesc: '1.0.3',
+            rightDesc: '1.0.4',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_lottery.js',
             icon: `${rootUrl}img/icon/lottery.png`
