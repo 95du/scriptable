@@ -415,12 +415,12 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     
     // 开奖状态
     const barStack = botStack.addStack();
-    barStack.setPadding(4, 8, 4, 8);
+    barStack.setPadding(3, 10, 3, 10)
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
     barStack.backgroundColor = new Color(staColor);
     barStack.url = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId[lotteryType]}`;
-    barStack.cornerRadius = 12;
+    barStack.cornerRadius = 11;
      
     const openCodeText = barStack.addText(todayOpenStatus);
     openCodeText.font = Font.mediumSystemFont(14);
