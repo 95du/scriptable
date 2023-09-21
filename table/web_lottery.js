@@ -420,7 +420,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     barStack.centerAlignContent();
     barStack.backgroundColor = new Color(staColor);
     barStack.url = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId[lotteryType]}`;
-    barStack.cornerRadius = 11;
+    barStack.cornerRadius = 10.5;
      
     const openCodeText = barStack.addText(todayOpenStatus);
     openCodeText.font = Font.mediumSystemFont(14);
