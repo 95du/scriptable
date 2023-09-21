@@ -63,7 +63,7 @@ async function main() {
       referer = boxjs_referer.val;
 
       if (verifyToken && referer) {
-        await writeSettings({
+        writeSettings({
           ...setting,
           sign,
           verifyToken,
@@ -117,7 +117,7 @@ async function main() {
     const cachePath = F_MGR.joinPath(cache, imgKey);
     F_MGR.writeImage(cachePath, carImage);
     imgArr.push(imgKey);
-    await writeSettings(setting);
+    writeSettings(setting);
     await getRandomImage();
     if ( imgArr.length == 1 ) {
       notify('获取成功', '初始化数据及储存车图片并使用缓存');  
@@ -255,7 +255,7 @@ async function main() {
     const { resultCode, resultMsg } = response;
     if (resultCode === 'AUTHENTICATION_CREDENTIALS_NOT_EXIST' || resultCode === 'SECURITY_INFO_ABNORMAL') {
       const data = { ...setting, sign: null, verifyToken: null };
-      await writeSettings(data);
+      writeSettings(data);
       notify(`${resultMsg} ⚠️`, '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取，请确保已打开辅助工具', detailsUrl);
     } else {
       notify(`${resultCode} ⚠️`, resultMsg, detailsUrl);
