@@ -21,9 +21,7 @@ async function main() {
   
   // 在桌面小组件添加Parameter参数
   const param = args.widgetParameter;
-  const _lotteryType = { 
-    ssq: 0, dlt: 1, kl8: 2, pl3: 3, fc3d: 4, qxc: 5, qlc: 6, pl5: 7
-  };
+  const _lotteryType = { ssq: 0, dlt: 1, kl8: 2, pl3: 3, fc3d: 4, qxc: 5, qlc: 6, pl5: 7 };
   
   /**
    * 存储当前设置
@@ -182,9 +180,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
    */
   const systemVersion =  Device.systemVersion().match(/\d+/)[0]; // 用于修改弧度
   
-  const gameId = {
-    ssq: 101, dlt: 201, pl3: 202, fc3d: 102, qxc: 204, qlc: 104, pl5: 203
-  };
+  const gameId = { ssq: 101, dlt: 201, pl3: 202, fc3d: 102, qxc: 204, qlc: 104, pl5: 203 };
   
   const statusMap = {
     0: { todayOpenStatus: '未到时间', staColor: '#666666' },
@@ -193,7 +189,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   };
   const { todayOpenStatus, staColor } = statusMap[todayOpen];
   
-  const type = {  
+  const type = {
     'qlc': 3.5,
     'pl5': 13.5,
     'pl3': 24,
@@ -259,8 +255,8 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   const isSmallScreen = Device.screenSize().height < 926;
   const adapt = {
     middle: isSmallScreen ? 12 : 15,
-    font: lotteryType === 'qlc' ? 18 : 20,
-    size: isSmallScreen ? (lotteryType === 'qlc' ? 32 : 38) : (lotteryType === 'qlc' ? 35 : 40),
+    font: isSmallScreen ? (lotteryType === 'qlc' ? 16 : 18) : (lotteryType === 'qlc' ? 18 : 20),
+    size: isSmallScreen ? (lotteryType === 'qlc' ? 32 : 38) : (lotteryType === 'qlc' ? 35 : 40)
   };
   
   
