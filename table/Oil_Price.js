@@ -29,7 +29,8 @@ async function main() {
     
   try {  
     const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-    forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+    const str = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+    forecast = str.match(/([^<]+)<br\/>/)[1];
   } catch(e) { 
     console.log(e);
     forecast = setting.oil;
