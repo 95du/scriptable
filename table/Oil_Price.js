@@ -7,7 +7,7 @@
  * UITable Version 1.0.0
  * 2023-01-03 11:30
  */
-
+await 
 async function main() {
   const fm = FileManager.local();
   const folder = fm.joinPath(fm.documentsDirectory(), "95duOilPrice");
@@ -105,7 +105,7 @@ async function main() {
     barStack.borderWidth = 3
     //Text Color
     const titleText = barStack.addText(`${setting.province}油价`);
-    dynamic = ['#FFBF00', '#34C759'];
+    dynamic = ['#FFD723', '#34C759'];
     titleText.textColor = new Color(dynamic[parseInt(Math.random() * dynamic.length)]);
     titleText.font = Font.boldSystemFont(16);
     titleText.centerAlignText();
