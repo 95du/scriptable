@@ -7,7 +7,7 @@
  * UITable Version 1.0.0
  * 2023-01-03 11:30
  */
-await 
+
 async function main() {
   const fm = FileManager.local();
   const folder = fm.joinPath(fm.documentsDirectory(), "95duOilPrice");
