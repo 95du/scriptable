@@ -308,11 +308,11 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     
     const image = titleStack.addImage(appImage);
     image.imageSize = new Size(20, 20);
-    titleStack.addSpacer(8);
+    titleStack.addSpacer(6);
     
-    const titleText = titleStack.addText(lotteryName);
+    const titleText = titleStack.addText(lotteryName === '排列5' ? '排列五' : lotteryName)
     titleText.centerAlignText();
-    titleText.font = Font.mediumSystemFont(18)
+    titleText.font = Font.boldSystemFont(17.5);
     titleText.textColor = Color.dynamic(new Color(setting.titleColor), Color.white());
     titleStack.addSpacer();
     
