@@ -21,14 +21,19 @@
  * 种豆得豆 https://plantearth.m.jd.com/plantBean/index?source=lingjingdoushouye
  * 京豆收支明细 https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean
  * 积分加油站 https://3.cn/-1FXjNaL
- * 双签 https://member.jr.jd.com/activity/sign/v5/indexV2.html?channelLv=shuangqian&utm_term=copyurl
  * 京东农场 https://carry.m.jd.com/babelDiy/Zeus/3KSjXqQabiTuD1cJ28QskrpWoBKT/index.html?babelChannel=94
  * 签到日历 https://h5.m.jd.com/rn/3a5TGXF7Y8xpQ45CjgMzQ3tyqd4K/index.html?has_native=0/index?source=lingjingdoushouye
  * 待收货 https://trade.m.jd.com/order/orderlist_jdm.shtml?sceneval=2&jxsid=16780988595962555448&orderType=waitReceipt&ptag=7155.1.13&source=my/index?source=lingjingdoushouye
  * 京享值 https://vipgrowth.m.jd.com/#/home
  * 红包 https://wqs.jd.com/my/redpacket.shtml?sceneval=2&jxsid=16780988595962555448
  * 下月待还 https://mbt.jd.com/bill/monthlybill/monthbillcore/month-bill-index.html?channelcode=024
+ * 白条 https://mcr.jd.com/credit_home/pages/index.html?btPageType=BT&channelName=024
+ * 白条等级 https://agree.jd.com/credit_rights/index.html?from=btsyjifentc
+ * 剩余待还 https://mbt.jd.com/bill/monthlybill/monthbillcore/month-bill-all.html?channelcode=zhuye
+ * 小金库 https://lc.jr.jd.com/ck/xjkHold/index/?channel=a00294
  * 总资产 https://channel.jr.jd.com/wealthAssets/index/?source=wdqb&channelCode=CFCCsingle01
+ * 汪汪庄园 https://joypark.jd.com/?activityId=99DZNpaCTAv8f4TuKXr0Ew&inviterId=zXrXTE1udgOiA5aUdMsW8w&inviteType=0
+
 */
 
 const uri = Script.name();
@@ -56,16 +61,17 @@ const notify = async (title, body, url) => {
 }
 
 async function presentMenu() {
-  let alert = new Alert();
-  alert.title = '京东 SchemeURL'
+  const alert = new Alert();
   alert.message = '\n1，运行制作生成跳转链接\n2，桌面组件点击跳转到指定App页面\n3，具体方法请查看脚本代码开头注释\n\n小组件作者:95度茅台'
-  alert.addDestructiveAction('更新代码');
-  alert.addDestructiveAction('重置所有');
-  alert.addAction('更多组件');
-  alert.addAction('透明背景');
-  alert.addAction('生成链接');
-  alert.addAction('退出菜单');
-  mainMenu = await alert.presentAlert();
+  const actions = [
+    '更新代码', '重置所有', '更多组件', '透明背景', '生成链接'
+  ];
+
+  actions.forEach(( action, index ) => {
+  alert[ index === 0 || index === 1 ? 'addDestructiveAction' : 'addAction' ](action);
+  });
+  alert.addCancelAction('取消');
+  const mainMenu = await alert.presentSheet();
   if (mainMenu === 1) {
     await F_MGR.remove(folder);
     if (F_MGR.fileExists(bgImage)) {
@@ -90,7 +96,6 @@ async function presentMenu() {
   if (mainMenu === 4) {
     await generateLink();
   }
-  if (mainMenu === 5) return;
   if (mainMenu === 0) {
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2pkX3NjaGVtZVVybC5qcw=='));
     const codeString = await reqUpdate.loadString();
