@@ -177,6 +177,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
    * 获取跳转页面ID
    * 数字转换为开奖状态、颜色
    * lotteryType
+   * Random icons
    */
   const systemVersion =  Device.systemVersion().match(/\d+/)[0]; // 用于修改弧度
   
@@ -195,6 +196,10 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     'pl3': 24,
     'fc3d': 24
   }[lotteryType] || 4;
+  
+  const imageId = [ 'i64_ssq', 'i64_dlt' ];
+  const randomItem = imageId[Math.floor(Math.random() * imageId.length)];
+  const appImage = await getCacheImage(`${randomItem}.png`, `https://r.ttyingqiu.com/r/images/kjgg/cpdt/${randomItem}.png`);
   
   // 时间转换星期
   function getWeekday(dateString) {
@@ -301,9 +306,13 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     titleStack.centerAlignContent();
     titleStack.setPadding(0, 15, 0, 15);
     
-    const titleText = titleStack.addText(`[  ${lotteryName}  ]`);
+    const image = titleStack.addImage(appImage);
+    image.imageSize = new Size(20, 20);
+    titleStack.addSpacer(8);
+    
+    const titleText = titleStack.addText(lotteryName);
     titleText.centerAlignText();
-    titleText.font = Font.boldSystemFont(18);
+    titleText.font = new Font('95du_maoTai', 16.2);
     titleText.textColor = Color.dynamic(new Color(setting.titleColor), Color.white());
     titleStack.addSpacer();
     
