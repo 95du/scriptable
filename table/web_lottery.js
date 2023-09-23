@@ -312,7 +312,7 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     
     const titleText = titleStack.addText(lotteryName);
     titleText.centerAlignText();
-    titleText.font = new Font('95du_maoTai', 16.2);
+    titleText.font = Font.mediumSystemFont(18)
     titleText.textColor = Color.dynamic(new Color(setting.titleColor), Color.white());
     titleStack.addSpacer();
     
