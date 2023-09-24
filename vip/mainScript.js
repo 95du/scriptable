@@ -206,7 +206,6 @@ async function main() {
       writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
     }
   };
-  
       
   /**
    * 获取css，js字符串并使用缓存
@@ -1340,7 +1339,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
         } catch (e) {
           console.log(e)
-          notify(label + ' ⚠️', '获取失败，请检查网络是否通畅');
+          notify(label + ' ⚠️', '获取失败，请在设置中打开Sync Script Order');
         }
       };
       
