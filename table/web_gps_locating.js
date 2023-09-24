@@ -8,7 +8,7 @@
  * 模拟电子围栏，显示车速，位置等
  */
 
-
+await 
 async function main() {
   const uri = Script.name();
   const fm = FileManager.local();
@@ -172,10 +172,14 @@ async function main() {
     const req = new Request('https://app.tutuiot.com/locator-app/imeiLoginVerification');
     req.method = 'POST'
     req.body = requestBody;
-    const { data } = await req.loadJSON();
-    setting.token = data.token;
-    writeSettings(setting);
-    notify('登录成功', !aMapkey ? '需填写高德地图key，用于转换坐标。' : data.token);
+    try {
+      const { data } = await req.loadJSON();
+      setting.token = data.token;
+      writeSettings(setting);
+      notify('登录成功', !aMapkey ? '需填写高德地图key，用于转换坐标。' : data.token);  
+    } catch (e) {
+      console.log(e);
+    }
   };
   
   //
