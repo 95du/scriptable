@@ -8,7 +8,7 @@
  * 模拟电子围栏，显示车速，位置等
  */
 
-await 
+
 async function main() {
   const uri = Script.name();
   const fm = FileManager.local();
