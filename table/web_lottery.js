@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: brown; icon-glyph: bowling-ball;
+// icon-color: deep-purple; icon-glyph: bowling-ball;
 /**
  * 组件作者: 95度茅台
  * 组件名称: 全国彩开奖结果
@@ -264,6 +264,12 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     size: isSmallScreen ? (lotteryType === 'qlc' ? 32 : 38) : (lotteryType === 'qlc' ? 35 : 40)
   };
   
+  // 开奖结果通知
+  if (setting.issue !== issue && todayOpen === 2 && param === null) {
+    notify(`${lotteryName} 💥`, `第 ${issue.substring(4)} 期，开奖结果: ${openCodeArr.join(' ')}`);
+    setting.issue = issue;
+    writeSettings(setting);
+  };
   
   //=========> Create <=========//
   const createWidget = async () => {
@@ -430,13 +436,6 @@ getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
     const openCodeText = barStack.addText(todayOpenStatus);
     openCodeText.font = Font.mediumSystemFont(14);
     openCodeText.textColor = Color.white();
-    
-    // 开奖结果通知
-    if (setting.issue !== issue && todayOpen === 2 && param === null) {
-      notify(`${lotteryName} 💥`, `第 ${issue.substring(4)} 期，开奖结果: ${openCodeArr.join(' ')}`);
-      setting.issue = issue;
-      writeSettings(setting);
-    };
     
     if (config.runsInApp) {
       await widget.presentMedium();
