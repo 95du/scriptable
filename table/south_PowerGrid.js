@@ -296,7 +296,7 @@ async function main() {
     barStack2.cornerRadius = 5;
     
     const balance = await getBalance();
-    const pointText = barStack2.addText(Number(balance).toFixed(2));
+    const pointText = barStack2.addText(balance < 0 ? '0.00' : Number(balance).toFixed(2));
     pointText.font = Font.boldSystemFont(12);
     pointText.textColor = new Color('#FFFFFF');
     mainStack.addSpacer();
@@ -333,7 +333,7 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText('预计 ' + (arrears / total * totalPower).toFixed(2));
+    const quotaText2 = quotaStack3.addText(`￥ ${totalPower > 0 ? balance : '0.00'}`);
     quotaText2.font = Font.boldSystemFont(14);
     quotaText2.textOpacity = 0.7;
     quotaStack3.addSpacer();
