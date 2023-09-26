@@ -333,7 +333,7 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText(`￥ ${totalPower > 0 ? balance : '0.00'}`);
+    const quotaText2 = quotaStack3.addText(totalPower > 0 ? balance : '0.00');
     quotaText2.font = Font.boldSystemFont(14);
     quotaText2.textOpacity = 0.7;
     quotaStack3.addSpacer();
@@ -370,7 +370,7 @@ async function main() {
     
     const billStack3 = billStack.addStack();
     billStack3.addSpacer();
-    const billText2 = billStack3.addText(`￥ ${arrears}`); 
+    const billText2 = billStack3.addText(arrears);
     billText2.font = Font.boldSystemFont(14);
     billText2.textOpacity = 0.7;
     mainStack.addSpacer();
