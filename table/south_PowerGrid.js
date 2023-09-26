@@ -370,7 +370,7 @@ async function main() {
     
     const billStack3 = billStack.addStack();
     billStack3.addSpacer();
-    const billText2 = billStack3.addText(arrears); 
+    const billText2 = billStack3.addText(`￥ ${arrears}`); 
     billText2.font = Font.boldSystemFont(14);
     billText2.textOpacity = 0.7;
     mainStack.addSpacer();
