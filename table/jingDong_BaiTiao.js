@@ -7,7 +7,7 @@
  * 2023-03-17 19:30
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
-await 
+
 async function main() {
   const F_MGR = FileManager.local();
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duJingDong_BaiTiao');
