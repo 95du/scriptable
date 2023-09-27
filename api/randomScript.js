@@ -85,8 +85,8 @@ async function presentMenu() {
     '更新代码', '重置所有', '更多组件', '删减脚本', '添加组件', '预览组件'
   ];
 
-  actions.forEach(( action, index ) => {
-  alert[ index === 0 || index === 1 || index === 3 ? 'addDestructiveAction' : 'addAction' ](action);
+  actions.forEach((action, i) => {
+  alert[ i === 0 || i === 1 || i === 3 ? 'addDestructiveAction' : 'addAction' ](action);
   });
   alert.addCancelAction('取消');
   
@@ -97,20 +97,13 @@ async function presentMenu() {
       notify('已重置数据', '请重新添加小组件URL');  
     }
   }
-  if ( response === 2 ) {
-    await importModule(await downloadScripts()).main();
-  }
-  if ( response === 3 && files ) {
-    await removeScript();
-  }
-  if ( response === 4 ) {
-    await addScriptURL();
-  }
+  if ( response === 2 ) await importModule(await downloadScripts()).main();
+  if ( response === 3 && files ) await removeScript();
+  if ( response === 4 ) await addScriptURL();
   if ( response === 5 ) {
     const importedModule = importModule(modulePath);
     await importedModule.main();
   }
-  if ( response === 6 ) return;
   if ( response === 0 ) {
     const codeString = await new Request(getData.update).loadString();
     if ( codeString.indexOf('95度茅台' ) == -1) {
