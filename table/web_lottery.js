@@ -8,7 +8,7 @@
  * 发布时间: 2023-09-17
  */
 
-
+await 
 async function main() {
   const fm = FileManager.local();
   const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_lottery');
@@ -137,7 +137,7 @@ async function main() {
    */
   const processData = (data) => {
     try {
-      const { firstNumbers, lastNumbers = '', ...rest } = JSON.parse(data);
+      const { firstNumbers, lastNumbers = '', ...rest } = data;
       const openCodeArr = [...firstNumbers.split(','), ...lastNumbers.split(',').filter(num => num !== '')];
       return { openCodeArr, ...rest }
     } catch (e) {
@@ -145,7 +145,8 @@ async function main() {
     }
   };
   
-  const macaujc = await getString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
+  const macaujc = await 
+getString('https://m.zhuying.com/api/lotapi/indexV2/1');
   const { openCodeArr, openTime, lastNumbers, lotteryName, frequency, officeOpenTime, todayOpen, issue, lotteryType, poolAmount } = processData(macaujc);
   
   /**
