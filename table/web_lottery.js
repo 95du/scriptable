@@ -8,7 +8,7 @@
  * 发布时间: 2023-09-17
  */
 
-await 
+
 async function main() {
   const fm = FileManager.local();
   const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_lottery');
