@@ -85,15 +85,6 @@ async function main() {
    */
   const useFileManager = ( cacheTime ) => {
     return {
-      readString: (fileName) => {
-        const filePath = fm.joinPath(cache, fileName);
-        if (fm.fileExists(filePath) && cacheTime < 20 && setting.useCache && !config.runsInApp) {
-          return fm.readString(filePath);
-        }
-        return null;
-      },
-      writeString: (fileName, content) => fm.writeString(fm.joinPath(cache, fileName), content),
-      // cache Image
       readImage: (fileName) => {
         const imgPath = fm.joinPath(cache, fileName);
         return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
@@ -140,20 +131,6 @@ async function main() {
     }
   };
   
-  const getCacheString = async (jsonFileName, jsonFileUrl) => {
-    const df = new DateFormatter();
-    df.dateFormat = 'HH';
-    const cacheTime = df.string(new Date());
-    const cache = useFileManager(cacheTime);
-    const jsonString = cache.readString(jsonFileName);
-    if (jsonString) {
-      return jsonString;
-    }
-    const response = await getString(jsonFileUrl);
-    cache.writeString(jsonFileName, JSON.stringify(response));
-    return JSON.stringify(response);
-  };
-  
   /**
    * @param {string} - string
    * @returns {object} - string
@@ -168,8 +145,7 @@ async function main() {
     }
   };
   
-  const macaujc = await 
-getCacheString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
+  const macaujc = await getString('macaujc.json', 'https://m.zhuying.com/api/lotapi/indexV2/1');
   const { openCodeArr, openTime, lastNumbers, lotteryName, frequency, officeOpenTime, todayOpen, issue, lotteryType, poolAmount } = processData(macaujc);
   
   /**
