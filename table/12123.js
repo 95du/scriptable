@@ -7,7 +7,7 @@
  * 获取Token作者: @FoKit
  * UITable 版本: Version 1.2.0
  */
-
+await 
 async function main() {
   const F_MGR = FileManager.local();
   
@@ -325,7 +325,7 @@ async function main() {
     topStack.centerAlignContent()
     
     const plateText = topStack.addText(myPlate);
-    plateText.font = Font.mediumSystemFont(19);
+    plateText.font = Font.mediumSystemFont(19.5);
     plateText.textColor = Color.black();
     topStack.addSpacer();
     
