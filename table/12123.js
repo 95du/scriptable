@@ -7,7 +7,7 @@
  * 获取Token作者: @FoKit
  * UITable 版本: Version 1.2.0
  */
-
+await 
 async function main() {
   const F_MGR = FileManager.local();
   
@@ -211,8 +211,8 @@ async function main() {
       plateType: 2,
       issueOrganization: issueData.issueOrganization,
     };
-    const surveils = await requestInfo(api3, params).catch(console.log);
-    return surveils ? surveils.data.surveils : [];
+    const surveils = await requestInfo(api3, params);
+    return surveils ? surveils.data?.surveils : [];
   }; 
 
   
@@ -245,8 +245,10 @@ async function main() {
   
   // 获取随机数组元素
   const getRandomItem = async (array) => {
-    const infoRandom = array[Math.floor(Math.random() * array.length)];
-    return infoRandom;
+    if ( array?.length ) {
+      const infoRandom = array[Math.floor(Math.random() * array.length)];
+      return infoRandom;
+    }
   }
 
   
