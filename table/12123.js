@@ -330,7 +330,7 @@ async function main() {
     topStack.addSpacer();
     
     const text12123 = topStack.addText('12123');
-    text12123.font = Font.boldSystemFont(18);
+    text12123.font = Font.mediumSystemFont(18);
     text12123.rightAlignText();
     text12123.textColor = new Color('#0061FF');
     
