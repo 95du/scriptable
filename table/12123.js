@@ -329,8 +329,8 @@ async function main() {
     plateText.textColor = Color.black();
     topStack.addSpacer();
     
-    const text12123 = topStack.addText('交管12123');
-    text12123.font = Font.boldSystemFont(15);
+    const text12123 = topStack.addText('12123');
+    text12123.font = Font.boldSystemFont(18);
     text12123.rightAlignText();
     text12123.textColor = new Color('#0061FF');
     
