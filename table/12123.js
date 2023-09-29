@@ -259,8 +259,6 @@ async function main() {
       const data = { ...setting, sign: null, verifyToken: null };
       writeSettings(data);
       notify(`${resultMsg} ⚠️`, '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取，请确保已打开辅助工具', detailsUrl);
-    } else {
-      notify(`${resultCode} ⚠️`, resultMsg, detailsUrl);
     }
   };
   
