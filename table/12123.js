@@ -7,7 +7,7 @@
  * 获取Token作者: @FoKit
  * UITable 版本: Version 1.2.0
  */
-await 
+
 async function main() {
   const F_MGR = FileManager.local();
   
