@@ -212,7 +212,7 @@ async function main() {
   const Step2nd = 85;
   const StepFin = 100;
   const barWidth = 15;
-  const barHeigth = (flow < 85 && voice < 85) ? 108 : 105;
+  const barHeigth = (flow < 100 && voice < 100) ? 108 : 105;
   
   const phone = Device.screenSize().height;
   
