@@ -270,6 +270,7 @@ df.dateFormat = 'ddHHmm'
     balanceText.centerAlignText();
     balanceText.textColor = new Color(balanceColor);
     balanceText.font = new Font('Georgia-Bold', phone < 926 ? 20 : 25);
+    balanceText.url = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex';
     rightStack.addSpacer();
     widget.addSpacer(phone < 926 ? 3 : 5)
     
@@ -483,6 +484,7 @@ df.dateFormat = 'ddHHmm'
    */
   async function createSmallWidget() {
     const widget = new ListWidget();
+    widget.url = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex'
     widget.setPadding(0, 0, -6, 0);
     if (F_MGR.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(F_MGR.readImage(bgImage))
