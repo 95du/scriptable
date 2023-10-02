@@ -256,7 +256,7 @@ async function main() {
     
     const benefitText2 = beneStack.addText(`${ystdayPower} °`);
     benefitText2.font = Font.boldSystemFont(16);
-    benefitText2.textColor = Color.red();
+    benefitText2.textColor = pay > 0 ? Color.blue() : Color.red()
     beneStack.addSpacer();
     
     if ( pay > 0 ) {
