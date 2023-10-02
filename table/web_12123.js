@@ -34,7 +34,7 @@ async function main() {
    * @param { JSON } string
    */
   const writeSettings = async (inObject) => {
-    F_MGR.writeString(cacheFile, JSON.stringify(inObject));
+    F_MGR.writeString(cacheFile, JSON.stringify(inObject, null, 2));
     console.log(JSON.stringify(
       inObject, null, 2
     ));
@@ -120,7 +120,7 @@ async function main() {
     writeSettings(setting);
     await getRandomImage();
     if ( imgArr.length == 1 ) {
-      notify('获取成功', '初始化数据及储存车图片并使用缓存');  
+      Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
     }
   };
   
