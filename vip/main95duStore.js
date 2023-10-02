@@ -545,14 +545,6 @@ async function main() {
       max-height: 60px;
     }
     
-    .sign ul>li {
-      margin: 10px 0;
-    }
-    
-    #sign-in,#sign-up {
-      padding: 0 10px;
-    }
-    
     /* 弹窗 content */
     .popup-title {
       text-align: center;
