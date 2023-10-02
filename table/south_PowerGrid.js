@@ -565,8 +565,10 @@ async function main() {
       if ( !lastBill.arrears ) {
         await selectBill();
       } else {
+        formattedDate = lastBill.electricityBillYearMonthEnd.replace(/^(\d{4})(\d{2})$/, '$1-$2')
         return {
-          arrears: pay ,
+          formattedDate: electricityBillYearMonthEnd,
+          arrears: pay,
           billingElectricity: total,
           receieElectricity: arrears
         } = lastBill;
