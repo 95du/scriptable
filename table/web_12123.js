@@ -120,7 +120,7 @@ async function main() {
     writeSettings(setting);
     await getRandomImage();
     if ( imgArr.length == 1 ) {
-      Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
+      //Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
     }
   };
   
