@@ -335,7 +335,7 @@ async function main() {
     
     const plateText = topStack.addText(myPlate);
     plateText.font = Font.mediumSystemFont(19.5);
-    plateText.textColor = Color.black();
+    plateText.textColor = new Color(setting.titleColor);
     topStack.addSpacer();
     
     const text12123 = topStack.addText('12123');
