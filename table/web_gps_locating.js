@@ -419,7 +419,7 @@ async function main() {
     // Car image
     const carImageStack = rightStack.addStack();
     carImageStack.size = new Size(setting.carStackWidth, 0);
-    carImageStack.setPadding(-25, 5, 0, 0);
+    carImageStack.setPadding(setting.carTop, 5, setting.carBottom, 0);
     const img = await getRandomImage();
     const imageCar = carImageStack.addImage(img);
     imageCar.imageSize = new Size(setting.carWidth, setting.carHeight);
