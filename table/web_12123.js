@@ -319,6 +319,8 @@ async function main() {
     const { success, vioList, detail, vio, photos } = queryResult;
     const nothing = success ? vioList === undefined : vioList;
     
+    const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
+    
     /**
      * @param {image} image
      * @param {string} text
@@ -371,7 +373,8 @@ async function main() {
     const vehicleModel = carIconStack.addStack();
     vehicleModelText = vehicleModel.addText(nothing || !success ? '未处理违章 0' : `未处理违章 ${vioList.count} 条`);
     vehicleModelText.font = Font.mediumSystemFont(12);
-    vehicleModelText.textColor = new Color('#484848');
+    vehicleModelText.textColor = textColor;
+    vehicleModelText.textOpacity = 0.7
     leftStack.addSpacer(3)
   
     //
@@ -380,7 +383,8 @@ async function main() {
     if ( !nothing && success && detail ) {
       vioPointText = vioPoint.addText(`罚款${vio.fine}元   扣${vio.violationPoint}分`);
       vioPointText.font = Font.mediumSystemFont(12);
-      vioPointText.textColor = new Color('#484848');
+      vioPointText.textColor = textColor;
+      vioPointText.textOpacity = 0.7
       leftStack.addSpacer(3);
     };
       
@@ -399,7 +403,8 @@ async function main() {
     const updateTime = dateStack.addStack();
     const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(\d{4}-\d{2}-\d{2})&/)[1] : `${vio.violationTime}`);
     textUpdateTime.font = Font.mediumSystemFont(nothing ? 13 : 11.8);
-    textUpdateTime.textColor = new Color('#484848');
+    textUpdateTime.textColor = textColor;
+    textUpdateTime.textOpacity = 0.7
     leftStack.addSpacer();
     
     /**
@@ -497,7 +502,8 @@ async function main() {
       }
     };
     tipsText.font = Font.mediumSystemFont(nothing || !success ? 11.5 : 11);
-    tipsText.textColor = new Color('#484848');
+    tipsText.textColor = textColor;
+    tipsText.textOpacity = 0.7
     tipsText.centerAlignText();
     
     // jump show status
