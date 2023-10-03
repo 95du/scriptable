@@ -1,6 +1,12 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: car;
+/**
+ * 支付宝小程序 交管12123
+ * 小组件作者：95度茅台
+ * 获取Token作者: @FoKit
+ * Version 1.0.0
+ */
 await 
 async function main() {
   const fm = FileManager.local();
