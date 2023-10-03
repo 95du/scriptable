@@ -1410,20 +1410,20 @@ document.getElementById('telegram').addEventListener('click', () => {
             icon: `${rootUrl}img/icon/lottery.png`
           },
           {
+            label: '交管12123_2',
+            desc: '违章信息、累积记分',
+            rightDesc: '1.0.0',
+            type: 'button',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_12123.js',
+            icon: `${rootUrl}img/icon/new12123.png`
+          },
+          {
             label: '中国电信_2',
             desc: '剩余流量、语音和余额',
             rightDesc: '1.0.5',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleTelecom.js',
             icon: `${rootUrl}img/icon/telecom_2.png`
-          },
-          {
-            label: '交管12123_2',
-            desc: '违章信息、累积记分',
-            rightDesc: '1.2.7',
-            type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module12123.js',
-            icon: `${rootUrl}img/icon/new12123.png`
           },
           {
             label: '全国油价_2',
