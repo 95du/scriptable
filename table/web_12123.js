@@ -1,20 +1,14 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: car;
-/**
- * 支付宝小程序 交管12123
- * 小组件作者：95度茅台
- * 获取Token作者: @FoKit
- * UITable 版本: Version 1.2.0
- */
-
+await 
 async function main() {
-  const F_MGR = FileManager.local();
+  const fm = FileManager.local();
   
-  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_12123');  
-  F_MGR.createDirectory(path, true);  
+  const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');  
+  fm.createDirectory(path, true);  
   
-  const cacheFile = F_MGR.joinPath(path, 'setting.json');
+  const cacheFile = fm.joinPath(path, 'setting.json');
   
   /**
    * 读取储存的设置
@@ -22,8 +16,8 @@ async function main() {
    * @returns {object} - JSON
    */
   const getSettings = (file) => {
-    if ( F_MGR.fileExists(file) ) {
-      return { verifyToken, myPlate, referer, sign, imgArr, picture } = JSON.parse(F_MGR.readString(file));
+    if ( fm.fileExists(file) ) {
+      return { verifyToken, myPlate, referer, sign, imgArr, picture } = JSON.parse(fm.readString(file));
     }
     return {}
   };
@@ -34,7 +28,7 @@ async function main() {
    * @param { JSON } string
    */
   const writeSettings = async (inObject) => {
-    F_MGR.writeString(cacheFile, JSON.stringify(inObject, null, 2));
+    fm.writeString(cacheFile, JSON.stringify(inObject, null, 2));
     console.log(JSON.stringify(
       inObject, null, 2
     ));
@@ -45,8 +39,8 @@ async function main() {
    * @returns {string} - 目录路径
    */
   const getBgImagePath = () => {
-    const bgImgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
-    return F_MGR.joinPath(bgImgPath, Script.name() + '.jpg');
+    const bgImgPath = fm.joinPath(fm.documentsDirectory(), '95duBackground');
+    return fm.joinPath(bgImgPath, Script.name() + '.jpg');
   };
   
   /**
@@ -108,20 +102,17 @@ async function main() {
    * @param {string} File Extension
    * @returns {image} - Request
    */
-  const cache = F_MGR.joinPath(path, 'cachePath');
-  F_MGR.createDirectory(cache, true);
+  const cache = fm.joinPath(path, 'cachePath');
+  fm.createDirectory(cache, true);
   
   const downloadCarImage = async (item) => {
     const carImage = await getImage(item);
     const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
-    const cachePath = F_MGR.joinPath(cache, imgKey);
-    F_MGR.writeImage(cachePath, carImage);
+    const cachePath = fm.joinPath(cache, imgKey);
+    fm.writeImage(cachePath, carImage);
     imgArr.push(imgKey);
     writeSettings(setting);
     await getRandomImage();
-    if ( imgArr.length == 1 ) {
-      //Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
-    }
   };
   
   if ( !imgArr?.length || picture.length > imgArr.length) {
@@ -137,7 +128,32 @@ async function main() {
     const count = imgArr.length;
     const index = Math.floor(Math.random() * count);
     const cacheImgPath = cache + '/' + imgArr[index];
-    return ing = await F_MGR.readImage(cacheImgPath);
+    return ing = await fm.readImage(cacheImgPath);
+  };
+  
+  /**  
+   * 获取网络图片并使用缓存
+   * @param {Image} url
+   */
+  const useFileManager = ({ cacheTime } = {}) => {
+    return {
+      readImage: (fileName) => {
+        const imgPath = fm.joinPath(cache, fileName);
+        return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
+      },
+      writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
+    }
+  };
+    
+  const getCacheImage = async (name, url) => {
+    const cache = useFileManager();
+    const image = cache.readImage(name);
+    if ( image ) {
+      return image;
+    }
+    const img = await getImage(url);
+    cache.writeImage(name, img);
+    return img;
   };
   
   /**
@@ -269,8 +285,8 @@ async function main() {
     const widget = new ListWidget();
     
     const bgImage = await getBgImagePath();
-    if (F_MGR.fileExists(bgImage)) {
-      widget.backgroundImage = F_MGR.readImage(bgImage);
+    if (fm.fileExists(bgImage)) {
+      widget.backgroundImage = fm.readImage(bgImage);
     } else {
       const gradient = new LinearGradient();
       colorArr = setting.gradient.length
@@ -461,9 +477,15 @@ async function main() {
         violationText = shortText;
       }
     };
-    carImageStack.setPadding(nothing || !success ? -12 : -20, 5, 0, 0);
+    carImageStack.setPadding(nothing || !success ? -12 : setting.carTop, 5, setting.carBottom, 0);
     carImageStack.size = new Size(setting.carStackWidth, 0);
-    const img = await getRandomImage();
+    if (!setting.carImg) {
+      img = await getRandomImage();
+    } else {
+      const imgKey = decodeURIComponent(setting.carImg.substring(setting.carImg.lastIndexOf("/") + 1));
+      img = await getCacheImage(imgKey, setting.carImg);
+    }
+    
     const imageCar = carImageStack.addImage(img);
     imageCar.imageSize = new Size(setting.carWidth, setting.carHeight);
     rightStack.addSpacer();
