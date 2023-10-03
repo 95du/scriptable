@@ -271,8 +271,7 @@ async function main() {
       const infoRandom = array[Math.floor(Math.random() * array.length)];
       return infoRandom;
     }
-  }
-
+  };
   
   // 处理错误
   const handleError = async (response) => {
@@ -292,39 +291,27 @@ async function main() {
     
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
-      widget.backgroundImage = fm.readImage(bgImage);
+      widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
     } else {
       const gradient = new LinearGradient();
-      colorArr = setting.gradient.length
-      if (colorArr === 0) {
-        color = [
-          "#82B1FF",
-          "#4FC3F7",
-          "#66CCFF",
-          "#99CCCC",
-          "#BCBBBB",
-          "#A0BACB"
-        ]
-      } else {
-        color = setting.gradient;
-      }
-      const randomColor = await getRandomItem(color);
+      const color = setting.gradient.length > 0 ? setting.gradient : [setting.rangeColor];
+      const randomColor = color[Math.floor(Math.random() * color.length)];
       
       // 渐变角度
-      const angle = setting.angle || 90
+      const angle = setting.angle;
       const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
       const x = 0.5 + 0.5 * Math.cos(radianAngle);
       const y = 0.5 + 0.5 * Math.sin(radianAngle);
       gradient.startPoint = new Point(1 - x, y);
       gradient.endPoint = new Point(x, 1 - y);
       
-      gradient.locations = [0, 1]
+      gradient.locations = [0, 1];
       gradient.colors = [
         new Color(randomColor, Number(setting.transparency)),
         new Color('#00000000')
-      ]
+      ];
       widget.backgroundGradient = gradient;  
-      widget.backgroundColor = Color.white();
+      widget.backgroundColor = new Color(setting.solidColor);
     };
     
     // 调用违章查询函数
