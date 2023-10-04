@@ -8,7 +8,7 @@
  * 2023-03-23 15:30
  * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
  *
- * 例如: https://gitcode.net/4qiao/framework/raw/master/mian/module12123.js
+ * 例如: https://gitcode.net/4qiao/framework/raw/master/mian/web_module_12123.js
  */
 
 if (config.runsInApp) {
@@ -82,7 +82,7 @@ async function presentMenu() {
   const alert = new Alert();
   alert.message = getData.version;
   const actions = [
-    '更新代码', '重置所有', '更多组件', '删减脚本', '添加组件', '预览组件'
+    '更新代码', '重置所有', '95度茅台', '删减脚本', '添加组件', '预览组件'
   ];
 
   actions.forEach((action, i) => {
@@ -91,11 +91,9 @@ async function presentMenu() {
   alert.addCancelAction('取消');
   
   const response = await alert.presentSheet();
-  if ( response === 1 ) {
-    if (F_MGR.fileExists(folder)) {
-      F_MGR.remove(folder);
-      notify('已重置数据', '请重新添加小组件URL');  
-    }
+  if ( response === 1 && F_MGR.fileExists(folder) ) {
+    F_MGR.remove(folder);
+    notify('已重置数据', '请重新添加小组件URL');
   }
   if ( response === 2 ) await importModule(await downloadScripts()).main();
   if ( response === 3 && files ) await removeScript();
@@ -132,7 +130,7 @@ async function downloadScripts() {
     F_MGR.write(modulePath, moduleJs);
     return modulePath;
   }
-}
+};
 
 async function addScriptURL() {
   const input = new Alert();
@@ -153,13 +151,13 @@ async function addScriptURL() {
     }
     //await presentMenu();
   } 
-}
+};
 
 async function removeScript() {
   if ( files ) {
     const Run = async () => {
       const alert = new Alert();
-      alert.title = '\n删除已添加的组件 URL';
+      alert.message = '\n删减脚本';
       script.forEach(item => {
         alert.addAction(decodeURIComponent(item.substring(item.lastIndexOf('/') + 1)));
       });
@@ -178,4 +176,4 @@ async function removeScript() {
     }
     await Run();
   }
-}
+};
