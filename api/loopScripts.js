@@ -3,9 +3,9 @@
 // icon-color: deep-brown; icon-glyph: th-large;
 /**
  * 小组件作者: 95度茅台
- * 随机自动切换多个小组件
- * Version 1.1.5
- * 2023-03-23 15:30
+ * 循环切换显示桌面小组件
+ * Version 1.0.0
+ * 2023-10-04 20:30
  * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
  *
  * 例如: https://gitcode.net/4qiao/framework/raw/master/mian/web_module_12123.js
@@ -30,14 +30,14 @@ const readCacheFile = () => {
 await readCacheFile();
 
 // Get scriptUrl
-const script = files ? scripts : scripts = [ "https://gitcode.net/4qiao/framework/raw/master/api/mainOil_UITable.js" ];
+const myScript = atob('YUhSMGNITTZMeTluYVhSamIyUmxMbTVsZEM4MGNXbGhieTltY21GdFpYZHZjbXN2Y21GM0wyMWhjM1JsY2k5aGNHa3ZiV0ZwYms5cGJGOVZTVlJoWW14bExtcHo=');
+const script = files ? scripts : scripts = [ atob(myScript) ];
 
 const outputNextScript = () => {
-  const nextIndex = (!files ? 0 : currentIndex + 1) % scripts.length;
+  const nextIndex = ((!files ? 0 : currentIndex) + 1) % scripts.length;
   if ( files ) {
     writeSettings({ scripts, currentIndex: nextIndex });
-  }
-  
+  };
   currentIndex = nextIndex;
   return scripts[currentIndex];
 };
@@ -51,16 +51,6 @@ if ( modulePath != null ) {
   } else {
     await presentMenu();
   }
-};
-
-async function notify (title, body, url, opts = {}) {
-  let n = new Notification()
-  n = Object.assign(n, opts);
-  n.title = title
-  n.body = body
-  n.sound = 'event'
-  if (url) n.openURL = url
-  return await n.schedule();
 };
 
 async function downloadModule() {
@@ -83,6 +73,12 @@ module.exports = { main }`
     fm.writeString(modulePath, moduleJs);  
     return modulePath;
   }
+};
+
+async function notify (title, body, url, opts = {}) {
+  const n = Object.assign(new Notification(), { title, body, sound: 'piano_success', ...opts });
+  if (url) n.openURL = url;
+  return await n.schedule();
 };
 
 async function presentMenu() {
@@ -165,7 +161,7 @@ async function removeScript() {
   if ( files ) {
     const Run = async () => {
       const alert = new Alert();
-      alert.title = '\n删除已添加的组件 URL';
+      alert.message = '\n删减脚本';
       script.forEach(item => {
         alert.addAction(decodeURIComponent(item.substring(item.lastIndexOf('/') + 1)));
       });
