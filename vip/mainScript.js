@@ -377,7 +377,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: ${Device.screenSize().height < 926 ? '62px' : '78px'};
-      top: ${Device.screenSize().height < 926 ? '-135.5%' : '-125.5%'}; /* 弹窗位置 */
+      top: ${Device.screenSize().height < 926 ? '-140.5%' : '-130.5%'}; /* 弹窗位置 */
     }
     
     .modal-backdrop {
