@@ -108,7 +108,7 @@ async function presentMenu() {
   }
   if ( response === 0 ) {
     const codeString = await new Request(getData.update).loadString();
-    if ( codeString.indexOf('95度茅台' ) == -1) {
+    if ( codeString.indexOf('95度茅台') === -1 ) {
       notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
       fm.writeString(module.filename, codeString);
@@ -135,9 +135,8 @@ async function downloadScripts() {
 
 async function addScriptURL() {
   const input = new Alert();
-  const URL = Pasteboard.paste();
   input.title = '添加小组件URL';
-  input.addTextField('输入URL', URL);
+  input.addTextField('输入URL', Pasteboard.paste());
   input.addAction('确定');
   input.addCancelAction('取消');
   const install = await input.presentAlert();
