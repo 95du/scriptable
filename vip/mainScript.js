@@ -1502,6 +1502,14 @@ document.getElementById('telegram').addEventListener('click', () => {
             icon: `${rootUrl}img/icon/electric.png`
           },
           {
+            label: '循环组件',
+            desc: '循环切换显示小组件',
+            rightDesc: '1.0.0',
+            type: 'button',
+            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/loopScripts.js',
+            icon: `${rootUrl}img/icon/loopScript.png`
+          },
+          {
             label: '随机组件',
             desc: '随机切换多个小组件',
             rightDesc: '1.1.5',
