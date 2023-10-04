@@ -45,7 +45,7 @@ const outputNextScript = () => {
 
 const scriptUrl = outputNextScript();
 const modulePath = await downloadModule(scriptUrl);
-if ( modulePath != null ) {
+if ( modulePath !== null ) {
   if ( config.runsInWidget ) {
     const importedModule = await importModule(modulePath);
     await importedModule.main();
@@ -101,7 +101,7 @@ async function presentMenu() {
   }
   if ( response === 2 ) await importModule(await downloadScripts()).main();
   if ( response === 3 && files ) await removeScript();
-  if ( response === 4 ) await addScriptURL();
+  if ( response === 4 ) await addScripts();
   if ( response === 5 ) {
     const importedModule = importModule(modulePath);
     await importedModule.main();
@@ -133,7 +133,7 @@ async function downloadScripts() {
   }
 };
 
-async function addScriptURL() {
+async function addScripts() {
   const input = new Alert();
   input.title = '添加小组件URL';
   input.addTextField('输入URL', Pasteboard.paste());
