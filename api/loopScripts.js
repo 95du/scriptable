@@ -6,6 +6,7 @@
  * 循环切换显示桌面小组件
  * Version 1.0.0
  * 2023-10-04 20:30
+ *
  * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
  *
  * 例如: https://gitcode.net/4qiao/framework/raw/master/mian/web_module_12123.js
