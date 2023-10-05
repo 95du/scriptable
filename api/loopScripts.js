@@ -146,10 +146,6 @@ async function addScripts() {
     if ( javaScript === 'js' ) {
       files ? arr = scripts : arr = new Array();
       arr.push(url);
-      const json = {
-        scripts: arr,
-        currentIndex: 0
-      }
       writeSettings({ scripts: arr, currentIndex: 0 });
       notify('添加成功', `当前数据库中已储存${arr.length}个小组件`);
     }
