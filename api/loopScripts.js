@@ -84,7 +84,7 @@ async function notify (title, body, url, opts = {}) {
 
 async function presentMenu() {
   const alert = new Alert();
-  alert.message = '\n添加小组件的脚本URL( 可无限添加 )\n在桌面循环切换显示所添加的小组件\n\r小组件作者 : 95度茅台'
+  alert.message = '添加小组件的脚本URL( 可无限添加 )\r在桌面循环切换显示所添加的小组件'
   const actions = [
     '更新代码', '重置所有', '95度茅台', '删减脚本', '添加组件', '预览组件'
   ];
@@ -157,9 +157,11 @@ async function removeScript() {
   if ( files ) {
     const Run = async () => {
       const alert = new Alert();
-      alert.message = '\n删减脚本';
+      alert.message = '删减脚本';
       script.forEach(item => {
-        alert.addAction(decodeURIComponent(item.substring(item.lastIndexOf('/') + 1)));
+        alert.addAction(
+decodeURIComponent(item.substring(item.lastIndexOf('/') + 1))  
+        );
       });
       alert.addCancelAction('取消');
       const menuId = await alert.presentSheet();
