@@ -5,7 +5,6 @@
  * 小组件作者：95度茅台
  * UITable 版本: Version 1.0.0
  * 2023-03-17 19:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
 async function main() {
@@ -22,7 +21,7 @@ async function main() {
   const getBgImagePath = () => {
     const bgPath = F_MGR.joinPath(F_MGR.documentsDirectory(), '95duBackground');
     return F_MGR.joinPath(bgPath, Script.name() + '.jpg');
-  }
+  };
   
   /**
    * 读取储存的设置
@@ -44,8 +43,8 @@ async function main() {
     F_MGR.writeString(cacheFile, JSON.stringify(setting, null, 2));
     console.log(JSON.stringify(
       setting, null, 2)
-    );
-  }
+    )
+  };
   
   /**
    * 获取图片并使用缓存
@@ -104,11 +103,10 @@ async function main() {
     n.sound = 'alert'
     if (url) {n.openURL = url}
     return await n.schedule();
-  }
+  };
   
   
   //=========> START <=========//
-  
   const getData = async () => {
     benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
     
@@ -141,7 +139,7 @@ async function main() {
         new Color("#444444")
       );;
     }
-  }
+  };
   
   async function createWidget() {
     const widget = new ListWidget();
@@ -248,7 +246,7 @@ async function main() {
     
     const jdImage = await getCacheImage('jdWord.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/jdWord.png');
     const jdIcon = beneStack.addImage(jdImage);
-    jdIcon.imageSize = new Size(35, 35);
+    jdIcon.imageSize = new Size(40, 35);
     topStack.addSpacer(1); // 5
     
     const pointStack = topStack.addStack();
@@ -417,7 +415,7 @@ async function main() {
       await widget.presentMedium()
     }
     return widget;
-  }
+  };
   
   
   /**-------------------------**/
@@ -430,7 +428,7 @@ async function main() {
     } else {
       await smallrWidget();
     }
-  }
+  };
   await runWidget();
   
   /**-------------------------**/
@@ -475,7 +473,7 @@ async function main() {
     } else {
       console.log(res)
     }
-  }
+  };
   
   async function LvlProgress(url) {
     const req = new Request(url)
@@ -504,7 +502,7 @@ async function main() {
       await writeSettings();
       notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
     }
-  }
+  };
   
   async function shadowImage(img) {
     let ctx = new DrawContext()
@@ -513,7 +511,7 @@ async function main() {
     ctx.setFillColor(new Color("#000000", Number(setting.masking)));
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage()
-  }
+  };
   
   async function circleImage(url) {
     typeof url === 'object' ? img = url : img = await new Request(url).loadImage();
@@ -545,7 +543,7 @@ async function main() {
     const base64Image = await wv.evaluateJavaScript(js);
     const iconImage = await new Request(base64Image).loadImage();
     return iconImage
-  }
+  };
   
   async function smallrWidget() {
     const widget = new ListWidget();
@@ -554,7 +552,7 @@ async function main() {
     text.centerAlignText();
     Script.setWidget(widget);
     Script.complete();
-  }
+  };
   
   async function createErrWidget() {
     const widget = new ListWidget();
@@ -567,6 +565,6 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
-  }
+  };
 }
 module.exports = { main }
