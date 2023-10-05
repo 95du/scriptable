@@ -6,7 +6,7 @@
 * Version 1.2.0
 * 2023-04-24 15:30
 * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
-* ⚠️小机型修改第 198 行中的数字 63
+* ⚠️小机型修改第 194 行中的数字 63
 */
 
 const fm = FileManager.local();
@@ -225,7 +225,6 @@ const createWidget = async () => {
   contentText.textOpacity = 0.7
   widget.addSpacer();
   
-  
   /** 
   * Bottom Content
   * @param {object} options
@@ -284,36 +283,21 @@ const presentMenu = async() => {
   const alert = new Alert();
   alert.message = "\n【 iOS 16 负一屏底栏 】\n高仿微信通知信息样式，内容显示未来两小时天气，\n底部显示每日一句中英文";
   const actions = [
-    '更新代码', '重置所有', '透明背景', '更多组件',  '预览组件'
+    '95度茅台', '更新代码', '重置所有', '透明背景', '预览组件'
   ];
 
   actions.forEach(( action, index ) => {
-  alert[ index === 0 || index === 1 
+  alert[ index === 1 || index === 2 
     ? 'addDestructiveAction'
     : 'addAction' ](action);
   });
   alert.addCancelAction('取消');
   
   const mainMenu = await alert.presentSheet();
-  if (mainMenu === 1) {
-    await fm.remove(path);
-    const bgImage = await getBgImagePath();
-    if (fm.fileExists(bgImage)) {
-      fm.remove(bgImage);
-    }
-    await runScriptable();
-  }
-  if (mainMenu === 2) {
-    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).main()
-  }
-  if (mainMenu === 3) {
+  if (mainMenu === 0) {
     await importModule(await downloadModule('store.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW45NWR1U3RvcmUuanM=')).main();
   }
-  if (mainMenu === 4) {
-    await createWidget();
-  }
-  if (mainMenu === 5) return;
-  if (mainMenu === 0) {
+  if (mainMenu === 1) {
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
     const codeString = await reqUpdate.loadString();
     const finish = new Alert();
@@ -331,6 +315,20 @@ const presentMenu = async() => {
       await finish.presentAlert();
       await runScriptable();
     }
+  }
+  if (mainMenu === 2) {
+    await fm.remove(path);
+    const bgImage = await getBgImagePath();
+    if (fm.fileExists(bgImage)) {
+      fm.remove(bgImage);
+    }
+    await runScriptable();
+  }
+  if (mainMenu === 3) {
+    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).
+  }
+  if (mainMenu === 4) {
+    await createWidget();
   }
 };
 
