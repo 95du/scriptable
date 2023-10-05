@@ -109,17 +109,11 @@ async function main() {
   * 该函数获取当前的年份和月份
   * @returns {Promise}
   */
-  const getYearMonth = async () => {
-    const Year = new Date().getFullYear();
-    
-    const df = new DateFormatter();
-    df.dateFormat = 'MM';
-    const Month = (df.string(new Date()));
-    
-    const year = Month === 1 ? (Year - 1) : Year;  
-    return { Year, Month, year }
-  }
-  const { Year, Month, year } = await getYearMonth();
+  const Year = new Date().getFullYear();
+  const df = new DateFormatter();
+  df.dateFormat = 'MM';
+  const Month = (df.string(new Date()));
+  const year = Month === 1 ? (Year - 1) : Year;
   
   // 请求头参数
   const headers = {
