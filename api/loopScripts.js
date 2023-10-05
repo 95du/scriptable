@@ -107,7 +107,7 @@ async function presentMenu() {
     await importedModule.main();
   }
   if ( response === 0 ) {
-    const codeString = await new Request(getData.update).loadString();
+    const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/loopScripts.js').loadString();
     if ( codeString.indexOf('95度茅台') === -1 ) {
       notify('更新失败⚠️', '请检查网络或稍后再试');
     } else {
