@@ -84,7 +84,7 @@ async function notify (title, body, url, opts = {}) {
 
 async function presentMenu() {
   const alert = new Alert();
-  alert.message = '添加小组件的脚本URL( 可无限添加 )\r在桌面循环切换显示所添加的小组件'
+  alert.message = '\n添加小组件的脚本URL( 可无限添加 )\r在桌面循环切换显示所添加的小组件'
   const actions = [
     '更新代码', '重置所有', '95度茅台', '删减脚本', '添加组件', '预览组件'
   ];
