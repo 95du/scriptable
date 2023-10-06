@@ -95,7 +95,7 @@
       ]
     },
     {
-      "id": "cookie_gitcode",
+      "id": "gitcode_cookie",
       "name": "GitCode",
       "author": "@95du",
       "descs_html": [
@@ -106,11 +106,11 @@
         "https://sweixinfile.hisense.com/media/M00/7C/CE/Ch4FyGUgg2OAC7hRAAQod2sIdzI493.png"
       ],
       "keys": [
-        "cookie_gitcode"
+        "gitcode_cookie"
       ],
       "settings": [
         {
-          "id": "cookie_gitcode",
+          "id": "gitcode_cookie",
           "name": "Cookie",
           "val": "",
           "type": "text",
