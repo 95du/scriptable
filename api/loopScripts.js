@@ -39,8 +39,7 @@ const outputNextScript = () => {
   if ( files ) {
     writeSettings({ scripts, currentIndex: nextIndex });
   };
-  currentIndex = nextIndex;
-  return scripts[currentIndex];
+  return scripts[nextIndex];
 };
 
 const scriptUrl = outputNextScript();
