@@ -156,7 +156,7 @@ async function removeScript() {
   if ( files ) {
     const Run = async () => {
       const alert = new Alert();
-      alert.message = '删减脚本';
+      alert.message = '删减组件❓';
       script.forEach(item => {
         alert.addAction(
 decodeURIComponent(item.substring(item.lastIndexOf('/') + 1))  
