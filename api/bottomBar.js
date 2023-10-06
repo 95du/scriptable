@@ -6,7 +6,7 @@
 * Version 1.2.0
 * 2023-04-24 15:30
 * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
-* ⚠️小机型修改第 194 行中的数字 63
+* ⚠️ 小机型修改第 19 行中的数字 63
 */
 
 const fm = FileManager.local();
@@ -19,13 +19,11 @@ const df = new DateFormatter();
 df.dateFormat = 'HH:mm';
 const GMT = df.string(new Date());
 
+const stackSize = 63 // 容器尺寸
+
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
-);
-const textColor = Color.dynamic(
-  new Color('#1E1E1E'), 
-  new Color('#FEFEFE')
 );
 
 /**
@@ -194,7 +192,7 @@ const createWidget = async () => {
   eventStack.centerAlignContent();
   eventStack.backgroundColor = stackBackground;
   eventStack.cornerRadius = 23;
-  eventStack.size = new Size(0, 63);
+  eventStack.size = new Size(0, stackSize);
   
   // WeChat icon
   const imageElement = eventStack.addImage(await getPicture());
@@ -211,18 +209,17 @@ const createWidget = async () => {
   statusStack.layoutHorizontally();
   const weatherText = statusStack.addText(title);
   weatherText.font = Font.boldSystemFont(14);
+  weatherText.textOpacity = 0.85;
   statusStack.addSpacer();
   
   const statusText = statusStack.addText(GMT);
-  statusText.font = Font.boldSystemFont(15);
-  statusText.textColor = textColor;
-  statusText.textOpacity = 0.45
+  statusText.font = Font.mediumSystemFont(15);
+  statusText.textOpacity = 0.45;
   twoHoursStack.addSpacer(2);
   
   const contentText = twoHoursStack.addText(content);
-  contentText.font = Font.boldSystemFont(13.5);
-  contentText.textColor = textColor;
-  contentText.textOpacity = 0.7
+  contentText.font = Font.mediumSystemFont(13.5);
+  contentText.textOpacity = 0.7;
   widget.addSpacer();
   
   /** 
@@ -240,9 +237,8 @@ const createWidget = async () => {
   oneStack.size = new Size(0, 80);
   
   const textElement = oneStack.addText(note);
-  textElement.textColor = textColor;
-  textElement.font = Font.boldSystemFont(14);
-  textElement.textOpacity = 0.8;
+  textElement.font = Font.mediumSystemFont(14);
+  textElement.textOpacity = 0.7;
   textElement.url = imgUrl;
   oneStack.addSpacer();
   
