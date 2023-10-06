@@ -6,7 +6,7 @@
  * UITable 版本: Version 1.0.0
  * 2023-04-23 19:30
  */
-
+await 
 async function main() {
   const F_MGR = FileManager.local();
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
@@ -112,7 +112,7 @@ async function main() {
   const Year = new Date().getFullYear();
   const df = new DateFormatter();
   df.dateFormat = 'MM';
-  const Month = (df.string(new Date()));
+  const Month = df.string(new Date())
   const year = Month === 1 ? (Year - 1) : Year;
   
   // 请求头参数
@@ -121,13 +121,12 @@ async function main() {
     'Content-Type': 'application/json;charset=utf-8'
   }
   
+  // totalPower & Yesterday
   const Run = async () => {
-    // Month & Yesterday
     const month = await getMonthData();
     if ( month ) {  
       totalPower = month.totalPower;
-      const arr = month.result;
-      ystdayPower = arr[arr.length-1].power;
+      ystdayPower = month.result[0].power;
     } else {
       totalPower = '0.00';
       ystdayPower = '0.00';
@@ -142,18 +141,6 @@ async function main() {
       setting.loop = 0
       levelColor = '#4FC3F7'
       barColor = new Color(levelColor, 0.6);
-    }
-  }
-  
-  const selectBill = async () => {
-    const ele = await selectEleBill();
-    if ( ele ) {  
-      pay = ele.electricBillPay;
-      const { startMonthDate, totalPower, totalElectricity, electricityBillYearMonth } = ele.billUserAndYear[0];
-      formattedDate = electricityBillYearMonth.replace(/^(\d{4})(\d{2})$/, '$1-$2');
-      monthDate = startMonthDate.split('.')[0];
-      total = totalPower;
-      arrears = totalElectricity;
     }
   };
   
@@ -250,12 +237,12 @@ async function main() {
     
     const benefitText2 = beneStack.addText(`${ystdayPower} °`);
     benefitText2.font = Font.boldSystemFont(16);
-    benefitText2.textColor = pay > 0 ? Color.blue() : Color.red()
+    benefitText2.textColor = isArrears == 1 ? Color.blue() : Color.red()
     beneStack.addSpacer();
     
-    if ( pay > 0 ) {
+    if ( isArrears == 1 ) {
       const payText0 = 
-      beneStack.addText(pay);
+      beneStack.addText(arrears);
       payText0.font = Font.boldSystemFont(16);
       payText0.textColor = new Color('#FF2400');
     }
@@ -268,11 +255,11 @@ async function main() {
     const payStack = pointStack.addStack();
     payStack.layoutHorizontally();
     payStack.centerAlignContent();
-    payStack.backgroundColor = new Color(pay > 0 ? '#D50000' : '#AF52DE');
+    payStack.backgroundColor = new Color(isArrears == 1 ? '#D50000' : '#AF52DE');
     payStack.setPadding(1, 5, 1, 5);
     payStack.cornerRadius = 5;
     
-    const payText = payStack.addText(pay > 0 ? '待缴费' : '已缴费');
+    const payText = payStack.addText(isArrears == 1 ? '待缴费' : '已缴费');
     payText.font = Font.boldSystemFont(11);
     payText.textColor = new Color('#FFFFFF');
     pointStack.addSpacer(8);
@@ -364,7 +351,7 @@ async function main() {
     
     const billStack3 = billStack.addStack();
     billStack3.addSpacer();
-    const billText2 = billStack3.addText(arrears);
+    const billText2 = billStack3.addText(totalBill);
     billText2.font = Font.boldSystemFont(14);
     billText2.textOpacity = 0.7;
     mainStack.addSpacer();
@@ -437,15 +424,14 @@ async function main() {
       const pushTime = (Date.now() - setting.updateTime);
       const duration = pushTime % (24 * 3600 * 1000);
       const hours = Math.floor(duration / (3600 * 1000));
-      if ( hours >= 12 && pay > 0 ) {
-        notify('用电缴费通知‼️', `${name}` + `，户号 ${number}` + `\n上月用电 ${total} 度 ，待缴电费 ${pay} 元`)
+      if ( hours >= 12 && isArrears == 1 ) {
+        notify('用电缴费通知 ‼️', `${name}，户号 ${number}` + `\n上月用电 ${total} 度 ，待缴电费 ${arrears} 元`)
         setting.updateTime = Date.now();
       }
     }
     arrearsNotice();
     writeSettings(setting);
     
-    // 组件实例
     if (!config.runsInWidget) {
       await widget.presentMedium();
     } else {
@@ -453,17 +439,16 @@ async function main() {
       Script.complete();
     };
     return widget;
-  }
+  };
   
   
   /**-------------------------**/
      /** Request(url) json **/
   /**-------------------------**/
-  
   const runWidget = async () => {
     if (setting.code === 0) {
       await userInfo();
-      await getEleBill();
+      await selectEleBill();
       await Run();
     }
     if (config.widgetFamily === 'medium' || config.runsInApp) {
@@ -478,19 +463,21 @@ async function main() {
   }
   await runWidget();
   
-  /**-------------------------**/
-     /** Request(url) json **/
-  /**-------------------------**/
-  
-  async function userInfo() {
-    const req = new Request('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers')
-    req.method = 'POST'
+  // 请求 api 数据
+  async function makeRequest(url, requestBody) {
+    const req = new Request(url);
+    req.method = 'POST';
     req.headers = headers;
-    const res = await req.loadJSON();
+    req.body = JSON.stringify(requestBody);
+    return await req.loadJSON();
+  };
+  
+  // 用户信息
+  async function userInfo() {
+    const res = await makeRequest('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers');
     if (res.sta == 00) {
       let countArr = res.data.length;
       setting.count = countArr == 1 ? countArr - 1 : setting.count > 0 ? setting.count - 1 : countArr - 1;
-      
       return {  
         userName: name,
         areaCode: code,
@@ -500,22 +487,14 @@ async function main() {
     }
   };
   
-  // 每月用电
-  async function makeRequest(url, requestBody) {
-    const req = new Request(url);
-    req.method = 'POST';
-    req.headers = headers;
-    req.body = JSON.stringify(requestBody);
-    return await req.loadJSON();
-  };
-  
+  // 月用电量
   async function getMonthData() {
     const pointResponse = await makeRequest(
       'https://95598.csg.cn/ucs/ma/zt/charge/queryMeteringPoint', {
       areaCode: code,
       eleCustNumberList: [{ areaCode: code, eleCustId: id }]
     });
-    // Month & Yesterday
+    // totalPower & Yesterday
     const { meteringPointId } = pointResponse.data[0];
     const monthResponse = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint', {
       eleCustId: id,
@@ -528,67 +507,36 @@ async function main() {
   
   // 余额
   async function getBalance() {
-    const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus');  
-    req.method = 'POST'
-    req.headers = headers;
-    req.body = JSON.stringify({
+    const response = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus', {
       areaCode: code,
       eleCustId: id
     });
-    return (await req.loadJSON()).data[0].balance;
+    return response.data[0].balance;
   };
   
   // 账单
-  async function getEleBill() {
-    const elecBill = new Request('https://95598.csg.cn/ucs/ma/zt/charge/queryCharges');
-    elecBill.method = 'POST'
-    elecBill.headers = headers;
-    elecBill.body = JSON.stringify({
-      type: 0,
-      areaCode: code,
-      eleModels: [
-        {
-          areaCode: code,
-          eleCustId: id
-        }
-      ]
-    });
-    const res = await elecBill.loadJSON();
-    const lastBill = res.data[0].points[0];
-    if ( lastBill ) {
-      if ( !lastBill.arrears ) {
-        await selectBill();
-      } else {
-        formattedDate = lastBill.electricityBillYearMonthEnd.replace(/^(\d{4})(\d{2})$/, '$1-$2')
-        return {
-          formattedDate: electricityBillYearMonthEnd,
-          arrears: pay,
-          billingElectricity: total,
-          receieElectricity: arrears
-        } = lastBill;
-      }
-    } else {
-      return {
-        pay: '0',
-        total: '0.00',
-        arrears: '0.00'
-      }
-    }
-  };
-  
   async function selectEleBill() {
-    const req = new Request('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill');
-    req.method = 'POST';
-    req.headers = headers;
-    req.body = JSON.stringify({ 
+    const response = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill', {
       electricityBillYear: year,
       areaCode: code,
       eleCustId: id
     });
-    return (await req.loadJSON()).data;
+    const eleBill = response.data.billUserAndYear[0];
+    if ( eleBill ) {
+      formattedDate = eleBill.electricityBillYearMonth.replace(/^(\d{4})(\d{2})$/, '$1-$2');
+      return {
+        formattedDate: electricityBillYearMonth,
+        totalPower: total,
+        totalElectricity: totalBill,
+        arrears,
+        isArrears
+      } = eleBill;
+    }
   };
   
-  // 组件设置功能
+  /**-------------------------**/
+     /** Request(url) json **/
+  /**-------------------------**/
   async function shadowImage(img) {
     let ctx = new DrawContext()
     ctx.size = img.size
