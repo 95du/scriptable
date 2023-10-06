@@ -39,38 +39,6 @@
       ]
     },
     {
-      "id": "china_telecom",
-      "name": "中国电信",
-      "author": "@FoKit",
-      "descs_html": [
-        "中国电信 Cookie"
-      ],
-      "icons": [
-        "https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_2.png",
-        "https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_2.png"
-      ],
-      "keys": [
-        "china_telecom_cookie",
-        "china_telecom_login_url"
-      ],
-      "settings": [
-        {
-          "id": "china_telecom_cookie",
-          "name": "Cookie",
-          "val": "",
-          "type": "text",
-          "desc": ""
-        },
-        {
-          "id": "china_telecom_login_url",
-          "name": "Login_url",
-          "val": "",
-          "type": "text",
-          "desc": ""
-        }
-      ]
-    },
-    {
       "id": "user_token_sharecuts",
       "name": "捷径社区",
       "author": "@95du",
@@ -78,8 +46,8 @@
         "捷径社区 Token"
       ],
       "icons": [
-        "http://mtw.so/66n570",
-        "http://mtw.so/66n570"
+        "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/1a/53/c3/1a53c3a4-041f-eb2d-5bef-8665cd16b2a9/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png",
+        "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/1a/53/c3/1a53c3a4-041f-eb2d-5bef-8665cd16b2a9/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png"
       ],
       "keys": [
         "token_sharecuts",
@@ -134,8 +102,8 @@
         "GitCode Cookie"
       ],
       "icons": [
-        "http://mtw.so/5CYGGc",
-        "http://mtw.so/5CYGGc"
+        "https://sweixinfile.hisense.com/media/M00/7C/CE/Ch4FyGUgg2OAC7hRAAQod2sIdzI493.png",
+        "https://sweixinfile.hisense.com/media/M00/7C/CE/Ch4FyGUgg2OAC7hRAAQod2sIdzI493.png"
       ],
       "keys": [
         "cookie_gitcode"
@@ -206,8 +174,8 @@
         "京东豆苗 Request_Url"
       ],
       "icons": [
-        "http://mtw.so/5CDDy8",
-        "http://mtw.so/5CDDy8"
+        "https://gitcode.net/4qiao/framework/raw/master/img/icon/jd_wangWang.png",
+        "https://gitcode.net/4qiao/framework/raw/master/img/icon/jd_wangWang.png"
       ],
       "keys": [
         "request_url"
