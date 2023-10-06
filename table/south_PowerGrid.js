@@ -6,7 +6,7 @@
  * UITable 版本: Version 1.0.0
  * 2023-04-23 19:30
  */
-await 
+
 async function main() {
   const F_MGR = FileManager.local();
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
