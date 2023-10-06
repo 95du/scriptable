@@ -127,9 +127,11 @@ async function main() {
     if ( month ) {  
       totalPower = month.totalPower;
       ystdayPower = month.result[0].power;
+      beforeYesterday = month.result[1].power ?? '0.00'
     } else {
       totalPower = '0.00';
       ystdayPower = '0.00';
+      beforeYesterday: '0.00';
     }
     
     // levelColor loop
@@ -276,8 +278,7 @@ async function main() {
     barStack2.setPadding(0.5, 8, 0.5, 8);
     barStack2.cornerRadius = 5;
     
-    const balance = await getBalance();
-    const pointText = barStack2.addText(balance < 0 ? '0.00' : Number(balance).toFixed(2));
+    const pointText = barStack2.addText(beforeYesterday);
     pointText.font = Font.boldSystemFont(12);
     pointText.textColor = new Color('#FFFFFF');
     mainStack.addSpacer();
@@ -314,7 +315,7 @@ async function main() {
     quotaStack.addSpacer(3);
 
     const quotaStack3 = quotaStack.addStack();
-    const quotaText2 = quotaStack3.addText(totalPower > 0 ? balance : '0.00');
+    const quotaText2 = quotaStack3.addText(totalPower > 0 ? await getBalance() : '0.00');
     quotaText2.font = Font.boldSystemFont(14);
     quotaText2.textOpacity = 0.7;
     quotaStack3.addSpacer();
