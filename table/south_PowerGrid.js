@@ -339,7 +339,7 @@ async function main() {
     const billStack1 = billStack.addStack();
     billStack1.addSpacer();
     
-    const billText = billStack1.addText(formattedDate);
+    const billText = billStack1.addText(lastMonth);
     billText.font = Font.mediumSystemFont(14);
     billText.textOpacity = 0.7;
     billStack.addSpacer(3);
@@ -524,9 +524,9 @@ async function main() {
     });
     const eleBill = response.data.billUserAndYear[0];
     if ( eleBill ) {
-      formattedDate = eleBill.electricityBillYearMonth.replace(/^(\d{4})(\d{2})$/, '$1-$2');
+      lastMonth = eleBill.electricityBillYearMonth.replace(/^(\d{4})(\d{2})$/, '$1-$2');
       return {
-        formattedDate: electricityBillYearMonth,
+        lastMonth: electricityBillYearMonth,
         totalPower: total,
         totalElectricity: totalBill,
         arrears,
