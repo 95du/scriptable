@@ -1,6 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: deep-brown; icon-glyph: cog;
 /*
 脚本名称：淘宝 Cookie
 更新时间：2023-02-19
@@ -15,9 +12,9 @@ https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
 
 ========== Quantumult X ===========
 [rewrite_local]
-^^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/ url script-request-header https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.js
+^https:\/\/h5api\.m\.taobao\.com\/h5\/mtop\.taobao\.reborn\.mclaren\.h5 url script-request-header https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_taobao_cookie.js
 [MITM]
-hostname = m5.amap.com
+hostname = h5api.m.taobao.com
 
 */
 
