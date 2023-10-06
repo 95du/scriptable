@@ -208,7 +208,7 @@ const createWidget = async () => {
   statusStack.layoutHorizontally();
   const weatherText = statusStack.addText(title);
   weatherText.font = Font.boldSystemFont(14);
-  weatherText.textOpacity = 0.85;
+  weatherText.textOpacity = 0.9;
   statusStack.addSpacer();
   
   const statusText = statusStack.addText(GMT);
