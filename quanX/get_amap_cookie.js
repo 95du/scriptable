@@ -18,7 +18,7 @@ https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
 
 ========== Quantumult X ===========
 [rewrite_local]
-^^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/ url script-request-header https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.js
+^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/ url script-request-header https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.js
 [MITM]
 hostname = m5.amap.com
 
