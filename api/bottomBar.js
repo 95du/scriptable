@@ -1,6 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: deep-green; icon-glyph: comments;
 /**
 * 小组件作者：95度茅台
 * Version 1.2.0
@@ -320,7 +317,7 @@ const presentMenu = async() => {
     await runScriptable();
   }
   if (mainMenu === 3) {
-    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).
+    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).main()
   }
   if (mainMenu === 4) {
     await createWidget();
