@@ -161,11 +161,10 @@ const getPicture = async () => {
  * @returns {Object} string
  */
 const getOneWord = async () => {
-  const oneUrl = 'https://open.iciba.com/dsapi';
-  const oneJson = await getJson(oneUrl);
+  const { fenxiang_img, note, content } = await getJson('https://open.iciba.com/dsapi');
   return { 
-    note: oneJson.note.length >= 21 ? oneJson.note : `${oneJson.note}\n${oneJson.content}`,
-    imgUrl: oneJson.fenxiang_img
+    note: note.length >= 21 ? note : `${note}\n${content}`,
+    imgUrl: fenxiang_img
   }
 };
 
