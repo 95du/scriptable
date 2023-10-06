@@ -218,7 +218,7 @@ const createWidget = async () => {
   
   const contentText = twoHoursStack.addText(content);
   contentText.font = Font.mediumSystemFont(13.5);
-  contentText.textOpacity = 0.7;
+  contentText.textOpacity = 0.82;
   widget.addSpacer();
   
   /** 
