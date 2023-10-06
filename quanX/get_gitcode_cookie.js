@@ -1,6 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: blue; icon-glyph: cog;
 /*
 脚本名称：获取GitCode代码仓Cookie
 更新时间：2023-02-02
@@ -16,7 +13,7 @@ hostname = gitcode.net
 */
 
 const $ = new Env('GitCode');
-$.cookie_key = 'cookie_gitcode';
+$.cookie_key = 'gitcode_cookie';
 $.cookie = $.getdata($.cookie_key);
 $.is_debug = $.getdata('is_debug');
 
