@@ -89,7 +89,7 @@ async function presentMenu() {
   ];
 
   actions.forEach((action, i) => {
-  alert[ i === 0 || i === 1 || i === 3 ? 'addDestructiveAction' : 'addAction' ](action);
+    alert[ i === 0 || i === 1 || i === 3 ? 'addDestructiveAction' : 'addAction' ](action);
   });
   alert.addCancelAction('取消');
   
