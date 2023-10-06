@@ -39,6 +39,38 @@
       ]
     },
     {
+      "id": "china_telecom",
+      "name": "中国电信",
+      "author": "@FoKit",
+      "descs_html": [
+        "中国电信 Cookie"
+      ],
+      "icons": [
+        "https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_2.png",
+        "https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_2.png"
+      ],
+      "keys": [
+        "china_telecom_cookie",
+        "china_telecom_login_url"
+      ],
+      "settings": [
+        {
+          "id": "china_telecom_cookie",
+          "name": "Cookie",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        },
+        {
+          "id": "china_telecom_login_url",
+          "name": "Login_url",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        }
+      ]
+    },
+    {
       "id": "user_token_sharecuts",
       "name": "捷径社区",
       "author": "@95du",
@@ -135,6 +167,30 @@
       "settings": [
         {
           "id": "amap_cookie",
+          "name": "Cookie",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        }
+      ]
+    },
+    {
+      "id": "taobao_cookie",
+      "name": "淘宝",
+      "author": "@95du",
+      "descs_html": [
+        "淘宝 Cookie"
+      ],
+      "icons": [
+        "https://gitcode.net/4qiao/scriptable/raw/master/img/icon/taobao.png",
+        "https://gitcode.net/4qiao/scriptable/raw/master/img/icon/taobao.png"
+      ],
+      "keys": [
+        "taobao_cookie"
+      ],
+      "settings": [
+        {
+          "id": "taobao_cookie",
           "name": "Cookie",
           "val": "",
           "type": "text",
