@@ -100,7 +100,7 @@ async function main() {
     const cachePath = fm.joinPath(cache, imgKey);
     await fm.writeImage(cachePath, carImage, { overwrite: true });
     imgArr.push(imgKey);
-    await writeSettings(setting);
+    writeSettings(setting);
     if ( imgArr.length === 1 ) {
       notify('获取成功', '初始化数据及获取GPS设备信息。');
     }
@@ -108,8 +108,7 @@ async function main() {
   
   const loadPicture = async () => {
     if ( !imgArr?.length || picture?.length > imgArr.length) {
-      const cacheUrl = await new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json').loadJSON();
-      let maybach = cacheUrl.maybach;
+      let maybach = Array.from({ length: 9 }, (_, index) => `https://gitcode.net/4qiao/scriptable/raw/master/img/car/Maybach-${index}.png`);
       if (picture?.length > imgArr.length) {
         maybach = picture;
       }
