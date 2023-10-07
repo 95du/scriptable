@@ -131,7 +131,7 @@ async function main() {
     } else {
       totalPower = '0.00';
       ystdayPower = '0.00';
-      beforeYesterday: '0.00';
+      beforeYesterday = '0.00';
     }
     
     // levelColor loop
