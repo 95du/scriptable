@@ -109,12 +109,11 @@ async function main() {
   * 该函数获取当前的年份和月份
   * @returns {Promise}
   */
-  const Year = new Date().getFullYear();
-  const df = new DateFormatter();
-  df.dateFormat = 'MM';
-  const Month = df.string(new Date())
-  const year = Month === 1 ? (Year - 1) : Year;
-  
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const currentYear = month === '01' ? year - 1 : year;
+
   // 请求头参数
   const headers = {
     'x-auth-token': token,
@@ -302,7 +301,7 @@ async function main() {
     quotaStack.centerAlignContent();
     
     const quotaStack1 = quotaStack.addStack();
-    const quotaText = quotaStack1.addText(`${Year}-${Month}`);
+    const quotaText = quotaStack1.addText(`${year}-${month}`);
     quotaText.font = Font.mediumSystemFont(14);
     quotaText.textOpacity = 0.7;
     quotaStack1.addSpacer();
@@ -376,7 +375,7 @@ async function main() {
       prgsStack.layoutHorizontally();
       prgsStack.centerAlignContent();
       
-      const curScoreText = prgsStack.addText(Month)
+      const curScoreText = prgsStack.addText(month)
       curScoreText.font = Font.boldSystemFont(13);
       prgsStack.addSpacer();
       
@@ -500,7 +499,7 @@ async function main() {
     const monthResponse = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint', {
       eleCustId: id,
       areaCode: code,
-      yearMonth: Year + Month,
+      yearMonth: year + month,
       meteringPointId
     });
     return monthResponse.data;
@@ -518,7 +517,7 @@ async function main() {
   // 账单
   async function selectEleBill() {
     const response = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill', {
-      electricityBillYear: year,
+      electricityBillYear: currentYear,
       areaCode: code,
       eleCustId: id
     });
