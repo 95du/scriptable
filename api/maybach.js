@@ -54,7 +54,6 @@ const notify = async (title, body, url, opts = {}) => {
   return await n.schedule();
 };
 
-
 /**
  * 弹出菜单供用户选择进行操作
  */
@@ -109,7 +108,7 @@ const presentMenu = async () => {
       }
    // Main Menu
   }
-}
+};
 
 const inputCookie = async () => {
   const alert = new Alert();
@@ -124,7 +123,7 @@ const inputCookie = async () => {
     writeSettings({ cookie: btoa(cookie), imgArr: [] });
     Safari.open('scriptable:///run/' + encodeURIComponent(uri));
   }
-}
+};
 
 /**
  * 获取远程图片
@@ -153,8 +152,7 @@ const downloadCarImage = async (item) => {
 
 const loadPicture = async () => {
   if ( !setting.imgArr?.length ) {
-    const cacheUrl = await new Request('https://gitcode.net/4qiao/shortcuts/raw/master/api/update/Scriptable.json').loadJSON();
-    const maybach = cacheUrl.maybach;
+    const maybach = Array.from({ length: 9 }, (_, index) => `https://gitcode.net/4qiao/scriptable/raw/master/img/car/Maybach-${index}.png`);
     maybach.forEach(async (item) => {
       await downloadCarImage(item);
     });
@@ -170,7 +168,7 @@ async function getRandomImage() {
   const index = Math.floor(Math.random() * count);
   const cacheImgPath = cache + '/' + imgArr[index];
   return fm.readImage(cacheImgPath);
-}
+};
 
 /**
  * 获取网络图片并使用缓存
@@ -242,11 +240,12 @@ const getDistance = async () => {
  */
 const getInfo = async () => {
   await getLastLocation();
-  const info = await Promise.all([loadPicture(), getAddress()]);
 
   const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent('琼A·849A8')}&ll=${latitude},${longitude}&t=m`;
   
-  const [ state, status ] = speed <= 5 ? ['已静止', '[ 车辆静止中 ]'] : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
+  const [state, status] = speed <= 5
+    ? ['已静止', '[ 车辆静止中 ]']
+    : [`${speed} km·h`, `[ 车速 ${speed} km·h ]`];
   
   // 计算停车时长(红绿灯图标)  
   const getParkingTime = (updateTime) => (new Date(Date.now() - updateTime)).getUTCMinutes();
@@ -261,22 +260,23 @@ const getInfo = async () => {
   const GMT = formatDate(updateTime, 'yyyy-MM-dd HH:mm');
   const GMT2 = formatDate(updateTime, 'MM-dd HH:mm');
   
+  const info = await Promise.all([loadPicture(), getAddress()]);
+  
   const runObj = {
     updateTime, 
     address,
     run: owner,
-    coordinates: `${longitude},${latitude}`,
     pushTime: Date.now(),
     parkingTime: GMT2,
     cookie,
-    imgArr
+    imgArr,
+    coordinates: `${longitude},${latitude}`,
   };
-  return { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
+  return { state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
 };
 
 
 //=========> Create <=========//
-
 const createWidget = async () => {
   const widget = new ListWidget();
   widget.backgroundColor = Color.white();
@@ -297,7 +297,7 @@ const createWidget = async () => {
   ];
   widget.backgroundGradient = gradient;
   
-  const { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
+  const { state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
 
   // Initial Save
   if ( !setting.run ) {
