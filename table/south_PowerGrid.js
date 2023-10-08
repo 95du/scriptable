@@ -3,10 +3,10 @@
 // icon-color: light-brown; icon-glyph: broadcast-tower;
 /**
  * 小组件作者：95度茅台
- * UITable 版本: Version 1.0.0
- * 2023-04-23 19:30
+ * UITable 版本: Version 1.0.1
+ * 2023-10-08 19:30
  */
-
+await 
 async function main() {
   const F_MGR = FileManager.local();
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
@@ -125,8 +125,8 @@ async function main() {
     const month = await getMonthData();
     if ( month ) {  
       totalPower = month.totalPower;
-      ystdayPower = month.result[0].power;
-      beforeYesterday = month.result[1].power ?? '0.00'
+      ystdayPower = month.result.pop().power;
+      beforeYesterday = month.result[month.result.length - 1].power ?? '0.00'
     } else {
       totalPower = '0.00';
       ystdayPower = '0.00';
