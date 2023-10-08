@@ -196,7 +196,7 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     } else if (amount >= 10000) {
       return (amount / 10000).toFixed(1) + ' 万';
     }
-    return '未知数额';
+    return '等待更新';
   };
   
   /**
