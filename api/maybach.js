@@ -118,11 +118,21 @@ const inputCookie = async () => {
   alert.addCancelAction('取消');
   const input = await alert.present();
   if ( input === -1 ) return;
-  const cookie = alert.textFieldValue(0);
-  if ( cookie ) {
-    writeSettings({ cookie: btoa(cookie), imgArr: [] });
-    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+  let cookie = alert.textFieldValue(0);
+
+  if ( !cookie ) {
+    try {
+      const boxjs_data = await new Request('http://boxjs.com/query/data/amap_cookie').loadJSON();
+      cookie = boxjs_data.val;
+    } catch(e) {
+      notify('获取 boxjs 数据失败 ⚠️', '需打开Quantumult-X获取Cookie');  
+      Safari.open('quantumult-x://');
+      return;
+    }
   }
+  
+  writeSettings({ cookie: btoa(cookie), imgArr: [] });
+  Safari.open('scriptable:///run/' + encodeURIComponent(uri));
 };
 
 /**
