@@ -238,8 +238,8 @@ async function main() {
     } catch (err) {
       notify('获取坐标错误 ⚠️', '需填写高德地图 web 服务类型 key。');
       return {
-        longitude: 116.48482,
-        latitude: 39.94858
+        longitude: 116.484828,
+        latitude: 39.948585
       }
     }
   };
@@ -393,7 +393,6 @@ async function main() {
     statusText.textColor = textColor;
     statusText.textOpacity = 0.7;
     leftStack.addSpacer();
-    
       
     /**
      * right Stack
