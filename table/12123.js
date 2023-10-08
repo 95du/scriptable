@@ -7,11 +7,11 @@
  * 获取Token作者: @FoKit
  * UITable 版本: Version 1.2.0
  */
-
+await 
 async function main() {
   const F_MGR = FileManager.local();
   
-  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du12123');  
+  const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_12123');  
   F_MGR.createDirectory(path, true);  
   
   const cacheFile = F_MGR.joinPath(path, 'setting.json');
