@@ -7,13 +7,11 @@
  * 获取Token作者: @FoKit
  * UITable 版本: Version 1.2.0
  */
-
+await 
 async function main() {
   const F_MGR = FileManager.local();
-  
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du12123');  
   F_MGR.createDirectory(path, true);  
-  
   const cacheFile = F_MGR.joinPath(path, 'setting.json');
   
   /**
@@ -450,15 +448,7 @@ async function main() {
     rightStack.layoutVertically();
     rightStack.centerAlignContent();
     
-    const carImageStack = rightStack.addStack();  
-    if ( success && detail ) {
-      const shortText = `${vio.violationAddress}，${vio.violation}`;
-      if ( shortText.length <= 19 ) {
-        violationText = `${shortText}，违章序列号 ${detail.violationSerialNumber}`;
-      } else {
-        violationText = shortText;
-      }
-    };
+    const carImageStack = rightStack.addStack();
     carImageStack.setPadding(nothing || !success ? -12 : -20, 5, 0, 0);
     carImageStack.size = new Size(setting.carStackWidth, 0);
     const img = await getRandomImage();
@@ -470,7 +460,17 @@ async function main() {
     const tipsStack = rightStack.addStack();
     tipsStack.layoutHorizontally(); 
     tipsStack.centerAlignContent();
-    tipsStack.size = new Size(setting.bottomSize, 28);
+    tipsStack.size = new Size(setting.bottomSize, 28);  
+    
+    if ( success && detail ) {
+      const shortText = `${vio.violationAddress}，${vio.violation}`;
+      if ( shortText.length <= 19 ) {
+        violationText = `${shortText}，违章序列号 ${detail.violationSerialNumber}`;
+      } else {
+        violationText = shortText;
+      }
+    };
+    
     if (nothing || !success) {
      tipsText = tipsStack.addText(setting.botStr);
     } else {
