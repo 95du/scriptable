@@ -64,7 +64,7 @@ const presentMenu = async () => {
   const actions = ['更新代码', '重置所有', '家人地图', '输入凭证', '预览组件'];
 
   actions.forEach(( action, index ) => {
-  alert[ index === 0 || index === 1 
+    alert[ index === 0 || index === 1 
     ? 'addDestructiveAction'
     : 'addAction' ](action);
   });
@@ -272,7 +272,7 @@ const getInfo = async () => {
     imgArr,
     coordinates: `${longitude},${latitude}`,
   };
-  return { state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
+  return { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
 };
 
 
@@ -297,7 +297,7 @@ const createWidget = async () => {
   ];
   widget.backgroundGradient = gradient;
   
-  const { state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
+  const { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
 
   // Initial Save
   if ( !setting.run ) {
