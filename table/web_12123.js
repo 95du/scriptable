@@ -10,10 +10,8 @@
 
 async function main() {
   const fm = FileManager.local();
-  
-  const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');  
-  fm.createDirectory(path, true);  
-  
+  const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');
+  fm.createDirectory(path, true);
   const cacheFile = fm.joinPath(path, 'setting.json');
   
   /**
@@ -75,7 +73,7 @@ async function main() {
         }
       }
     } catch (e) {
-      console.log(e + '或者网络有问题')
+      console.log(e + '或网络有问题')
       notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
     }
   };
@@ -121,10 +119,7 @@ async function main() {
     await getRandomImage();
   };
   
-  if ( !imgArr?.length || picture.length > imgArr.length) {
-    if (picture.length > imgArr.length) {
-      maybach = picture;
-    }
+  if ( !imgArr?.length ) {
     maybach.forEach(async (item) => {
       await downloadCarImage(item);
     });
@@ -235,8 +230,7 @@ async function main() {
     };
     const surveils = await requestInfo(api3, params);
     return surveils ? surveils.data?.surveils : [];
-  }; 
-
+  };
   
   // 获取违章详细信息
   const getViolationMsg = async (detail) => {
@@ -285,7 +279,6 @@ async function main() {
   
   
   //=========> Create <=========//
-  
   async function createWidget() {
     const widget = new ListWidget();
     
@@ -466,22 +459,15 @@ async function main() {
     rightStack.layoutVertically();
     rightStack.centerAlignContent();
     
-    const carImageStack = rightStack.addStack();  
-    if ( success && detail ) {
-      const shortText = `${vio.violationAddress}，${vio.violation}`;
-      if ( shortText.length <= 19 ) {
-        violationText = `${shortText}，违章序列号 ${detail.violationSerialNumber}`;
-      } else {
-        violationText = shortText;
-      }
-    };
-    carImageStack.setPadding(nothing || !success ? -12 : setting.carTop, 5, setting.carBottom, 0);
+    const carImageStack = rightStack.addStack();
+    carImageStack.setPadding(nothing || !success ? setting.carTop + 8 : setting.carTop, 5, setting.carBottom, 0);
     carImageStack.size = new Size(setting.carStackWidth, 0);
+
     if (!setting.carImg) {
       img = await getRandomImage();
     } else {
-      const imgKey = decodeURIComponent(setting.carImg.substring(setting.carImg.lastIndexOf("/") + 1));
-      img = await getCacheImage(imgKey, setting.carImg);
+      const name = decodeURIComponent(setting.carImg.substring(setting.carImg.lastIndexOf("/") + 1));
+      img = await getCacheImage(name, setting.carImg);
     }
     
     const imageCar = carImageStack.addImage(img);
@@ -493,6 +479,16 @@ async function main() {
     tipsStack.layoutHorizontally(); 
     tipsStack.centerAlignContent();
     tipsStack.size = new Size(setting.bottomSize, 28);
+    
+    if ( success && detail ) {
+      const shortText = `${vio.violationAddress}，${vio.violation}`;
+      if ( shortText.length <= 19 ) {
+        violationText = `${shortText}，违章序列号 ${detail.violationSerialNumber}`;
+      } else {
+        violationText = shortText;
+      }
+    };
+
     if (nothing || !success) {
      tipsText = tipsStack.addText(setting.botStr);
     } else {
@@ -510,7 +506,6 @@ async function main() {
     barStack2.url = statusUrl;
     topStack.url = 'tmri12123://'
     imageCar.url = detailsUrl;
-    
     
     if ( !config.runsInWidget ) {  
       await widget.presentMedium();
