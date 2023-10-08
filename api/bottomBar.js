@@ -20,7 +20,6 @@ df.dateFormat = 'HH:mm';
 const GMT = df.string(new Date());
 
 const stackSize = 63 // 容器尺寸
-
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
@@ -282,7 +281,7 @@ const presentMenu = async() => {
   ];
 
   actions.forEach(( action, index ) => {
-  alert[ index === 1 || index === 2 
+    alert[ index === 1 || index === 2 
     ? 'addDestructiveAction'
     : 'addAction' ](action);
   });
@@ -320,7 +319,7 @@ const presentMenu = async() => {
     await runScriptable();
   }
   if (mainMenu === 3) {
-    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).main()
+    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).
   }
   if (mainMenu === 4) {
     await createWidget();
