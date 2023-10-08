@@ -249,8 +249,7 @@ async function main() {
       const infoRandom = array[Math.floor(Math.random() * array.length)];
       return infoRandom;
     }
-  }
-
+  };
   
   // 处理错误
   const handleError = async (response) => {
@@ -264,7 +263,6 @@ async function main() {
   
   
   //=========> Create <=========//
-  
   async function createWidget() {
     const widget = new ListWidget();
     
@@ -490,7 +488,6 @@ async function main() {
     topStack.url = 'tmri12123://'
     imageCar.url = detailsUrl;
     
-    
     if ( !config.runsInWidget ) {  
       await widget.presentMedium();
     } else {
@@ -498,7 +495,7 @@ async function main() {
       Script.complete();
     };
     return widget;
-  }
+  };
   
   /**-------------------------**/
      /** Request(url) json **/
