@@ -2,10 +2,10 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: pink; icon-glyph: cloud-download-alt;
 /**
- * 组件名称: 小组件商店
- * 小组件作者: 95度茅台
- * Version 1.0.0
- * 2023-07-07
+ * 组件名称: 95du_ScriptStore
+ * 组件作者: 95du茅台
+ * 组件版本: Version 1.0.0
+ * 发布日期: 2023-07-07
  */
 
 const scriptName = '95du_store';
