@@ -276,21 +276,15 @@ async function main() {
     // themeColor
     const [themeColor, logoColor] = Device.isUsingDarkAppearance() ? ['dark', 'white'] : ['white', 'black'];
 
-    const appleHub = await getCacheImage(
-      `${logoColor}.png`,
-      `${rootUrl}img/picture/appleHub_${logoColor}.png`
-    );
+    const appleHub = await getCacheImage(`${logoColor}.png`, `${rootUrl}img/picture/appleHub_${logoColor}.png`);
     
-    const authorAvatar = fm.fileExists(getAvatarImg()) ? await toBase64(fm.readImage(getAvatarImg()) ) : await getCacheImage(
-      'author.png',
-      `${rootUrl}img/icon/4qiao.png`
-    );
+    const authorAvatar = fm.fileExists(getAvatarImg()) ? await toBase64(fm.readImage(getAvatarImg()) ) : await getCacheImage('author.png', `${rootUrl}img/icon/4qiao.png`);
     
     const gifImage = await getCacheImage('gifImage.gif', `${rootUrl}img/picture/widget.gif`);
     
     const scripts = ['jquery.min.js', 'bootstrap.min.js', 'loader.js'];
     const scriptTags = await Promise.all(scripts.map(async (script) => {
-      const content = await getCacheString(script, `${rootUrl}web/${script}`);
+      const content = await getCacheString(script, `${rootUrl}web/${script}?ver=7.4.2`);
       return `<script>${content}</script>`;
     }));
     
