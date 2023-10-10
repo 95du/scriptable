@@ -321,6 +321,7 @@ async function main() {
       --desc-background: #86868b;
       --card-radius: 10px;
       --list-header-color: rgba(60,60,67,0.6);
+      --update-desc: hsl(0, 0%, 20%);
     }
     
     .btn-block {
@@ -550,11 +551,12 @@ async function main() {
     .popup-version {
       text-align: center;
       font-size: 16px;
+      color: var(--update-desc);
     }
     
     .popup-content {
       margin-left: 12px;
-      font-weight: 400;
+      color: var(--update-desc);
     }
     
     /** 头像开始 **/
@@ -895,6 +897,7 @@ async function main() {
         --checkbox: #454545;
         --solid-color: #1c1c1e;
         --desc-background: darkGrey;
+        --update-desc: hsl(0,0%,80%);
       }
       
       .white-theme, .dark-theme {
