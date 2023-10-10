@@ -269,8 +269,7 @@ async function main() {
     const {
       formItems = [],
       head,
-      avatarInfo,
-      $ = 'https://www.imarkr.com'
+      avatarInfo
     } = options;
     
     // themeColor
@@ -1263,7 +1262,7 @@ document.getElementById('telegram').addEventListener('click', () => {
     <html>
       <head>
         <meta name='viewport' content='width=device-width, user-scalable=no, viewport-fit=cover'>
-        <link rel="stylesheet" href="//at.alicdn.com/t/c/font_3772663_kmo790s3yfq.css" type="text/css">
+        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_3772663_kmo790s3yfq.css" type="text/css">
         <style>${style}</style>
       </head>
       <body class="${themeColor}-theme site-layout-1">
@@ -1276,7 +1275,7 @@ document.getElementById('telegram').addEventListener('click', () => {
     </html>`;
   
     const webView = new WebView();
-    await webView.loadHTML(html, $);
+    await webView.loadHTML(html);
     
     // 清除缓存
     const clearCache = async () => {
