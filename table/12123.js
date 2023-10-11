@@ -5,9 +5,9 @@
  * 支付宝小程序 交管12123
  * 小组件作者：95度茅台
  * 获取Token作者: @FoKit
- * UITable 版本: Version 1.2.0
+ * UITable 版本: Version 1.2.5
  */
-await 
+
 async function main() {
   const F_MGR = FileManager.local();
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du12123');  
@@ -76,10 +76,6 @@ async function main() {
       console.log(e + '或者网络有问题')
       notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
     }
-  };
-  
-  if (verifyToken === null || sign === null || !referer) {
-    await getBoxjsData();
   };
   
   /**
@@ -528,6 +524,9 @@ async function main() {
   };
   
   const runWidget = async () => {
+    if (!verifyToken || !referer) {
+      await getBoxjsData();
+    }
     if ((config.widgetFamily === 'medium' || config.runsInApp) && referer && imgArr.length > 0) {
       await createWidget();
     } else {
