@@ -78,10 +78,6 @@ async function main() {
     }
   };
   
-  if (verifyToken === null || sign === null || !referer) {
-    await getBoxjsData();
-  };
-  
   /**
    * 获取请求数据
    * @param {string} - string
@@ -547,6 +543,9 @@ async function main() {
   };
   
   const runWidget = async () => {
+    if (!verifyToken || !referer) {
+      await getBoxjsData();
+    }
     if ((config.widgetFamily === 'medium' || config.runsInApp) && referer && imgArr.length > 0) {
       await createWidget();
     } else {
