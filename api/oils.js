@@ -17,7 +17,7 @@ const wide = 8 //小机型改成 6
 
 try {
   const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-  forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+  forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", '，');
 } catch(e) { 
   console.log(e);
 }
@@ -82,7 +82,7 @@ async function createWidget(oil) {
    
   // 更新时间
   const df = new DateFormatter();
-  df.dateFormat = 'MM-dd HH:mm';
+  df.dateFormat = 'HH:mm';
   const GMT = df.string(new Date());
   
   // 灵动岛
