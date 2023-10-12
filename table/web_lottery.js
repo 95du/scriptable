@@ -4,7 +4,7 @@
 /**
  * 组件作者: 95度茅台
  * 组件名称: 全国彩开奖结果
- * 组件版本: Version 1.0.3
+ * 组件版本: Version 1.0.4
  * 发布时间: 2023-09-17
  */
 
@@ -398,6 +398,7 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     
     const bottomText3 = botStack.addText(officeOpenTime.match(/\d+:\d+/)[0]);
     bottomText3.font = Font.mediumSystemFont(15);
+    bottomText2.textColor = textColor
     bottomText3.textOpacity = 0.5;
     botStack.addSpacer();
     
