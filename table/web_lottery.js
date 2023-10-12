@@ -398,7 +398,7 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     
     const bottomText3 = botStack.addText(officeOpenTime.match(/\d+:\d+/)[0]);
     bottomText3.font = Font.mediumSystemFont(15);
-    bottomText2.textColor = textColor
+    bottomText3.textColor = textColor
     bottomText3.textOpacity = 0.5;
     botStack.addSpacer();
     
