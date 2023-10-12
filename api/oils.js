@@ -2,14 +2,15 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-brown; icon-glyph: gas-pump;
 /**
- * 小组件作者: 95度茅台
- * Oil price
- * Version 1.2
- * 2022-12-19 11:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
+ * 组件作者: 95度茅台
+ * 组件名称: 全国油价
+ * 组件版本: Version 1.2.0
+ * 更新日期: 2022-12-19 11:30
+ *
+ * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
  * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  * 🚫如运行时报错，在iCloud中的Scriptable目录里删除oil文件夹。
- * ⚠️适配机型: 手动修改第12、13行的数字
+ * ⚠️适配机型: 手动修改第13、14行的数字
  */
 
 const value = 6 //小机型改成 4
@@ -85,7 +86,6 @@ async function createWidget(oil) {
   df.dateFormat = 'HH:mm';
   const GMT = df.string(new Date());
   
-  // 灵动岛
   widget.setPadding(7, 7, 7, 7);
   const mainStack = widget.addStack();
   mainStack.layoutVertically();
@@ -102,7 +102,7 @@ async function createWidget(oil) {
   barStack.cornerRadius = 15
   barStack.borderColor = Color.black();
   barStack.borderWidth = 3
-  //Text Color
+  
   const titleText = barStack.addText(`${data.province}油价`);
   dynamic = ['#FFBF00', '#34C759'];
   titleText.textColor = new Color(dynamic[parseInt(Math.random() * dynamic.length)]);
@@ -119,18 +119,17 @@ async function createWidget(oil) {
   Stack.addSpacer();
   mainStack.addSpacer(10)
   
-  
   // oilPrice Alert
   const dataStack2 = mainStack.addStack();
   dataStack2.addSpacer();
-  // bar
+  
   const barStack1 = dataStack2.addStack();
   barStack1.setPadding(8, 8, 8, 8);
   barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack1.cornerRadius = 10
   barStack1.borderColor = new Color('#D50000', 0.8);
   barStack1.borderWidth = 2.5
-  // bar text
+  
   const oilTipsText = barStack1.addText((forecast.length < 45 ? `${forecast}，大家互相转告油价调整信息` : forecast) + `【 ${GMT} 】`);
   oilTipsText.textColor = new Color('#5e5e5e');
   oilTipsText.font = Font.boldSystemFont(13);
@@ -138,63 +137,55 @@ async function createWidget(oil) {
   dataStack2.addSpacer();
   mainStack.addSpacer(10)
   
-  
-  // First column
   const dataStack = mainStack.addStack();
   dataStack.addSpacer();
-  // Oil_0 bar
+  // Oil_0
   const barStack0 = dataStack.addStack();
   barStack0.setPadding(3, wide, 3, wide);
   barStack0.backgroundColor = new Color('#FB8C00');
   barStack0.cornerRadius = 10
   barStack0.borderColor = new Color('#FB8C00');
   barStack0.borderWidth = 3
-  // bar text
+  
   const totalMonthBar0 = barStack0.addText(`0# - ${(oil.Oil0).toPrecision(3)}`);
   totalMonthBar0.font = Font.mediumSystemFont(14);
   totalMonthBar0.textColor = Color.white();
   dataStack.addSpacer(value)
   
-  
-  // Second column
-  // Oil_92 bar
+  // Oil_92
   const barStack2 = dataStack.addStack();
   barStack2.setPadding(3, wide, 3, wide);
   barStack2.backgroundColor = Color.blue();
   barStack2.cornerRadius = 10
   barStack2.borderColor = Color.blue();
   barStack2.borderWidth = 3
-  // bar text
+
   const totalMonthBar2 = barStack2.addText(`92 - ${(oil.Oil92).toPrecision(3)}`);
   totalMonthBar2.font = Font.mediumSystemFont(14);
   totalMonthBar2.textColor = new Color('#FFFFFF');
   dataStack.addSpacer(value)
   
-  
-  // Third column
-  // Oil_95 bar
+  // Oil_95
   const barStack5 = dataStack.addStack();
   barStack5.setPadding(3, wide, 3, wide);
   barStack5.backgroundColor = new Color('#00C853');
   barStack5.cornerRadius = 10
   barStack5.borderColor = new Color('#00C853');
   barStack5.borderWidth = 3
-  // bar text
+  
   const totalMonthBar5 = barStack5.addText(`95 - ${(oil.Oil95).toPrecision(3)}`);
   totalMonthBar5.font = Font.mediumSystemFont(14);
   totalMonthBar5.textColor = new Color('#FFFFFF');
   dataStack.addSpacer(value)
-  
-    
-  // Fourth column
-  // Oil_98 bar
+
+  // Oil_98
   const barStack8 = dataStack.addStack();
   barStack8.setPadding(3, wide, 3, wide);
   barStack8.backgroundColor = Color.purple();
   barStack8.cornerRadius = 10
   barStack8.borderColor = Color.purple();
   barStack8.borderWidth = 3
-  // bar text
+  
   const totalMonthBar8 = barStack8.addText(`98 - ${(oil.Oil98).toPrecision(3)}`);
   totalMonthBar8.font = Font.mediumSystemFont(14);
   totalMonthBar8.textColor = new Color('#FFFFFF');
