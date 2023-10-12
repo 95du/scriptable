@@ -315,13 +315,13 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     const dateText = titleStack.addText(openTime.split(" ")[0]);
     dateText.font = Font.mediumSystemFont(16);
     dateText.textColor = textColor;
-    dateText.textOpacity = 0.5;
+    dateText.textOpacity = 0.6;
     titleStack.addSpacer(6);
     
     const weekText = titleStack.addText(dayOfWeek);
     weekText.font = Font.mediumSystemFont(15);
     weekText.textColor = textColor;
-    weekText.textOpacity = 0.5;
+    weekText.textOpacity = 0.6;
     
     widget.addSpacer(adapt.middle);
     
@@ -381,7 +381,7 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     const bottomText = botStack.addText('奖池');
     bottomText.font = Font.mediumSystemFont(15);
     bottomText.textColor = textColor;
-    bottomText.textOpacity = 0.5;
+    bottomText.textOpacity = 0.6;
     botStack.addSpacer(3);
     
     const bottomText1 = botStack.addText(formatAmount(poolAmount));
@@ -393,13 +393,13 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     const bottomText2 = botStack.addText(frequency);
     bottomText2.font = Font.mediumSystemFont(15);
     bottomText2.textColor = textColor
-    bottomText2.textOpacity = 0.5;
+    bottomText2.textOpacity = 0.6;
     botStack.addSpacer(5);
     
     const bottomText3 = botStack.addText(officeOpenTime.match(/\d+:\d+/)[0]);
     bottomText3.font = Font.mediumSystemFont(15);
     bottomText3.textColor = textColor
-    bottomText3.textOpacity = 0.5;
+    bottomText3.textOpacity = 0.6;
     botStack.addSpacer();
     
     // 开奖状态
