@@ -29,7 +29,15 @@ async function main() {
     
   try {  
     const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
-    forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+    const webView = new WebView();
+    await webView.loadHTML(html);
+    // forecast = html.match(/var tishiContent="(.*?)";/)[1].replace("<br/>", ',');
+    const extractedString = await webView.evaluateJavaScript(`
+      (() => {
+        return tishiContent;
+      })();`
+    );
+    forecast = extractedString.replace("<br/>", ',')
   } catch(e) { 
     console.log(e);
     forecast = setting.oil;
