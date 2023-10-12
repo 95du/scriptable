@@ -37,8 +37,8 @@ async function main() {
         return tishiContent;
       })();`
     );
-    forecast = extractedString.replace("<br/>", ',')
-  } catch(e) { 
+    forecast = extractedString.replace('<br/>', '，');
+  } catch(e) {
     console.log(e);
     forecast = setting.oil;
   };
