@@ -31,18 +31,11 @@ async function main() {
       const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
       const webView = new WebView();
       await webView.loadHTML(html);
-      
-      const oilsAlert = await webView.evaluateJavaScript(`
-        (() => {
-          return tishiContent;
-        })();
-      `);
-      
-      // 油价
+
       const extractedData = await webView.evaluateJavaScript(`
         (() => {
           const table = document.querySelector('table');
-          const dataArr = [];
+          const oilsArr = [];
           const rows = table.querySelectorAll('tr');
           rows.forEach(row => {
             const cells = row.querySelectorAll('td');
@@ -51,19 +44,20 @@ async function main() {
               cells.forEach(cell => {
                 rowData.push(cell.textContent.trim())
               });
-              dataArr.push(rowData)
+              oilsArr.push(rowData)
             }
           });
-          return dataArr;
+          return { tishiContent, oilsArr }
         })();
       `);
       
+      const { tishiContent, oilsArr } = extractedData;
       return { 
-        oilsAlert: oilsAlert.replace('<br/>', '，'),
-        oils: extractedData[0]
+        oilsAlert: tishiContent.replace('<br/>', '，'),
+        oils: oilsArr[0]
       }
     } catch(e) {
-      console.log(e);
+      console.log(e + '\n使用缓存');
       return { 
         oilsAlert: setting.oilsAlert,
         oils: setting.oils
