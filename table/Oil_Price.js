@@ -66,7 +66,7 @@ async function main() {
   };
   
   const { oilsAlert, oils } = await getOilsData();
-  const [province, oil92, oil95, oil98, oil0] = oils.map(item => parseFloat(item).toPrecision(3));
+  const [_, oil92, oil95, oil98, oil0] = oils.map(item => parseFloat(item).toPrecision(3));
 
   if (setting.oils === undefined) {
     fm.writeString(cacheFile, JSON.stringify({ ...setting, oils, oilsAlert }, null, 2));
