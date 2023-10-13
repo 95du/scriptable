@@ -156,7 +156,7 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
    * lotteryType
    * Random icons
    */
-  const systemVersion =  Device.systemVersion().match(/\d+/)[0]; // 用于修改弧度
+  const systemVersion =  Device.systemVersion().split('.')[0];
   
   const gameId = { ssq: 101, dlt: 201, pl3: 202, fc3d: 102, qxc: 204, qlc: 104, pl5: 203 };
   
