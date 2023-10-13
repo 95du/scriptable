@@ -396,15 +396,22 @@ async function main() {
       overflow: hidden;
     }
     
-    /* 弹窗 body f04494 */    
+    .modal.fade .modal-dialog {
+      transform: scale(.9);
+      transition: transform .5s cubic-bezier(.32,.85,.45,1.18),width .3s;
+    }
     
+    .modal.in .modal-dialog {
+      transform: scale(1);
+    }
+    
+    /* 弹窗 body f04494 */
     body {
       --theme-color: #ff6800;
       --focus-color: var(--theme-color);
       --main-color: #4e5358;
       --main-shadow: rgba(116, 116, 116, 0.08);
       --main-bg-color: #fff;
-      --main-border-color: rgba(50, 50, 50, 0.06);
       --main-radius: 25px;
       --blur-bg: rgba(255, 255, 255, 0.75);
     }
@@ -483,44 +490,18 @@ async function main() {
       width: 100px;
     }
     
-    .modal {
-      padding-right: 0!important;
-    }
-    
-    .modal-title {
-      font-size: 16px;
-    }
-    
-    .modal-content {
-      border-radius: var(--main-radius);
-      background: var(--main-bg-color);
-      border: none;
-    }
-    
-    .modal.fade .modal-dialog {
-      transform: scale(.9);
-      transition: transform .5s cubic-bezier(.32,.85,.45,1.18),width .3s;
-    }
-    
-    .modal.in .modal-dialog {
-      transform: scale(1);
-    }
-    
     .separator {
       text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    
-    .separator-center {
       color: #86868b;
       font-size: 14px;
     }
     
-    .separator::after,.separator::before {
+    .separator::after,
+    .separator::before {
       content: "";
-      background: var(--main-border-color);
       max-width: 23%;
       height: 1px;
       margin: 0 1em;
@@ -545,7 +526,7 @@ async function main() {
       font-size: 20px;
       margin-top: -18px;
       margin-bottom: 5px;
-      font-weight: 420;
+      font-weight: 500;
     }
     
     .popup-version {
@@ -1160,7 +1141,7 @@ document.getElementById('telegram').addEventListener('click', () => {
         document.querySelector('#plus').addEventListener('click', (e) => {
           e.preventDefault();
           const popupTips = document.getElementById("popup").classList;
-          popupTips.add("show", "fd");
+          popupTips.add("show", "fd")
           setTimeout(() => {
             popupTips.remove("fd");
             setTimeout(() => popupTips.remove("show"), 1000);
@@ -1208,7 +1189,8 @@ document.getElementById('telegram').addEventListener('click', () => {
                 <button class="but radius jb-yellow btn-block" id="clearCache">清除缓存</button>
               </div>
             </div>
-            <p class="social-separator separator separator-center">95度茅台</p>
+            <p class="separator">
+              95度茅台</p>
           </div>
         </div>
       </div>
@@ -1322,7 +1304,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           const script = await getString(scrUrl);
           fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
           Pasteboard.copy(scrUrl);
-          notify(`已拷贝（${label}）可用于随机组件`, scrUrl);
+          notify(`已拷贝（${label}）可用于随机/循环组件`, scrUrl);
           Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
         } catch (e) {
           console.log(e)
