@@ -435,7 +435,11 @@ async function main() {
     barStack2.borderColor = new Color('#AB47BC', 0.7);
     barStack2.borderWidth = 2
     
-    const barIcon2 = SFSymbol.named('person.text.rectangle.fill');
+    try {
+      barIcon2 = SFSymbol.named('person.text.rectangle.fill');
+    } catch {
+      barIcon2 = SFSymbol.named('drop.keypad.rectangle.fill');
+    }
     const barIconElement2 = barStack2.addImage(barIcon2.image);
     barIconElement2.imageSize = new Size(16, 16);
     barIconElement2.tintColor = Color.purple();
