@@ -44,7 +44,7 @@ async function main() {
               cells.forEach(cell => {
                 rowData.push(cell.textContent.trim())
               });
-              oilsArr.push(rowData)
+              oilsArr.push(rowData);
             }
           });
           return { tishiContent, oilsArr }
