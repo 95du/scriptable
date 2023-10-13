@@ -7,7 +7,7 @@
  * 获取Token作者: @FoKit
  * Version 1.0.0
  */
-await 
+
 async function main() {
   const fm = FileManager.local();
   const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');
