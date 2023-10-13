@@ -7,7 +7,7 @@
  * 获取Token作者: @FoKit
  * Version 1.0.0
  */
-
+await 
 async function main() {
   const fm = FileManager.local();
   const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');
@@ -434,11 +434,11 @@ async function main() {
     barStack2.cornerRadius = 10
     barStack2.borderColor = new Color('#AB47BC', 0.7);
     barStack2.borderWidth = 2
-    
+
     try {
       barIcon2 = SFSymbol.named('person.text.rectangle.fill');
     } catch {
-      barIcon2 = SFSymbol.named('drop.keypad.rectangle.fill');
+      barIcon2 = SFSymbol.named('server.rack');
     }
     const barIconElement2 = barStack2.addImage(barIcon2.image);
     barIconElement2.imageSize = new Size(16, 16);
