@@ -490,24 +490,22 @@ const createWidget = async () => {
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
     
-    const driveAway = run !== 'HONDA' && distance > 20
+    const driveAway = parkingTime >= 10 && distance > 20
     if ( driveAway ) {
+      notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
     } else if ( speed <= 5 ) {
       const duration = updateTime === setting.updateTime ? 300 : 10;
       if (moment >= duration) {
+        notify(`${status}  ${GMT}`, address, mapUrl);
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         writeSettings({ ...runObj, run: speed });
       }
     } else {
-      if ( run !== 'HONDA' ) {
-        await sendWechatMessage(`${status}  启动时间 ${GMT}`, mapUrl, mapPicUrl);
-        writeSettings(runObj);
-      } else {
-        await sendWechatMessage(`${status}  更新时间 ${GMT}`, mapUrl, mapPicUrl);
-        writeSettings(runObj);
-      }
+      notify(`${status}  ${GMT}`, address, mapUrl);
+      await sendWechatMessage(`${status}  更新时间 ${GMT}`, mapUrl, mapPicUrl);
+      writeSettings(runObj);
     }
   };
   
@@ -516,13 +514,6 @@ const createWidget = async () => {
   * @returns {Promise} Promise
   */
   const sendWechatMessage = async (description, url, picurl) => {
-    const driveAway = run !== 'HONDA' && distance > 20
-    if ( driveAway ) {
-      notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
-    } else {
-      notify(`${status}  ${GMT}`, address, mapUrl);
-    };
-    
     const acc = await new Request(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ=')).loadJSON(); // accessToken
     const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
     request.method = 'POST'
