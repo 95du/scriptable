@@ -31,7 +31,6 @@ async function main() {
   }
   const setting = await getSettings(cacheFile);
   
-  
   /**
    * 存储当前设置
    * @param { JSON } string
@@ -484,26 +483,24 @@ async function main() {
     const hours = timeAgo.getUTCHours();
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
-  
+
     // push data
-    const driveAway = run !== 'GPS' && distance > 20
+    const driveAway = updateTime !== setting.updateTime && distance > 20
     if ( driveAway ) {
+      notify(`${status} ${GMT}`, `已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl);
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
     } else if ( speed <= 5 ) {
       const duration = updateTime === setting.updateTime ? interval || 240 : 10;
       if (moment >= duration) {
+        notify(`${status}  ${GMT}`, endAddr, mapUrl);
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         writeSettings({ ...runObj, run: speed });
       }
     } else {
-      if ( run !== 'GPS' ) {
-        await sendWechatMessage(`${status}  启动时间 ${GMT}`, mapUrl, mapPicUrl);
-        writeSettings(runObj);
-      } else {
-        await sendWechatMessage(`${status}  更新时间 ${GMT}`, mapUrl, mapPicUrl);
-        writeSettings(runObj);
-      }
+      notify(`${status}  ${GMT}`, endAddr, mapUrl);
+      await sendWechatMessage(`${status}  启动时间 ${GMT}`, mapUrl, mapPicUrl);
+      writeSettings(runObj);
     }
   };
 
@@ -512,13 +509,6 @@ async function main() {
   * @returns {Promise} Promise
   */
   const sendWechatMessage = async (description, url, picurl) => {
-    const driveAway = run !== 'GPS' && distance > 20
-    if ( driveAway ) {
-      notify(`${status} ${GMT}`, `已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl);
-    } else {
-      notify(`${status}  ${GMT}`, endAddr, mapUrl);
-    };
-    
     if ( !setting.tokenUrl ) return;
     const acc = await new Request(tokenUrl).loadJSON();
     const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
