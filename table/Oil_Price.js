@@ -224,18 +224,15 @@ async function main() {
     return widget;
   };
   
-  try {
-    if (oilsAlert.length !== setting.oilsAlert.length) {
-      const notice = new Notification()
-      notice.sound = 'alert'
-      notice.title = `${setting.province}油价涨跌调整‼️`
-      notice.body = oilsAlert
-      notice.schedule();
-      fm.writeString(cacheFile, JSON.stringify({ ...setting, oils, oilsAlert }, null, 2));
-    }
-  } catch(error) {
-    console.log(error);
-  }
+  if (oilsAlert.length !== setting.oilsAlert.length) {
+    const notice = Object.assign(new Notification(), { 
+      title: `${setting.province}油价涨跌调整‼️`, 
+      body: oilsAlert, 
+      sound: 'alert' 
+    });
+    notice.schedule();
+    fm.writeString(cacheFile, JSON.stringify({ ...setting, oils, oilsAlert }, null, 2));
+  };
   
   function createErrorWidget() {
     const widget = new ListWidget();
