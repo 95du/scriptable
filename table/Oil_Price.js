@@ -231,7 +231,7 @@ async function main() {
       notice.title = `${setting.province}油价涨跌调整‼️`
       notice.body = oilsAlert
       notice.schedule();
-      fm.writeString(cacheFile, JSON.stringify({ ...setting, oil: forecast }, null, 2));
+      fm.writeString(cacheFile, JSON.stringify({ ...setting, oils, oilsAlert }, null, 2));
     }
   } catch(error) {
     console.log(error);
