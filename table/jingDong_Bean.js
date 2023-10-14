@@ -8,7 +8,7 @@
  * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
-
+await 
 async function main() {
   const F_MGR = FileManager.local();
   const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "95duJingDong");
@@ -90,13 +90,13 @@ async function main() {
         lightColor: '#FF0000',
         darkColor: '#FFBF00'
       }
-    } else if (index === 3) {
-      const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm&body=%7B%22babelChannel%22%3A%22121%22%2C%22sid%22%3A%22%22%2C%22un_area%22%3A%2223_2121_22469_22691%22%2C%22version%22%3A24%2C%22channel%22%3A1%2C%22lat%22%3A%220%22%2C%22lng%22%3A%220%22%7D&appid=signed_wh5&area=0_0_0_0&osVersion=16.7.1&screen=428*926&networkType=wifi&timestamp=1697284915017&d_brand=iPhone&d_model=iPhone13%2C4&wqDefault=false&client=iOS&clientVersion=12.2.0&partner=&build=168919&openudid=5805217d9bec56036efb09672f08758b63766ff6&adid=&x-api-eid-token=jdd03Y5LWBUMK6TAILDEXWZSEOJA6HWCHTCUI3CHIPNXGCVM4KYDJZP2MZXQC7GM3D7RXBWCHUA5QAMR7EIFDKN2O7JZCOQAAAAMLFYBLVPYAAAAADJ4FKYWIQOQYDEX&uemps=0-2-999&ext=%7B%22prstate%22%3A%220%22%7D&h5st=20931014200155020%3B6375738323190268%3B8a2af%3Btk03w93031bad18nzb97dITw3eqy4NzQg_7c3G6z9lLVb1lU6KCV-Vf2jQ4ceAW6b51nFhoc_kaZg-qsqSSt7PU6CHXw%3B1a4809d6286140eb6cbb05f6720ce89ecba52cd27c466cbb45cc14fa0f9b28af%3B3.1%3B1697284915020%3B7414c4e56278580a133b60b72a30beb2764d2e61c66a5620e8e838e06644d1bf6c32b72dcbd030228d1ee4d3754abc1a3636862cbbd6ef9b012896b69f2f800939696f410dc4d4af06485cbf84fbcf4e7244ee66071be6d343b4d590fa57b4d98f3b3caac49a9e93b4df42bc2e332e19cadb3217c11150a856ebfc48a44fb324ada302c75a769a575057db9002024052');
+    } else if (index === 3000) {
+      const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');
       if (farm.treeState === 2 || farm.treeState === 3) {
         notify('东东农场', `${farm.name}，可以兑换啦~`);  
       }
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fcarry.m.jd.com%2FbabelDiy%2FZeus%2F3KSjXqQabiTuD1cJ28QskrpWoBKT%2Findex.html%3FbabelChannel%3D94%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
-      setting.randomIndex = 4
+      setting.randomIndex = 4000
       val = {
         leading: 5,
         imageSize: 35,
@@ -107,9 +107,9 @@ async function main() {
         lightColor: '#1ea532',
         darkColor: '#32CD32'
       }
-    } else if (index === 4) {
+    } else if (index === 3) {
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fh5.m.jd.com%2Frn%2F3a5TGXF7Y8xpQ45CjgMzQ3tyqd4K%2Findex.html%3Fhas_native%3D0%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
-      setting.randomIndex = 5;
+      setting.randomIndex = 4
       val = {
         leading: 3,
         imageSize: 40,
@@ -120,10 +120,10 @@ async function main() {
         lightColor: '#000000',
         darkColor: '#FFA500'
       }
-    } else if (index === 5) {
+    } else if (index === 4) {
       const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fm%2Findex.html%3Fsceneval%3D2%26jxsid%3D16780988595962555448%26channel%3Dwq%26from%3Djdmwode%22%7D'
-      setting.randomIndex = 0;
+      setting.randomIndex = 0
       val = {
         leading: 3,
         imageSize: 33,
