@@ -279,8 +279,6 @@ async function main() {
     
     const authorAvatar = fm.fileExists(getAvatarImg()) ? await toBase64(fm.readImage(getAvatarImg()) ) : await getCacheImage('author.png', `${rootUrl}img/icon/4qiao.png`);
     
-    const gifImage = await getCacheImage('gifImage.gif', `${rootUrl}img/picture/widget.gif`);
-    
     const scripts = ['jquery.min.js', 'bootstrap.min.js', 'loader.js'];
     const scriptTags = await Promise.all(scripts.map(async (script) => {
       const content = await getCacheString(script, `${rootUrl}web/${script}?ver=7.4.2`);
@@ -290,16 +288,24 @@ async function main() {
     for (const i of formItems) {
       for (const item of i.items) {
         if (item.data) {
-          const { name, appUrl } = item.data;
+          const { name, appUrl, images } = item.data;
           item.icon = await getCacheImage(name, appUrl);
-        };
+          
+          if (images) {
+            images.map(async (image, index) => {
+              const imageName = decodeURIComponent(image.substring(image.lastIndexOf("/") + 1 + index));
+              item.icon = await getCacheImage(imageName, image);
+            });
+          }
+        }
+        
         const { icon } = item;
         if (icon?.name) {
           const {name, color} = icon;
           item.icon = await loadSF2B64(name, color);
         } else if (icon?.startsWith('https')) {
-          const name = decodeURIComponent(icon.substring(icon.lastIndexOf("/") + 1));
-          item.icon = await getCacheImage(name, icon);
+          const imageName = decodeURIComponent(icon.substring(icon.lastIndexOf("/") + 1));
+          item.icon = await getCacheImage(imageName, icon);
         }
       }
     };
@@ -371,7 +377,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: ${Device.screenSize().height < 926 ? '62px' : '78px'};
-      top: ${Device.screenSize().height < 926 ? '-140.5%' : '-130.5%'}; /* 弹窗位置 */
+      top: ${Device.screenSize().height < 926 ? '-121%' : '-111%'}; /* 弹窗位置 */
     }
     
     .modal-backdrop {
@@ -1118,7 +1124,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       const avatarHtml = `      
       <div class="list">
         <form class="list__body" action="javascript:void(0);">
-          <img class="full-width-image signin-loader" src="${gifImage}" data-src="${rootUrl}img/picture/widget.gif">
+          <img class="full-width-image signin-loader" data-src="${rootUrl}img/picture/widget.gif">
           <div class="form-item-auth form-item--link">
             <div class="form-label">
               <img class="signin-loader form-label-author-avatar" src="${authorAvatar}" />
@@ -1480,22 +1486,6 @@ document.getElementById('telegram').addEventListener('click', () => {
             icon: `${rootUrl}img/icon/electric.png`
           },
           {
-            label: '循环组件',
-            desc: '循环切换显示小组件',
-            rightDesc: '1.0.0',
-            type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/loopScripts.js',
-            icon: `${rootUrl}img/icon/loopScript.png`
-          },
-          {
-            label: '随机组件',
-            desc: '随机切换多个小组件',
-            rightDesc: '1.1.5',
-            type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/randomScript.js',
-            icon: `${rootUrl}img/icon/random.png`
-          },
-          {
             label: '房屋估值',
             desc: '幸福里全国房屋估值',
             rightDesc: '1.0.0',
@@ -1510,29 +1500,23 @@ document.getElementById('telegram').addEventListener('click', () => {
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_macaujc.js',
             icon: `${rootUrl}img/icon/macaujc.png`
-          }
-        ]
-      },
-      {
-        label: '社交媒体',
-        type: 'group',
-        items: [
-          {
-            label: '车辆_GPS定位',
-            type: 'app',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_GPS.js',
-            data: {
-              name: 'Telegram Messenger',
-              desc: '社交',
-              date: '2023年7月10日',
-              appUrl: 'https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/98/6a/c3/986ac383-e560-d26e-5c00-eaf1336e9c18/AppIconLLC-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png',
-              images: [
-                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/b1/99/ae/b199ae04-cde7-f283-371f-59d06df51629/pr_source.png/392x696bb.png',
-                'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/3c/a5/b5/3ca5b5f6-f2a3-b50f-f96d-f9ffb7aabfb7/pr_source.png/392x696bb.png',
-                'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/fd/f2/18/fdf218e9-be34-bfdb-3468-6253e6c68561/pr_source.png/392x696bb.png'
-              ]
-            }
           },
+          {
+            label: '循环组件',
+            desc: '循环切换显示小组件',
+            rightDesc: '1.0.0',
+            type: 'button',
+            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/loopScripts.js',
+            icon: `${rootUrl}img/icon/loopScript.png`
+          },
+          {
+            label: '随机组件',
+            desc: '随机切换多个小组件',
+            rightDesc: '1.1.5',
+            type: 'button',
+            scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/randomScript.js',
+            icon: `${rootUrl}img/icon/random_2.jpeg`
+          }
         ]
       },
       {
