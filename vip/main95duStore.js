@@ -288,17 +288,9 @@ async function main() {
     for (const i of formItems) {
       for (const item of i.items) {
         if (item.data) {
-          const { name, appUrl, images } = item.data;
+          const { name, appUrl } = item.data;
           item.icon = await getCacheImage(name, appUrl);
-          
-          if (images) {
-            images.map(async (image, index) => {
-              const imageName = decodeURIComponent(image.substring(image.lastIndexOf("/") + 1 + index));
-              item.icon = await getCacheImage(imageName, image);
-            });
-          }
         }
-        
         const { icon } = item;
         if (icon?.name) {
           const {name, color} = icon;
