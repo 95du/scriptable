@@ -55,22 +55,18 @@ async function main() {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
       const boxjs = boxjs_data.val.split(',');
-      verifyToken = boxjs[0];
-      sign = boxjs[1];
+      const verifyToken = boxjs[0];
+      const sign = boxjs[1];
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
-      referer = boxjs_referer.val;
+      const referer = boxjs_referer.val;
 
-      if (verifyToken && referer) {
+      if (verifyToken && referer && imgArr?.length) {
         writeSettings({
           ...setting,
           sign,
           verifyToken,
           referer
-        })
-        
-        if (sign !== setting.sign && imgArr?.length) {
-          Timer.schedule(1500, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 更新成功')})
-        }
+        });
       }
     } catch (e) {
       console.log(e + '或网络有问题')
