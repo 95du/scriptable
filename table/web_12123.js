@@ -67,6 +67,7 @@ async function main() {
           verifyToken,
           referer
         });
+        await createWidget();
       }
     } catch (e) {
       console.log(e + '或网络有问题')
