@@ -7,7 +7,7 @@
  * 组件版本: Version 1.0.0
  * 更新日期: 2023-10-18 11:30
  */
-await 
+
 async function main() {
   const fm = FileManager.local();
   const folder = fm.joinPath(fm.documentsDirectory(), "95du_Oils");
