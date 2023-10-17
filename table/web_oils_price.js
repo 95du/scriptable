@@ -7,7 +7,7 @@
  * 组件版本: Version 1.0.0
  * 更新日期: 2023-10-18 11:30
  */
-
+await 
 async function main() {
   const fm = FileManager.local();
   const folder = fm.joinPath(fm.documentsDirectory(), "95du_Oils");
@@ -25,6 +25,8 @@ async function main() {
   const df = new DateFormatter();
   df.dateFormat = 'HH:mm';
   const GMT = df.string(new Date());
+  
+  const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
   
   const getOilsData = async () => {
     try {  
@@ -81,37 +83,27 @@ async function main() {
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
     if (fm.fileExists(bgImage)) {
-      widget.backgroundImage = fm.readImage(bgImage);
+      widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
     } else {
       const gradient = new LinearGradient();
-      colorArr = setting.gradient.length
-      if (colorArr === 0) {
-        color = [
-          "#82B1FF",
-          "#4FC3F7",
-          "#66CCFF",
-          "#99CCCC",
-          "#BCBBBB"
-        ]
-      } else {
-        color = setting.gradient
-      }
-      const items = color[Math.floor(Math.random()*color.length)];
+      const color = setting.gradient.length > 0 ? setting.gradient : [setting.rangeColor];
+      const randomColor = color[Math.floor(Math.random() * color.length)];
       
       // 渐变角度
-      const angle = setting.angle
+      const angle = setting.angle;
       const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
       const x = 0.5 + 0.5 * Math.cos(radianAngle);
       const y = 0.5 + 0.5 * Math.sin(radianAngle);
       gradient.startPoint = new Point(1 - x, y);
       gradient.endPoint = new Point(x, 1 - y);
       
-      gradient.locations = [0, 1]
+      gradient.locations = [0, 1];
       gradient.colors = [
-        new Color(items, Number(setting.transparency)),
+        new Color(randomColor, Number(setting.transparency)),
         new Color('#00000000')
-      ]
-      widget.backgroundGradient = gradient
+      ];
+      widget.backgroundGradient = gradient;  
+      widget.backgroundColor = new Color(setting.solidColor);
     };
     
     widget.setPadding(10, 10, 10, 10);
@@ -159,8 +151,9 @@ async function main() {
     barStack1.borderWidth = 2.5
 
     const oilTipsText = barStack1.addText((oilsAlert.length < 45 ? `${oilsAlert}，大家互相转告油价调整信息` : oilsAlert) + `【 ${GMT} 】`);
-    oilTipsText.textColor = fm.fileExists(bgImage) ? Color.white() : new Color('#5e5e5e');
+    oilTipsText.textColor = textColor
     oilTipsText.font = Font.boldSystemFont(13);
+    oilTipsText.textOpacity = 0.55
     oilTipsText.centerAlignText();
     dataStack2.addSpacer();
     mainStack.addSpacer(10);
@@ -245,7 +238,7 @@ async function main() {
     ctx.size = img.size
     ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']));
     // 图片遮罩颜色、透明度设置
-    ctx.setFillColor(new Color("#000000", 0.3))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage()
   };
