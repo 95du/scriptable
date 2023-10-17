@@ -5,7 +5,7 @@
  * 组件作者: 95度茅台
  * 组件名称: 全国油价_2
  * 组件版本: Version 1.0.0
- * 更新日期: 2023-10-13 11:30
+ * 更新日期: 2023-10-18 11:30
  */
 
 async function main() {
@@ -77,8 +77,7 @@ async function main() {
   
   //
   async function createWidget() {
-    const value = 6 - setting.interval
-    const wide = 8 - setting.interval
+    const wide = setting.interval;
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
     if (fm.fileExists(bgImage)) {
@@ -100,7 +99,7 @@ async function main() {
       const items = color[Math.floor(Math.random()*color.length)];
       
       // 渐变角度
-      const angle = setting.angle || 90
+      const angle = setting.angle
       const radianAngle = ((360 - angle) % 360) * (Math.PI / 180);
       const x = 0.5 + 0.5 * Math.cos(radianAngle);
       const y = 0.5 + 0.5 * Math.sin(radianAngle);
@@ -167,7 +166,7 @@ async function main() {
     mainStack.addSpacer(10);
     
     const dataStack = mainStack.addStack();
-    dataStack.addSpacer();
+    dataStack.setPadding(0, 10, 0, 10)
     
     // Oil_0 bar
     const barStack0 = dataStack.addStack();
@@ -180,7 +179,7 @@ async function main() {
     const totalMonthBar0 = barStack0.addText(`0# - ${oil0}`);
     totalMonthBar0.font = Font.mediumSystemFont(14);
     totalMonthBar0.textColor = Color.white();
-    dataStack.addSpacer(value);
+    dataStack.addSpacer();
     
     // Oil_92 bar
     const barStack2 = dataStack.addStack();
@@ -193,7 +192,7 @@ async function main() {
     totalMonthBar2 = barStack2.addText(`92 - ${oil92}`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#FFFFFF');
-    dataStack.addSpacer(value)
+    dataStack.addSpacer();
     
     // Oil_95 bar
     const barStack5 = dataStack.addStack();
@@ -206,7 +205,7 @@ async function main() {
     const totalMonthBar5 = barStack5.addText(`95 - ${oil95}`);
     totalMonthBar5.font = Font.mediumSystemFont(14);
     totalMonthBar5.textColor = new Color('#FFFFFF');
-    dataStack.addSpacer(value)
+    dataStack.addSpacer();
     
     // Oil_98 bar
     const barStack8 = dataStack.addStack();
@@ -219,7 +218,6 @@ async function main() {
     const totalMonthBar8 = barStack8.addText(`98 - ${oil98}`);
     totalMonthBar8.font = Font.mediumSystemFont(14);
     totalMonthBar8.textColor = new Color('#FFFFFF');
-    dataStack.addSpacer();
     
     return widget;
   };
