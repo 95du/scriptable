@@ -79,7 +79,9 @@ async function main() {
   
   // createWidget
   async function createWidget() {
-    const wide = setting.interval;
+    const value = 6 - setting.interval
+    const wide = 8 - setting.interval
+    
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
     if (fm.fileExists(bgImage)) {
@@ -160,7 +162,7 @@ async function main() {
     mainStack.addSpacer(10);
     
     const dataStack = mainStack.addStack();
-    dataStack.setPadding(0, 10, 0, 10)
+    dataStack.addSpacer();
     
     // Oil_0 bar
     const barStack0 = dataStack.addStack();
@@ -173,7 +175,7 @@ async function main() {
     const totalMonthBar0 = barStack0.addText(`0# - ${oil0}`);
     totalMonthBar0.font = Font.mediumSystemFont(14);
     totalMonthBar0.textColor = Color.white();
-    dataStack.addSpacer();
+    dataStack.addSpacer(value);
     
     // Oil_92 bar
     const barStack2 = dataStack.addStack();
@@ -186,7 +188,7 @@ async function main() {
     totalMonthBar2 = barStack2.addText(`92 - ${oil92}`);
     totalMonthBar2.font = Font.mediumSystemFont(14);
     totalMonthBar2.textColor = new Color('#FFFFFF');
-    dataStack.addSpacer();
+    dataStack.addSpacer(value);
     
     // Oil_95 bar
     const barStack5 = dataStack.addStack();
@@ -199,7 +201,7 @@ async function main() {
     const totalMonthBar5 = barStack5.addText(`95 - ${oil95}`);
     totalMonthBar5.font = Font.mediumSystemFont(14);
     totalMonthBar5.textColor = new Color('#FFFFFF');
-    dataStack.addSpacer();
+    dataStack.addSpacer(value);
     
     // Oil_98 bar
     const barStack8 = dataStack.addStack();
@@ -212,6 +214,7 @@ async function main() {
     const totalMonthBar8 = barStack8.addText(`98 - ${oil98}`);
     totalMonthBar8.font = Font.mediumSystemFont(14);
     totalMonthBar8.textColor = new Color('#FFFFFF');
+    dataStack.addSpacer();
     
     return widget;
   };
