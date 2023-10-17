@@ -10,7 +10,7 @@
 
 async function main() {
   const fm = FileManager.local();
-  const folder = fm.joinPath(fm.documentsDirectory(), "95duOilPrice");
+  const folder = fm.joinPath(fm.documentsDirectory(), "95du_Oils");
   
   const cacheFile = fm.joinPath(folder, 'setting.json');
   if (fm.fileExists(cacheFile)) { 
