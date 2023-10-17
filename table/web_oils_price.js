@@ -77,7 +77,7 @@ async function main() {
     )
   };
   
-  //
+  // createWidget
   async function createWidget() {
     const wide = setting.interval;
     const widget = new ListWidget();
@@ -106,11 +106,12 @@ async function main() {
       widget.backgroundColor = new Color(setting.solidColor);
     };
     
+    // Dynamic Island
     widget.setPadding(10, 10, 10, 10);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     mainStack.centerAlignContent();
-    // Dynamic Island bar
+
     const Stack = mainStack.addStack();
     Stack.layoutHorizontally();
     Stack.centerAlignContent();
