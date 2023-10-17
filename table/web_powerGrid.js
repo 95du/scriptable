@@ -7,7 +7,7 @@
  * 组件版本: Version 1.0.0
  * 发布时间: 2023-10-17
  */
-await 
+
 async function main() {
   const fm = FileManager.local();
   const path = fm.joinPath(fm.documentsDirectory(), '95du_powerGrid');
