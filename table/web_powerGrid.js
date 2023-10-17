@@ -69,7 +69,7 @@ async function main() {
     return {
       readString: (fileName) => {
         const filePath = fm.joinPath(cache, fileName);
-        if (fm.fileExists(filePath) && cacheTime < 22 && useCache) {
+        if (fm.fileExists(filePath) && cacheTime >= 3 && useCache ) {
           return fm.readString(filePath);
         }
         return null;
@@ -175,7 +175,7 @@ async function main() {
     const bgImage = await getBgImagePath();
     const Appearance = Device.isUsingDarkAppearance();
     if (fm.fileExists(bgImage) && Appearance === false) {
-      widget.backgroundImage = await shadowImage(fm.readImage(bgImage))  
+      widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
     } else if (setting.solidColor) {
       const gradient = new LinearGradient();
       const color = setting.gradient.length > 0 ? setting.gradient : [setting.rangeColor];
