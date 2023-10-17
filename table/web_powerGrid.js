@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: red; icon-glyph: bolt;
+// icon-color: deep-green; icon-glyph: bolt;
 /**
  * 组件作者: 95度茅台
  * 组件名称: 南方电网
@@ -33,9 +33,9 @@ async function main() {
    */
   const writeSettings = async (setting) => {
     fm.writeString(cacheFile, JSON.stringify(setting, null, 2));
-//     console.log(JSON.stringify(
-//       setting, null, 2)
-//     );
+    console.log(JSON.stringify(
+      setting, null, 2)
+    );
   }
   
   /**  
