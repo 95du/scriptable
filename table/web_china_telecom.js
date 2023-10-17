@@ -7,7 +7,7 @@
  * Version 1.0.0
  * 2023-10-17 14:30
  */
-await 
+
 async function main() {
   const fm = FileManager.local();
   const cacheDirName = '95du_telecom'
