@@ -6,7 +6,7 @@
  * UITable 版本: Version 1.0.1
  * 2023-10-08 19:30
  */
-
+await 
 async function main() {
   const F_MGR = FileManager.local();
   const path = F_MGR.joinPath(F_MGR.documentsDirectory(), '95du_electric');
@@ -20,7 +20,7 @@ async function main() {
    */
   const getBotSettings = (file) => {
     if (F_MGR.fileExists(file)) {
-      return { loop, token, gap, location, avatarImage, radius } = JSON.parse(F_MGR.readString(file));
+      return { count, loop, token, gap, location, avatarImage, radius } = JSON.parse(F_MGR.readString(file));
     }
     return null;
   };
@@ -32,9 +32,9 @@ async function main() {
    */
   const writeSettings = async (setting) => {
     F_MGR.writeString(cacheFile, JSON.stringify(setting, null, 2));
-    console.log(JSON.stringify(
-      setting, null, 2)
-    );
+//     console.log(JSON.stringify(
+//       setting, null, 2)
+//     );
   }
   
   /**  
@@ -73,6 +73,15 @@ async function main() {
     fm.createDirectory(cache, true);
     
     return {
+      readString: (fileName) => {
+        const filePath = fm.joinPath(cache, fileName);
+        if (fm.fileExists(filePath) && options.cacheTime < 21) {
+          return fm.readString(filePath);
+        }
+        return null;
+      },
+      writeString: (fileName, content) => fm.writeString(fm.joinPath(cache, fileName), content),  
+      // cache image
       readImage: (fileName) => {
         const imageFile = fm.joinPath(cache, fileName);
         if (fm.fileExists(imageFile) && options.cacheTime) {
@@ -89,20 +98,40 @@ async function main() {
     }
   };
   
+  /**
+   * 获取网络图片并使用缓存
+   * @param {Image} url
+   */
   const getImage = async (url) => {
     return await new Request(url).loadImage();
   };
   
-  // 获取图片，使用缓存
   const getCacheImage = async (name, url) => {
     const cache = useFileManager({ cacheTime: 1024 });
     const image = cache.readImage(name);
     if (image) {
       return image;
     }
-    const res = await getImage(url);
-    cache.writeImage(name, res);
-    return res;
+    const img = await getImage(url);
+    cache.writeImage(name, img);
+    return img;
+  };
+  
+  /**
+   * 获取JSON字符串
+   * @param {string} json
+   */
+  const getCacheJSON = async (jsonName, jsonUrl, requestBody) => {
+    const cacheTime = new Date().getHours();
+    const cache = useFileManager({ cacheTime });
+    const jsonString = cache.readString(jsonName);
+    if (jsonString) {
+      return JSON.parse(jsonString);
+    }
+    const response = await makeRequest(jsonUrl, requestBody);
+    const jsonFile = JSON.stringify(response);
+    cache.writeString(jsonName, jsonFile);
+    return JSON.parse(jsonFile);
   };
   
   /**
@@ -195,7 +224,7 @@ async function main() {
     const imgName = decodeURIComponent(avatarImage.substring(avatarImage.lastIndexOf("/") + 1));
     const iconSymbol = await getCacheImage(imgName, avatarImage);
     const avatarIcon = avatarStack2.addImage(iconSymbol);
-    avatarIcon.imageSize = new Size(Number(radius), Number(radius));
+    avatarIcon.imageSize = new Size(50, 50);
     if ( avatarImage.indexOf('png') == -1 ) {
       avatarStack2.cornerRadius = Number(radius);
       avatarStack2.borderWidth = 3;
@@ -489,14 +518,15 @@ async function main() {
   
   // 月用电量
   async function getMonthData() {
-    const pointResponse = await makeRequest(
+    const pointResponse = await getCacheJSON(
+      `queryMeteringPoint${count}.json`,
       'https://95598.csg.cn/ucs/ma/zt/charge/queryMeteringPoint', {
       areaCode: code,
       eleCustNumberList: [{ areaCode: code, eleCustId: id }]
     });
-    // totalPower & Yesterday
+    // totalPower & yesterday
     const { meteringPointId } = pointResponse.data[0];
-    const monthResponse = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint', {
+    const monthResponse = await getCacheJSON(`queryDayElectricByMPoint${count}.json`, 'https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint', {
       eleCustId: id,
       areaCode: code,
       yearMonth: year + month,
@@ -507,7 +537,9 @@ async function main() {
   
   // 余额
   async function getBalance() {
-    const response = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus', {
+    const response = await getCacheJSON(
+      `queryUserAccountNumberSurplus${count}.json`,
+      'https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus', {
       areaCode: code,
       eleCustId: id
     });
@@ -516,7 +548,9 @@ async function main() {
   
   // 账单
   async function selectEleBill() {
-    const response = await makeRequest('https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill', {
+    const response = await getCacheJSON(  
+      `selectElecBill${count}.json`,
+      'https://95598.csg.cn/ucs/ma/zt/charge/selectElecBill', {
       electricityBillYear: currentYear,
       areaCode: code,
       eleCustId: id
