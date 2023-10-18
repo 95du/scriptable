@@ -7,11 +7,11 @@
  * 获取Token作者: @FoKit
  * Version 1.0.0
  */
-
+await 
 async function main() {
   const fm = FileManager.local();
   const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');
-  fm.createDirectory(path, true);
+  const cacheData = fm.joinPath(path, 'cache_path');
   const cacheFile = fm.joinPath(path, 'setting.json');
   
   /**
@@ -103,7 +103,7 @@ async function main() {
    * @returns {image} - Request
    */
   const cache = fm.joinPath(path, 'cachePath');
-  fm.createDirectory(cache, true);
+  fm.createDirectory(cache, true)
   
   const downloadCarImage = async (item) => {
     const carImage = await getImage(item);
@@ -125,7 +125,20 @@ async function main() {
     const count = imgArr.length;
     const index = Math.floor(Math.random() * count);
     const cacheImgPath = cache + '/' + imgArr[index];
-    return ing = await fm.readImage(cacheImgPath);
+    return vehicleImg = await fm.readImage(cacheImgPath);
+  };
+    
+  try {
+    if (setting.carImg) {
+      const carImg = setting.carImg;
+      const name = decodeURIComponent(carImg.substring(carImg.lastIndexOf("/") + 1));
+      vehicleImg = await getCacheImage(name, carImg);
+    } else {
+      vehicleImg = await getRandomImage();
+    }
+  } catch (e) {
+    const cacheMaybach = fm.joinPath(cache, 'Maybach-8.png');
+    vehicleImg = fm.readImage(cacheMaybach);
   };
   
   /**  
@@ -134,6 +147,15 @@ async function main() {
    */
   const useFileManager = ({ cacheTime } = {}) => {
     return {
+      readString: (fileName) => {
+        const filePath = fm.joinPath(cacheData, fileName);
+        if (fm.fileExists(filePath) && cacheTime < 18 && setting.useCache) {
+          return fm.readString(filePath);
+        }
+        return null;
+      },
+      writeString: (fileName, content) => fm.writeString(fm.joinPath(cacheData, fileName), content),
+      // cache image
       readImage: (fileName) => {
         const imgPath = fm.joinPath(cache, fileName);
         return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
@@ -151,6 +173,23 @@ async function main() {
     const img = await getImage(url);
     cache.writeImage(name, img);
     return img;
+  };
+  
+  /**
+   * 获取JSON字符串
+   * @param {string} json
+   */
+  const getCacheString = async (jsonName, api, params) => {
+    const cacheTime = new Date().getHours();
+    const cache = useFileManager({ cacheTime });
+    const jsonString = cache.readString(jsonName);
+    if (jsonString) {
+      return JSON.parse(jsonString);
+    }
+    const response = await requestInfo(api, params);
+    const jsonFile = JSON.stringify(response);
+    cache.writeString(jsonName, jsonFile);
+    return JSON.parse(jsonFile);
   };
   
   /**
@@ -190,11 +229,14 @@ async function main() {
       return undefined;
     }
     const surveils = await getSurveils(vioList, issueData);
-    const detail = await getRandomItem(surveils);
+    //const detail = await getRandomItem(surveils);
+    const randomIndex = Math.floor(Math.random() * surveils.length);
+    const detail = surveils[randomIndex];
     if (!detail) {
       return undefined;
     }
-    const vioDetail = await getViolationMsg(detail);
+    const index = randomIndex + 1;
+    const vioDetail = await getViolationMsg(detail, index);
     const vio = vioDetail.detail;
     const photos = await getRandomItem(vioDetail.photos);
     return { vioList, detail, vio, photos };
@@ -208,7 +250,7 @@ async function main() {
       plateType: 2,
       _issueOrganization: plate,
     };
-    const issue = await requestInfo(api2, params);
+    const issue = await getCacheString('issue.json', api2, params);
     try {
       const issueArr = issue.data.vioCity.filter((item) => item.vioCount >= 1);
       return await getRandomItem(issueArr);
@@ -224,24 +266,25 @@ async function main() {
       plateType: 2,
       issueOrganization: issueData.issueOrganization,
     };
-    const surveils = await requestInfo(api3, params);
+    const surveils = await getCacheString('surveils.json', api3, params);
     return surveils ? surveils.data?.surveils : [];
   };
   
   // 获取违章详细信息
-  const getViolationMsg = async (detail) => {
+  const getViolationMsg = async (detail, number) => {
     const params = {
       violationSerialNumber: detail.violationSerialNumber,
       issueOrganization: detail.issueOrganization,
     };
-    const violationMsg = await requestInfo(api4, params);
+    //const violationMsg = await requestInfo(api4, params);
+    const violationMsg = await getCacheString(`violationMsg${number}.json`, api4, params);
     return { detail, photos } = violationMsg.data;
   };
   
   // 查询主函数
   const violationQuery = async () => {
     const params = { productId, api: api1, sign, version, verifyToken };
-    const main = await requestInfo(api1, params);
+    const main = await getCacheString('main.json', api1, params);
     const { success } = main;
     if (success) {
       const { list: vehicle } = main.data;
@@ -459,15 +502,8 @@ async function main() {
     const carImageStack = rightStack.addStack();
     carImageStack.setPadding(nothing || !success ? setting.carTop + 8 : setting.carTop, 5, setting.carBottom, 0);
     carImageStack.size = new Size(setting.carStackWidth, 0);
-
-    if (!setting.carImg) {
-      img = await getRandomImage();
-    } else {
-      const name = decodeURIComponent(setting.carImg.substring(setting.carImg.lastIndexOf("/") + 1));
-      img = await getCacheImage(name, setting.carImg);
-    }
-    
-    const imageCar = carImageStack.addImage(img);
+      
+    const imageCar = carImageStack.addImage(vehicleImg);
     imageCar.imageSize = new Size(setting.carWidth, setting.carHeight);
     rightStack.addSpacer();
   
