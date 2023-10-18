@@ -434,7 +434,9 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
   };
   
   const runWidget = async () => {
-    await (config.runsInApp || config.widgetFamily === 'medium' ? createWidget() : errorWidget());
+    await (config.runsInApp || config.widgetFamily === 'medium' 
+    ? await createWidget() 
+    : errorWidget());
   }
   await runWidget();
 }
