@@ -74,7 +74,7 @@ async function main() {
         }
         return null;
       },
-      writeString: (fileName, content) => fm.writeString(fm.joinPath(cache, fileName), content),  
+      writeString: (fileName, content) => fm.writeString(fm.joinPath(cache, fileName), content),
       // cache image
       readImage: (fileName) => {
         const imageFile = fm.joinPath(cache, fileName);
