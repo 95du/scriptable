@@ -167,6 +167,7 @@ async function main() {
     
     // Oil_0 bar
     const barStack0 = dataStack.addStack();
+    barStack0.size = new Size(0, 23);
     barStack0.setPadding(3, wide, 3, wide);
     barStack0.backgroundColor = new Color('#FB8C00');
     barStack0.cornerRadius = 10
@@ -180,6 +181,7 @@ async function main() {
     
     // Oil_92 bar
     const barStack2 = dataStack.addStack();
+    barStack2.size = new Size(0, 23);
     barStack2.setPadding(3, wide, 3, wide);
     barStack2.backgroundColor = Color.blue();
     barStack2.cornerRadius = 10
@@ -193,6 +195,7 @@ async function main() {
     
     // Oil_95 bar
     const barStack5 = dataStack.addStack();
+    barStack5.size = new Size(0, 23);
     barStack5.setPadding(3, wide, 3, wide);
     barStack5.backgroundColor = new Color('#00C853');
     barStack5.cornerRadius = 10
@@ -206,6 +209,7 @@ async function main() {
     
     // Oil_98 bar
     const barStack8 = dataStack.addStack();
+    barStack8.size = new Size(0, 23);
     barStack8.setPadding(3, wide, 3, wide);
     barStack8.backgroundColor = Color.purple();
     barStack8.cornerRadius = 10
