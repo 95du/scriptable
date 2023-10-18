@@ -86,9 +86,9 @@ async function main() {
     widget.backgroundColor = Color.white();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
-    } else if (!setting.solidColor) {
+    } else {
       const gradient = new LinearGradient();
-      const color = setting.gradient.length > 0 ? setting.gradient : [setting.rangeColor];
+      const color = !setting.solidColor ? setting.gradient : [setting.rangeColor];
       const randomColor = color[Math.floor(Math.random() * color.length)];
       
       // 渐变角度
@@ -105,9 +105,7 @@ async function main() {
         new Color('#00000000')
       ];
       widget.backgroundGradient = gradient;
-    } else {
-      widget.backgroundColor = new Color(setting.solidColor);
-    }
+    };
     
     // Dynamic Island
     widget.setPadding(10, 10, 10, 10);
