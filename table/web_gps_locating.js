@@ -551,7 +551,11 @@ async function main() {
   }
   
   const runWidget = async () => {
-    await (config.runsInApp || config.widgetFamily === 'medium' ? createWidget() : config.widgetFamily === 'small' ? createSmallWidget() : createErrorWidget());
+    await (config.runsInApp || config.widgetFamily === 'medium' 
+    ? await createWidget()
+    : config.widgetFamily === 'small' 
+    ? await createSmallWidget()
+    : createErrorWidget());
   }
   await runWidget();
 }
