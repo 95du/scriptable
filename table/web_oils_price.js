@@ -101,7 +101,7 @@ async function main() {
       
       gradient.locations = [0, 1];
       gradient.colors = [
-        new Color(randomColor, Number(setting.transparency)),
+        new Color(randomColor, setting.transparency),
         new Color('#00000000')
       ];
       widget.backgroundGradient = gradient;
@@ -155,7 +155,7 @@ async function main() {
     const oilTipsText = barStack1.addText((oilsAlert.length < 45 ? `${oilsAlert}，大家互相转告油价调整信息` : oilsAlert) + `【 ${GMT} 】`);
     oilTipsText.textColor = textColor
     oilTipsText.font = Font.boldSystemFont(13);
-    oilTipsText.textOpacity = 0.55
+    oilTipsText.textOpacity = 0.58
     oilTipsText.centerAlignText();
     dataStack2.addSpacer();
     mainStack.addSpacer(10);
