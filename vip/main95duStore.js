@@ -420,7 +420,7 @@ async function main() {
       text-decoration: none;
     }
     
-    .zib-widget {
+    .scriptable-widget {
       clear: both;
       background: var(--main-bg-color);
       padding: 15px;
@@ -1166,7 +1166,7 @@ document.getElementById('telegram').addEventListener('click', () => {
       const popup = `      
       <div class="modal fade" id="u_sign" role="dialog">
         <div class="modal-dialog">
-          <div class="zib-widget blur-bg relative">
+          <div class="scriptable-widget blur-bg">
             <div id="appleHub" class="box-body sign-logo">
               <img src="${appleHub}">
             </div>
@@ -1398,7 +1398,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             desc: '剩余流量、语音和余额',
             rightDesc: '1.0.5',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleTelecom.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_china_telecom.js',
             icon: `${rootUrl}img/icon/telecom_2.png`
           },
           {
@@ -1406,7 +1406,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             desc: '每日油价，油价预警',
             rightDesc: '1.0.5',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleOilPrice.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_oil_price.js',
             icon: `${rootUrl}img/icon/oilPrice2.png`
           }
         ]
@@ -1470,11 +1470,11 @@ document.getElementById('telegram').addEventListener('click', () => {
             icon: `${rootUrl}img/icon/bottomBars.png`
           },
           {
-            label: '南网在线',
+            label: '南网在线_2',
             desc: '昨日用电量，账单',
-            rightDesc: '1.0.2',
+            rightDesc: '1.0.0',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_south_PowerGrid.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_powerGrid.js',
             icon: `${rootUrl}img/icon/electric.png`
           },
           {
@@ -1520,7 +1520,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             desc: '京豆、农场、签到等',
             rightDesc: '1.0.5',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleJD.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_jingDong.js',
             icon: `${rootUrl}img/icon/jd.png`
           },
           {
@@ -1528,7 +1528,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             desc: '每月收支账单、白条',
             rightDesc: '1.0.3',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleJD_Bill.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_jingDong_bill.js',
             icon: `${rootUrl}img/icon/jingDong.png`
           },
           {
@@ -1536,7 +1536,7 @@ document.getElementById('telegram').addEventListener('click', () => {
             desc: '白条信息、白条等级',
             rightDesc: '1.0.3',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/moduleJD_baitiao.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_jingDong_baiTiao.js',
             icon: `${rootUrl}img/icon/jingDong.png`
           },
           {
