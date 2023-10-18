@@ -25,7 +25,7 @@ async function main() {
     }
     return null;
   };
-  const setting = await getBotSettings(cacheFile);
+  setting = await getBotSettings(cacheFile);
   
   /**
    * 存储当前设置
@@ -225,6 +225,7 @@ df.dateFormat = 'ddHHmm'
    */
   async function createWidget() {
     const widget = new ListWidget();
+    
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
     } else if (setting.solidColor) {
@@ -242,7 +243,7 @@ df.dateFormat = 'ddHHmm'
       
       gradient.locations = [0, 1];
       gradient.colors = [
-        new Color(randomColor, Number(setting.transparency)),
+        new Color(randomColor, setting.transparency),
         new Color('#00000000')
       ];
       widget.backgroundGradient = gradient;
