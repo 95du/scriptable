@@ -165,62 +165,29 @@ async function main() {
     const dataStack = mainStack.addStack();
     dataStack.addSpacer();
     
-    // Oil_0 bar
-    const barStack0 = dataStack.addStack();
-    barStack0.size = new Size(0, 23);
-    barStack0.setPadding(3, wide, 3, wide);
-    barStack0.backgroundColor = new Color('#FB8C00');
-    barStack0.cornerRadius = 10
-    barStack0.borderColor = new Color('#FB8C00');
-    barStack0.borderWidth = 3
-
-    const totalMonthBar0 = barStack0.addText(`0# - ${oil0}`);
-    totalMonthBar0.font = Font.mediumSystemFont(14);
-    totalMonthBar0.textColor = Color.white();
-    dataStack.addSpacer(value);
+    const oilTypes = [
+      { name: '0#', value: oil0, color: '#FB8C00' },
+      { name: '92', value: oil92, color: '#3F8BFF' },
+      { name: '95', value: oil95, color: '#00C853' },
+      { name: '98', value: oil98, color: '#BE38F3' },
+    ];
     
-    // Oil_92 bar
-    const barStack2 = dataStack.addStack();
-    barStack2.size = new Size(0, 23);
-    barStack2.setPadding(3, wide, 3, wide);
-    barStack2.backgroundColor = Color.blue();
-    barStack2.cornerRadius = 10
-    barStack2.borderColor = Color.blue();
-    barStack2.borderWidth = 3
-
-    totalMonthBar2 = barStack2.addText(`92 - ${oil92}`);
-    totalMonthBar2.font = Font.mediumSystemFont(14);
-    totalMonthBar2.textColor = new Color('#FFFFFF');
-    dataStack.addSpacer(value);
+    for (const oilType of oilTypes) {
+      const barStack = dataStack.addStack();
+      barStack.size = new Size(0, 23);
+      barStack.setPadding(3, wide, 3, wide);
+      barStack.backgroundColor = new Color(oilType.color);
+      barStack.cornerRadius = 10;
     
-    // Oil_95 bar
-    const barStack5 = dataStack.addStack();
-    barStack5.size = new Size(0, 23);
-    barStack5.setPadding(3, wide, 3, wide);
-    barStack5.backgroundColor = new Color('#00C853');
-    barStack5.cornerRadius = 10
-    barStack5.borderColor = new Color('#00C853');
-    barStack5.borderWidth = 3
-
-    const totalMonthBar5 = barStack5.addText(`95 - ${oil95}`);
-    totalMonthBar5.font = Font.mediumSystemFont(14);
-    totalMonthBar5.textColor = new Color('#FFFFFF');
-    dataStack.addSpacer(value);
-    
-    // Oil_98 bar
-    const barStack8 = dataStack.addStack();
-    barStack8.size = new Size(0, 23);
-    barStack8.setPadding(3, wide, 3, wide);
-    barStack8.backgroundColor = Color.purple();
-    barStack8.cornerRadius = 10
-    barStack8.borderColor = Color.purple();
-    barStack8.borderWidth = 3
-
-    const totalMonthBar8 = barStack8.addText(`98 - ${oil98}`);
-    totalMonthBar8.font = Font.mediumSystemFont(14);
-    totalMonthBar8.textColor = new Color('#FFFFFF');
+      const totalMonthBar = barStack.addText(`${oilType.name} - ${oilType.value}`);
+      totalMonthBar.font = Font.mediumSystemFont(14);
+      totalMonthBar.textColor = Color.white();
+      
+      if (oilType !== oilTypes[oilTypes.length - 1]) {
+        dataStack.addSpacer(value);
+      }
+    }
     dataStack.addSpacer();
-    
     return widget;
   };
   
