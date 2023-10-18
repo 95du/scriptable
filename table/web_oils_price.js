@@ -163,6 +163,7 @@ async function main() {
     mainStack.addSpacer(10);
     
     const dataStack = mainStack.addStack();
+    dataStack.layoutHorizontally();
     dataStack.addSpacer();
     
     const oilTypes = [
@@ -174,14 +175,14 @@ async function main() {
     
     for (const oilType of oilTypes) {
       const barStack = dataStack.addStack();
-      barStack.size = new Size(0, 23);
+      barStack.size = new Size(0, 23)
       barStack.setPadding(3, wide, 3, wide);
       barStack.backgroundColor = new Color(oilType.color);
       barStack.cornerRadius = 10;
     
-      const totalMonthBar = barStack.addText(`${oilType.name} - ${oilType.value}`);
-      totalMonthBar.font = Font.mediumSystemFont(14);
-      totalMonthBar.textColor = Color.white();
+      const oilPriceBar = barStack.addText(`${oilType.name} - ${oilType.value}`);
+      oilPriceBar.font = Font.mediumSystemFont(14);
+      oilPriceBar.textColor = Color.white();
       
       if (oilType !== oilTypes[oilTypes.length - 1]) {
         dataStack.addSpacer(value);
