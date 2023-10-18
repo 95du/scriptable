@@ -149,7 +149,7 @@ async function main() {
     return {
       readString: (fileName) => {
         const filePath = fm.joinPath(cacheData, fileName);
-        if (fm.fileExists(filePath) && cacheTime < 18 && setting.useCache) {
+        if (fm.fileExists(filePath) && cacheTime >= 3 && setting.useCache) {
           return fm.readString(filePath);
         }
         return null;
@@ -276,7 +276,6 @@ async function main() {
       violationSerialNumber: detail.violationSerialNumber,
       issueOrganization: detail.issueOrganization,
     };
-    //const violationMsg = await requestInfo(api4, params);
     const violationMsg = await getCacheString(`violationMsg${number}.json`, api4, params);
     return { detail, photos } = violationMsg.data;
   };
@@ -290,7 +289,10 @@ async function main() {
       const { list: vehicle } = main.data;
       const violationDetails = await getVehicleViolation(vehicle);
       if (violationDetails) {
-        return { success, ...violationDetails };
+        return {
+          success,
+         ...violationDetails
+        };
       }
     } else {
       await handleError(main);
@@ -320,7 +322,6 @@ async function main() {
   //=========> Create <=========//
   async function createWidget() {
     const widget = new ListWidget();
-    
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
