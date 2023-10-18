@@ -25,7 +25,7 @@ async function main() {
   const getSettings = (file) => {
     let setting = {};
     if (fm.fileExists(file)) {
-      return { imei, password, token, run, coordinates, pushTime, imgArr, picture, aMapkey, tokenUrl, touser, agentid, interval } = JSON.parse(fm.readString(file));
+      return { imei, password, token, run, coordinates, pushTime, imgArr, picture, aMapkey, tokenUrl, touser, agentid, interval, endAddr } = JSON.parse(fm.readString(file));
     }
     return {}
   }
@@ -197,7 +197,9 @@ async function main() {
       const { data } = await req.loadJSON();
       return { deviceName, endAddr, updateTime, totalTime, endTime, mileage, highestSpeed, averageSpeed, endLongitude, endLatitude } = data.list[0];
     } catch (e) {
-      notify('获取数据失败⚠️', '新设备无行车/位置记录，或token已过期。');
+      if ( !endAddr ) {
+        notify('获取数据失败⚠️', '新设备无行车/位置记录，或token已过期。');  
+      }
       console.log(e);
       await fetchToken();
     }
@@ -235,7 +237,7 @@ async function main() {
         latitude: Number(locations[1]).toFixed(6)
       }
     } catch (err) {
-      notify('获取坐标错误 ⚠️', '需填写高德地图 web 服务类型 key。');
+      console.log(err);
       return {
         longitude: 116.484828,
         latitude: 39.948585
