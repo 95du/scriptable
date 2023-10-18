@@ -26,6 +26,9 @@ async function main() {
   df.dateFormat = 'HH:mm';
   const GMT = df.string(new Date());
   
+  const value = 6 - setting.interval
+  const wide = 8 - setting.interval
+  
   const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
   
   const getOilsData = async () => {
@@ -79,9 +82,6 @@ async function main() {
   
   // createWidget
   async function createWidget() {
-    const value = 6 - setting.interval
-    const wide = 8 - setting.interval
-    
     const widget = new ListWidget();
     widget.backgroundColor = Color.white();
     if (fm.fileExists(bgImage)) {
@@ -142,7 +142,7 @@ async function main() {
     Stack.addSpacer();
     mainStack.addSpacer(10)
     
-    // oilPrice Alert
+    // Alert
     const dataStack2 = mainStack.addStack();
     dataStack2.layoutHorizontally();
     dataStack2.addSpacer();
