@@ -114,7 +114,7 @@ async function main() {
       Cookie: cookie
     };
     return await request.loadJSON();
-  }
+  };
   
   // Voice Package
   const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
@@ -128,7 +128,7 @@ async function main() {
     voiceAmount = package.voiceAmount;
     voiceBalance = package.voiceBalance;
     voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
-  }
+  };
   
   // Flow Package
   const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
@@ -137,14 +137,14 @@ async function main() {
   let balArr = [];
   for (let i in arr) {
     pacArr.push(...arr[i].items);
-  }
+  };
   
   for (const item of pacArr) {
     if (item.ratableAmount !== '999999999999' && item.ratableResourcename.indexOf('流量') > -1  && item.ratableResourcename.indexOf('定向') === -1) {
       newArr.push(item.ratableAmount)
       balArr.push(item.balanceAmount)
     }
-  }
+  };
   
   if (newArr.length > 0) {
     flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
@@ -177,7 +177,7 @@ async function main() {
       init: true
     });
     return null;
-  }
+  };
   
   //=========> config <=========//
   
@@ -401,7 +401,7 @@ df.dateFormat = 'ddHHmm'
       Script.setWidget(widget);
       Script.complete();
     }
-  }
+  };
     
   // Create Progress BarValue
   function creatProgress(barValue1, barValue2) {
@@ -478,7 +478,7 @@ df.dateFormat = 'ddHHmm'
       new Rect(0, barHeigth - path1BarHeigth + PosCorr, barWidth, path1BarHeigth - PosCorr)
     );
     return context.getImage();
-  }
+  };
   
   /**
    * Create Small Widget
@@ -555,7 +555,7 @@ df.dateFormat = 'ddHHmm'
     } else {
       await widget.presentSmall();
     }
-  }
+  };
   
   async function shadowImage(img) {
     let ctx = new DrawContext();
@@ -564,7 +564,7 @@ df.dateFormat = 'ddHHmm'
     ctx.setFillColor(new Color("#000000", Number(setting.masking)));
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']));
     return await ctx.getImage();
-  }
+  };
   
   /*
    * Name: MyWidget
