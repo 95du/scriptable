@@ -191,7 +191,7 @@ async function main() {
       
       gradient.locations = [0, 1];
       gradient.colors = [
-        new Color(randomColor, Number(setting.transparency)),
+        new Color(randomColor, setting.transparency),
         new Color('#00000000')
       ];
       widget.backgroundGradient = gradient;
@@ -541,8 +541,7 @@ async function main() {
   // 余额
   async function getBalance() {
     const response = await getCacheString(
-      `queryUserAccountNumberSurplus${count}.json`,
-      'https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus', {
+      `queryUserAccountNumberSurplus${count}.json`, 'https://95598.csg.cn/ucs/ma/zt/charge/queryUserAccountNumberSurplus', {
       areaCode: code,
       eleCustId: id
     });
