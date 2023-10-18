@@ -86,7 +86,7 @@ async function main() {
     widget.backgroundColor = Color.white();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
-    } else {
+    } else if (!setting.solidColor) {
       const gradient = new LinearGradient();
       const color = setting.gradient.length > 0 ? setting.gradient : [setting.rangeColor];
       const randomColor = color[Math.floor(Math.random() * color.length)];
@@ -104,9 +104,10 @@ async function main() {
         new Color(randomColor, Number(setting.transparency)),
         new Color('#00000000')
       ];
-      widget.backgroundGradient = gradient;  
+      widget.backgroundGradient = gradient;
+    } else {
       widget.backgroundColor = new Color(setting.solidColor);
-    };
+    }
     
     // Dynamic Island
     widget.setPadding(10, 10, 10, 10);
@@ -261,6 +262,6 @@ async function main() {
       }
     }
   };
-  runWidget();
+  await runWidget();
 }
 module.exports = { main }
