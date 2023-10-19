@@ -420,9 +420,9 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     } else {
       Script.setWidget(widget);
       Script.complete();
-    };
-    return widget;
+    }
   };
+  
   //=========> Create <=========//
   
   const errorWidget = async () => {
