@@ -251,7 +251,8 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
   //=========> Create <=========//
   const createWidget = async () => {
     const widget = new ListWidget();
-    
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
+
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
