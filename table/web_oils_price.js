@@ -206,7 +206,8 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
-  }
+    Script.complete();
+  };
   
   async function shadowImage(img) {
     let ctx = new DrawContext();
@@ -222,7 +223,7 @@ async function main() {
     const widget = await createWidget();
     const isMediumWidget =  config.widgetFamily === 'medium'
     if (!config.runsInWidget) {
-      await widget.presentMedium();
+      widget.presentMedium();
     } else {
       if (isMediumWidget) {
         Script.setWidget(widget);
