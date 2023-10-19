@@ -31,10 +31,10 @@ async function main() {
    * 存储当前设置
    * @param { JSON } string
    */
-  const writeSettings = async (inObject) => {
-    fm.writeString(cacheFile, JSON.stringify(inObject, null, 2));
+  const writeSettings = async (settings) => {
+    fm.writeString(cacheFile, JSON.stringify(settings, null, 2));
     console.log(JSON.stringify(
-      inObject, null, 2
+      settings, null, 2
     ));
   };
   
@@ -188,7 +188,10 @@ async function main() {
     }
     const response = await requestInfo(api, params);
     const jsonFile = JSON.stringify(response);
-    cache.writeString(jsonName, jsonFile);
+    const { success } = JSON.parse(jsonFile);
+    if ( success ) {
+      cache.writeString(jsonName, jsonFile);
+    }
     return JSON.parse(jsonFile);
   };
   
@@ -229,7 +232,9 @@ async function main() {
       return undefined;
     }
     const surveils = await getSurveils(vioList, issueData);
-    //const detail = await getRandomItem(surveils);
+    if (vioList.count > setting.count) {
+      await newViolation(surveils, vioList.plateNumber, vioList.count);
+    }
     const randomIndex = Math.floor(Math.random() * surveils.length);
     const detail = surveils[randomIndex];
     if (!detail) {
@@ -277,7 +282,7 @@ async function main() {
       issueOrganization: detail.issueOrganization,
     };
     const violationMsg = await getCacheString(`violationMsg${number}.json`, api4, params);
-    return { detail, photos } = violationMsg.data;
+    return { detail, photos } = violationMsg.data;  
   };
   
   // 查询主函数
@@ -316,6 +321,14 @@ async function main() {
       writeSettings(data);
       notify(`${resultMsg} ⚠️`, '点击【 通知框 】或【 车图 】跳转到支付宝12123页面重新获取，请确保已打开辅助工具', detailsUrl);
     }
+  };
+  
+  // 新的违章通知
+  const newViolation = async (surveils, plate, count) => {
+    setting.count = count;
+    writeSettings(setting);
+    const { violationTime, violationAddress, violationDescribe, fine } = surveils[0];
+    notify(`${plate} 🚫`, `${violationAddress}，${violationDescribe}，\n罚款 ${fine}元，${violationTime}`);
   };
   
   
