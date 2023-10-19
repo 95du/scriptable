@@ -3,7 +3,7 @@
 // icon-color: cyan; icon-glyph: car;
 /**
  * 支付宝小程序 交管12123
- * 小组件作者：95度茅台
+ * 组件作者：95度茅台
  * 获取Token作者: @FoKit
  * Version 1.0.0
  */
@@ -64,8 +64,8 @@ async function main() {
         writeSettings({
           ...setting,
           sign,
-          verifyToken,
-          referer
+          referer,
+          verifyToken
         })
         
         if (sign !== setting.sign && imgArr?.length) {
@@ -546,9 +546,8 @@ async function main() {
     } else {
       Script.setWidget(widget);
       Script.complete();
-    };
-    return widget;
-  }
+    }
+  };
   
   /**-------------------------**/
      /** Request(url) json **/
@@ -569,6 +568,7 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
+    Script.complete();
   };
   
   async function shadowImage(img) {
