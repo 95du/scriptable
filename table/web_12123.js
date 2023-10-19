@@ -55,10 +55,10 @@ async function main() {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
       const boxjs = boxjs_data.val.split(',');
-      verifyToken = boxjs[0];
-      sign = boxjs[1];
+      const verifyToken = boxjs[0];
+      const sign = boxjs[1];
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
-      referer = boxjs_referer.val;
+      const referer = boxjs_referer.val;
 
       if (verifyToken && referer) {
         writeSettings({
@@ -322,6 +322,8 @@ async function main() {
   //=========> Create <=========//
   async function createWidget() {
     const widget = new ListWidget();
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
+    
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
