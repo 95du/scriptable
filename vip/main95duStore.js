@@ -1396,7 +1396,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '中国电信_2',
             desc: '剩余流量、语音和余额',
-            rightDesc: '1.0.5',
+            rightDesc: '1.0.0',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_china_telecom.js',
             icon: `${rootUrl}img/icon/telecom_2.png`
@@ -1404,7 +1404,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '全国油价_2',
             desc: '每日油价，油价预警',
-            rightDesc: '1.0.5',
+            rightDesc: '1.0.0',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_oil_price.js',
             icon: `${rootUrl}img/icon/oilPrice2.png`
@@ -1526,7 +1526,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '京东收支账单',
             desc: '每月收支账单、白条',
-            rightDesc: '1.0.3',
+            rightDesc: '1.0.0',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_jingDong_bill.js',
             icon: `${rootUrl}img/icon/jingDong.png`
@@ -1534,7 +1534,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '京东小白鹅',
             desc: '白条信息、白条等级',
-            rightDesc: '1.0.3',
+            rightDesc: '1.0.0',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_jingDong_baiTiao.js',
             icon: `${rootUrl}img/icon/jingDong.png`
