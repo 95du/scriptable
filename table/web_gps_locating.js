@@ -2,12 +2,11 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: car;
 /**
- * 小组件作者: 95度茅台
- * Version 1.0.0
- * 2023-08-12
+ * 组件作者: 95度茅台
+ * 组件版本: Version 1.0.0
+ * 更新日期: 2023-08-12
  * 模拟电子围栏，显示车速，位置等
  */
-
 
 async function main() {
   const uri = Script.name();
@@ -75,7 +74,7 @@ async function main() {
     n.sound = 'piano_success'
     if (url) n.openURL = url
     return await n.schedule();
-  }
+  };
   
   /**
    * 获取远程图片
@@ -194,8 +193,11 @@ async function main() {
     req.method = 'POST';
     req.body = requestBody;
     try {
-      const { data } = await req.loadJSON();
-      return { deviceName, endAddr, updateTime, totalTime, endTime, mileage, highestSpeed, averageSpeed, endLongitude, endLatitude } = data.list[0];
+      const { data } = await req.loadJSON();  
+      if (data.list?.length) {
+        return { deviceName, endAddr, updateTime, totalTime, endTime, mileage, highestSpeed, averageSpeed, endLongitude, endLatitude } = data.list[0];
+      }
+      return null
     } catch (e) {
       if ( !endAddr ) {
         notify('获取数据失败⚠️', '新设备无行车/位置记录，或token已过期。');  
@@ -270,11 +272,14 @@ async function main() {
     };
     return { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, textColor, runObj };
   };
-
   
-  //=========> Create <=========//
-  const { info, state, status, longitude, latitude, mapUrl, GMT, GMT2, textColor, runObj } = await getData();
+  try {
+    ({ info, state, status, longitude, latitude, mapUrl, GMT, GMT2, textColor, runObj } = await getData());
+  } catch (error) {
+    console.log(error);
+  };
 
+  //=========> Create <=========//
   const createWidget = async () => {
     const widget = new ListWidget();
     
@@ -450,18 +455,17 @@ async function main() {
     addressText.url = mapUrl;
     imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
     
+    if ( coordinates && aMapkey ) {
+      await getDistance();
+      await pushMessage(mapUrl, longitude, latitude, distance);
+    };
+    
     if ( !config.runsInWidget ) {  
       await widget.presentMedium();
     } else {
       Script.setWidget(widget);
       Script.complete();
     };
-    
-    if ( coordinates && aMapkey ) {
-      await getDistance();
-      await pushMessage(mapUrl, longitude, latitude, distance);
-    };
-    return widget;
   }
   
   /**
@@ -541,23 +545,57 @@ async function main() {
     widget.url = mapUrl;
     Script.setWidget(widget);
     Script.complete();
-    return widget;  
   }
+  
+  const createError = async () => {
+    const widget = new ListWidget();
+    widget.backgroundColor = Color.white();
+    const gradient = new LinearGradient();
+    gradient.locations = [0, 1];
+    gradient.colors = [
+      new Color("#99CCCC", 0.5),
+      new Color('#00000000')
+    ];
+    widget.backgroundGradient = gradient;  
     
+    widget.setPadding(10, 20, 30, 10)
+    const mainStack = widget.addStack();
+    mainStack.addSpacer();
+    
+    const cacheMaybach = fm.joinPath(cache, 'Maybach-8.png');
+    const vehicleImg = fm.readImage(cacheMaybach);
+    const widgetImg = mainStack.addImage(vehicleImg);
+    widgetImg.imageSize = new Size(400, 150);
+    mainStack.addSpacer();
+    
+    if (!config.runsInWidget) {
+      await widget.presentMedium();  
+    } else {
+      Script.setWidget(widget);
+      Script.complete();
+    }
+  };
+  
   const createErrorWidget = async () => {
     const widget = new ListWidget();
     const text = widget.addText('仅支持中小尺寸');
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
-  }
+    Script.complete();
+  };
   
   const runWidget = async () => {
-    await (config.runsInApp || config.widgetFamily === 'medium' 
-    ? await createWidget()
-    : config.widgetFamily === 'small' 
-    ? await createSmallWidget()
-    : createErrorWidget());
+    const medium = config.runsInApp || config.widgetFamily === 'medium'
+    try {
+      await (medium 
+      ? await createWidget() 
+      : config.widgetFamily === 'small' 
+      ? await createSmallWidget() 
+      : createErrorWidget());
+    } catch (e) {
+      medium ? await createError() : createErrorWidget();
+    }
   }
   await runWidget();
 }
