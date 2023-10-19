@@ -172,6 +172,8 @@ async function main() {
   //=========> Create <=========//
   async function createWidget() {
     const widget = new ListWidget();
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
+    
     const bgImage = await getBgImagePath();
     const Appearance = Device.isUsingDarkAppearance();
     if (fm.fileExists(bgImage) && Appearance === false) {
