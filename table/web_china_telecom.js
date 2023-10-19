@@ -549,13 +549,7 @@ df.dateFormat = 'ddHHmm'
       context.fillPath();
       return context.getImage();
     }
-    
-    if (config.runsInWidget) {
-      Script.setWidget(widget);
-      Script.complete();
-    } else {
-      await widget.presentSmall();
-    }
+    return widget;
   };
   
   async function shadowImage(img) {
@@ -577,7 +571,9 @@ df.dateFormat = 'ddHHmm'
   const runWidget = async () => {
     const isSmallWidget =  config.widgetFamily === 'small'
     if (config.runsInWidget && isSmallWidget) {
-      await createSmallWidget();
+      const widget = await createSmallWidget();
+      Script.setWidget(widget);
+      Script.complete();
     } else {
       await createWidget();
     }
