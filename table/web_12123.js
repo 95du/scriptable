@@ -55,10 +55,10 @@ async function main() {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
       const boxjs = boxjs_data.val.split(',');
-      const verifyToken = boxjs[0];
-      const sign = boxjs[1];
+      verifyToken = boxjs[0];
+      sign = boxjs[1];
       const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
-      const referer = boxjs_referer.val;
+      referer = boxjs_referer.val;
 
       if (verifyToken && referer) {
         writeSettings({
