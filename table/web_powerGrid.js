@@ -124,7 +124,10 @@ async function main() {
     }
     const response = await makeRequest(jsonUrl, requestBody);
     const jsonFile = JSON.stringify(response);
-    cache.writeString(jsonName, jsonFile);
+    const { sta } = JSON.parse(jsonFile);
+    if ( sta == 00 ) {
+      cache.writeString(jsonName, jsonFile);
+    }
     return JSON.parse(jsonFile);
   };
   
