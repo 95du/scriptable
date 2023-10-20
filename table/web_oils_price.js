@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: cyan; icon-glyph: gas-pump;
+// icon-color: orange; icon-glyph: gas-pump;
 /**
  * 组件作者: 95度茅台
  * 组件名称: 全国油价_2
@@ -223,16 +223,13 @@ async function main() {
   
   const runWidget = async () => {
     const widget = await createWidget();
-    const isMediumWidget =  config.widgetFamily === 'medium'
     if (!config.runsInWidget) {
       widget.presentMedium();
+    } else if (config.widgetFamily === 'medium') {
+      Script.setWidget(widget);
+      Script.complete();
     } else {
-      if (isMediumWidget) {
-        Script.setWidget(widget);
-        Script.complete();
-      } else {
-        createErrorWidget();
-      }
+      createErrorWidget();
     }
   };
   await runWidget();
