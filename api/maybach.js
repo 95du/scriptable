@@ -493,7 +493,7 @@ const createWidget = async () => {
     const driveAway = parkingTime >= 10 && distance > 20
     if ( driveAway ) {
       notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
-      await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
+      await sendWechatMessage(`${status}  更新时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
     } else if ( speed <= 5 ) {
       const duration = updateTime === setting.updateTime ? 300 : 10;
