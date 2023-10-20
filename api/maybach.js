@@ -490,8 +490,8 @@ const createWidget = async () => {
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
     
-    const driveAway = parkingTime >= 10 && distance > 20
-    if ( driveAway ) {
+    // driveAway
+    if ( parkingTime >= 10 && distance > 20 && address !== setting.address ) {
       notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
       await sendWechatMessage(`${status}  更新时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
