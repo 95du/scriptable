@@ -228,7 +228,7 @@ async function main() {
   const runWidget = async () => {
     const widget = await createWidget();
     if (!config.runsInWidget) {
-      widget.presentMedium();
+      await widget.presentMedium();
     } else if (config.widgetFamily === 'medium') {
       Script.setWidget(widget);
       Script.complete();
