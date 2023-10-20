@@ -96,7 +96,7 @@ async function main() {
    * @returns {image} - Request
    */
   const cache = fm.joinPath(path, 'cachePath');
-  fm.createDirectory(cache, true)
+  fm.createDirectory(cache, true);
   
   const downloadCarImage = async (item) => {
     const carImage = await getImage(item);
@@ -104,8 +104,9 @@ async function main() {
     const cachePath = fm.joinPath(cache, imgKey);
     fm.writeImage(cachePath, carImage);
     imgArr.push(imgKey);
-    writeSettings(setting);
-    await getRandomImage();
+    if (imgArr.length > 8) {
+      writeSettings(setting);
+    }
   };
   
   if ( !imgArr?.length ) {
