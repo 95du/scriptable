@@ -475,29 +475,9 @@ async function main() {
     return widget;
   };
   
-  
   /**-------------------------**/
      /** Request(url) json **/
   /**-------------------------**/
-  const runWidget = async () => {
-    if (setting.code === 0) {
-      await userInfo();
-      await selectEleBill();
-      await Run();
-    }
-    if (config.widgetFamily === 'medium' || config.runsInApp) {
-      try {
-        await (setting.code === 0 ? createWidget() : createErrWidget());  
-      } catch (e) {
-        console.log(e)
-      }
-    } else {
-      await smallrWidget();
-    }
-  }
-  await runWidget();
-  
-  // 请求 api 数据
   async function makeRequest(url, requestBody) {
     const req = new Request(url);
     req.method = 'POST';
@@ -605,5 +585,23 @@ async function main() {
     text.centerAlignText();
     Script.setWidget(widget);
   };
+  
+  const runWidget = async () => {
+    if (setting.code === 0) {
+      await userInfo();
+      await selectEleBill();
+      await Run();
+    }
+    if (config.widgetFamily === 'medium' || config.runsInApp) {
+      try {
+        await (setting.code === 0 ? createWidget() : createErrWidget());  
+      } catch (e) {
+        console.log(e)
+      }
+    } else {
+      await smallrWidget();
+    }
+  };
+  await runWidget();
 }
 module.exports = { main }
