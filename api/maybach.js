@@ -249,8 +249,11 @@ const getDistance = async () => {
  * @param {string} format
  */
 const getInfo = async () => {
-  await getLastLocation();
-
+  const locationData = await getLastLocation();
+  if (locationData) {
+    await Promise.all([loadPicture(), getAddress()]);
+  }
+  
   const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent('琼A·849A8')}&ll=${latitude},${longitude}&t=m`;
   
   const [state, status] = speed <= 5
@@ -270,19 +273,18 @@ const getInfo = async () => {
   const GMT = formatDate(updateTime, 'yyyy-MM-dd HH:mm');
   const GMT2 = formatDate(updateTime, 'MM-dd HH:mm');
   
-  const info = await Promise.all([loadPicture(), getAddress()]);
-  
   const runObj = {
+    cookie,
+    imgArr,
     updateTime, 
     address,
+    coordinates: `${longitude},${latitude}`,
     run: owner,
     pushTime: Date.now(),
     parkingTime: GMT2,
-    cookie,
-    imgArr,
-    coordinates: `${longitude},${latitude}`,
   };
-  return { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
+  
+  return { state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
 };
 
 
@@ -307,7 +309,7 @@ const createWidget = async () => {
   ];
   widget.backgroundGradient = gradient;
   
-  const { info, state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
+  const { state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
 
   // Initial Save
   if ( !setting.run ) {
@@ -410,7 +412,6 @@ const createWidget = async () => {
   statusText.textColor = Color.black();
   statusText.textOpacity = 0.6;
   leftStack.addSpacer();
-  
     
   /**
    * Create right Stack
@@ -514,7 +515,7 @@ const createWidget = async () => {
   * @returns {Promise} Promise
   */
   const sendWechatMessage = async (description, url, picurl) => {
-    const acc = await new Request(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ=')).loadJSON(); // accessToken
+    const acc = await new Request(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ=')).loadJSON();
     const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
     request.method = 'POST'
     request.body = JSON.stringify({
@@ -534,10 +535,9 @@ const createWidget = async () => {
   };
   
   if ( setting.coordinates ) {
-    await getDistance();
+    const distance = await getDistance();
     await pushMessage(mapUrl, longitude, latitude, distance);
-  };
-  return widget;
+  }
 };
 
 // 创建小号组件
