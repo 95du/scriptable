@@ -54,27 +54,20 @@ async function main() {
   const getBoxjsData = async () => {
     try {
       const boxjs_data = await new Request('http://boxjs.com/query/data/body_12123').loadJSON();
+      const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
+      
       const boxjs = boxjs_data.val.split(',');
       verifyToken = boxjs[0];
       sign = boxjs[1];
-      const boxjs_referer = await new Request('http://boxjs.com/query/data/referer_12123').loadJSON();
       referer = boxjs_referer.val;
 
       if (verifyToken && referer) {
-        writeSettings({
-          ...setting,
-          sign,
-          referer,
-          verifyToken
-        })
-        
-        if (sign !== setting.sign && imgArr?.length) {
-          Timer.schedule(1500, false, () => {notify('Boxjs_12123', 'verifyToken/Sign/Referer 更新成功')})
-        }
+        writeSettings({ ...setting, sign, verifyToken, referer });
       }
     } catch (e) {
-      console.log(e + '或网络有问题')
-      notify('获取 Boxjs 数据失败 ⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
+      if (!setting.verifyToken) {
+        notify('获取 Boxjs 数据失败⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
+      }
     }
   };
   
@@ -176,7 +169,7 @@ async function main() {
   };
   
   /**
-   * 获取JSON字符串
+   * 获取 POST JSON 字符串
    * @param {string} json
    */
   const getCacheString = async (jsonName, api, params) => {
@@ -287,7 +280,7 @@ async function main() {
   
   // 查询主函数
   const violationQuery = async () => {
-    const params = { productId, api: api1, sign, version, verifyToken };
+    const params = { productId, sign, version, verifyToken };
     const main = await getCacheString('main.json', api1, params);
     const { success } = main;
     if (success) {
