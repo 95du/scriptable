@@ -30,7 +30,11 @@ async function main() {
   const wide = 8 - setting.interval
   
   const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
-  
+    
+  /**
+   * 获取石油数据
+   * @returns {Object} 包含石油价格和提示信息的对象。
+   */
   const getOilsData = async () => {
     try {  
       const html = await new Request(atob('aHR0cDovL20ucWl5b3VqaWFnZS5jb20=')).loadString();
