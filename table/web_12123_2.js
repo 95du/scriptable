@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: car;
 /**
- * 支付宝小程序 交管12123
+ * 脚本名称: 交管12123
  * 组件作者：95度茅台
  * 获取Token作者: @FoKit
  * Version 1.0.0
@@ -12,9 +12,7 @@ async function main() {
   const fm = FileManager.local();
   const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_12123');
   
-  const getCachePath = (dirName) => {
-    return fm.joinPath(mainPath, dirName);
-  };
+  const getCachePath = (dirName) => fm.joinPath(mainPath, dirName);
   
   const [ settingPath, cacheImg, cacheStr, cacheCar] = [
     'setting.json',
@@ -93,7 +91,7 @@ async function main() {
     return {
       readString: (name) => {
         const filePath = strPath(name);
-        return fm.fileExists(filePath) && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
+        return fm.fileExists(filePath) && setting.useCache && cacheTime >= 1 ? fm.readString(filePath) : null;
       },
       writeString: (name, content) => fm.writeString(strPath(name), content),
       // cache image
@@ -137,7 +135,7 @@ async function main() {
   };
   
   /**
-   * 获取图片并使用缓存
+   * 获取车辆图片并使用缓存
    * @param {string} File Extension
    * @returns {image} - Request
    */
