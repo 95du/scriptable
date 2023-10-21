@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: cyan; icon-glyph: car;
 /**
- * 支付宝小程序 交管12123
+ * 脚本名称: 交管12123
  * 组件作者：95度茅台
  * 获取Token作者: @FoKit
  * Version 1.0.0
@@ -10,9 +10,16 @@
 
 async function main() {
   const fm = FileManager.local();
-  const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');
-  const cache = fm.joinPath(path, 'cache_path');
-  const cacheFile = fm.joinPath(path, 'setting.json');
+  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_12123');
+  
+  const getCachePath = (dirName) => fm.joinPath(mainPath, dirName);
+  
+  const [ settingPath, cacheImg, cacheStr, cacheCar] = [
+    'setting.json',
+    'cache_image',
+    'cache_string',
+    'cache_vehicle'
+  ].map(getCachePath);
   
   /**
    * 读取储存的设置
@@ -25,14 +32,14 @@ async function main() {
     }
     return {}
   };
-  const setting = getSettings(cacheFile);
+  const setting = getSettings(settingPath);
 
   /**
    * 存储当前设置
    * @param { JSON } string
    */
   const writeSettings = async (settings) => {
-    fm.writeString(cacheFile, JSON.stringify(settings, null, 2));
+    fm.writeString(settingPath, JSON.stringify(settings, null, 2));
     console.log(JSON.stringify(
       settings, null, 2
     ));
@@ -78,20 +85,21 @@ async function main() {
    * @returns {object} - Object
    */
   const useFileManager = ({ cacheTime } = {}) => {
-    const getPath = (name) => fm.joinPath(cache, name);
-
+    const strPath = (name) => fm.joinPath(cacheStr, name);  
+    const imgPath = (name) => fm.joinPath(cacheImg, name);
+    
     return {
       readString: (name) => {
-        const filePath = getPath(name);
+        const filePath = strPath(name);
         return fm.fileExists(filePath) && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
       },
-      writeString: (name, content) => fm.writeString(getPath(name), content),
+      writeString: (name, content) => fm.writeString(strPath(name), content),
       // cache image
       readImage: (name) => {
-        const filePath = getPath(name);
+        const filePath = imgPath(name);
         return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
       },
-      writeImage: (image) => fm.writeImage(getPath(name), image),
+      writeImage: (image) => fm.writeImage(imgPath(name), image),
     };
   };
   
@@ -127,17 +135,14 @@ async function main() {
   };
   
   /**
-   * 获取图片并使用缓存
+   * 获取车辆图片并使用缓存
    * @param {string} File Extension
    * @returns {image} - Request
    */
-  const carPath = fm.joinPath(path, 'cachePath');
-  fm.createDirectory(carPath, true);
-  
   const downloadCarImage = async (item) => {
     const carImage = await getImage(item);
     const imgName = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
-    const cachePath = fm.joinPath(carPath, imgName);
+    const cachePath = fm.joinPath(cacheCar, imgName);
     fm.writeImage(cachePath, carImage);
     imgArr.push(imgName);
     if (imgArr.length > 8) {
@@ -154,8 +159,8 @@ async function main() {
   async function getRandomImage() {
     const count = imgArr.length;
     const index = Math.floor(Math.random() * count);
-    const cacheImgPath = carPath + '/' + imgArr[index];
-    return vehicleImg = await fm.readImage(cacheImgPath);
+    const cacheCarPath = cacheCar + '/' + imgArr[index];
+    return vehicleImg = await fm.readImage(cacheCarPath);
   };
     
   try {
@@ -167,7 +172,7 @@ async function main() {
       vehicleImg = await getRandomImage();
     }
   } catch (e) {
-    const cacheMaybach = fm.joinPath(carPath, 'Maybach-8.png')
+    const cacheMaybach = fm.joinPath(cacheCar, 'Maybach-8.png')
     vehicleImg = fm.readImage(cacheMaybach);
   };
     
