@@ -12,7 +12,7 @@ async function main(settings) {
   const fm = FileManager.local();
   const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');
   const cacheData = fm.joinPath(path, 'cache_path');
-  const cacheFile = fm.joinPath(path, 'setting.json');
+  /*const cacheFile = fm.joinPath(path, 'setting.json');
   
   /**
    * 读取储存的设置
