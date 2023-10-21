@@ -70,21 +70,22 @@ async function main() {
    * @param {string} File Extension
    * @returns {image} - Request
    */
-  const useFileManager = ({ cacheTime } = {}) => {
+  const useFileManager = ({ fileName, cacheTime } = {}) => {
+    const filePath = fm.joinPath(cache, fileName);
+
     return {
-      readImage: (fileName) => {
-        const imageFile = fm.joinPath(cache, fileName);
-        if (fm.fileExists(imageFile) && cacheTime) {
-          const createTime = fm.creationDate(imageFile).getTime();
+      readImage: () => {
+        if (fm.fileExists(filePath) && cacheTime) {
+          const createTime = fm.creationDate(filePath).getTime();
           const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
           if (diff >= cacheTime) {
-            fm.remove(imageFile);
+            fm.remove(filePath);
             return null;
           }
         }
-        return fm.readImage(imageFile);
+        return fm.readImage(filePath);
       },
-      writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
+      writeImage: (image) => fm.writeImage(filePath, image)
     }
   };
   
@@ -94,13 +95,13 @@ async function main() {
   
   // 获取图片，使用缓存
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ cacheTime: 24 });
+    const cache = useFileManager({ fileName: name, cacheTime: 24 });
     const image = cache.readImage(name);
     if (image) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(name, img);
+    cache.writeImage(img);
     return img;
   };
   
