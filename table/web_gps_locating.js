@@ -101,9 +101,9 @@ async function main() {
     const imgName = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
     const cachePath = fm.joinPath(cacheCar, imgName);
     await fm.writeImage(cachePath, carImage, { overwrite: true });
-    imgArr.push(imgKey);
-    writeSettings(setting);
-    if ( imgArr.length === 1 ) {
+    imgArr.push(imgName);
+    if ( imgArr.length > 8 ) {
+      writeSettings(setting);
       notify('获取成功', '初始化数据及获取GPS设备信息。');
     }
   };
@@ -243,7 +243,8 @@ async function main() {
         latitude: Number(locations[1]).toFixed(6)
       }
     } catch (err) {
-      console.log(err);
+      console.log(err + '243行');
+      await fetchToken();
       return {
         longitude: 116.484828,
         latitude: 39.948585
@@ -567,7 +568,7 @@ async function main() {
     const mainStack = widget.addStack();
     mainStack.addSpacer();
     
-    const cacheMaybach = fm.joinPath(cache, 'Maybach-8.png');
+    const cacheMaybach = fm.joinPath(cacheCar, 'Maybach-8.png');
     const vehicleImg = fm.readImage(cacheMaybach);
     const widgetImg = mainStack.addImage(vehicleImg);
     widgetImg.imageSize = new Size(400, 150);
