@@ -72,15 +72,51 @@ async function main() {
   };
   
   /**
+   * 读取和写入缓存的文本和图片数据
+   * @param {object} options
+   * @param {number}  - number
+   * @returns {object} - Object
+   */
+  const useFileManager = ({ cacheTime } = {}) => {
+    const getPath = (name) => fm.joinPath(cache, name);
+
+    return {
+      readString: (name) => {
+        const filePath = getPath(name);
+        return fm.fileExists(filePath) && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
+      },
+      writeString: (name, content) => fm.writeString(getPath(name), content),
+      // cache image
+      readImage: (name) => {
+        const filePath = getPath(name);
+        return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
+      },
+      writeImage: (image) => fm.writeImage(getPath(name), image),
+    };
+  };
+  
+  /**
    * 获取请求数据
    * @param {string} - string
    * @returns {image} - url
    */
-  const getGovData = async() => {
-    const invoke = await new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u')).loadJSON();
-    return { infoURL, productId, version, api1, api2, api3, api4, alipayUrl, statusUrl, detailsUrl, maybach } = invoke;
+  const getCacheJSON = async (jsonName, jsonUrl) => {
+    const cacheTime = new Date().getHours();
+    const cache = useFileManager({ cacheTime });
+    const jsonString = cache.readString(jsonName);
+    if (jsonString) {
+      return JSON.parse(jsonString);
+    }
+    const response = await new Request(jsonUrl).loadJSON();
+    const jsonFile = JSON.stringify(response);
+    if (jsonFile) {
+      cache.writeString(jsonName, jsonFile);
+    }
+    return JSON.parse(jsonFile);
   };
-  await getGovData();
+  
+  const invokeGov = await getCacheJSON('invoke.json', atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zaG9ydGN1dHMvcmF3L21hc3Rlci9hcGkvdXBkYXRlL3Zpb2xhdGlvbi5qc29u'));
+  const { infoURL, productId, version, api1, api2, api3, api4, alipayUrl, statusUrl, detailsUrl, maybach } = invokeGov;
   
   /**
    * 获取远程图片
@@ -134,28 +170,6 @@ async function main() {
     const cacheMaybach = fm.joinPath(carPath, 'Maybach-8.png')
     vehicleImg = fm.readImage(cacheMaybach);
   };
-  
-  /**
-   * 读取和写入缓存的文本和图片数据
-   * @param {object} options
-   * @param {number}  - number
-   * @returns {object} - Object
-   */
-  const useFileManager = ({ fileName, cacheTime } = {}) => {
-    const filePath = fm.joinPath(cache, fileName);
-
-    return {
-      readString: (fileName) => {
-        return fm.fileExists(filePath) && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
-      },
-      writeString: (content) => fm.writeString(filePath, content),
-      // cache image
-      readImage: (fileName) => {
-        return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
-      },
-      writeImage: (image) => fm.writeImage(filePath, image),
-    };
-  };
     
   /**
    * 获取缓存图片
@@ -164,13 +178,13 @@ async function main() {
    * @returns {Image} - string
    */
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ fileName: name });
+    const cache = useFileManager();
     const image = cache.readImage(name);
     if ( image ) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(img);
+    cache.writeImage(name, img);
     return img;
   };
   
@@ -181,7 +195,7 @@ async function main() {
    */
   const getCacheString = async (jsonName, api, params) => {
     const cacheTime = new Date().getHours();
-    const cache = useFileManager({ fileName: jsonName, cacheTime });
+    const cache = useFileManager({ cacheTime });
     const jsonString = cache.readString(jsonName);
     if (jsonString) {
       return JSON.parse(jsonString);
@@ -190,7 +204,7 @@ async function main() {
     const jsonFile = JSON.stringify(response);
     const { success } = JSON.parse(jsonFile);
     if (success) {
-      cache.writeString(jsonFile);
+      cache.writeString(jsonName, jsonFile);
     }
     return JSON.parse(jsonFile);
   };
