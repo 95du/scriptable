@@ -83,13 +83,13 @@ async function main() {
    * @param {Image} Basr64 
    * @returns {string} - Request
    */
-  const useFileManager = ( cacheTime ) => {
+  const useFileManager = ({ fileName, cacheTime } = {}) => {
+    const imgPath = fm.joinPath(cache, fileName);
     return {
-      readImage: (fileName) => {
-        const imgPath = fm.joinPath(cache, fileName);
+      readImage: () => {
         return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
       },
-      writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
+      writeImage: (image) => fm.writeImage(imgPath, image)
     }
   };  
   
@@ -103,13 +103,13 @@ async function main() {
   
   // 获取图片，使用缓存
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ cacheTime: 24 });
+    const cache = useFileManager({ fileName: name, cacheTime: 24 });
     const image = cache.readImage(name);
     if (image) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(name, img);
+    cache.writeImage(img);
     return img;
   };
   
