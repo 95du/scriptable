@@ -8,7 +8,7 @@
  * Version 1.0.0
  */
 
-async function main(path, cacheData，cacheFile, settings) {
+async function main(path, cacheData, cacheFile,.settings) {
   //const fm = FileManager.local();
   //const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');
   //const cacheData = fm.joinPath(path, 'cache_path');
