@@ -590,9 +590,8 @@ async function main() {
   };
   
   const runWidget = async () => {
-    const medium = config.runsInApp || config.widgetFamily === 'medium'
     try {
-      await (medium 
+      await (config.runsInApp || config.widgetFamily === 'medium' 
       ? await createWidget() 
       : config.widgetFamily === 'small' 
       ? await createSmallWidget() 
