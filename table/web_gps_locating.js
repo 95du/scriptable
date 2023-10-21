@@ -104,7 +104,6 @@ async function main() {
     imgArr.push(imgName);
     if ( imgArr.length > 8 ) {
       writeSettings(setting);
-      notify('获取成功', '初始化数据及获取GPS设备信息。');
     }
   };
   
@@ -243,8 +242,6 @@ async function main() {
         latitude: Number(locations[1]).toFixed(6)
       }
     } catch (err) {
-      console.log(err + '243行');
-      await fetchToken();
       return {
         longitude: 116.484828,
         latitude: 39.948585
