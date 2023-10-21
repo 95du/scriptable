@@ -242,6 +242,7 @@ async function main() {
         latitude: Number(locations[1]).toFixed(6)
       }
     } catch (err) {
+      await fetchToken();
       return {
         longitude: 116.484828,
         latitude: 39.948585
