@@ -11,9 +11,16 @@
 async function main() {
   const uri = Script.name();
   const fm = FileManager.local();
-  const path = fm.joinPath(fm.documentsDirectory(), '95du_GPS');
-  fm.createDirectory(path, true);
-  const cacheFile = fm.joinPath(path, 'setting.json');
+  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_GPS');
+  
+  const getCachePath = (dirName) => fm.joinPath(mainPath, dirName);
+  
+  const [ settingPath, cacheImg, cacheStr, cacheCar] = [
+    'setting.json',
+    'cache_image',
+    'cache_string',
+    'cache_vehicle'
+  ].map(getCachePath);
   
   
   /**
@@ -28,14 +35,14 @@ async function main() {
     }
     return {}
   }
-  const setting = await getSettings(cacheFile);
+  const setting = await getSettings(settingPath);
   
   /**
    * 存储当前设置
    * @param { JSON } string
    */
   const writeSettings = async (inObject) => {
-    fm.writeString(cacheFile, JSON.stringify(inObject, null, 2));
+    fm.writeString(settingPath, JSON.stringify(inObject, null, 2));
     console.log(JSON.stringify(
       inObject, null, 2
     ));
@@ -85,17 +92,14 @@ async function main() {
   };
   
   /**
-   * 获取图片并使用缓存
+   * 获取车辆图片并使用缓存
    * @param {string} File Extension
    * @returns {image} - Request
    */
-  const cache = fm.joinPath(path, 'cache_carImg');
-  fm.createDirectory(cache, true);
-  
   const downloadCarImage = async (item) => {
     const carImage = await getImage(item);
-    const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
-    const cachePath = fm.joinPath(cache, imgKey);
+    const imgName = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
+    const cachePath = fm.joinPath(cacheCar, imgName);
     await fm.writeImage(cachePath, carImage, { overwrite: true });
     imgArr.push(imgKey);
     writeSettings(setting);
@@ -123,7 +127,7 @@ async function main() {
  async function getRandomImage() {
     const count = imgArr.length;
     const index = Math.floor(Math.random() * count);
-    const cacheImgPath = cache + '/' + imgArr[index];
+    const cacheImgPath = cacheCar + '/' + imgArr[index];
     return await fm.readImage(cacheImgPath);
   };
   
@@ -132,7 +136,7 @@ async function main() {
    * @param {Image} url
    */
   const useFileManager = (fileName) => {
-    const imgPath = fm.joinPath(cache, fileName);
+    const imgPath = fm.joinPath(cacheImg, fileName);
     return {
       readImage: () => {
         return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
