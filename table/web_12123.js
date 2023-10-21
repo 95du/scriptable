@@ -182,7 +182,7 @@ async function main() {
   const getCacheString = async (jsonName, api, params) => {
     const cacheTime = new Date().getHours();
     const cache = useFileManager({ fileName: jsonName, cacheTime });
-    const jsonString = cache.readString();
+    const jsonString = cache.readString(jsonName);
     if (jsonString) {
       return JSON.parse(jsonString);
     }
