@@ -11,7 +11,7 @@
 async function main() {
   const fm = FileManager.local();
   const path = fm.joinPath(fm.documentsDirectory(), '95du_12123');
-  const cacheData = fm.joinPath(path, 'cache_path');
+  const cache = fm.joinPath(path, 'cache_path');
   const cacheFile = fm.joinPath(path, 'setting.json');
   
   /**
@@ -65,7 +65,7 @@ async function main() {
         writeSettings({ ...setting, sign, verifyToken, referer });
       }
     } catch (e) {
-      if (!setting.verifyToken) {
+      if (!verifyToken) {
         notify('获取 Boxjs 数据失败⚠️', '需打开 Quantumult-X 或其他辅助工具', 'quantumult-x://');
       }
     }
@@ -95,15 +95,15 @@ async function main() {
    * @param {string} File Extension
    * @returns {image} - Request
    */
-  const cache = fm.joinPath(path, 'cachePath');
-  fm.createDirectory(cache, true);
+  const carPath = fm.joinPath(path, 'cachePath');
+  fm.createDirectory(carPath, true);
   
   const downloadCarImage = async (item) => {
     const carImage = await getImage(item);
-    const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
-    const cachePath = fm.joinPath(cache, imgKey);
+    const imgName = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
+    const cachePath = fm.joinPath(carPath, imgName);
     fm.writeImage(cachePath, carImage);
-    imgArr.push(imgKey);
+    imgArr.push(imgName);
     if (imgArr.length > 8) {
       writeSettings(setting);
     }
@@ -118,7 +118,7 @@ async function main() {
   async function getRandomImage() {
     const count = imgArr.length;
     const index = Math.floor(Math.random() * count);
-    const cacheImgPath = cache + '/' + imgArr[index];
+    const cacheImgPath = carPath + '/' + imgArr[index];
     return vehicleImg = await fm.readImage(cacheImgPath);
   };
     
@@ -131,60 +131,66 @@ async function main() {
       vehicleImg = await getRandomImage();
     }
   } catch (e) {
-    const cacheMaybach = fm.joinPath(cache, 'Maybach-8.png');
+    const cacheMaybach = fm.joinPath(carPath, 'Maybach-8.png')
     vehicleImg = fm.readImage(cacheMaybach);
   };
   
-  /**  
-   * 获取网络图片并使用缓存
-   * @param {Image} url
+  /**
+   * 读取和写入缓存的文本和图片数据
+   * @param {object} options
+   * @param {number}  - number
+   * @returns {object} - Object
    */
-  const useFileManager = ({ cacheTime } = {}) => {
+  const useFileManager = ({ fileName, cacheTime } = {}) => {
+    const filePath = fm.joinPath(cache, fileName);
+
     return {
       readString: (fileName) => {
-        const filePath = fm.joinPath(cacheData, fileName);
-        if (fm.fileExists(filePath) && cacheTime >= 3 && setting.useCache) {
-          return fm.readString(filePath);
-        }
-        return null;
+        return fm.fileExists(filePath) && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
       },
-      writeString: (fileName, content) => fm.writeString(fm.joinPath(cacheData, fileName), content),
+      writeString: (content) => fm.writeString(filePath, content),
       // cache image
       readImage: (fileName) => {
-        const imgPath = fm.joinPath(cache, fileName);
-        return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
+        return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
       },
-      writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
-    }
+      writeImage: (image) => fm.writeImage(filePath, image),
+    };
   };
     
+  /**
+   * 获取缓存图片
+   * @param {string} name 
+   * @param {string} url
+   * @returns {Image} - string
+   */
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager();
+    const cache = useFileManager({ fileName: name });
     const image = cache.readImage(name);
     if ( image ) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(name, img);
+    cache.writeImage(img);
     return img;
   };
   
   /**
    * 获取 POST JSON 字符串
    * @param {string} json
+   * @returns {object} - JSON
    */
   const getCacheString = async (jsonName, api, params) => {
     const cacheTime = new Date().getHours();
-    const cache = useFileManager({ cacheTime });
-    const jsonString = cache.readString(jsonName);
+    const cache = useFileManager({ fileName: jsonName, cacheTime });
+    const jsonString = cache.readString();
     if (jsonString) {
       return JSON.parse(jsonString);
     }
     const response = await requestInfo(api, params);
     const jsonFile = JSON.stringify(response);
     const { success } = JSON.parse(jsonFile);
-    if ( success ) {
-      cache.writeString(jsonName, jsonFile);
+    if (success) {
+      cache.writeString(jsonFile);
     }
     return JSON.parse(jsonFile);
   };
