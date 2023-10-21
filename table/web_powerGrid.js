@@ -61,34 +61,32 @@ async function main() {
   }
   
   /**
-   * 获取图片并使用缓存
-   * @param {string} File Extension
-   * @returns {image} - Request
+   * 读取和写入缓存的文本和图片数据
+   * @param {object} options
+   * @param {number}  - number
+   * @returns {object} - Object
    */
-  const useFileManager = ({ cacheTime } = {}) => {
+  const useFileManager = ({ fileName, cacheTime } = {}) => {
+    const filePath = fm.joinPath(cache, fileName);
+    
     return {
       readString: (fileName) => {
-        const filePath = fm.joinPath(cache, fileName);
-        if (fm.fileExists(filePath) && cacheTime >= 3 && useCache ) {
-          return fm.readString(filePath);
-        }
-        return null;
+        return fm.fileExists(filePath) && cacheTime >= 3 && useCache ? fm.readString(filePath) : null;
       },
-      writeString: (fileName, content) => fm.writeString(fm.joinPath(cache, fileName), content),
+      writeString: (content) => fm.writeString(filePath, content),
       // cache image
       readImage: (fileName) => {
-        const imageFile = fm.joinPath(cache, fileName);
-        if (fm.fileExists(imageFile) && cacheTime) {
-          const createTime = fm.creationDate(imageFile).getTime();
+        if (fm.fileExists(filePath) && cacheTime) {
+          const createTime = fm.creationDate(filePath).getTime();
           const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
           if (diff >= cacheTime) {
             fm.remove(imageFile);
             return null;
           }
         }
-        return fm.readImage(imageFile);
+        return fm.readImage(filePath);
       },
-      writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
+      writeImage: (image) => fm.writeImage(filePath, image)
     }
   };
   
@@ -101,23 +99,24 @@ async function main() {
   };
   
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ cacheTime: 1024 });
+    const cache = useFileManager({ fileName: name, cacheTime: 1024 });
     const image = cache.readImage(name);
     if (image) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(name, img);
+    cache.writeImage(img);
     return img;
   };
   
   /**
-   * 获取JSON字符串
+   * 获取 POST JSON 字符串
    * @param {string} json
+   * @returns {object} - JSON
    */
   const getCacheString = async (jsonName, jsonUrl, requestBody) => {
     const cacheTime = new Date().getHours();
-    const cache = useFileManager({ cacheTime });
+    const cache = useFileManager({ fileName: jsonName, cacheTime });
     const jsonString = cache.readString(jsonName);
     if (jsonString) {
       return JSON.parse(jsonString);
@@ -126,7 +125,7 @@ async function main() {
     const jsonFile = JSON.stringify(response);
     const { sta } = JSON.parse(jsonFile);
     if ( sta == 00 ) {
-      cache.writeString(jsonName, jsonFile);
+      cache.writeString(jsonFile);
     }
     return JSON.parse(jsonFile);
   };
