@@ -131,24 +131,24 @@ async function main() {
    * 获取网络图片并使用缓存
    * @param {Image} url
    */
-  const useFileManager = ({ cacheTime } = {}) => {
+  const useFileManager = (fileName) => {
+    const imgPath = fm.joinPath(cache, fileName);
     return {
-      readImage: (fileName) => {
-        const imgPath = fm.joinPath(cache, fileName);
+      readImage: () => {
         return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
       },
-      writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
+      writeImage: (image) => fm.writeImage(imgPath, image)
     }
   };
     
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager();
+    const cache = useFileManager(name);
     const image = cache.readImage(name);
     if ( image ) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(name, img);
+    cache.writeImage(img);
     return img;
   };
   
