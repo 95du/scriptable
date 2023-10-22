@@ -178,7 +178,7 @@ async function main() {
       writeSettings(setting);
       notify('登录成功', !aMapkey ? '需填写高德地图key，用于转换坐标。' : data.token);  
     } catch (e) {
-      console.log(e);
+      console.log(e + '178行');
     }
   };
   
@@ -205,7 +205,7 @@ async function main() {
       if ( !endAddr ) {
         notify('获取数据失败⚠️', '新设备无行车/位置记录，或token已过期。');  
       }
-      console.log(e);
+      console.log(e + '205行');
       await fetchToken();
     }
   };
@@ -225,8 +225,8 @@ async function main() {
     try {
       const { data } = await req.loadJSON();
       return { speed } = data;
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.log(e + '226行');
       await fetchToken();
     }
   };
@@ -241,7 +241,8 @@ async function main() {
         longitude: Number(locations[0]).toFixed(6),
         latitude: Number(locations[1]).toFixed(6)
       }
-    } catch (err) {
+    } catch (e) {
+      console.log(e + '242行');
       await fetchToken();
       return {
         longitude: 116.484828,
