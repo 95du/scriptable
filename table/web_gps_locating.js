@@ -591,14 +591,15 @@ async function main() {
   };
   
   const runWidget = async () => {
+    const isMediumWidget = config.widgetFamily === 'medium' || config.runsInApp
     try {
-      await (config.runsInApp || config.widgetFamily === 'medium' 
+      await (isMediumWidget 
       ? await createWidget() 
       : config.widgetFamily === 'small' 
       ? await createSmallWidget() 
       : createErrorWidget());
     } catch (e) {
-      medium ? await createError() : createErrorWidget();
+      isMediumWidget ? await createError() : createErrorWidget();
     }
   }
   await runWidget();
