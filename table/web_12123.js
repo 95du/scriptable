@@ -301,7 +301,9 @@ async function main() {
       issueOrganization: detail.issueOrganization,
     };
     const violationMsg = await getCacheString(`violationMsg${number}.json`, api4, params);
-    return { detail, photos } = violationMsg.data;  
+    if (violationMsg) {
+      return { detail, photos } = violationMsg.data;  
+    }
   };
   
   // 查询主函数
