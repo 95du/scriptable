@@ -196,7 +196,7 @@ async function main() {
     return widget;
   };
   
-  if (oilsAlert.length !== setting.oilsAlert.length) {
+  if (setting.oilsAlert !== oilsAlert) {
     const notice = Object.assign(new Notification(), { 
       title: `${setting.province}油价涨跌调整‼️`, 
       body: oilsAlert, 
