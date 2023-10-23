@@ -83,32 +83,32 @@ async function main() {
    * @param {object} options
    * @param {number}  - number
    * @returns {object} - Object
-   */
-const useFileManager = ({ cacheTime, timing } = {}) => {
-  return {
-    readString: (name) => {
-      const filePath = fm.joinPath(cacheStr, name);  
-      const fileExists =  fm.fileExists(filePath)
-      if (fileExists && timing && hasExpired(filePath) > 5) {
-        fm.remove(filePath);
-        return null;
-      }
-      return fileExists && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
-    },
-    writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
-    // cache image
-    readImage: (name) => {
-      const filePath = fm.joinPath(cacheImg, name);
-      return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
-    },
-    writeImage: (name, image) => fm.writeImage(fm.joinPath(cacheImg, name), image),
+   */  
+  const useFileManager = ({ cacheTime } = {}) => {
+    return {
+      readString: (name) => {
+        const filePath = fm.joinPath(cacheStr, name);  
+        const fileExists =  fm.fileExists(filePath)
+        if (fileExists && hasExpired(filePath) > cacheTime) {
+          fm.remove(filePath);
+          return null;
+        }
+        return fileExists && setting.useCache ? fm.readString(filePath) : null;
+      },
+      writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
+      // cache image
+      readImage: (name) => {
+        const filePath = fm.joinPath(cacheImg, name);
+        return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
+      },
+      writeImage: (name, image) => fm.writeImage(fm.joinPath(cacheImg, name), image),
+    };
+    
+    function hasExpired(filePath) {
+      const createTime = fm.creationDate(filePath).getTime();
+      return (Date.now() - createTime) / (60 * 60 * 1000)
+    }
   };
-  
-  function hasExpired(filePath) {
-    const createTime = fm.creationDate(filePath).getTime();
-    return (Date.now() - createTime) / (60 * 60 * 1000)
-  }
-};
   
   /**
    * 获取请求数据
@@ -204,9 +204,9 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
    * @param {string} json
    * @returns {object} - JSON
    */
-  const getCacheString = async (jsonName, api, params, timing) => {
-    const cacheTime = new Date().getHours();
-    const cache = useFileManager({ cacheTime, timing })
+  const getCacheString = async ( jsonName, api, params, cacheTime ) => {
+    //const cacheTime = new Date().getHours();
+    const cache = useFileManager({ cacheTime })
     const jsonString = cache.readString(jsonName);
     if (jsonString) {
       return JSON.parse(jsonString);
@@ -315,7 +315,7 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
   // 查询主函数
   const violationQuery = async () => {
     const params = { productId, sign, version, verifyToken };
-    const main = await getCacheString('main.json', api1, params, true);
+    const main = await getCacheString('main.json', api1, params, 5);
     const { success } = main;
     if (success) {
       const { list } = main.data;
@@ -471,7 +471,7 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
     //
     const vioPointStack = leftStack.addStack();
     const vioPoint = vioPointStack.addStack();
-    if ( !nothing && success && detail ) {
+    if ( success && detail ) {
       vioPointText = vioPoint.addText(`罚款${vio.fine}元   扣${vio.violationPoint}分`);
       vioPointText.font = Font.mediumSystemFont(12);
       vioPointText.textColor = textColor;
@@ -483,7 +483,7 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
     const dateStack = leftStack.addStack();
     dateStack.layoutHorizontally();
     dateStack.centerAlignContent();
-    if ( nothing || !success || !detail ) {
+    if ( nothing || !success ) {
       const iconSymbol2 = SFSymbol.named('timer');
       const carIcon2 = dateStack.addImage(iconSymbol2.image)
       carIcon2.imageSize = new Size(15, 15);
@@ -492,7 +492,7 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
       
     // 
     const updateTime = dateStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing || !success || `${vio.violationTime}` === 'undefined' ? referer.match(/validPeriodEnd=(\d{4}-\d{2}-\d{2})&/)[1] : `${vio.violationTime}`);
+    const textUpdateTime = updateTime.addText(nothing || !success || vio.violationTime === 'undefined' ? referer.match(/validPeriodEnd=(\d{4}-\d{2}-\d{2})&/)[1] : vio.violationTime);
     textUpdateTime.font = Font.mediumSystemFont(nothing ? 13 : 11.8);
     textUpdateTime.textColor = textColor;
     textUpdateTime.textOpacity = 0.7
@@ -522,7 +522,7 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
       barStack.addSpacer(4);
     };
     
-    const totalMonthBar = barStack.addText(nothing ? '无违章' : !success ? 'Sign 过期' : `${vioList.plateNumber}`);
+    const totalMonthBar = barStack.addText(nothing ? '无违章' : !success ? 'Sign 过期' : vioList.plateNumber);
     totalMonthBar.font = Font.mediumSystemFont(14);
     totalMonthBar.textColor = new Color(nothing ? '#00b100' : !success ? 'FF9500' : '#D50000');
     leftStack.addSpacer(8);
@@ -559,7 +559,7 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
     rightStack.centerAlignContent();
     
     const carImageStack = rightStack.addStack();
-    carImageStack.setPadding(nothing || !success ? setting.carTop + 8 : setting.carTop, 5, setting.carBottom, 0);
+    carImageStack.setPadding((nothing || !success ? setting.carTop + 8 : setting.carTop), 5, setting.carBottom, 0);
     carImageStack.size = new Size(setting.carStackWidth, 0);
       
     const imageCar = carImageStack.addImage(vehicleImg);
@@ -581,20 +581,14 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
       }
     };
 
-    if (nothing || !success) {
-     tipsText = tipsStack.addText(setting.botStr);
-    } else {
-      tipsText = tipsStack.addText(violationText);
-      if ( success && detail ) {
-        tipsText.url = photos;
-      }
-    };
+    const tipsText = tipsStack.addText(nothing || !success ? setting.botStr : violationText);
     tipsText.font = Font.mediumSystemFont(nothing || !success ? 11.5 : 11);
     tipsText.textColor = textColor;
     tipsText.textOpacity = 0.7
     tipsText.centerAlignText();
     
     // jump show status
+    if ( success && detail && photos) tipsText.url = photos;
     barStack2.url = statusUrl;
     topStack.url = 'tmri12123://'
     imageCar.url = detailsUrl;
