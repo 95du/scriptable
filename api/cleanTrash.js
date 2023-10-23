@@ -13,7 +13,7 @@ const Run = async () => {
     alert.message = JSON.stringify(contents, null, 2);
     alert.addDestructiveAction('删除');
     alert.addCancelAction('取消');
-    output = await alert.presentAlert();
+    const output = await alert.presentAlert();
     if (output === 0) {
       F_MGR.remove(recycleBin)
     }
