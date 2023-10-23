@@ -12,12 +12,14 @@
 async function main() {
   const fm = FileManager.local();
   const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_lottery');
-  const cache = fm.joinPath(mainPath, 'cache_data');
-  if (!fm.fileExists(cache)) {
-    fm.createDirectory(cache);
-  };
   
-  const cacheFile =  fm.joinPath(mainPath, 'setting.json')
+  const getCachePath = (dirName) => fm.joinPath(mainPath, dirName);
+  
+  const [ settingPath, cacheImg, cacheStr, cacheCar] = [
+    'setting.json',
+    'cache_image',
+    'cache_string',
+  ].map(getCachePath);
   
   // 在桌面小组件添加Parameter参数
   const param = args.widgetParameter;
@@ -28,7 +30,7 @@ async function main() {
    * @param { JSON } string
    */
   const writeSettings = async (setting) => {
-    fm.writeString(cacheFile, JSON.stringify(setting, null, 2));
+    fm.writeString(settingPath, JSON.stringify(setting, null, 2));
     console.log(JSON.stringify(
       setting, null, 2)
     );
@@ -44,7 +46,7 @@ async function main() {
     }
     return null;
   };
-  const setting = await getBotSettings(cacheFile);
+  const setting = await getBotSettings(settingPath);
   
   /**
    * 获取背景图片存储目录路径
@@ -83,15 +85,36 @@ async function main() {
    * @param {Image} Basr64 
    * @returns {string} - Request
    */
-  const useFileManager = ({ fileName, cacheTime } = {}) => {
-    const imgPath = fm.joinPath(cache, fileName);
+  const useFileManager = ({ cacheTime } = {}) => {
     return {
-      readImage: () => {
-        return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
+      readString: (name) => {
+        const filePath = fm.joinPath(cacheStr, name);  
+        const fileExists =  fm.fileExists(filePath);
+        if (fileExists && hasExpired(filePath) > cacheTime) {
+          fm.remove(filePath);
+          return null;
+        }
+        return fm.fileExists(filePath) && useCache ? fm.readString(filePath) : null;
       },
-      writeImage: (image) => fm.writeImage(imgPath, image)
+      writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
+      // cache image
+      readImage: (name) => {
+        const filePath = fm.joinPath(cacheImg, name);
+        const fileExists =  fm.fileExists(filePath);
+        if (fileExists && hasExpired(filePath) > cacheTime) {
+          fm.remove(filePath);
+          return null;
+        }
+        return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
+      },
+      writeImage: (name, image) => fm.writeImage(fm.joinPath(cacheImg, name), image),
+    };
+    
+    function hasExpired(filePath) {
+      const createTime = fm.creationDate(filePath).getTime();
+      return (Date.now() - createTime) / (60 * 60 * 1000)
     }
-  };  
+  };
   
   /**
    * 获取网络图片
@@ -103,13 +126,13 @@ async function main() {
   
   // 获取图片，使用缓存
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ fileName: name, cacheTime: 24 });
+    const cache = useFileManager({ cacheTime: 24 });
     const image = cache.readImage(name);
     if (image) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(img);
+    cache.writeImage(name, img);
     return img;
   };
   
