@@ -89,7 +89,8 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
     readString: (name) => {
       const filePath = fm.joinPath(cacheStr, name);  
       const fileExists =  fm.fileExists(filePath)
-      if (fileExists && timing && hasExpired(filePath)) {
+      if (fileExists && timing && hasExpired(filePath) > 5) {
+        fm.remove(filePath);
         return null;
       }
       return fileExists && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
@@ -105,7 +106,7 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
   
   function hasExpired(filePath) {
     const createTime = fm.creationDate(filePath).getTime();
-    return ((Date.now() - createTime) / (60 * 60 * 1000)) > 5;
+    return (Date.now() - createTime) / (60 * 60 * 1000)
   }
 };
   
