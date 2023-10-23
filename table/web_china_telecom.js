@@ -10,10 +10,15 @@
 
 async function main() {
   const fm = FileManager.local();
-  const cacheDirName = '95du_telecom'
-  const path = fm.joinPath(fm.documentsDirectory(), cacheDirName);
-  const cache = fm.joinPath(path, 'cache_path');
-  const cacheFile =  fm.joinPath(path, 'setting.json');
+  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_telecom');
+  
+  const getCachePath = (dirName) => fm.joinPath(mainPath, dirName);
+  
+  const [ settingPath, cacheImg, cacheStr ] = [
+    'setting.json',
+    'cache_image',
+    'cache_string',
+  ].map(getCachePath);
   
   /**
    * 读取储存的设置
@@ -25,14 +30,14 @@ async function main() {
     }
     return null;
   };
-  setting = await getBotSettings(cacheFile);
+  setting = await getBotSettings(settingPath);
   
   /**
    * 存储当前设置
    * @param { JSON } string
    */
   const writeSettings = async (settings) => {
-    fm.writeString(cacheFile, JSON.stringify(settings, null, 2));
+    fm.writeString(settingPath, JSON.stringify(settings, null, 2));
     console.log(JSON.stringify(
       settings, null, 2)
     );
@@ -68,38 +73,53 @@ async function main() {
    * @param {string} File Extension
    * @returns {image} - Request
    */
-  const useFileManager = ({ fileName, cacheTime } = {}) => {
-    const imageFile = fm.joinPath(cache, fileName);
-
+  const useFileManager = ({ cacheTime } = {}) => {
     return {
-      readImage: () => {
-        if (fm.fileExists(imageFile) && cacheTime) {
-          const createTime = fm.creationDate(imageFile).getTime();
-          const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
-          if (diff >= cacheTime) {
-            fm.remove(imageFile);
-            return null;
-          }
+      readString: (name) => {
+        const filePath = fm.joinPath(cacheStr, name);  
+        const fileExists =  fm.fileExists(filePath);
+        if (fileExists && hasExpired(filePath) > cacheTime) {
+          fm.remove(filePath);
+          return null;
         }
-        return fm.readImage(imageFile);
+        return fm.fileExists(filePath) && useCache ? fm.readString(filePath) : null;
       },
-      writeImage: (image) => fm.writeImage(imageFile, image)
+      writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
+      // cache image
+      readImage: (name) => {
+        const filePath = fm.joinPath(cacheImg, name);
+        const fileExists =  fm.fileExists(filePath);
+        if (fileExists && hasExpired(filePath) > cacheTime) {
+          fm.remove(filePath);
+          return null;
+        }
+        return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
+      },
+      writeImage: (name, image) => fm.writeImage(fm.joinPath(cacheImg, name), image),
+    };
+    
+    function hasExpired(filePath) {
+      const createTime = fm.creationDate(filePath).getTime();
+      return (Date.now() - createTime) / (60 * 60 * 1000)
     }
   };
   
+  /**
+   * 获取网络图片并使用缓存
+   * @param {Image} url
+   */
   const getImage = async (url) => {
     return await new Request(url).loadImage();
   };
   
-  // 获取图片，使用缓存
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ fileName: name, cacheTime: 24 });
+    const cache = useFileManager({ cacheTime : 24 });
     const image = cache.readImage(name);
     if (image) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(img);
+    cache.writeImage(name, img);
     return img;
   };
   
@@ -108,7 +128,7 @@ async function main() {
    * 从用户套餐页面获取数据，并进行处理
    * @returns {Promise<Object>} - 包含处理后的语音、流量和余额信息的对象
    */
-  const makeRequest = async (url) => {
+  const makeReq = async (url) => {
     const request = new Request(url);
     request.method = 'GET';
     request.headers = {
@@ -117,39 +137,38 @@ async function main() {
     return await request.loadJSON();
   };
   
-  // Voice Package
-  const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-  const { items: arr, total, balance } = package;
-  
-  if (!package.voiceAmount) {
-    voiceAmount = '1';
-    voiceBalance = '0';
-    voice = '0';
-  } else {
-    voiceAmount = package.voiceAmount;
-    voiceBalance = package.voiceBalance;
-    voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
-  };
-  
-  // Flow Package
-  const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
-  let pacArr = [];
-  let newArr = [];
-  let balArr = [];
-  for (let i in arr) {
-    pacArr.push(...arr[i].items);
-  };
-  
-  for (const item of pacArr) {
-    if (item.ratableAmount !== '999999999999' && item.ratableResourcename.indexOf('流量') > -1  && item.ratableResourcename.indexOf('定向') === -1) {
-      newArr.push(item.ratableAmount)
-      balArr.push(item.balanceAmount)
+  const fetchVoice = async () => {
+    const package = await makeReq('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+    const { items, voiceAmount, voiceBalance } = package;
+    
+    if (!voiceAmount) {
+      return { voiceAmount: '1', voiceBalance: '0', voice: '0' }
+    } else {
+      return { items, voiceAmount, voiceBalance, voice: (voiceBalance / voiceAmount * 100).toPrecision(3) }
     }
   };
   
+  const { items, voiceAmount, voiceBalance, voice } = await fetchVoice();
+  
+  // Flow Package
+  const balances = await makeReq('https://e.189.cn/store/user/balance_new.do?t=189Bill');
+
+  let pacArr = [];
+  for (let i in items) {
+    pacArr.push(...items[i].items);
+  };
+
+  const filteredItems = pacArr.filter(item => {
+    const { ratableAmount: amount, ratableResourcename: name } = item
+    return name.includes('流量') && !name.includes('定向') && amount !== '999999999999';
+  });
+  
+  const newArr = filteredItems.map(item => item.ratableAmount);
+  const balArr = filteredItems.map(item => item.balanceAmount);
+  
   if (newArr.length > 0) {
-    flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
-    bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
+    flowTotal = newArr.reduce((acc, val) => acc + Number(val)) / 1048576
+    bal = balArr.reduce((acc, val) => acc + Number(val)) / 1048576
   } else {
     flowTotal = total / 1048576
     bal = balance / 1048576
@@ -157,26 +176,15 @@ async function main() {
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
-  // Get Balance
-  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
-
-
+  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2); // 获取余额
+  
   /**
    * Get dayNumber
-   * Initial
    * Daily dosage
    */
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-  if (setting.init === false || dayNumber !== setting.dayNumber) {
-    await writeSettings({
-      ...setting,
-      dayNumber,
-      flow,
-      flowBalance,
-      voice,
-      voiceBalance,
-      init: true
-    });
+  if (!setting.init || dayNumber !== setting.dayNumber) {
+    await writeSettings({ ...setting, dayNumber, flow, flowBalance, voice, voiceBalance, init: true });
     return null;
   };
   
