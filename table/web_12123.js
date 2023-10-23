@@ -250,10 +250,7 @@ async function main() {
     const vioList = await getRandomItem(vehicle);
     if (!vioList) {
       if (vioList.count < 1 && setting.status) {
-        setting.count = 0
-        setting.status = false
-        writeSettings(settings);
-        ddeleteJsonFiles(cacheStr);
+        recoverVioStatus();
       }
       return undefined;
     }
@@ -272,9 +269,11 @@ async function main() {
     }
     const index = randomIndex + 1;
     const vioDetail = await getViolationMsg(detail, index);
-    const vio = vioDetail.detail;
-    const photos = await getRandomItem(vioDetail.photos);
-    return { vioList, detail, vio, photos };
+    if (vioDetail) {
+      const vio = vioDetail.detail;
+      const photos = await getRandomItem(vioDetail.photos);
+      return { vioList, detail, vio, photos };  
+    }
   };
   
   // 获取违章对应的发证机关信息
@@ -364,11 +363,20 @@ async function main() {
     })
   };
   
+  // 违章状态处理
+  const recoverVioStatus = () => {
+    notify(myPlate, '所有违章已处理，请遵守交通规则');
+    setting.count = 0
+    setting.status = false
+    writeSettings(setting);
+    ddeleteJsonFiles(cacheStr);
+  }
+  
   // 新的违章通知
   const newViolation = async (surveils, plate, count) => {
     setting.count = count;
-    setting.count = true,
-    writeSettings(settings);
+    setting.status = true,
+    writeSettings(setting);
     const { violationTime, violationAddress, violationDescribe, fine } = surveils[0];
       
     const creationDate = fm.creationDate(settingPath);
