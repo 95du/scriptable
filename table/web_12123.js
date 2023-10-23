@@ -366,7 +366,7 @@ const useFileManager = ({ cacheTime, timing } = {}) => {
     const { violationTime, violationAddress, violationDescribe, fine } = surveils[0];
       
     const creationDate = fm.creationDate(settingPath);
-    const isInitialized = creationDate && (Date.now() - creationDate.getTime() > 300000);  
+    const isInitialized = (Date.now() - creationDate.getTime() > 300000);  
     if (isInitialized) {
       notify(`${plate} 🚫`, `${violationAddress}，${violationDescribe}，\n罚款 ${fine}元，${violationTime}`);  
       // fm.remove(cacheStr)
