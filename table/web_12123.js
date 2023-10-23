@@ -378,7 +378,7 @@ async function main() {
     setting.status = true,
     writeSettings(setting);
     
-    if (!surveils) return undefined;
+    if (!surveils) return
     const { violationTime, violationAddress, violationDescribe, fine } = surveils[0];
         
     const creationDate = fm.creationDate(settingPath);
