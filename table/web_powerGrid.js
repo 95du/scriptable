@@ -14,7 +14,7 @@ async function main() {
   
   const getCachePath = (dirName) => fm.joinPath(mainPath, dirName);
   
-  const [ settingPath, cacheImg, cacheStr, cacheCar] = [
+  const [ settingPath, cacheImg, cacheStr ] = [
     'setting.json',
     'cache_image',
     'cache_string',
