@@ -248,8 +248,8 @@ async function main() {
   // 获取车辆违章信息
   const getVehicleViolation = async (vehicle) => {
     const vioList = await getRandomItem(vehicle);
-    if (!vioList) {
-      if (vioList.count < 1 && setting.status) {
+    if ( !vioList ) {
+      if (!vioList || vioList.count < 1 && setting.status) {
         recoverVioStatus();
       }
       return undefined;
