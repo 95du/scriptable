@@ -131,7 +131,7 @@ async function main() {
     const jsonFile = JSON.stringify(response);
     const { sta } = JSON.parse(jsonFile);
     if ( sta == 00 ) {
-      cache.writeString(jsonFile);
+      cache.writeString(jsonName, jsonFile);
     }
     return JSON.parse(jsonFile);
   };
