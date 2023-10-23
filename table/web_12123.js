@@ -377,8 +377,10 @@ async function main() {
     setting.count = count;
     setting.status = true,
     writeSettings(setting);
+    
+    if (!surveils) return undefined;
     const { violationTime, violationAddress, violationDescribe, fine } = surveils[0];
-      
+        
     const creationDate = fm.creationDate(settingPath);
     const isInitialized = (Date.now() - creationDate.getTime() > 300000);  
     if (isInitialized) {
