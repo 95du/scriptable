@@ -5,7 +5,7 @@
  * 脚本名称: 交管12123
  * 组件作者：95度茅台
  * 获取Token作者: @FoKit
- * Version 1.0.0
+ * 组件版本: Version 1.0.0
  */
 
 async function main() {
@@ -249,9 +249,7 @@ async function main() {
   const getVehicleViolation = async (vehicle) => {
     const vioList = await getRandomItem(vehicle);
     if ( !vioList ) {
-      if (!vioList || vioList.count < 1 && setting.status) {
-        recoverVioStatus();
-      }
+      if (!vioList && setting.status) recoverVioStatus();
       return undefined;
     }
     const issueData = await getIssueData(vioList);
@@ -367,7 +365,7 @@ async function main() {
   const recoverVioStatus = () => {
     notify(myPlate, '所有违章已处理，请遵守交通规则');
     setting.count = 0
-    setting.status = false
+    setting.status = false;
     writeSettings(setting);
     ddeleteJsonFiles(cacheStr);
   }
