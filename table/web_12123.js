@@ -33,7 +33,7 @@ async function main() {
     return {}
   };
   const setting = getSettings(settingPath);
-
+  
   /**
    * 存储当前设置
    * @param { JSON } string
@@ -84,24 +84,30 @@ async function main() {
    * @param {number}  - number
    * @returns {object} - Object
    */
-  const useFileManager = ({ cacheTime } = {}) => {
-    const strPath = (name) => fm.joinPath(cacheStr, name);  
-    const imgPath = (name) => fm.joinPath(cacheImg, name);
-    
-    return {
-      readString: (name) => {
-        const filePath = strPath(name);
-        return fm.fileExists(filePath) && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
-      },
-      writeString: (name, content) => fm.writeString(strPath(name), content),
-      // cache image
-      readImage: (name) => {
-        const filePath = imgPath(name);
-        return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
-      },
-      writeImage: (image) => fm.writeImage(imgPath(name), image),
-    };
+const useFileManager = ({ cacheTime, timing } = {}) => {
+  return {
+    readString: (name) => {
+      const filePath = fm.joinPath(cacheStr, name);  
+      const fileExists =  fm.fileExists(filePath)
+      if (fileExists && timing && hasExpired(filePath)) {
+        return null;
+      }
+      return fileExists && setting.useCache && cacheTime >= 3 ? fm.readString(filePath) : null;
+    },
+    writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
+    // cache image
+    readImage: (name) => {
+      const filePath = fm.joinPath(cacheImg, name);
+      return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
+    },
+    writeImage: (name, image) => fm.writeImage(fm.joinPath(cacheImg, name), image),
   };
+  
+  function hasExpired(filePath) {
+    const createTime = fm.creationDate(filePath).getTime();
+    return ((Date.now() - createTime) / (60 * 60 * 1000)) > 5;
+  }
+};
   
   /**
    * 获取请求数据
@@ -162,7 +168,7 @@ async function main() {
     const cacheCarPath = cacheCar + '/' + imgArr[index];
     return vehicleImg = await fm.readImage(cacheCarPath);
   };
-    
+  
   try {
     if (setting.carImg) {
       const carImg = setting.carImg;
@@ -175,11 +181,10 @@ async function main() {
     const cacheMaybach = fm.joinPath(cacheCar, 'Maybach-8.png')
     vehicleImg = fm.readImage(cacheMaybach);
   };
-    
+  
   /**
-   * 获取缓存图片
-   * @param {string} name 
-   * @param {string} url
+   * 获取网络图片并使用缓存
+   * @param {string} name url
    * @returns {Image} - string
    */
   const getCacheImage = async (name, url) => {
@@ -198,9 +203,9 @@ async function main() {
    * @param {string} json
    * @returns {object} - JSON
    */
-  const getCacheString = async (jsonName, api, params) => {
+  const getCacheString = async (jsonName, api, params, timing) => {
     const cacheTime = new Date().getHours();
-    const cache = useFileManager({ cacheTime });
+    const cache = useFileManager({ cacheTime, timing })
     const jsonString = cache.readString(jsonName);
     if (jsonString) {
       return JSON.parse(jsonString);
@@ -301,7 +306,7 @@ async function main() {
       issueOrganization: detail.issueOrganization,
     };
     const violationMsg = await getCacheString(`violationMsg${number}.json`, api4, params);
-    if (violationMsg) {
+    if (violationMsg.data) {
       return { detail, photos } = violationMsg.data;  
     }
   };
@@ -309,17 +314,12 @@ async function main() {
   // 查询主函数
   const violationQuery = async () => {
     const params = { productId, sign, version, verifyToken };
-    const main = await getCacheString('main.json', api1, params);
+    const main = await getCacheString('main.json', api1, params, true);
     const { success } = main;
     if (success) {
-      const { list: vehicle } = main.data;
-      const violationDetails = await getVehicleViolation(vehicle);
-      if (violationDetails) {
-        return {
-          success,
-         ...violationDetails
-        };
-      }
+      const { list } = main.data;
+      const violationDetails = await getVehicleViolation(list);
+      if (violationDetails) return { success, ...violationDetails };
     } else {
       await handleError(main);
     }
@@ -344,12 +344,33 @@ async function main() {
     }
   };
   
+  // 有新违章时的处理
+  const ddeleteJsonFiles = (folderPath) => {
+    const jsonFiles = fm.listContents(folderPath)
+      .filter(item => {
+        const filePath = fm.joinPath(folderPath, item);
+        return fm.fileExists(filePath) && item.toLowerCase().endsWith('.json');
+      });
+      
+    jsonFiles.forEach(file => {
+      const filePath = fm.joinPath(folderPath, file);
+      fm.remove(filePath);
+    })
+  };
+  
   // 新的违章通知
   const newViolation = async (surveils, plate, count) => {
     setting.count = count;
     writeSettings(setting);
     const { violationTime, violationAddress, violationDescribe, fine } = surveils[0];
-    notify(`${plate} 🚫`, `${violationAddress}，${violationDescribe}，\n罚款 ${fine}元，${violationTime}`);
+      
+    const creationDate = fm.creationDate(settingPath);
+    const isInitialized = creationDate && (Date.now() - creationDate.getTime() > 300000);  
+    if (isInitialized) {
+      notify(`${plate} 🚫`, `${violationAddress}，${violationDescribe}，\n罚款 ${fine}元，${violationTime}`);  
+      // fm.remove(cacheStr)
+      ddeleteJsonFiles(cacheStr);
+    }
   };
   
   
