@@ -153,7 +153,7 @@ async function main() {
     fm.writeImage(cachePath, carImage);
     imgArr.push(imgName);
     if (imgArr.length > 8) {
-      writeSettings(setting);
+      writeSettings(settings);
     }
   };
   
@@ -249,6 +249,12 @@ async function main() {
   const getVehicleViolation = async (vehicle) => {
     const vioList = await getRandomItem(vehicle);
     if (!vioList) {
+      if (vioList.count < 1 && setting.status) {
+        setting.count = 0
+        setting.status = false
+        writeSettings(settings);
+        ddeleteJsonFiles(cacheStr);
+      }
       return undefined;
     }
     const issueData = await getIssueData(vioList);
@@ -256,7 +262,7 @@ async function main() {
       return undefined;
     }
     const surveils = await getSurveils(vioList, issueData);
-    if (vioList.count > setting.count) {
+    if (vioList.count > setting.count || vioList.count < setting.count) {
       await newViolation(surveils, vioList.plateNumber, vioList.count);
     }
     const randomIndex = Math.floor(Math.random() * surveils.length);
@@ -361,7 +367,8 @@ async function main() {
   // 新的违章通知
   const newViolation = async (surveils, plate, count) => {
     setting.count = count;
-    writeSettings(setting);
+    setting.count = true,
+    writeSettings(settings);
     const { violationTime, violationAddress, violationDescribe, fine } = surveils[0];
       
     const creationDate = fm.creationDate(settingPath);
