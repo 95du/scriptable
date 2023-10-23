@@ -82,7 +82,7 @@ async function main() {
           fm.remove(filePath);
           return null;
         }
-        return fm.fileExists(filePath) && useCache ? fm.readString(filePath) : null;
+        return fm.fileExists(filePath) ? fm.readString(filePath) : null;
       },
       writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
       // cache image
@@ -123,6 +123,25 @@ async function main() {
     return img;
   };
   
+  /**
+   * 获取 POST JSON 字符串
+   * @param {string} json
+   * @returns {object} - JSON
+   */
+  const getCacheString = async (jsonName, jsonUrl) => {
+    const cache = useFileManager({ cacheTime: setting.cacheTime });
+    const jsonString = cache.readString(jsonName);
+    if (jsonString) {
+      return JSON.parse(jsonString);
+    }
+    const response = await makeReq(jsonUrl);
+    const jsonFile = JSON.stringify(response);
+    const { result } = JSON.parse(jsonFile);
+    if ( result === 0 ) {
+      cache.writeString(jsonName, jsonFile);
+    }
+    return JSON.parse(jsonFile);
+  };
   
   /**
    * 从用户套餐页面获取数据，并进行处理
@@ -138,7 +157,7 @@ async function main() {
   };
   
   const fetchVoice = async () => {
-    const package = await makeReq('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+    const package = await getCacheString('package_detail.json', 'https://e.189.cn/store/user/package_detail.do?t=189Bill');
     const { items, voiceAmount, voiceBalance } = package;
     
     if (!voiceAmount) {
@@ -151,7 +170,7 @@ async function main() {
   const { items, voiceAmount, voiceBalance, voice } = await fetchVoice();
   
   // Flow Package
-  const balances = await makeReq('https://e.189.cn/store/user/balance_new.do?t=189Bill');
+  const balances = await getCacheString('balance_new.json', 'https://e.189.cn/store/user/balance_new.do?t=189Bill');
 
   let pacArr = [];
   for (let i in items) {
