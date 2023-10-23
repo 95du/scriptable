@@ -38,10 +38,10 @@ async function main() {
    * 存储当前设置
    * @param { JSON } string
    */
-  const writeSettings = async (settings) => {
-    fm.writeString(settingPath, JSON.stringify(settings, null, 2));
+  const writeSettings = async (setting) => {
+    fm.writeString(settingPath, JSON.stringify(setting, null, 2));
     console.log(JSON.stringify(
-      settings, null, 2
+      setting, null, 2
     ));
   };
   
@@ -153,7 +153,7 @@ async function main() {
     fm.writeImage(cachePath, carImage);
     imgArr.push(imgName);
     if (imgArr.length > 8) {
-      writeSettings(settings);
+      writeSettings(setting);
     }
   };
   
