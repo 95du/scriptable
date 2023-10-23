@@ -10,9 +10,15 @@
 
 async function main() {
   const fm = FileManager.local();
-  const path = fm.joinPath(fm.documentsDirectory(), '95du_jd_baiTiao');
-  const cache = fm.joinPath(path, 'cache_path');
-  const cacheFile =  fm.joinPath(path, 'setting.json');
+  const mainPath = fm.joinPath(fm.documentsDirectory(), '95du_jd_baiTiao');
+  
+  const getCachePath = (dirName) => fm.joinPath(mainPath, dirName);
+  
+  const [ settingPath, cacheImg, cacheStr ] = [
+    'setting.json',
+    'cache_image',
+    'cache_string',
+  ].map(getCachePath);
   
   /**
    * 获取背景图片存储目录路径
@@ -33,14 +39,14 @@ async function main() {
     }
     return null;
   };
-  const setting = await getBotSettings(cacheFile);
+  const setting = await getBotSettings(settingPath);
   
   /**
    * 存储当前设置
    * @param { JSON } string
    */
   const writeSettings = async (setting) => {
-    fm.writeString(cacheFile, JSON.stringify(setting, null, 2));
+    fm.writeString(settingPath, JSON.stringify(setting, null, 2));
     console.log(JSON.stringify(
       setting, null, 2)
     )
@@ -51,38 +57,54 @@ async function main() {
    * @param {string} File Extension
    * @returns {image} - Request
    */
-  const useFileManager = ({ fileName, cacheTime } = {}) => {
-    const filePath = fm.joinPath(cache, fileName);
-
+  const useFileManager = ({ cacheTime } = {}) => {
     return {
-      readImage: (fileName) => {
-        if (fm.fileExists(filePath) && cacheTime) {
-          const createTime = fm.creationDate(filePath).getTime();
-          const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
-          if (diff >= cacheTime) {
-            fm.remove(filePath);
-            return null;
-          }
+      readString: (name) => {
+        const filePath = fm.joinPath(cacheStr, name);  
+        const fileExists =  fm.fileExists(filePath);
+        if (fileExists && hasExpired(filePath) > cacheTime) {
+          fm.remove(filePath);
+          return null;
         }
-        return fm.readImage(filePath);
+        return fm.fileExists(filePath) && useCache ? fm.readString(filePath) : null;
       },
-      writeImage: (image) => fm.writeImage(filePath, image)
+      writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
+      // cache image
+      readImage: (name) => {
+        const filePath = fm.joinPath(cacheImg, name);
+        const fileExists =  fm.fileExists(filePath);
+        if (fileExists && hasExpired(filePath) > cacheTime) {
+          fm.remove(filePath);
+          return null;
+        }
+        return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
+      },
+      writeImage: (name, image) => fm.writeImage(fm.joinPath(cacheImg, name), image),
+    };
+    
+    function hasExpired(filePath) {
+      const createTime = fm.creationDate(filePath).getTime();
+      return (Date.now() - createTime) / (60 * 60 * 1000)
     }
   };
   
+  /**
+   * 获取网络图片
+   * @param {Image} url
+   */
   const getImage = async (url) => {
     return await new Request(url).loadImage();
   };
   
   // 获取图片，使用缓存
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ fileName: name, cacheTime: 24 });
+    const cache = useFileManager({ cacheTime: 24 });
     const image = cache.readImage(name);
     if (image) {
       return image;
     }
     const img = await getImage(url);
-    cache.writeImage(img);
+    cache.writeImage(name, img);
     return img;
   };
   
