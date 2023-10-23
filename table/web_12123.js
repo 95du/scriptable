@@ -89,7 +89,7 @@ async function main() {
       readString: (name) => {
         const filePath = fm.joinPath(cacheStr, name);  
         const fileExists =  fm.fileExists(filePath)
-        if (fileExists && hasExpired(filePath) > cacheTime) {
+        if (fileExists && hasExpired(filePath) >= cacheTime) {
           fm.remove(filePath);
           return null;
         }
@@ -230,14 +230,7 @@ async function main() {
   const requestInfo = async (api, params) => {
     const request = new Request(infoURL);
     request.method = 'POST';
-    request.body = 'params=' + encodeURIComponent(JSON.stringify({
-      productId,
-      api,  
-      sign,
-      version,
-      verifyToken,
-      params,
-    }));
+    request.body = 'params=' + encodeURIComponent(JSON.stringify({ productId, api, sign, version, verifyToken, params }));
     const response = await request.loadJSON();
     if (!response.success) {
       await handleError(request);
