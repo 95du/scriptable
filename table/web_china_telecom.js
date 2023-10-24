@@ -210,21 +210,38 @@ async function main() {
   //=========> config <=========//
   
   // Color definitions
-  logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
-  widgetBgColor = Color.dynamic(
+  const logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
+  const widgetBgColor = Color.dynamic(
   new Color("#fefefe"), new Color("#1e1e1e"));
-  stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
-  barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
-  MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
-  SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
+  const stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
+  const barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
+  const MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
+  const SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
   
   // Small Widget Color
-  bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#1e1e1e'));  
-  bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
-  textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
-  barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
-  progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
+  const bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#1e1e1e'));  
+  const bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
+  const textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
+  const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
   
+  const getColor = (value) => {
+    if (value <= 20) {
+      return new Color("#D50000");
+    } else if (value <= 30) {
+      return new Color("#FFD723");
+    } else if (value <= 50) {
+      return new Color("#FF9500");
+    } else if (value <= 70) {
+      return new Color("#44CB9C");
+    } else {
+      return new Color("#3BC952");
+    }
+  };
+    
+  const flowColor = getColor(flow);
+  const voiceColor = getColor(voice);
+  
+  // 中号组件
   const flow1st = setting.flow
   const flow2nd = flow
   const voice1st = voice
@@ -449,14 +466,15 @@ df.dateFormat = 'ddHHmm'
     context.fillPath();
     
     // BarValue1 Color
-    if (barValue1 <= Step1st) {BarColor1 = new Color("#bb1e10")}
-    if (barValue2 <= Step1st) {BarColor2 = new Color("#bb1e1075")} 
+    if (barValue1 <= Step1st) { BarColor1 = new Color("#bb1e10") }
+    
+    if (barValue2 <= Step1st) {BarColor2 = new Color("#bb1e1075")}
    
-    if (barValue1 >= Step1st && barValue1 < Step2nd) {BarColor1 = new Color("#f7b500")}
-    else if (barValue1 >= Step2nd) {BarColor1 = new Color("#00b347")}
+    if (barValue1 >= Step1st && barValue1 < Step2nd) { BarColor1 = new Color("#f7b500") } 
+    else if (barValue1 >= Step2nd) { BarColor1 = new Color("#00b347") }
     
     // BarValue2 Color
-    if (barValue2 >= Step1st && barValue2 < Step2nd) {BarColor2 = new Color("#f7b50075")} 
+    if (barValue2 >= Step1st && barValue2 < Step2nd) { BarColor2 = new Color("#f7b50075") }
     else if (barValue2 >= Step2nd) {BarColor2 = new Color("#00b34775")}
     
     // BarValue1
@@ -474,7 +492,6 @@ df.dateFormat = 'ddHHmm'
     path2.addRoundedRect(new Rect(0, barHeigth, barWidth, -path2BarHeigth), 2, 2);
     context.addPath(path2);
     context.fillPath();
-    // context Font(size)
     context.setFont(
       Font.boldSystemFont(8)
     );
@@ -538,26 +555,26 @@ df.dateFormat = 'ddHHmm'
     balText.textColor = Color.orange();
     balText.font = new Font("Georgia-Bold", 22);
     balText.centerAlignText();
-    widget.addSpacer(3)
+    widget.addSpacer(3);
     
-    getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance} 分钟`);
-    getwidget(flowTotal, bal, `剩余流量 ${flowBalance} GB`);
+    getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance} 分钟`, voiceColor);
+    getwidget(flowTotal, bal, `剩余流量 ${flowBalance} GB`, flowColor);
     
-    function getwidget(flowTotal, haveGone, str) {
+    function getwidget(flowTotal, haveGone, str, progressColor) {
       const titlew = widget.addText(str);
       titlew.centerAlignText();
       titlew.textColor = fm.fileExists(bgImage) ? Color.white() : textColor
       titlew.font = Font.boldSystemFont(13);
-      widget.addSpacer(3)
+      widget.addSpacer(3);
       
-      const imgw = widget.addImage(creatProgress(flowTotal, haveGone));
+      const imgw = widget.addImage(creatProgress(flowTotal, haveGone, progressColor));
       imgw.centerAlignImage();
       imgw.cornerRadius = 5.2
       imgw.imageSize = new Size(width, height);
-      widget.addSpacer(5)
+      widget.addSpacer(5);
     }
     
-    function creatProgress(flowTotal, havegone) {
+    function creatProgress(flowTotal, havegone, progressColor) {
       const context = new DrawContext();
       context.size = new Size(width, height);
       context.opaque = false
