@@ -158,20 +158,17 @@ async function main() {
   
   const fetchVoice = async () => {
     const package = await getCacheString('package_detail.json', 'https://e.189.cn/store/user/package_detail.do?t=189Bill');
-    const { items, voiceAmount, voiceBalance } = package;
-    
+    const { items, total, balance, voiceAmount, voiceBalance } = package
     if (!voiceAmount) {
-      return { voiceAmount: '1', voiceBalance: '0', voice: '0' }
+      return { voiceAmount: '1', voiceBalance: '0', voice: '0' };
     } else {
-      return { items, voiceAmount, voiceBalance, voice: (voiceBalance / voiceAmount * 100).toPrecision(3) }
+      return { items, total, balance, voiceAmount, voiceBalance, voice: (voiceBalance / voiceAmount * 100).toPrecision(3) };
     }
   };
-  
-  const { items, voiceAmount, voiceBalance, voice } = await fetchVoice();
-  
-  // Flow Package
-  const balances = await getCacheString('balance_new.json', 'https://e.189.cn/store/user/balance_new.do?t=189Bill');
 
+  const { items, total, balance, voiceAmount, voiceBalance, voice } = await fetchVoice();
+  
+  // 获取流量
   let pacArr = [];
   for (let i in items) {
     pacArr.push(...items[i].items);
@@ -181,21 +178,25 @@ async function main() {
     const { ratableAmount: amount, ratableResourcename: name } = item
     return name.includes('流量') && !name.includes('定向') && amount !== '999999999999';
   });
+    
+  const calculateFlowTotals = (filteredItems, total, balance) => {
+    const newArr = filteredItems.map(item => item.ratableAmount);
+    const balArr = filteredItems.map(item => item.balanceAmount);
   
-  const newArr = filteredItems.map(item => item.ratableAmount);
-  const balArr = filteredItems.map(item => item.balanceAmount);
+    return {
+      flowTotal: newArr.length > 0 ? newArr.reduce((acc, val) => acc + Number(val)) / 1048576 : total / 1048576,
+      bal: newArr.length > 0 ? balArr.reduce((acc, val) => acc + Number(val)) / 1048576 : balance / 1048576
+    }
+  };
   
-  if (newArr.length > 0) {
-    flowTotal = newArr.reduce((acc, val) => acc + Number(val)) / 1048576
-    bal = balArr.reduce((acc, val) => acc + Number(val)) / 1048576
-  } else {
-    flowTotal = total / 1048576
-    bal = balance / 1048576
-  }
+  const { flowTotal, bal } = calculateFlowTotals(filteredItems, total, balance);
+  
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
-  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2); // 获取余额
+  // 获取余额
+  const balances = await getCacheString('balance_new.json', 'https://e.189.cn/store/user/balance_new.do?t=189Bill');
+  const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
   
   /**
    * Get dayNumber
@@ -206,8 +207,6 @@ async function main() {
     await writeSettings({ ...setting, dayNumber, flow, flowBalance, voice, voiceBalance, init: true });
     return null;
   };
-  
-  //=========> config <=========//
   
   // Color definitions
   const logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
@@ -225,23 +224,25 @@ async function main() {
   const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
   
   const getColor = (value) => {
-    if (value <= 20) {
-      return new Color("#D50000");
-    } else if (value <= 30) {
-      return new Color("#FFD723");
-    } else if (value <= 50) {
-      return new Color("#FF9500");
-    } else if (value <= 70) {
-      return new Color("#44CB9C");
-    } else {
-      return new Color("#3BC952");
+    const colorMap = new Map([
+      [20, new Color("#D50000")],
+      [30, new Color("#FFD723")],
+      [50, new Color("#FF9500")],
+      [70, new Color("#44CB9C")]
+    ]);
+  
+    for (let [threshold, color] of colorMap) {
+      if (value <= threshold) {
+        return color;
+      }
     }
+    return new Color("#3BC952");
   };
-    
+  
   const flowColor = getColor(flow);
   const voiceColor = getColor(voice);
   
-  // 中号组件
+  //=========> config <=========//
   const flow1st = setting.flow
   const flow2nd = flow
   const voice1st = voice
@@ -534,14 +535,16 @@ df.dateFormat = 'ddHHmm'
    */
   async function createSmallWidget() {
     const widget = new ListWidget();
-    widget.url = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex'
     widget.setPadding(0, 0, -6, 0);
+    
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
     } else {
       widget.backgroundColor = widgetBgColor;
     }
     
+    widget.url = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex'
+
     const width = 130
     const height = 8
     
