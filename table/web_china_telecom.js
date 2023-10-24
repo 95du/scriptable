@@ -30,7 +30,7 @@ async function main() {
     }
     return null;
   };
-  setting = await getBotSettings(settingPath);
+  const setting = await getBotSettings(settingPath);
   
   /**
    * 存储当前设置
@@ -204,7 +204,7 @@ async function main() {
    */
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   if (!setting.init || dayNumber !== setting.dayNumber) {
-    await writeSettings({ ...setting, dayNumber, flow, flowBalance, voice, voiceBalance, init: true });
+    writeSettings({ ...setting, dayNumber, flow, flowBalance, voice, voiceBalance, init: true });
     return null;
   };
   
