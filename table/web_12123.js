@@ -242,7 +242,7 @@ async function main() {
   const getVehicleViolation = async (vehicle) => {
     const vioList = await getRandomItem(vehicle);
     if ( !vioList ) {
-      if (!vioList && setting.status) recoverVioStatus();
+      if (setting.status && !vioList) recoverVioStatus();
       return undefined;
     }
     const issueData = await getIssueData(vioList);
@@ -361,7 +361,7 @@ async function main() {
     setting.status = false;
     writeSettings(setting);
     ddeleteJsonFiles(cacheStr);
-  }
+  };
   
   // 新的违章通知
   const newViolation = async (surveils, plate, count) => {
@@ -424,7 +424,7 @@ async function main() {
      * @param {string} text
      * Cylindrical Bar Chart
      */
-    widget.setPadding(15, 18, 15, 15);
+    widget.setPadding(15, 18, 15, 15)
     if (nothing || !success) {
       widget.addSpacer(3);
     }
