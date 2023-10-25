@@ -2,18 +2,21 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: car;
 /**
- * 小组件作者: 95度茅台
+ * 组件作者: 95度茅台
  * Honda Civic
  * Version 1.1.0
  * 2022-12-22 22:22
- * 模拟电子围栏，显示车速，位置
  */
 
 const uri = Script.name();
 const fm = FileManager.local();
-const path = fm.joinPath(fm.documentsDirectory(), 'mercedes');
-fm.createDirectory(path, true);
-const cacheFile = fm.joinPath(path, 'setting.json');
+const mainPath = fm.joinPath(fm.documentsDirectory(), 'mercedes');
+if (!fm.fileExists(mainPath)) fm.createDirectory(mainPath);
+
+const cache = fm.joinPath(mainPath, 'cachePath');
+if (!fm.fileExists(cache)) fm.createDirectory(cache);
+
+const cacheFile = fm.joinPath(mainPath, 'setting.json')
 
 /**
  * 读取储存的设置
@@ -148,9 +151,6 @@ const getImage = async (url) => {
  * @param {string} File Extension
  * @returns {image} - Request
  */
-const cache = fm.joinPath(path, 'cachePath');
-fm.createDirectory(cache, true);
-
 const downloadCarImage = async (item) => {
   const carImage = await getImage(item);
   const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
@@ -548,7 +548,6 @@ createSmallWidget = async () => {
   widget.url = mapUrl;
   Script.setWidget(widget);
   Script.complete();
-  return widget;  
 };
 
 async function createErrorWidget() {
