@@ -243,11 +243,8 @@ async function main() {
   const voiceColor = getColor(voice);
   
   //=========> config <=========//
-  const flow1st = setting.flow
-  const flow2nd = flow
-  const voice1st = voice
-  const voice2nd = setting.voice
-  
+  const [flow1st, flow2nd, voice1st, voice2nd] = [setting.flow, flow, voice, setting.voice];
+
   const Step1st = 25;
   const Step2nd = 85;
   const StepFin = 100;
