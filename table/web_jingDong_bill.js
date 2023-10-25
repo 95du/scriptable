@@ -413,7 +413,8 @@ async function main() {
     */
     const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
     const width = Number(setting.progressWidth);
-    const height = setting.progressHeight;
+    const height = Number(setting.progressHeight);
+    const radius = height / 2
     
     getwidget(outTotal, outPercent, '支出', `${outPer} %`, progressColor = new Color(setting.progressColor1));
     getwidget(inTotal, inPercent, '收入', `${inPer} %`, progressColor = new Color(setting.progressColor2));
@@ -432,7 +433,6 @@ async function main() {
       
       const imgProgress = percStack.addImage(creatProgress(inTotal, haveGone));
       imgProgress.centerAlignImage();
-      imgProgress.cornerRadius = 5.2
       imgProgress.imageSize = new Size(width, height);
       percStack.addSpacer();
       
@@ -444,7 +444,7 @@ async function main() {
     }
     widget.addSpacer(5);
     
-    function creatProgress(inTotal, havegone) {
+    function creatProgress(inTotal, haveGone) {
       const context = new DrawContext();
       context.size = new Size(width, height);
       context.opaque = false
@@ -452,7 +452,7 @@ async function main() {
       context.setFillColor(barColor);
       
       const path = new Path();
-      path.addRoundedRect(new Rect(0, 0, width, height), 3, 2);
+      path.addRoundedRect(new Rect(0, 0, width, height), radius, radius);
       context.addPath(path);
       context.fillPath();
       context.setFillColor(
@@ -460,7 +460,7 @@ async function main() {
       );
       
       const path1 = new Path();
-      path1.addRoundedRect(new Rect(0, 0, width * havegone / inTotal, height), 3, 0)
+      path1.addRoundedRect(new Rect(0, 0, width * haveGone / inTotal, height), radius, radius);
       context.addPath(path1);
       context.fillPath();
       return context.getImage();
