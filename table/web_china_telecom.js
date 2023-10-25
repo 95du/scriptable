@@ -544,6 +544,7 @@ df.dateFormat = 'ddHHmm'
 
     const width = 130
     const height = 8
+    const radius = height / 2
     
     const logoImage = 
     widget.addImage(image);
@@ -569,12 +570,12 @@ df.dateFormat = 'ddHHmm'
       
       const imgw = widget.addImage(creatProgress(flowTotal, haveGone, progressColor));
       imgw.centerAlignImage();
-      imgw.cornerRadius = 5.2
+      //imgw.cornerRadius = 5.2
       imgw.imageSize = new Size(width, height);
       widget.addSpacer(5);
     }
     
-    function creatProgress(flowTotal, havegone, progressColor) {
+    function creatProgress(flowTotal, haveGone, progressColor) {
       const context = new DrawContext();
       context.size = new Size(width, height);
       context.opaque = false
@@ -582,7 +583,7 @@ df.dateFormat = 'ddHHmm'
       context.setFillColor(barColor);
       
       const path = new Path();
-      path.addRoundedRect(new Rect(0, 0, width, height), 3, 2);
+      path.addRoundedRect(new Rect(0, 0, width, height), radius, radius);
       context.addPath(path);
       context.fillPath();
       context.setFillColor(
@@ -590,7 +591,7 @@ df.dateFormat = 'ddHHmm'
       );
       
       const path1 = new Path();
-      path1.addRoundedRect(new Rect(0, 0, width * havegone / flowTotal, height), 3, 0)
+      path1.addRoundedRect(new Rect(0, 0, width * haveGone / flowTotal, height), radius, radius);
       context.addPath(path1);
       context.fillPath();
       return context.getImage();
