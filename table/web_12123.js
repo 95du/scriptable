@@ -581,11 +581,9 @@ async function main() {
     
     if ( success && detail ) {
       const shortText = `${vio.violationAddress}，${vio.violation}`;
-      if ( shortText.length <= 19 ) {
-        violationText = `${shortText}，违章序列号 ${detail.violationSerialNumber}`;
-      } else {
-        violationText = shortText;
-      }
+      violationText = shortText.length <= 19 
+      ? `${shortText}，违章序列号 ${detail.violationSerialNumber}` 
+      : shortText;
     };
 
     const tipsText = tipsStack.addText(nothing || !success ? setting.botStr : violationText);
