@@ -174,7 +174,7 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
   
   /**
    * iOS 系统版本
-   * 获取跳转页面ID
+   * 获取跳转直播页面
    * 数字转换为开奖状态、颜色
    * lotteryType
    * Random icons
@@ -182,7 +182,8 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
   const systemVersion =  Device.systemVersion().split('.')[0];
   
   const gameId = { ssq: 101, dlt: 201, pl3: 202, fc3d: 102, qxc: 204, qlc: 104, pl5: 203 };
-  
+  const watchLive = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId[lotteryType]}`;
+
   const statusMap = {
     0: { todayOpenStatus: '未到时间', staColor: '#666666' },
     1: { todayOpenStatus: '今晚开奖', staColor: '#FF6800' },
@@ -250,10 +251,7 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
   });
   
   // 其他配置
-  const contextColor = Color.dynamic(
-    new Color('#48484b', 0.3),
-    new Color('#FFFFFF', 0.3)
-  );
+  const contextColor = Color.dynamic(new Color('#48484b', 0.3),new Color('#FFFFFF', 0.3));
   
   const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
   
@@ -432,7 +430,7 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     barStack.layoutHorizontally();
     barStack.centerAlignContent();
     barStack.backgroundColor = new Color(staColor);
-    barStack.url = `https://m.ttzoushi.com/#/kjgg/detail;gameId=${gameId[lotteryType]}`;
+    barStack.url = watchLive;
     barStack.cornerRadius = 10.5;
      
     const openCodeText = barStack.addText(todayOpenStatus);
