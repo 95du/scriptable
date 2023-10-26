@@ -530,7 +530,7 @@ df.dateFormat = 'ddHHmm'
    * @param { string } string
    * @param { image } image
    */
-  async function createSmallWidget() {
+  const createSmallWidget = async () => {
     const widget = new ListWidget();
     widget.setPadding(0, 0, -6, 0);
     
