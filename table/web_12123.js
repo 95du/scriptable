@@ -116,8 +116,7 @@ async function main() {
    * @returns {image} - url
    */
   const getCacheJSON = async (jsonName, jsonUrl) => {
-    const cacheTime = new Date().getHours();
-    const cache = useFileManager({ cacheTime: 24 });
+    const cache = useFileManager({ cacheTime: 240 });
     const jsonString = cache.readString(jsonName);
     if (jsonString) {
       return JSON.parse(jsonString);
@@ -340,7 +339,7 @@ async function main() {
     }
   };
   
-  // 有新违章时的处理
+  // 违章状态处理
   const ddeleteJsonFiles = (folderPath) => {
     const jsonFiles = fm.listContents(folderPath)
       .filter(item => {
@@ -354,7 +353,7 @@ async function main() {
     })
   };
   
-  // 违章状态处理
+  // 违章清零后
   const recoverVioStatus = () => {
     notify(myPlate, '所有违章已处理，请遵守交通规则');
     setting.count = 0
