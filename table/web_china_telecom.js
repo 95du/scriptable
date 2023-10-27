@@ -243,7 +243,7 @@ async function main() {
   const voiceColor = getColor(voice);
   
   //=========> config <=========//
-  const [flow1st, flow2nd, voice1st, voice2nd] = [setting.flow, flow, voice, setting.voice];
+  const [ flow1st, flow2nd, voice1st, voice2nd ] = [ setting.flow, flow, voice, setting.voice ];
 
   const Step1st = 25;
   const Step2nd = 85;
@@ -518,6 +518,7 @@ df.dateFormat = 'ddHHmm'
         Color.white()
       );
     }
+    
     context.drawTextInRect(
       barValue1.toString(),
       new Rect(0, barHeigth - path1BarHeigth + PosCorr, barWidth, path1BarHeigth - PosCorr)
@@ -573,7 +574,7 @@ df.dateFormat = 'ddHHmm'
       //imgw.cornerRadius = 5.2
       imgw.imageSize = new Size(width, height);
       widget.addSpacer(5);
-    }
+    };
     
     function creatProgress(flowTotal, haveGone, progressColor) {
       const context = new DrawContext();
@@ -595,7 +596,7 @@ df.dateFormat = 'ddHHmm'
       context.addPath(path1);
       context.fillPath();
       return context.getImage();
-    }
+    };
     return widget;
   };
   
