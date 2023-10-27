@@ -2,10 +2,9 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-purple; icon-glyph: tags;
 /**
- * 小组件作者：95度茅台
+ * 组件作者：95度茅台
  * UITable 版本: Version 1.0.2
  * 2023-02-27 11:30
- * Telegram 交流群 https://t.me/+ViT7uEUrIUV0B_iy
  */
 
 
@@ -90,7 +89,7 @@ async function main() {
         lightColor: '#FF0000',
         darkColor: '#FFBF00'
       }
-    } else if (index === 3) {
+    } else if (index === 3000) {
       const farm = await farmProgress('https://api.m.jd.com/client.action?functionId=initForFarm');
       if (farm.treeState === 2 || farm.treeState === 3) {
         notify('东东农场', `${farm.name}，可以兑换啦~`);  
@@ -107,9 +106,9 @@ async function main() {
         lightColor: '#1ea532',
         darkColor: '#32CD32'
       }
-    } else if (index === 4) {
+    } else if (index === 3) {
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fh5.m.jd.com%2Frn%2F3a5TGXF7Y8xpQ45CjgMzQ3tyqd4K%2Findex.html%3Fhas_native%3D0%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
-      setting.randomIndex = 5
+      setting.randomIndex = 4
       val = {
         leading: 3,
         imageSize: 40,
@@ -120,7 +119,7 @@ async function main() {
         lightColor: '#000000',
         darkColor: '#FFA500'
       }
-    } else if (index === 5) {
+    } else if (index === 4) {
       const promise = await custXbScore('https://ms.jr.jd.com/gw/generic/bt/h5/m/queryCustXbScoreInfo');
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fagree.jd.com%2Fm%2Findex.html%3Fsceneval%3D2%26jxsid%3D16780988595962555448%26channel%3Dwq%26from%3Djdmwode%22%7D'
       setting.randomIndex = 0
