@@ -39,8 +39,8 @@ async function main() {
   const writeSettings = async (setting) => {
     fm.writeString(settingPath, JSON.stringify(setting, null, 2));
     console.log(JSON.stringify(
-      setting, null, 2)
-    );
+      setting, null, 2
+    ));
   }
   
   /**  
@@ -496,16 +496,16 @@ async function main() {
   
   // 用户信息
   async function userInfo() {
-    const res = await makeRequest('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers');
-    if (res.sta == 00) {
-      let countArr = res.data.length;
+    const { sta, data } = await makeRequest('https://95598.csg.cn/ucs/ma/zt/eleCustNumber/queryBindEleUsers');
+    if (sta == 00) {
+      let countArr = data.length;
       setting.count = countArr == 1 ? countArr - 1 : setting.count > 0 ? setting.count - 1 : countArr - 1;
       return {  
         userName: name,
         areaCode: code,
         bindingId: id,
         eleCustNumber: number,
-      } = res.data[setting.count];
+      } = data[setting.count];
     }
   };
   
@@ -517,8 +517,8 @@ async function main() {
       areaCode: code,
       eleCustNumberList: [{ areaCode: code, eleCustId: id }]
     });
-    // totalPower & yesterday
     const { meteringPointId } = pointResponse.data[0];
+    // totalPower & yesterday
     const monthResponse = await getCacheString(`queryDayElectricByMPoint${count}.json`, 'https://95598.csg.cn/ucs/ma/zt/charge/queryDayElectricByMPoint', {
       eleCustId: id,
       areaCode: code,
