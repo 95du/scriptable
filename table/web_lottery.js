@@ -212,17 +212,6 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
   };
   const dayOfWeek = getWeekday(openTime.split(" ")[0]);
   
-  // 自动切换七星彩利排列五
-  function setAgentShortName() {
-    const _dayOfWeek = getWeekday(Date.now());
-    setting.agentShortName = ['周二', '周五', '周日'].includes(_dayOfWeek) ? 4 : 6;
-    writeSettings(setting);
-  }
-  
-  if (new Date().getHours() < 1 && setting.refresh === 18 && setting.useCache) {
-    setAgentShortName();
-  };
-
   // 转换亿万单位
   function formatAmount(original) {
     const amount = parseFloat(original);
