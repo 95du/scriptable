@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -992,7 +992,7 @@ async function main() {
             ? e.target.checked
             : e.target.value;
           invoke('changeSettings', formData);
-          // 播放器开关
+
           !formData.music ? iframe.src = '' : iframe.src = iframe.getAttribute('data-src');
         });
         label.appendChild(input);
@@ -1299,8 +1299,9 @@ document.getElementById('telegram').addEventListener('click', () => {
         const { label, scrUrl, rightDesc } = data;
         try {
           const fm = FileManager.iCloud();
-          const script = await getString(scrUrl);
-          fm.writeString(fm.documentsDirectory() + `/${label}.js`, script);
+          const script = await getString(scrUrl);  
+          const scrLable = fm.documentsDirectory() + `/${label}.js`;
+          fm.writeString(scrLable, script);
           Pasteboard.copy(scrUrl);
           notify(`已拷贝（${label}）可用于随机/循环组件`, scrUrl);
           Safari.open(`scriptable:///run/${encodeURIComponent(label)}`);
