@@ -178,8 +178,7 @@ async function main() {
       vehicleImg = await getRandomImage();
     }
   } catch (e) {
-    const cacheMaybach = fm.joinPath(cacheCar, 'Maybach-8.png')
-    vehicleImg = fm.readImage(cacheMaybach);
+    vehicleImg = fm.readImage(fm.joinPath(cacheCar, 'Maybach-8.png'));
   };
   
   /**
@@ -386,7 +385,7 @@ async function main() {
     const widget = new ListWidget();
     widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
     
-    const bgImage = await getBgImagePath();
+    const bgImage = getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
     } else {
