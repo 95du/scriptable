@@ -235,8 +235,9 @@ async function main() {
       widget.backgroundGradient = gradient;
     } else {
       widget.backgroundColor = Color.dynamic(new Color('#fefefe', 0.5), new Color('#1e1e1e'));
-    }
+    };
     
+    const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
     
     widget.setPadding(10, 10, 10, 10);
     const mainStack = widget.addStack();
@@ -286,6 +287,7 @@ async function main() {
     
     const nameText = nameStack.addText(setting.userName ?? nickname);
     nameText.font = Font.mediumSystemFont(12);
+    nameText.textColor = textColor;
     nameText.textOpacity = 0.8;
     leftStack.addSpacer(3);
     
@@ -302,6 +304,7 @@ async function main() {
     const Amount = state === '1' ? amount.replace(',', '') : '0.00';
     const baitiaoText = btStack.addText(Amount >= '1000' ? String(Math.floor(Amount)) : Amount);
     baitiaoText.font = Font.mediumSystemFont(14);
+    baitiaoText.textColor = textColor;
     mainStack.addSpacer();
     
     
@@ -332,7 +335,6 @@ async function main() {
     const jdIcon = logoStack.addImage(jdImage);
     jdIcon.imageSize = new Size(36, 36);
     
-    
     /*
     * Right Center Stack
     */
@@ -346,6 +348,7 @@ async function main() {
     const inStack1 = midLeftStack.addStack();
     const inText = inStack1.addText(inCode ? income.compareLastTotalAmount : '收入/月');
     inText.font = Font.mediumSystemFont(13);
+    inText.textColor = textColor;
     inText.textOpacity = 0.7;
     inStack1.addSpacer();
     midLeftStack.addSpacer(7);
@@ -355,6 +358,7 @@ async function main() {
     inAmountText.font = Font.boldSystemFont(20);
     inAmountText.leftAlignText();
     inAmountText.textOpacity = 0.9;
+    inAmountText.textColor = textColor;
     inStack2.addSpacer();
     middleStack.addSpacer();
     
@@ -377,6 +381,7 @@ async function main() {
     outStack1.addSpacer();
     const outText = outStack1.addText(outCode ? expend.compareLastTotalAmount : '支出/月');
     outText.font = Font.mediumSystemFont(13);
+    outText.textColor = textColor;
     outText.textOpacity = 0.7;
     outText.rightAlignText();
     midRightStack.addSpacer(7);
@@ -385,6 +390,7 @@ async function main() {
     outStack2.addSpacer();
     const outAmountText = outStack2.addText(expend.responseCode == 00000 ? expend.totalAmount : '0.00');
     outAmountText.font = Font.boldSystemFont(20);
+    outAmountText.textColor = textColor;
     outAmountText.rightAlignText();
     outAmountText.textOpacity = 0.9;
     
@@ -427,8 +433,9 @@ async function main() {
       
       const title = percStack.addText(str);
       title.centerAlignText();
-      title.textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
       title.font = Font.boldSystemFont(12);
+      title.textColor = textColor;
+      title.textOpacity = 0.7;
       percStack.addSpacer(8);
       
       const imgProgress = percStack.addImage(creatProgress(inTotal, haveGone));
@@ -438,8 +445,9 @@ async function main() {
       
       const percentText = percStack.addText(percent);
       percentText.centerAlignText();
-      percentText.textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
       percentText.font = Font.boldSystemFont(12);
+      percentText.textColor = textColor;
+      percentText.textOpacity = 0.7;
       widget.addSpacer(phoneSize < 926 ? 1.5 : 2.5)
     }
     widget.addSpacer(5);
