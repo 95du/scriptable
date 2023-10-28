@@ -287,7 +287,7 @@ async function main() {
       const payText0 = beneStack.addText(arrears);
       payText0.font = Font.boldSystemFont(16);
       payText0.textColor = new Color('#FF2400');
-    } else {
+    } else if (setting.estimate) {
       const payText0 = beneStack.addText((totalBill / total * totalPower).toFixed(2));  
       payText0.font = Font.mediumSystemFont(16);
       payText0.textColor = Color.blue();
