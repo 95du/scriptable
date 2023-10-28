@@ -222,13 +222,15 @@ async function main() {
   const bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
   const textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
   const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
-  
+
   const getColor = (value) => {
     const colorMap = new Map([
-      [20, new Color("#D50000")],
-      [30, new Color("#FFD723")],
-      [50, new Color("#FF9500")],
-      [70, new Color("#44CB9C")]
+      [10, new Color("#D50000")],
+      [20, new Color("#FFD723")],
+      [40, new Color("#FFA500")],
+      [50, new Color("#BE62F3")],
+      [70, new Color("#0083FF")],
+      [80, new Color("#44CB9C")]
     ]);
   
     for (let [threshold, color] of colorMap) {
