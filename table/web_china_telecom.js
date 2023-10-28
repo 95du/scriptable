@@ -210,8 +210,7 @@ async function main() {
   
   // Color definitions
   const logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
-  const widgetBgColor = Color.dynamic(
-  new Color("#fefefe"), new Color("#1e1e1e"));
+  const widgetBgColor = Color.dynamic(new Color("#fefefe"), new Color("#1e1e1e"));
   const stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
   const barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
   const MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
@@ -223,14 +222,14 @@ async function main() {
   const textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
   const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
 
-  const getColor = (value) => {
+  const getColor = (value, isOpaque = false) => {
     const colorMap = new Map([
-      [10, new Color("#D50000")],
-      [20, new Color("#FFD723")],
-      [40, new Color("#FFA500")],
-      [50, new Color("#BE62F3")],
-      [70, new Color("#0083FF")],
-      [80, new Color("#44CB9C")]
+      [ 10, isOpaque ? new Color("#D5000075") : new Color("#D50000") ],
+      [ 20, isOpaque ? new Color("#f7b50075") : new Color("#f7b500") ],
+      [ 40, isOpaque ? new Color("#FFA50075") : new Color("#FFA500") ],
+      [ 50, isOpaque ? new Color("#BE62F375") : new Color("#BE62F3") ],
+      [ 70, isOpaque ? new Color("#0083FF75") : new Color("#0083FF") ],
+      [ 80, isOpaque ? new Color("#44CB9C75") : new Color("#44CB9C") ]
     ]);
   
     for (let [threshold, color] of colorMap) {
@@ -241,14 +240,10 @@ async function main() {
     return new Color("#3BC952");
   };
   
-  const flowColor = getColor(flow);
-  const voiceColor = getColor(voice);
   
   //=========> config <=========//
   const [ flow1st, flow2nd, voice1st, voice2nd ] = [ setting.flow, flow, voice, setting.voice ];
 
-  const Step1st = 25;
-  const Step2nd = 85;
   const StepFin = 100;
   const barWidth = 15;
   const barHeigth = (flow < 100 && voice < 100) ? 108 : 105;
@@ -458,38 +453,28 @@ df.dateFormat = 'ddHHmm'
     context.size = new Size(barWidth, barHeigth);
     context.opaque = false
     context.respectScreenScale = true
-   // background
+    
+    const BarColor1 = getColor(barValue1);
+    const BarColor2 = getColor(barValue2, true);
+  
+    // background
     const path = new Path();
     path.addRoundedRect(new Rect(0, 0, barWidth, barHeigth), 4, 4);
     context.addPath(path);
     context.setFillColor(barBgColor);
     context.fillPath();
     
-    // BarValue1 Color
-    if (barValue1 <= Step1st) { BarColor1 = new Color("#bb1e10") }
-    
-    if (barValue2 <= Step1st) {BarColor2 = new Color("#bb1e1075")}
-   
-    if (barValue1 >= Step1st && barValue1 < Step2nd) { BarColor1 = new Color("#f7b500") } 
-    else if (barValue1 >= Step2nd) { BarColor1 = new Color("#00b347") }
-    
-    // BarValue2 Color
-    if (barValue2 >= Step1st && barValue2 < Step2nd) { BarColor2 = new Color("#f7b50075") }
-    else if (barValue2 >= Step2nd) {BarColor2 = new Color("#00b34775")}
-    
-    // BarValue1
     context.setFillColor(BarColor1);
     const path1 = new Path();
     const path1BarHeigth = (barHeigth * (barValue1 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue1 / StepFin);
-    path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
+    path1.addRoundedRect(new Rect(0, barHeigth, barWidth, - path1BarHeigth), 2, 2);
     context.addPath(path1);
     context.fillPath();
     
-    // BarValue2
     context.setFillColor(BarColor2);
     const path2 = new Path();
     const path2BarHeigth = (barHeigth * (barValue2 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue2 / StepFin);
-    path2.addRoundedRect(new Rect(0, barHeigth, barWidth, -path2BarHeigth), 2, 2);
+    path2.addRoundedRect(new Rect(0, barHeigth, barWidth, - path2BarHeigth), 2, 2);
     context.addPath(path2);
     context.fillPath();
     context.setFont(
@@ -498,14 +483,10 @@ df.dateFormat = 'ddHHmm'
     context.setTextAlignedCenter();
     
     if (barValue1 < 90) {
-      context.setTextColor(  
-        new Color("#666666")
-      );
+      context.setTextColor(new Color("#666666"));
       context.drawTextInRect('%', new Rect(0, 3, barWidth, barHeigth));
     } else {
-      context.setTextColor(
-        Color.white()
-      );
+      context.setTextColor(new Color("#FFFFFF"));
       context.drawTextInRect('%', new Rect(0, barHeigth - 15, barWidth, barHeigth));
     }
     
@@ -545,7 +526,7 @@ df.dateFormat = 'ddHHmm'
     
     widget.url = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex'
 
-    const width = 130
+    const width = 128
     const height = 8
     const radius = height / 2
     
@@ -561,21 +542,20 @@ df.dateFormat = 'ddHHmm'
     balText.centerAlignText();
     widget.addSpacer(3);
     
-    getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance} 分钟`, voiceColor);
-    getwidget(flowTotal, bal, `剩余流量 ${flowBalance} GB`, flowColor);
+    getwidget(voiceAmount, voiceBalance, `${voiceBalance} 分钟 - ${voice}%`, getColor(voice));
+    getwidget(flowTotal, bal, `${flowBalance} GB - ${flow}%`, getColor(flow));
     
     function getwidget(flowTotal, haveGone, str, progressColor) {
       const titlew = widget.addText(str);
       titlew.centerAlignText();
       titlew.textColor = fm.fileExists(bgImage) ? Color.white() : textColor
-      titlew.font = Font.boldSystemFont(13);
+      titlew.font = Font.boldSystemFont(14);
       widget.addSpacer(3);
       
       const imgw = widget.addImage(creatProgress(flowTotal, haveGone, progressColor));
       imgw.centerAlignImage();
-      //imgw.cornerRadius = 5.2
       imgw.imageSize = new Size(width, height);
-      widget.addSpacer(5);
+      widget.addSpacer(6);
     };
     
     function creatProgress(flowTotal, haveGone, progressColor) {
