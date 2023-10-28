@@ -417,7 +417,6 @@ async function main() {
     * @param {image} Progress Bar
     * @param {string} string
     */
-    const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
     const width = Number(setting.progressWidth);
     const height = Number(setting.progressHeight);
     const radius = height / 2
@@ -457,6 +456,7 @@ async function main() {
       context.size = new Size(width, height);
       context.opaque = false
       context.respectScreenScale = true
+      const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
       context.setFillColor(barColor);
       
       const path = new Path();
