@@ -94,20 +94,17 @@ const presentMenu = async () => {
     case 0:
       const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
       const iCloudInUse = fm.isFileStoredIniCloud(module.filename);
-      const finish = showAlert();
-      if (codeString.includes('95度茅台' || 'HONDA') && iCloudInUse) {
+      if (codeString.includes('95度茅台') && iCloudInUse) {
         fm.writeString(
           module.filename, 
           codeString
         );
-        finish.title = '更新成功';
-        finish.addAction('OK');
-        await finish.presentAlert();
         Safari.open('scriptable:///run/' + encodeURIComponent(uri));
       } else {
-        finish.title = '更新失败';
-        finish.addAction('OK');
-        await finish.presentAlert();
+        const error = new Alert();
+        error.title = '更新失败';
+        error.addAction('OK');
+        await error.presentAlert();
       }
    // Main Menu
   }
