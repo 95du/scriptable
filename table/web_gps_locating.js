@@ -108,12 +108,9 @@ async function main() {
   };
   
   const loadPicture = async () => {
-    if ( !imgArr?.length || picture?.length > imgArr.length) {
-      let maybach = Array.from({ length: 9 }, (_, index) => `https://gitcode.net/4qiao/scriptable/raw/master/img/car/Maybach-${index}.png`);
-      if (picture?.length > imgArr.length) {
-        maybach = picture;
-      }
-      maybach.forEach(async (item) => {
+    if ( !imgArr?.length ) {
+      const maybach = Array.from({ length: 9 }, (_, index) => `https://gitcode.net/4qiao/scriptable/raw/master/img/car/Maybach-${index}.png`);
+      maybach.forEach(async ( item ) => {
         await downloadCarImage(item);
       });
     }
@@ -128,6 +125,17 @@ async function main() {
     const index = Math.floor(Math.random() * count);
     const cacheImgPath = cacheCar + '/' + imgArr[index];
     return await fm.readImage(cacheImgPath);
+  };
+  
+  try {
+    if (setting.carImg) {
+      const name = decodeURIComponent(setting.carImg.split('/').pop());
+      vehicleImg = await getCacheImage(name, setting.carImg);
+    } else {
+      vehicleImg = await getRandomImage();
+    }
+  } catch (e) {
+    vehicleImg = fm.readImage(fm.joinPath(cacheCar, 'Maybach-8.png'));
   };
   
   /**  
@@ -429,8 +437,8 @@ async function main() {
     const carImageStack = rightStack.addStack();
     carImageStack.size = new Size(setting.carStackWidth, 0);
     carImageStack.setPadding(setting.carTop, 5, setting.carBottom, 0);
-    const img = await getRandomImage();
-    const imageCar = carImageStack.addImage(img);
+    
+    const imageCar = carImageStack.addImage(vehicleImg);
     imageCar.imageSize = new Size(setting.carWidth, setting.carHeight);
     rightStack.addSpacer();
   
