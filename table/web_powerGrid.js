@@ -284,10 +284,13 @@ async function main() {
     beneStack.addSpacer();
     
     if ( isArrears == 1 ) {
-      const payText0 = 
-      beneStack.addText(arrears);
+      const payText0 = beneStack.addText(arrears);
       payText0.font = Font.boldSystemFont(16);
       payText0.textColor = new Color('#FF2400');
+    } else {
+      const payText0 = beneStack.addText((totalBill / total * totalPower).toFixed(2));  
+      payText0.font = Font.mediumSystemFont(16);
+      payText0.textColor = Color.blue();
     }
     topStack.addSpacer(5);
     
