@@ -122,7 +122,7 @@ async function main() {
    * @returns {object} - JSON
    */
   const getCacheString = async (jsonName, jsonUrl, requestBody) => {
-    const cache = useFileManager({ cacheTime: 24 });
+    const cache = useFileManager({ cacheTime: 12 });
     const jsonString = cache.readString(jsonName);
     if (jsonString) {
       return JSON.parse(jsonString);
