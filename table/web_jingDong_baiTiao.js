@@ -133,30 +133,12 @@ async function main() {
     
     await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
     
-    if (level === '1') {
-      levelColor = '#4FC3F7'
-      barColor = new Color(levelColor, 0.6);
-    } else if (level === '2') {
-      levelColor = '#99C0F0'
-      barColor = new Color(levelColor, 0.6);
-    } else if (level === '3') {
-      levelColor = '#FF9999'
-      barColor = new Color(levelColor, 0.6);
-    } else if (level === '4') {
-      levelColor = '#F72E27'
-      barColor = new Color(levelColor, 0.6);
-    } else if (level === '5') {
-      levelColor = '#AB0D0D'
+    if (level === '1' || level === '2' || level === '3' || level === '4' || level === '5') {
+      levelColor = { '1': '#4FC3F7', '2': '#99C0F0', '3': '#FF9999', '4': '#F72E27', '5': '#AB0D0D' }[level];
       barColor = new Color(levelColor, 0.6);
     } else if (level === '6') {
-      levelColor = Color.dynamic(
-        new Color('#222222'),
-        new Color("#333333")
-      );;
-      barColor = Color.dynamic(
-        new Color('#222222', 0.5),
-        new Color("#444444")
-      );;
+      levelColor = Color.dynamic(new Color('#222222'), new Color("#333333"));
+      barColor = Color.dynamic(new Color('#222222', 0.5), new Color("#444444"));
     }
   };
   
