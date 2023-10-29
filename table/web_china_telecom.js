@@ -190,7 +190,6 @@ async function main() {
   };
   
   const { flowTotal, bal } = calculateFlowTotals(filteredItems, total, balance);
-  
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
@@ -202,7 +201,8 @@ async function main() {
    * Get dayNumber
    * Daily dosage
    */
-  const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
+  const date = Date.now();
+  const dayNumber = Math.floor(date / 1000 / 60 / 60 / 24);
   if (!setting.init || dayNumber !== setting.dayNumber) {
     writeSettings({ 
       ...setting, 
@@ -351,7 +351,7 @@ df.dateFormat = 'ddHHmm'
     
     const flowStack = Stack1.addStack();
     flowStack.addSpacer();
-    let flowText = flowStack.addText(flowBalance + ' GB');
+    const flowText = flowStack.addText(flowBalance + ' GB');
     flowText.textColor = MainTextColor
     flowText.font = Font.boldSystemFont(15);
     flowStack.addSpacer();
@@ -372,12 +372,13 @@ df.dateFormat = 'ddHHmm'
     Stack1Percent.layoutHorizontally();
     Stack1Percent.centerAlignContent();
     Stack1Percent.addSpacer();
-    let percentText1 = Stack1Percent.addText(flow);
+    
+    const percentText1 = Stack1Percent.addText(flow);
     percentText1.textColor = MainTextColor
     percentText1.font = Font.boldSystemFont(28);
-    percentSymbol1 = Stack1Percent.addText(' %');
+    const percentSymbol1 = Stack1Percent.addText(' %');
     percentSymbol1.textColor = SubTextColor
-    percentSymbol1.font = Font.systemFont(20);
+    percentSymbol1.font = Font.systemFont(26);
     Stack1Percent.addSpacer();
     Stack1.addSpacer();
     Content.addSpacer();
@@ -406,7 +407,7 @@ df.dateFormat = 'ddHHmm'
     
     const Stack2Head = Stack2.addStack();
     Stack2Head.addSpacer();
-    let voiceTitleText = Stack2Head.addText('剩余语音');
+    const voiceTitleText = Stack2Head.addText('剩余语音');
     voiceTitleText.textColor = SubTextColor
     voiceTitleText.font = Font.mediumSystemFont(12);
     Stack2Head.addSpacer();
@@ -414,7 +415,7 @@ df.dateFormat = 'ddHHmm'
      
     const voiceStack = Stack2.addStack();
     voiceStack.addSpacer();
-    let voiceText = voiceStack.addText(voiceBalance + ' Min');
+    const voiceText = voiceStack.addText(voiceBalance + ' Min');
     voiceText.textColor = MainTextColor
     voiceText.font = Font.boldSystemFont(15);
     voiceStack.addSpacer();
@@ -436,12 +437,12 @@ df.dateFormat = 'ddHHmm'
     Stack2Percent.centerAlignContent();
     Stack2Percent.addSpacer();
     
-    let percentText2 = Stack2Percent.addText(voice);
+    const percentText2 = Stack2Percent.addText(voice);
     percentText2.textColor = MainTextColor;
     percentText2.font = Font.boldSystemFont(28);
-    percentSymbol2 = Stack2Percent.addText(' %');
+    const percentSymbol2 = Stack2Percent.addText(' %');
     percentSymbol2.textColor = SubTextColor
-    percentSymbol2.font = Font.systemFont(20);
+    percentSymbol2.font = Font.systemFont(26);
     Stack2Percent.addSpacer();
     Stack2.addSpacer();
     
