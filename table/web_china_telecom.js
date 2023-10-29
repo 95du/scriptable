@@ -232,7 +232,7 @@ async function main() {
 
   const getColor = (value, isOpaque = false) => {
     const colorMap = new Map([
-      [ 10, isOpaque ? new Color("#D5000075") : new Color("#D50000") ],
+      [ 10, isOpaque ? new Color("#FF000075") : new Color("#FF0000") ],
       [ 20, isOpaque ? new Color("#f7b50075") : new Color("#f7b500") ],
       [ 40, isOpaque ? new Color("#FFA50075") : new Color("#FFA500") ],
       [ 50, isOpaque ? new Color("#BE62F375") : new Color("#BE62F3") ],
