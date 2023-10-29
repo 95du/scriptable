@@ -579,9 +579,7 @@ df.dateFormat = 'ddHHmm'
       path.addRoundedRect(new Rect(0, 0, width, height), radius, radius);
       context.addPath(path);
       context.fillPath();
-      context.setFillColor(
-        progressColor
-      );
+      context.setFillColor(haveGone < 0.3 ? widgetBgColor : progressColor);
       
       const path1 = new Path();
       path1.addRoundedRect(new Rect(0, 0, width * haveGone / flowTotal, height), radius, radius);
