@@ -464,7 +464,7 @@ df.dateFormat = 'ddHHmm'
     
     const BarColor1 = getColor(barValue1);
     const BarColor2 = getColor(barValue2, true);
-  
+    
     // background
     const path = new Path();
     path.addRoundedRect(new Rect(0, 0, barWidth, barHeigth), 4, 4);
@@ -472,18 +472,18 @@ df.dateFormat = 'ddHHmm'
     context.setFillColor(barBgColor);
     context.fillPath();
     
-    context.setFillColor(BarColor1);
-    const path1 = new Path();
-    const path1BarHeigth = (barHeigth * (barValue1 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue1 / StepFin);
-    path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
-    context.addPath(path1);
-    context.fillPath();
-    
     context.setFillColor(BarColor2);
     const path2 = new Path();
     const path2BarHeigth = (barHeigth * (barValue2 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue2 / StepFin);
     path2.addRoundedRect(new Rect(0, barHeigth, barWidth, -path2BarHeigth), 2, 2);
     context.addPath(path2);
+    context.fillPath();
+    
+    context.setFillColor(BarColor1);
+    const path1 = new Path();
+    const path1BarHeigth = (barHeigth * (barValue1 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue1 / StepFin);
+    path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
+    context.addPath(path1);
     context.fillPath();
     context.setFont(
       Font.boldSystemFont(8)
@@ -499,7 +499,7 @@ df.dateFormat = 'ddHHmm'
     }
     
     if (barValue1 <= 10) {
-      PosCorr = -10
+      PosCorr = -15
       context.setTextColor(
         Color.black()
       );
