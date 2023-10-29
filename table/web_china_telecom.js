@@ -204,7 +204,15 @@ async function main() {
    */
   const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
   if (!setting.init || dayNumber !== setting.dayNumber) {
-    writeSettings({ ...setting, dayNumber, flow, flowBalance, voice, voiceBalance, init: true });
+    writeSettings({ 
+      ...setting, 
+      init: true,
+      dayNumber, 
+      flow: flow ?? '0',
+      flowBalance, 
+      voice: voice ?? '0',  
+      voiceBalance
+    });
     return null;
   };
   
@@ -243,7 +251,7 @@ async function main() {
   
   //=========> config <=========//
   const [ flow1st, flow2nd, voice1st, voice2nd ] = [ setting.flow, flow, voice, setting.voice ];
-
+  
   const StepFin = 100;
   const barWidth = 15;
   const barHeigth = (flow < 100 && voice < 100) ? 108 : 105;
@@ -467,14 +475,14 @@ df.dateFormat = 'ddHHmm'
     context.setFillColor(BarColor1);
     const path1 = new Path();
     const path1BarHeigth = (barHeigth * (barValue1 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue1 / StepFin);
-    path1.addRoundedRect(new Rect(0, barHeigth, barWidth, - path1BarHeigth), 2, 2);
+    path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
     context.addPath(path1);
     context.fillPath();
     
     context.setFillColor(BarColor2);
     const path2 = new Path();
     const path2BarHeigth = (barHeigth * (barValue2 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue2 / StepFin);
-    path2.addRoundedRect(new Rect(0, barHeigth, barWidth, - path2BarHeigth), 2, 2);
+    path2.addRoundedRect(new Rect(0, barHeigth, barWidth, -path2BarHeigth), 2, 2);
     context.addPath(path2);
     context.fillPath();
     context.setFont(
