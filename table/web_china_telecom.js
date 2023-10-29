@@ -113,7 +113,7 @@ async function main() {
   };
   
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ cacheTime : 24 });
+    const cache = useFileManager({ cacheTime : 240 });
     const image = cache.readImage(name);
     if (image) {
       return image;
@@ -486,6 +486,7 @@ df.dateFormat = 'ddHHmm'
     path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
     context.addPath(path1);
     context.fillPath();
+    
     context.setFont(
       Font.boldSystemFont(8)
     );
