@@ -36,7 +36,8 @@ $.is_debug = $.getdata('is_debug');
       $.guanCha_token = $request['headers']['Authorization'];
       if ($.guanCha_token !== $.boxjs_token) {
         $.setdata($.guanCha_token, $.token_key);
-        $.msg($.name + '_token 获取成功', ``, $.guanCha_token);
+        $.msg($.name + '_token 获取成功', ``, $.guanCha_token);  
+        Pasteboard.copy($.guanCha_token);
       } else {
         console.log(`无需更新 token 🚫\n${$.guanCha_token}`);
       }
