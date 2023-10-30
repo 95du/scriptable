@@ -39,6 +39,38 @@
       ]
     },
     {
+      "id": "china_telecom",
+      "name": "中国电信",
+      "author": "@FoKit",
+      "descs_html": [
+        "中国电信 Cookie"
+      ],
+      "icons": [
+        "https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_2.png",
+        "https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_2.png"
+      ],
+      "keys": [
+        "china_telecom_cookie",
+        "china_telecom_login_url"
+      ],
+      "settings": [
+        {
+          "id": "china_telecom_cookie",
+          "name": "Cookie",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        },
+        {
+          "id": "china_telecom_login_url",
+          "name": "Login_url",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        }
+      ]
+    },
+    {
       "id": "user_token_sharecuts",
       "name": "捷径社区",
       "author": "@95du",
@@ -160,6 +192,30 @@
         {
           "id": "taobao_cookie",
           "name": "Cookie",
+          "val": "",
+          "type": "text",
+          "desc": ""
+        }
+      ]
+    },
+    {
+      "id": "guanCha_token",
+      "name": "四川观察",
+      "author": "@95du",
+      "descs_html": [
+        "四川观察 token"
+      ],
+      "icons": [
+        "https://sweixinfile.hisense.com/media/M00/7D/77/Ch4FyGVABumAAz-bAACJYAhys6c529.png",
+        "https://sweixinfile.hisense.com/media/M00/7D/77/Ch4FyGVABumAAz-bAACJYAhys6c529.png"
+      ],
+      "keys": [
+        "guanCha_token"
+      ],
+      "settings": [
+        {
+          "id": "guanCha_token",
+          "name": "token",
           "val": "",
           "type": "text",
           "desc": ""
