@@ -232,12 +232,12 @@ async function main() {
 
   const getColor = (value, isOpaque = false) => {
     const colorMap = new Map([
-      [ 10, isOpaque ? new Color("#FF000075") : new Color("#FF0000") ],
-      [ 20, isOpaque ? new Color("#f7b50075") : new Color("#f7b500") ],
-      [ 40, isOpaque ? new Color("#FFA50075") : new Color("#FFA500") ],
-      [ 50, isOpaque ? new Color("#BE62F375") : new Color("#BE62F3") ],
-      [ 70, isOpaque ? new Color("#0083FF75") : new Color("#0083FF") ],
-      [ 80, isOpaque ? new Color("#44CB9C75") : new Color("#44CB9C") ]
+      [ 10, isOpaque ? new Color("#F7B50075") : new Color("#FF0000") ],
+      [ 20, isOpaque ? new Color("#BE62F375") : new Color("#F7B500") ],
+      [ 40, isOpaque ? new Color("#0083FF75") : new Color("#FFA500") ],
+      [ 50, isOpaque ? new Color("#FFA50075") : new Color("#BE62F3") ],
+      [ 70, isOpaque ? new Color("#FFA50075") : new Color("#0083FF") ],
+      [ 80, isOpaque ? new Color("#FFA50075") : new Color("#44CB9C") ]
     ]);
   
     for (let [threshold, color] of colorMap) {
