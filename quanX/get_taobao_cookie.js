@@ -1,10 +1,15 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: teal; icon-glyph: cart-arrow-down;
 /*
 脚本名称：淘宝 Cookie
 更新时间：2023-02-19
 Author: 95度茅台
 
 重写订阅 Quantumult X
-https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.conf
+https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_taobao_cookie.conf
+
+Boxjs 重写: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.quanx.conf
 
 95度茅台 Boxjs 订阅:
 https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
