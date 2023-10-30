@@ -369,18 +369,18 @@ df.dateFormat = 'ddHHmm'
     usedFlowStack.addSpacer();
     Stack1.addSpacer(5);
     
-    const Stack1Percent = Stack1.addStack();
-    Stack1Percent.layoutHorizontally();
-    Stack1Percent.centerAlignContent();
-    Stack1Percent.addSpacer();
+    const Stack1Pct = Stack1.addStack();
+    Stack1Pct.layoutHorizontally();
+    Stack1Pct.centerAlignContent();
+    Stack1Pct.addSpacer();
     
-    const percentText1 = Stack1Percent.addText(flow);
+    const percentText1 = Stack1Pct.addText(flow);
     percentText1.textColor = MainTextColor
     percentText1.font = Font.boldSystemFont(28);
-    const percentSymbol1 = Stack1Percent.addText(' %');
+    const percentSymbol1 = Stack1Pct.addText(' %');
     percentSymbol1.textColor = SubTextColor
     percentSymbol1.font = Font.systemFont(26);
-    Stack1Percent.addSpacer();
+    Stack1Pct.addSpacer();
     Stack1.addSpacer();
     Content.addSpacer();
     
@@ -423,7 +423,7 @@ df.dateFormat = 'ddHHmm'
     
     const voiceUsedStack = Stack2.addStack();
     voiceUsedStack.addSpacer();
-    if (day1st > '010000' && day1st < '010030') {
+    if (day1st > '010000' && day1st < '010100') {
       voiceUsedText = voiceUsedStack.addText(`- ${voiceBalance - voiceBalance}`);
     } else {
       voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
@@ -433,18 +433,18 @@ df.dateFormat = 'ddHHmm'
     voiceUsedStack.addSpacer();
     Stack2.addSpacer(5);
     
-    const Stack2Percent = Stack2.addStack();
-    Stack2Percent.layoutHorizontally();
-    Stack2Percent.centerAlignContent();
-    Stack2Percent.addSpacer();
+    const Stack2Pct = Stack2.addStack();
+    Stack2Pct.layoutHorizontally();
+    Stack2Pct.centerAlignContent();
+    Stack2Pct.addSpacer();
     
-    const percentText2 = Stack2Percent.addText(voice);
+    const percentText2 = Stack2Pct.addText(voice);
     percentText2.textColor = MainTextColor;
     percentText2.font = Font.boldSystemFont(28);
-    const percentSymbol2 = Stack2Percent.addText(' %');
+    const percentSymbol2 = Stack2Pct.addText(' %');
     percentSymbol2.textColor = SubTextColor
     percentSymbol2.font = Font.systemFont(26);
-    Stack2Percent.addSpacer();
+    Stack2Pct.addSpacer();
     Stack2.addSpacer();
     
     if (!config.runsInWidget) {  
