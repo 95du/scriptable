@@ -1,9 +1,9 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-blue; icon-glyph: magic;
+// icon-color: deep-blue; icon-glyph: desktop;
 /*
-脚本名称：淘宝 Cookie
-更新时间：2023-02-19
+脚本名称：四川观察 token
+更新时间：2023-10-31
 Author: 95度茅台
 
 重写订阅 Quantumult X
