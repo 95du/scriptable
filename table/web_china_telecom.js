@@ -4,8 +4,8 @@
 /**
  * 组件作者: 95度茅台
  * 组件名称: 中国电信余量
- * Version 1.0.0
- * 2023-10-17 14:30
+ * Version 1.0.2
+ * 2023-10-30 16:30
  */
 
 async function main() {
@@ -344,7 +344,7 @@ df.dateFormat = 'ddHHmm'
     
     const Stack1Head = Stack1.addStack();
     Stack1Head.addSpacer();
-    let flowTitleText = Stack1Head.addText('剩余流量');
+    const flowTitleText = Stack1Head.addText('剩余流量');
     flowTitleText.textColor = SubTextColor;
     flowTitleText.font = Font.mediumSystemFont(12);
     Stack1Head.addSpacer();
@@ -354,7 +354,7 @@ df.dateFormat = 'ddHHmm'
     flowStack.addSpacer();
     const flowText = flowStack.addText(flowBalance + ' GB');
     flowText.textColor = MainTextColor
-    flowText.font = Font.boldSystemFont(15);
+    flowText.font = Font.boldSystemFont(16);
     flowStack.addSpacer();
     
     const usedFlowStack = Stack1.addStack();
@@ -365,7 +365,7 @@ df.dateFormat = 'ddHHmm'
       usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
     }
     usedFlowText.textColor  = SubTextColor;
-    usedFlowText.font = Font.systemFont(12);
+    usedFlowText.font = Font.boldSystemFont(12);
     usedFlowStack.addSpacer();
     Stack1.addSpacer(5);
     
@@ -418,7 +418,7 @@ df.dateFormat = 'ddHHmm'
     voiceStack.addSpacer();
     const voiceText = voiceStack.addText(voiceBalance + ' Min');
     voiceText.textColor = MainTextColor
-    voiceText.font = Font.boldSystemFont(15);
+    voiceText.font = Font.boldSystemFont(16);
     voiceStack.addSpacer();
     
     const voiceUsedStack = Stack2.addStack();
@@ -429,7 +429,7 @@ df.dateFormat = 'ddHHmm'
       voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
     }
     voiceUsedText.textColor  = SubTextColor
-    voiceUsedText.font = Font.systemFont(12);
+    voiceUsedText.font = Font.boldSystemFont(12);
     voiceUsedStack.addSpacer();
     Stack2.addSpacer(5);
     
