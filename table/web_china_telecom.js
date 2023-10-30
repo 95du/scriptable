@@ -257,6 +257,7 @@ async function main() {
   const barHeigth = (flow < 100 && voice < 100) ? 108 : 105;
   
   const phone = Device.screenSize().height;
+  const payment = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex';
   
   const df = new DateFormatter();
 df.dateFormat = 'ddHHmm'
@@ -323,7 +324,7 @@ df.dateFormat = 'ddHHmm'
     balanceText.centerAlignText();
     balanceText.textColor = new Color(balanceColor);
     balanceText.font = new Font('Georgia-Bold', phone < 926 ? 20 : 25);
-    balanceText.url = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex';
+    balanceText.url = payment
     rightStack.addSpacer();
     widget.addSpacer(phone < 926 ? 3 : 5)
     
@@ -344,7 +345,7 @@ df.dateFormat = 'ddHHmm'
     const Stack1Head = Stack1.addStack();
     Stack1Head.addSpacer();
     let flowTitleText = Stack1Head.addText('剩余流量');
-    flowTitleText.textColor = SubTextColor
+    flowTitleText.textColor = SubTextColor;
     flowTitleText.font = Font.mediumSystemFont(12);
     Stack1Head.addSpacer();
     Stack1.addSpacer(3);
@@ -387,7 +388,7 @@ df.dateFormat = 'ddHHmm'
     const BarContent1 = Content.addStack();
     BarContent1.layoutVertically();
     const progressBar1st = BarContent1.addImage(creatProgress(flow2nd, flow1st));
-    progressBar1st.cornerRadius = 5.5
+    progressBar1st.cornerRadius = 6
     progressBar1st.imageSize = new Size(barWidth, barHeigth);
     Content.addSpacer();
    
@@ -395,7 +396,7 @@ df.dateFormat = 'ddHHmm'
     const BarContent2 = Content.addStack();
     BarContent2.layoutVertically();
     const progressBar2nd = BarContent2.addImage(creatProgress(voice1st, voice2nd));
-    progressBar2nd.cornerRadius = 5.5
+    progressBar2nd.cornerRadius = 6
     progressBar2nd.imageSize = new Size(barWidth, barHeigth);
     Content.addSpacer();
     
@@ -454,7 +455,7 @@ df.dateFormat = 'ddHHmm'
     }
   };
     
-  // Create Progress BarValue
+  // Create Progress 柱状进度条
   function creatProgress(barValue1, barValue2) {
     barValue1 = Math.round(barValue1);
     barValue2 = Math.round(barValue2);
@@ -527,14 +528,13 @@ df.dateFormat = 'ddHHmm'
   const createSmallWidget = async () => {
     const widget = new ListWidget();
     widget.setPadding(0, 0, -6, 0);
+    widget.url = payment
     
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
     } else {
       widget.backgroundColor = widgetBgColor;
-    }
-    
-    widget.url = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex'
+    };
 
     const width = 128
     const height = 8
@@ -556,15 +556,15 @@ df.dateFormat = 'ddHHmm'
     getwidget(flowTotal, bal, `${flowBalance} GB - ${flow}%`, getColor(flow));
     
     function getwidget(flowTotal, haveGone, str, progressColor) {
-      const titlew = widget.addText(str);
-      titlew.centerAlignText();
-      titlew.textColor = fm.fileExists(bgImage) ? Color.white() : textColor
-      titlew.font = Font.boldSystemFont(14);
+      const title = widget.addText(str);
+      title.centerAlignText();
+      title.textColor = fm.fileExists(bgImage) ? Color.white() : textColor;
+      title.font = Font.boldSystemFont(14);
       widget.addSpacer(3);
       
-      const imgw = widget.addImage(creatProgress(flowTotal, haveGone, progressColor));
-      imgw.centerAlignImage();
-      imgw.imageSize = new Size(width, height);
+      const img = widget.addImage(creatProgress(flowTotal, haveGone, progressColor));
+      img.centerAlignImage();
+      img.imageSize = new Size(width, height);
       widget.addSpacer(6);
     };
     
