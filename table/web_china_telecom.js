@@ -542,7 +542,6 @@ df.dateFormat = 'ddHHmm'
     
     const imageArr = [image, image1];
     const index = Math.floor(Math.random() * imageArr.length);
-
     const logoImage = widget.addImage(imageArr[index]);
     logoImage.centerAlignImage();
     logoImage.imageSize = new Size(130, index === 0 ? 35 : 40);
