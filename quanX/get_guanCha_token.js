@@ -30,19 +30,18 @@ $.is_debug = $.getdata('is_debug');
   if (isGetCookie = typeof $request !== `undefined`) {
     GetToken();
   }
-  
+    
   function GetToken() {
     if ($request && $request.url.indexOf("https://scgcgwcdn.sctv-tf.com/app/v1/mall/user/getSignInfo") > -1 && $request.headers) {
-      $.guanCha_token = $request['headers']['Authorization'];
-      if ($.guanCha_token !== $.boxjs_token) {
-        $.setdata($.guanCha_token, $.token_key);
-        $.msg($.name + '_token 获取成功', ``, $.guanCha_token);  
-        Pasteboard.copy($.guanCha_token);
+      const copiedToken = $.guanCha_token;
+      if (copiedToken !== $.boxjs_token) {
+        Pasteboard.copyString(copiedToken);
+        $.msg($.name + '_token 获取成功', ``, copiedToken);
       } else {
-        console.log(`无需更新 token 🚫\n${$.guanCha_token}`);
+        console.log(`无需更新 token 🚫\n${copiedToken}`);
       }
     }
-  }
+  };
   
 })()
   .catch((e) => $.logErr(e))
