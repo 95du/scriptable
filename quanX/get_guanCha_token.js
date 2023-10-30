@@ -7,7 +7,9 @@
 Author: 95度茅台
 
 重写订阅 Quantumult X
-https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_amap_cookie.conf
+https://gitcode.net/4qiao/scriptable/raw/master/quanX/get_guanCha_token.conf
+
+Boxjs 重写: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.quanx.conf
 
 95度茅台 Boxjs 订阅:
 https://gitcode.net/4qiao/scriptable/raw/master/boxjs/sub.json
