@@ -264,8 +264,8 @@ df.dateFormat = 'ddHHmm'
   const day1st = df.string(new Date());
   
   const image = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
+  const image1 = await getCacheImage('logo1.png', 'https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_1.png');
   const bgImage = await getBgImagePath();
-  
   
   /**
    * Create Medium Widget
@@ -503,7 +503,7 @@ df.dateFormat = 'ddHHmm'
     
     if (barValue1 <= 10) {
       PosCorr = -15
-      context.setTextColor(
+      context.setTextColor(  
         Color.black()
       );
     } else {
@@ -540,11 +540,13 @@ df.dateFormat = 'ddHHmm'
     const height = 8
     const radius = height / 2
     
-    const logoImage = 
-    widget.addImage(image);
-    logoImage.imageSize = new Size(130, 35);
-    logoImage.tintColor = logoColor
+    const imageArr = [image, image1];
+    const index = Math.floor(Math.random() * imageArr.length);
+
+    const logoImage = widget.addImage(imageArr[index]);
     logoImage.centerAlignImage();
+    logoImage.imageSize = new Size(130, index === 0 ? 35 : 40);
+    logoImage.tintColor = index === 0 ? logoColor : undefined;
     
     const balText = widget.addText('' + balanceAvailable);  
     balText.textColor = Color.orange();
