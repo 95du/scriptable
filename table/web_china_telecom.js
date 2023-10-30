@@ -254,7 +254,7 @@ async function main() {
   
   const StepFin = 100;
   const barWidth = 15;
-  const barHeigth = (flow < 100 && voice < 100) ? 108 : 105;
+  const barHeigth = (flow < 100 && voice < 100) ? 111 : 108
   
   const phone = Device.screenSize().height;
   const payment = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex';
