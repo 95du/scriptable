@@ -540,12 +540,9 @@ df.dateFormat = 'ddHHmm'
     const height = 8
     const radius = height / 2
     
-    const imageArr = [image, image1];
-    const index = Math.floor(Math.random() * imageArr.length);
-    const logoImage = widget.addImage(imageArr[index]);
+    const logoImage = widget.addImage(image1);
     logoImage.centerAlignImage();
-    logoImage.imageSize = new Size(130, index === 0 ? 35 : 40);
-    logoImage.tintColor = index === 0 ? logoColor : undefined;
+    logoImage.imageSize = new Size(130, 40);
     
     const balText = widget.addText('' + balanceAvailable);  
     balText.textColor = Color.orange();
