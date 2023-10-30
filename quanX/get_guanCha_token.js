@@ -34,7 +34,7 @@ $.is_debug = $.getdata('is_debug');
   }
   
   function GetToken() {
-    if ($request && $request.url.indexOf("https://scgcgwcdn.sctv-tf.com/app/v1/mall/user/getSignInfo") > -1 && $request.headers) {
+    if ($request && ($request.url.indexOf("https://scgcgwcdn.sctv-tf.com/app/v1/mall/user/getSignInfo") > -1 || $request.url.indexOf("https://scgcgwcdn.sctv-tf.com/app/v1/apple/mark/check") > -1) && $request.headers) {
       $.guanCha_token = $request['headers']['Authorization'];
       if ($.guanCha_token !== $.boxjs_token) {
         $.setdata($.guanCha_token, $.token_key);
