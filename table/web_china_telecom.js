@@ -365,7 +365,7 @@ df.dateFormat = 'ddHHmm'
       usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
     }
     usedFlowText.textColor  = SubTextColor;
-    usedFlowText.font = Font.boldSystemFont(12);
+    usedFlowText.font = Font.boldSystemFont(13);
     usedFlowStack.addSpacer();
     Stack1.addSpacer(5);
     
@@ -429,7 +429,7 @@ df.dateFormat = 'ddHHmm'
       voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
     }
     voiceUsedText.textColor  = SubTextColor
-    voiceUsedText.font = Font.boldSystemFont(12);
+    voiceUsedText.font = Font.boldSystemFont(13);
     voiceUsedStack.addSpacer();
     Stack2.addSpacer(5);
     
