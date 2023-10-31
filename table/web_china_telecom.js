@@ -217,7 +217,6 @@ async function main() {
   };
   
   // Color definitions
-  const logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
   const widgetBgColor = Color.dynamic(new Color("#fefefe"), new Color("#1e1e1e"));
   const stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
   const barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
@@ -308,7 +307,7 @@ df.dateFormat = 'ddHHmm'
     leftStack.addSpacer();
     const logoImage = 
     leftStack.addImage(image);
-    logoImage.tintColor = logoColor
+    logoImage.tintColor = new Color('#2B83F1');
     logoImage.centerAlignImage();
     leftStack.addSpacer();
     top.addSpacer(50);
