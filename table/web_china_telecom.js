@@ -136,8 +136,8 @@ async function main() {
     }
     const response = await makeReq(jsonUrl);
     const jsonFile = JSON.stringify(response);
-    const { result } = JSON.parse(jsonFile);
-    if ( result === 0 ) {
+    const { result, voiceAmount } = JSON.parse(jsonFile);
+    if ( result === 0 && voiceAmount ) {
       cache.writeString(jsonName, jsonFile);
     }
     return JSON.parse(jsonFile);
@@ -254,7 +254,7 @@ async function main() {
   
   const StepFin = 100;
   const barWidth = 15;
-  const barHeigth = (flow < 100 && voice < 100) ? 111 : 108
+  const barHeigth = 111
   
   const phone = Device.screenSize().height;
   const payment = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex';
