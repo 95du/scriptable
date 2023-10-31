@@ -311,7 +311,6 @@ df.dateFormat = 'ddHHmm'
     leftStack.addSpacer();
     const logoImage = 
     leftStack.addImage(image);
-    logoImage.imageSize = new Size(phone < 926 ? 95 : 100, phone < 926 ? 25 : 30);
     logoImage.tintColor = logoColor
     logoImage.centerAlignImage();
     leftStack.addSpacer();
@@ -320,13 +319,13 @@ df.dateFormat = 'ddHHmm'
     const rightStack = top.addStack()
     rightStack.centerAlignContent();
     rightStack.addSpacer();
-    let balanceText = rightStack.addText(balanceAvailable);
+    const balanceText = rightStack.addText(balanceAvailable);
     balanceText.centerAlignText();
     balanceText.textColor = new Color(balanceColor);
-    balanceText.font = new Font('Georgia-Bold', phone < 926 ? 20 : 25);
+    balanceText.font = new Font('Georgia-Bold', phone < 926 ? 25 : 28);
     balanceText.url = payment
     rightStack.addSpacer();
-    widget.addSpacer(phone < 926 ? 3 : 5)
+    widget.addSpacer(phone < 926 ? 3 : 5);
     
     /** 
      * Stacks and Bar
@@ -527,7 +526,7 @@ df.dateFormat = 'ddHHmm'
    */
   const createSmallWidget = async () => {
     const widget = new ListWidget();
-    widget.setPadding(0, 0, -6, 0);
+    widget.setPadding(6, 0, 0, 0);
     widget.url = payment
     
     if (fm.fileExists(bgImage)) {
@@ -544,7 +543,7 @@ df.dateFormat = 'ddHHmm'
     logoImage.centerAlignImage();
     logoImage.imageSize = new Size(130, 40);
     
-    const balText = widget.addText('' + balanceAvailable);  
+    const balText = widget.addText(balanceAvailable);  
     balText.textColor = Color.orange();
     balText.font = new Font("Georgia-Bold", 22);
     balText.centerAlignText();
