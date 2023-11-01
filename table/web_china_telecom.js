@@ -523,7 +523,9 @@ df.dateFormat = 'ddHHmm'
   const createSmallWidget = async () => {
     const widget = new ListWidget();
     widget.setPadding(6, 0, 0, 0);
-    widget.url = payment
+    if (balanceAvailable < 0) {
+      widget.url = payment
+    }
     
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
