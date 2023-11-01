@@ -439,8 +439,8 @@ async function main() {
         const barHeight = tempBarHeight - 10;
         barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
         draw.addPath(barPath);
-        // Circle Color
-        draw.setFillColor((barColor))
+        // progressColor
+        draw.setFillColor(barColor);
         draw.fillPath();
       
         const currPath = new Path();
@@ -450,7 +450,7 @@ async function main() {
         }
         currPath.addEllipse(new Rect((tempBarWidth - tempBarHeight) * isPercent, 0, tempBarHeight, tempBarHeight));
         draw.addPath(currPath);
-        // progressColor
+        // Circle Color
         draw.setFillColor(new Color("#FAFCFB"));
         draw.fillPath();
         return draw.getImage();
