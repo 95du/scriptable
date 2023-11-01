@@ -354,7 +354,7 @@ async function main() {
   
   // 违章清零后
   const recoverVioStatus = () => {
-    notify(myPlate, '所有违章已处理，请遵守交通规则');
+    notify(`${myPlate} ♻️`, '所有违章已处理，请遵守交通规则');
     setting.count = 0
     setting.status = false;
     writeSettings(setting);
