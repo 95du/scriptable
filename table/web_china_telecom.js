@@ -224,8 +224,6 @@ async function main() {
   const SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
   
   // Small Widget Color
-  const bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#1e1e1e'));  
-  const bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
   const textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
   const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
 
@@ -297,7 +295,7 @@ df.dateFormat = 'ddHHmm'
       widget.backgroundColor = widgetBgColor;
     }
     
-    widget.setPadding(15, 15, 15, 15);
+    widget.setPadding(15, 15, 15, 15)
     const top = widget.addStack();
     top.layoutHorizontally();
     top.size = new Size(0, phone < 926 ? 25 : 30);
