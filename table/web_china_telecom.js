@@ -172,7 +172,7 @@ async function main() {
   const pacArr = items.flatMap((item) => item.items);
   const flowItems = pacArr.filter((item) => {
     const { ratableAmount: amount, ratableResourcename: name } = item;
-    return name.includes('流量') && !name.includes('定向') && amount !== '999999999999';
+    return name.includes('流量') && !name.includes('定向') && amount < '999999990000';
   });
   
   const totalFlow = flowItems.length > 0 ? flowItems.reduce((acc, item) => acc + Number(item.ratableAmount), 0) / 1048576 : total / 1048576;
