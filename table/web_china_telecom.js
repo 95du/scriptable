@@ -169,27 +169,17 @@ async function main() {
   const { items, total, balance, voiceAmount, voiceBalance, voice } = await fetchVoice();
   
   // 获取流量
-  let pacArr = [];
-  let newArr = [];
-  let balArr = [];
+  const pacArr = items.flatMap((item) => item.items);
+  const flowItems = pacArr.filter((item) => {
+    const { ratableAmount: amount, ratableResourcename: name } = item;
+    return name.includes('流量') && !name.includes('定向') && amount !== '999999999999';
+  });
   
-  for (let i in items) {
-    pacArr.push(...items[i].items);
-  }
+  const totalFlow = flowItems.length > 0 ? flowItems.reduce((acc, item) => acc + Number(item.ratableAmount), 0) / 1048576 : total / 1048576;
+  const totalBalance = flowItems.length > 0 ? flowItems.reduce((acc, item) => acc + Number(item.balanceAmount), 0) / 1048576 : balance / 1048576;
   
-  for (const item of pacArr) {
-    const { ratableAmount: amount, ratableResourcename: name, balanceAmount: balance } = item
-    if (name.includes('流量') && !name.includes('定向') && amount !== '999999999999') {
-      newArr.push(amount);
-      balArr.push(balance);
-    }
-  };
-  
-  const flowTotal = newArr.length > 0 ? newArr.reduce((acc, val) => acc + Number(val)) / 1048576 : total / 1048576;
-   const bal = newArr.length > 0 ? balArr.reduce((acc, val) => acc + Number(val)) / 1048576 : balance / 1048576;
-  
-  const flowBalance = bal.toFixed(2);
-  const flow = (bal / flowTotal * 100).toPrecision(3);
+  const flowBalance = totalBalance.toFixed(2);
+  const flow = ((totalBalance / totalFlow) * 100).toPrecision(3);
   
   // 获取余额
   const balances = await getCacheString('balance_new.json', 'https://e.189.cn/store/user/balance_new.do?t=189Bill');
@@ -542,22 +532,22 @@ df.dateFormat = 'ddHHmm'
     widget.addSpacer(3);
     
     getwidget(voiceAmount, voiceBalance, `${voiceBalance} 分钟 - ${voice}%`, getColor(voice));
-    getwidget(flowTotal, bal, `${flowBalance} GB - ${flow}%`, getColor(flow));
+    getwidget(totalFlow, totalBalance, `${flowBalance} GB - ${flow}%`, getColor(flow));
     
-    function getwidget(flowTotal, haveGone, str, progressColor) {
+    function getwidget(Total, haveGone, str, progressColor) {
       const title = widget.addText(str);
       title.centerAlignText();
       title.textColor = fm.fileExists(bgImage) ? Color.white() : textColor;
       title.font = Font.boldSystemFont(14);
       widget.addSpacer(3);
       
-      const img = widget.addImage(creatProgress(flowTotal, haveGone, progressColor));
+      const img = widget.addImage(creatProgress(Total, haveGone, progressColor));
       img.centerAlignImage();
       img.imageSize = new Size(width, height);
       widget.addSpacer(6);
     };
     
-    function creatProgress(flowTotal, haveGone, progressColor) {
+    function creatProgress(Total, haveGone, progressColor) {
       const context = new DrawContext();
       context.size = new Size(width, height);
       context.opaque = false
@@ -571,7 +561,7 @@ df.dateFormat = 'ddHHmm'
       context.setFillColor(haveGone < 0.3 ? widgetBgColor : progressColor);
       
       const path1 = new Path();
-      path1.addRoundedRect(new Rect(0, 0, width * haveGone / flowTotal, height), radius, radius);
+      path1.addRoundedRect(new Rect(0, 0, width * haveGone / Total, height), radius, radius);
       context.addPath(path1);
       context.fillPath();
       return context.getImage();
