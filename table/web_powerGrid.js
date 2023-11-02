@@ -154,10 +154,10 @@ async function main() {
   // totalPower & Yesterday
   const Run = async () => {
     const month = await getMonthData();
-    if ( month ) {  
+    if ( month ) {
       totalPower = month.totalPower;
       ystdayPower = month.result.pop().power;
-      beforeYesterday = month.result[month.result.length - 1].power ?? '0.00'
+      beforeYesterday = month.result.length ? month.result[month.result.length - 1].power : '0.00';
     } else {
       totalPower = '0.00';
       ystdayPower = '0.00';
