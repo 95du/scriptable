@@ -212,7 +212,7 @@ async function main() {
   const SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
   
   // Small Widget Color
-  const textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
+  const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
   const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
 
   const getColor = (value, isOpaque = false) => {
@@ -247,17 +247,10 @@ df.dateFormat = 'ddHHmm'
   
   const image = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
   const image1 = await getCacheImage('logo1.png', 'https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_1.png');
-  const bgImage = await getBgImagePath();
   
-  /**
-   * Create Medium Widget
-   * @param { string } string
-   * @param { image } image
-   */
-  async function createWidget() {
-    const widget = new ListWidget();
-    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
-    
+  // 组件背景
+  const background = async (widget) => {
+    const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
     } else if (setting.solidColor) {
@@ -282,6 +275,17 @@ df.dateFormat = 'ddHHmm'
     } else {
       widget.backgroundColor = widgetBgColor;
     }
+  };
+  
+  /**
+   * Create Medium Widget
+   * @param { string } string
+   * @param { image } image
+   */
+  async function createWidget() {
+    const widget = new ListWidget();
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
+    await background(widget);
     
     widget.setPadding(15, 15, 15, 15)
     const topStack = widget.addStack();
@@ -434,7 +438,10 @@ df.dateFormat = 'ddHHmm'
     }
   };
     
-  // Create Progress 柱状进度条
+  /**
+   * Create Progress 柱状进度条
+   * 中号小组件
+   */
   function creatProgress(barValue1, barValue2) {
     barValue1 = Math.round(barValue1);
     barValue2 = Math.round(barValue2);
@@ -506,16 +513,11 @@ df.dateFormat = 'ddHHmm'
    */
   const createSmallWidget = async () => {
     const widget = new ListWidget();
+    await background(widget);
     widget.setPadding(6, 0, 0, 0);
     if (balanceAvailable < 0) {
       widget.url = payment
     }
-    
-    if (fm.fileExists(bgImage)) {
-      widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
-    } else {
-      widget.backgroundColor = widgetBgColor;
-    };
 
     const width = 128
     const height = 8
@@ -537,7 +539,8 @@ df.dateFormat = 'ddHHmm'
     function getwidget(Total, haveGone, str, progressColor) {
       const title = widget.addText(str);
       title.centerAlignText();
-      title.textColor = fm.fileExists(bgImage) ? Color.white() : textColor;
+      title.textColor = textColor;
+      title.textOpacity = 0.75;
       title.font = Font.boldSystemFont(14);
       widget.addSpacer(3);
       
