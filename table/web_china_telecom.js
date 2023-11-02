@@ -296,25 +296,22 @@ df.dateFormat = 'ddHHmm'
     }
     
     widget.setPadding(15, 15, 15, 15)
-    const top = widget.addStack();
-    top.layoutHorizontally();
-    top.size = new Size(0, phone < 926 ? 25 : 30);
+    const topStack = widget.addStack();
+    topStack.layoutHorizontally();
+    topStack.size = new Size(0, phone < 926 ? 25 : 30);
     
-    const leftStack = top.addStack();
-    leftStack.centerAlignContent();
+    const leftStack = topStack.addStack();
     leftStack.addSpacer();
     const logoImage = 
     leftStack.addImage(image);
     logoImage.tintColor = new Color('#2B83F1');
     logoImage.centerAlignImage();
     leftStack.addSpacer();
-    top.addSpacer(50);
+    topStack.addSpacer(50);
     
-    const rightStack = top.addStack()
-    rightStack.centerAlignContent();
+    const rightStack = topStack.addStack()
     rightStack.addSpacer();
     const balanceText = rightStack.addText(balanceAvailable);
-    balanceText.centerAlignText();
     balanceText.textColor = new Color(balanceColor);
     balanceText.font = new Font('Georgia-Bold', phone < 926 ? 25 : 28);
     balanceText.url = payment
