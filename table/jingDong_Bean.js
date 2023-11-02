@@ -217,7 +217,7 @@ async function main() {
     const middleText = middleStack.addText(`京享值 ${info.jvalue.toString()}`);
     middleText.textColor = Color.white();
     middleText.textOpacity = 0.9
-    middleText.font = Font.boldSystemFont(11);
+    middleText.font = Font.boldSystemFont(12);
     middleStack.addSpacer();
     widget.addSpacer();
     
