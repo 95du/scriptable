@@ -170,26 +170,24 @@ async function main() {
   
   // 获取流量
   let pacArr = [];
+  let newArr = [];
+  let balArr = [];
+  
   for (let i in items) {
     pacArr.push(...items[i].items);
-  };
-
-  const filteredItems = pacArr.filter(item => {
-    const { ratableAmount: amount, ratableResourcename: name } = item
-    return name.includes('流量') && !name.includes('定向') && amount !== '999999999999';
-  });
-    
-  const calculateFlowTotals = (filteredItems, total, balance) => {
-    const newArr = filteredItems.map(item => item.ratableAmount);
-    const balArr = filteredItems.map(item => item.balanceAmount);
+  }
   
-    return {
-      flowTotal: newArr.length > 0 ? newArr.reduce((acc, val) => acc + Number(val)) / 1048576 : total / 1048576,
-      bal: newArr.length > 0 ? balArr.reduce((acc, val) => acc + Number(val)) / 1048576 : balance / 1048576
+  for (const item of pacArr) {
+    const { ratableAmount: amount, ratableResourcename: name, balanceAmount: balance } = item
+    if (name.includes('流量') && !name.includes('定向') && amount !== '999999999999') {
+      newArr.push(amount);
+      balArr.push(balance);
     }
   };
   
-  const { flowTotal, bal } = calculateFlowTotals(filteredItems, total, balance);
+  const flowTotal = newArr.length > 0 ? newArr.reduce((acc, val) => acc + Number(val)) / 1048576 : total / 1048576;
+   const bal = newArr.length > 0 ? balArr.reduce((acc, val) => acc + Number(val)) / 1048576 : balance / 1048576;
+  
   const flowBalance = bal.toFixed(2);
   const flow = (bal / flowTotal * 100).toPrecision(3);
   
@@ -490,7 +488,7 @@ df.dateFormat = 'ddHHmm'
     } else {
       context.setTextColor(new Color("#FFFFFF"));
       context.drawTextInRect('%', new Rect(0, barHeigth - 15, barWidth, barHeigth));
-    }
+    };
     
     if (barValue1 <= 10) {
       PosCorr = -15
@@ -502,7 +500,7 @@ df.dateFormat = 'ddHHmm'
       context.setTextColor(
         Color.white()
       );
-    }
+    };
     
     context.drawTextInRect(
       barValue1.toString(),
