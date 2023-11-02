@@ -205,7 +205,7 @@ async function main() {
   };
   
   // Color definitions
-  const widgetBgColor = Color.dynamic(new Color("#fefefe"), new Color("#1e1e1e"));
+  const widgetBgColor = Color.dynamic(new Color("#fefefe"), new Color("#111111"));
   const stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
   const barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
   const MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
