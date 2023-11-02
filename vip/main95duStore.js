@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1225,10 +1225,8 @@ document.getElementById('telegram').addEventListener('click', () => {
     
     // 组件效果图
     const previewEffectImgHtml = async () => {
-      const previewImgUrl = [  
-        `${rootUrl}img/picture/Example.png`,
-        `${rootUrl}img/picture/Example_1.png`
-      ];
+      const previewImgUrl = Array.from({ length: 3 }, (_, index) => `${rootUrl}img/picture/Example_${index}.png`);
+
       const previewImgs = await Promise.all(previewImgUrl.map(async (item) => {
         const imgName = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
         const previewImg = await getCacheImage(imgName, item);
