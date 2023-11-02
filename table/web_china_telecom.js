@@ -169,8 +169,8 @@ async function main() {
   const { items, total, balance, voiceAmount, voiceBalance, voice } = await fetchVoice();
   
   // 获取流量
-  const pacArr = items.flatMap((item) => item.items);
-  const flowItems = pacArr.filter((item) => {
+  const packageIiems = items.flatMap((item) => item.items);
+  const flowItems = packageIiems.filter((item) => {
     const { ratableAmount: amount, ratableResourcename: name } = item;
     return name.includes('流量') && !name.includes('定向') && amount < '999999990000';
   });
@@ -191,14 +191,13 @@ async function main() {
    */
   const date = Date.now();
   const dayNumber = Math.floor(date / 1000 / 60 / 60 / 24);
-  if (!setting.init || dayNumber !== setting.dayNumber) {
+  if (dayNumber !== setting.dayNumber) {
     writeSettings({ 
-      ...setting, 
-      init: true,
-      dayNumber, 
+      ...setting,
+      dayNumber,
       flow: flow ?? '0',
-      flowBalance, 
-      voice: voice ?? '0',  
+      flowBalance,
+      voice: voice ?? '0',
       voiceBalance
     });
     return null;
@@ -544,9 +543,9 @@ df.dateFormat = 'ddHHmm'
       title.font = Font.boldSystemFont(14);
       widget.addSpacer(3);
       
-      const img = widget.addImage(creatProgress(Total, haveGone, progressColor));
-      img.centerAlignImage();
-      img.imageSize = new Size(width, height);
+      const drawImage = widget.addImage(creatProgress(Total, haveGone, progressColor));
+      drawImage.centerAlignImage();
+      drawImage.imageSize = new Size(width, height);
       widget.addSpacer(6);
     };
     
