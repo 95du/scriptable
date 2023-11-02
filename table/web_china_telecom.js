@@ -298,6 +298,7 @@ df.dateFormat = 'ddHHmm'
     widget.setPadding(15, 15, 15, 15)
     const topStack = widget.addStack();
     topStack.layoutHorizontally();
+    topStack.centerAlignContent();
     topStack.size = new Size(0, phone < 926 ? 25 : 30);
     
     const leftStack = topStack.addStack();
@@ -309,12 +310,12 @@ df.dateFormat = 'ddHHmm'
     leftStack.addSpacer();
     topStack.addSpacer(50);
     
-    const rightStack = topStack.addStack()
+    const rightStack = topStack.addStack();
     rightStack.addSpacer();
     const balanceText = rightStack.addText(balanceAvailable);
     balanceText.textColor = new Color(balanceColor);
     balanceText.font = new Font('Georgia-Bold', phone < 926 ? 25 : 28);
-    balanceText.url = payment
+    balanceText.url = payment;
     rightStack.addSpacer();
     widget.addSpacer(phone < 926 ? 3 : 5);
     
