@@ -234,7 +234,7 @@ async function main() {
       ];
       widget.backgroundGradient = gradient;
     } else {
-      widget.backgroundColor = Color.dynamic(new Color('#fefefe', 0.5), new Color('#1e1e1e'));
+      widget.backgroundColor = Color.dynamic(new Color('#fefefe', 0.5), new Color('#111111'));
     };
     
     const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
