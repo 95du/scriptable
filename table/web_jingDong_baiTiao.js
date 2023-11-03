@@ -142,10 +142,8 @@ async function main() {
     }
   };
   
-  async function createWidget() {
-    const widget = new ListWidget();
-    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
-    
+  // 设置组件背景
+  const setBackground = async (widget) => {
     const bgImage = getBgImagePath();
     const Appearance = Device.isUsingDarkAppearance();
     if (fm.fileExists(bgImage) && Appearance === false) {
@@ -182,18 +180,25 @@ async function main() {
       widget.backgroundImage = randomBackgroundImage;
       widget.backgroundColor = Color.dynamic( new Color("#fefefe"), new Color('#111111'));
     }
+  };
+  
+  // 创建组件实例
+  async function createWidget() {
+    const widget = new ListWidget();
+    await setBackground(widget);
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
     
-    
-    /** 
-    * @param {image} image
-    * @param {string} string
-    */
+    /**
+     * @param {number} padding
+     * @returns {WidgetStack} 
+     */
     widget.setPadding(0, 0, 0, 0);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
     mainStack.centerAlignContent();
     mainStack.setPadding(gap, gap, gap, gap);
     mainStack.addSpacer();
+    
     // avatarStack
     const avatarStack = mainStack.addStack();
     avatarStack.layoutHorizontally();
