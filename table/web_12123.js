@@ -379,12 +379,8 @@ async function main() {
     }
   };
   
-  
-  //=========> Create <=========//
-  async function createWidget() {
-    const widget = new ListWidget();
-    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
-    
+  // 设置组件背景
+  const setBackground = async (widget) => {
     const bgImage = getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
@@ -408,8 +404,11 @@ async function main() {
       ];
       widget.backgroundGradient = gradient;  
       widget.backgroundColor = new Color(setting.solidColor);
-    };
-    
+    }
+  };
+  
+  //=========> Create <=========//
+  async function createWidget() {
     // 调用违章查询函数
     const queryResult = await violationQuery();
     const { success, vioList, detail, vio, photos } = queryResult;
@@ -422,6 +421,10 @@ async function main() {
      * @param {string} text
      * Cylindrical Bar Chart
      */
+    const widget = new ListWidget();
+    await setBackground(widget);
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
+
     widget.setPadding(15, 18, 15, 15)
     if (nothing || !success) {
       widget.addSpacer(3);
