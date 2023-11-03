@@ -85,11 +85,8 @@ async function main() {
     )
   };
   
-  // createWidget
-  async function createWidget() {
-    const widget = new ListWidget();
-    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
-    
+  // 设置组件背景
+  const setBackground = async (widget) => {
     widget.backgroundColor = Color.white();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
@@ -112,9 +109,15 @@ async function main() {
         new Color('#00000000')
       ];
       widget.backgroundGradient = gradient;
-    };
+    }
+  };
+  
+  // createWidget
+  async function createWidget() {
+    const widget = new ListWidget();
+    await setBackground(widget);
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
     
-    // Dynamic Island
     widget.setPadding(10, 10, 10, 10);
     const mainStack = widget.addStack();
     mainStack.layoutVertically();
