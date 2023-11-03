@@ -185,12 +185,6 @@ async function main() {
   const balances = await getCacheString('balance_new.json', 'https://e.189.cn/store/user/balance_new.do?t=189Bill');
   const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
   
-  const [ flow1st, flow2nd, voice1st, voice2nd ] = [ setting.flow, flow, voice, setting.voice ];
-  
-  const StepFin = 100;
-  const barWidth = 15;
-  const barHeigth = 111
-  
   /**
    * Get dayNumber
    * Daily dosage
@@ -208,6 +202,12 @@ async function main() {
     });
     return null;
   };
+  
+  const [ flow1st, flow2nd, voice1st, voice2nd ] = [ setting.flow, flow, voice, setting.voice ];
+  
+  const StepFin = 100;
+  const barWidth = 15;
+  const barHeigth = 111
   
   //=========> Color <=========//
   const widgetBgColor = Color.dynamic(
