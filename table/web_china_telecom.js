@@ -241,7 +241,7 @@ async function main() {
   const payment = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex';
   
   const df = new DateFormatter();
-df.dateFormat = 'ddHHmm'
+  df.dateFormat = 'ddHHmm'
   const day1st = df.string(new Date());
   
   const image = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
@@ -472,10 +472,7 @@ df.dateFormat = 'ddHHmm'
     path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
     context.addPath(path1);
     context.fillPath();
-    
-    context.setFont(
-      Font.boldSystemFont(8)
-    );
+    context.setFont(Font.boldSystemFont(barValue1 > 99.5 ? 6 : 8));
     context.setTextAlignedCenter();
     
     if (barValue1 < 90) {
