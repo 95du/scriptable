@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-green; icon-glyph: comments;
 /**
-* 小组件作者：95度茅台
+* 组件作者：95度茅台
 * Version 1.2.0
 * 2023-04-24 15:30
 * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
@@ -294,8 +294,8 @@ const presentMenu = async() => {
   if (mainMenu === 1) {
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
     const codeString = await reqUpdate.loadString();
-    const finish = new Alert();
     if (codeString.indexOf("95度茅台") == -1) {
+      const finish = new Alert();
       finish.title = "更新失败"
       finish.addAction('OK')
       await finish.presentAlert();
@@ -304,9 +304,6 @@ const presentMenu = async() => {
         module.filename,
         codeString
       );
-      finish.title = "更新成功"
-      finish.addAction('OK')
-      await finish.presentAlert();
       await runScriptable();
     }
   }
@@ -319,7 +316,7 @@ const presentMenu = async() => {
     await runScriptable();
   }
   if (mainMenu === 3) {
-    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).
+    await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).main()
   }
   if (mainMenu === 4) {
     await createWidget();
