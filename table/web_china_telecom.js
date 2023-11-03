@@ -210,15 +210,33 @@ async function main() {
   };
   
   //=========> Color <=========//
-  const widgetBgColor = Color.dynamic(new Color("#fefefe"), new Color("#111111"));
-  const stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
-  const barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
-  const MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
-  const SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
+  const widgetBgColor = Color.dynamic(
+    new Color("#fefefe"), 
+    new Color("#111111")
+  );
+  const stackBgColor = Color.dynamic(
+    new Color("#dfdfdf"), 
+    new Color("#444444")
+  );
+  const barBgColor = Color.dynamic(
+    new Color("#dfdfdf"), 
+    new Color("#cfcfcf")
+  );
+  const MainTextColor = Color.dynamic(
+    new Color("#000000"), 
+    new Color("#ffffff")
+  );
+  const SubTextColor = Color.dynamic(  
+    new Color("#666666"), 
+    new Color("#aaaaaa")
+  );
   
   // Small Widget Color
   const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
-  const barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
+  const barColor = Color.dynamic(
+    new Color('#CFCFCF'), 
+    new Color('#7A7A7A')
+  );
 
   const getColor = (value, isOpaque = false) => {
     const colorMap = new Map([
@@ -438,8 +456,8 @@ async function main() {
   };
     
   /**
-   * Create Progress 柱状进度条
-   * 中号小组件
+   * Create Progress 
+   * 中号组件柱状进度条
    */
   function creatProgress(barValue1, barValue2) {
     barValue1 = Math.round(barValue1);
@@ -509,7 +527,7 @@ async function main() {
    */
   const createSmallWidget = async () => {
     const widget = new ListWidget();
-    await background(widget);
+    await setBackground(widget);
     widget.setPadding(6, 0, 0, 0);
     if (balanceAvailable < 0) {
       widget.url = payment
