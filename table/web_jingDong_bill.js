@@ -204,13 +204,10 @@ async function main() {
         }
       }
     } // 全部账单
-  }
+  };
   
-  
-  async function createWidget() {
-    const widget = new ListWidget();
-    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
-    
+  // 设置组件背景
+  const setBackground = async (widget) => {
     const bgImage = getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
@@ -235,10 +232,21 @@ async function main() {
       widget.backgroundGradient = gradient;
     } else {
       widget.backgroundColor = Color.dynamic(new Color('#fefefe', 0.5), new Color('#111111'));
-    };
-    
+    }
+  };
+  
+  // 创建组件实例
+  async function createWidget() {
     const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
     
+    const widget = new ListWidget();
+    await setBackground(widget);
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
+    
+    /**
+     * @param {number} padding
+     * @returns {WidgetStack} 
+     */
     widget.setPadding(10, 10, 10, 10);
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
@@ -246,10 +254,10 @@ async function main() {
     mainStack.addSpacer();
     
     /** 
-    * Left Content
-    * @param {image} image
-    * @param {string} string
-    */
+     * Left Content
+     * @param {image} image
+     * @param {string} string
+     */
     const leftStack = mainStack.addStack();
     leftStack.layoutVertically();
     leftStack.centerAlignContent();
@@ -307,12 +315,11 @@ async function main() {
     baitiaoText.textColor = textColor;
     mainStack.addSpacer();
     
-    
     /** 
-    * Right Content
-    * @param {image} image
-    * @param {string} jd_value
-    */
+     * Right Content
+     * @param {image} image
+     * @param {string} jd_value
+     */
     const rightStack = mainStack.addStack();
     rightStack.layoutVertically();
     rightStack.centerAlignContent();
@@ -336,8 +343,8 @@ async function main() {
     jdIcon.imageSize = new Size(36, 36);
     
     /*
-    * Right Center Stack
-    */
+     * Right Center Stack
+     */
     const middleStack = rightStack.addStack();
     middleStack.layoutHorizontally();
     middleStack.setPadding(6, 0, 6, 0);
