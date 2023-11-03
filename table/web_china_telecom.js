@@ -247,8 +247,8 @@ async function main() {
   const image = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
   const image1 = await getCacheImage('logo1.png', 'https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_1.png');
   
-  // 组件背景
-  const background = async (widget) => {
+  // 设置组件背景
+  const setBackground = async (widget) => {
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
@@ -284,7 +284,7 @@ async function main() {
   async function createWidget() {
     const widget = new ListWidget();
     widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
-    await background(widget);
+    await setBackground(widget);
     
     widget.setPadding(15, 15, 15, 15)
     const topStack = widget.addStack();
