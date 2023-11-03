@@ -290,12 +290,9 @@ async function main() {
   } catch (error) {
     console.log(error);
   };
-
-  //=========> Create <=========//
-  const createWidget = async () => {
-    const widget = new ListWidget();
-    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
-
+  
+  // 设置组件背景
+  const setBackground = async (widget) => {
     const bgImage = getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
@@ -319,17 +316,29 @@ async function main() {
       ];
       widget.backgroundGradient = gradient;  
       widget.backgroundColor = new Color(setting.solidColor);
-    };
-    
+    }
+  };
+  
+  //=========> Create <=========//
+  const createWidget = async () => {
     if ( !setting.run ) {
       writeSettings(runObj);
       await getRandomImage();
     }
     
+    const widget = new ListWidget();
+    await setBackground(widget);
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
+
+    /**
+     * @param {number} padding
+     * @returns {WidgetStack} 
+     */
     widget.setPadding(10, 10, 10, 15);
     const mainStack = widget.addStack();
     mainStack.layoutHorizontally();
     mainStack.addSpacer();
+    
     /**
      * Left Stack
      * @param {image} SFSymbol
