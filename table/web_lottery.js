@@ -269,11 +269,8 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     writeSettings(setting);
   };
   
-  //=========> Create <=========//
-  const createWidget = async () => {
-    const widget = new ListWidget();
-    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
-
+  // 设置组件背景
+  const setBackground = async (widget) => {
     const bgImage = getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage));
@@ -299,8 +296,15 @@ getString('https://m.zhuying.com/api/lotapi/indexV2/1');
     } else {
       widget.backgroundColor = Color.dynamic(new Color("#fefefe"), new Color('#111111'));
       widget.backgroundImage = await getCacheImage('logo.png', 'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/baiTiaoBg2.png');
-    };
-    
+    }
+  };
+  
+  //=========> Create <=========//
+  const createWidget = async () => {
+    const widget = new ListWidget();
+    await setBackground(widget);
+    widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
+
     /**
      * @param {number} padding
      * @returns {WidgetStack} 
