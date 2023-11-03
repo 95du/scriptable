@@ -284,10 +284,8 @@ const getInfo = async () => {
   return { state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
 };
 
-
-//=========> Create <=========//
-const createWidget = async () => {
-  const widget = new ListWidget();
+// 设置组件背景
+const setBackground = async (widget) => {
   widget.backgroundColor = Color.white();
   const gradient = new LinearGradient();
   const color = [
@@ -305,7 +303,10 @@ const createWidget = async () => {
     new Color('#00000000')
   ];
   widget.backgroundGradient = gradient;
-  
+};
+
+//=========> Create <=========//
+const createWidget = async () => {
   const { state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
 
   // Initial Save
@@ -318,7 +319,10 @@ const createWidget = async () => {
    * @param {number} padding
    * @returns {WidgetStack} 
    */
+  const widget = new ListWidget();
+  await setBackground(widget);
   widget.setPadding(10, 10, 10, 15);
+  
   const mainStack = widget.addStack();
   mainStack.layoutHorizontally();
   mainStack.addSpacer();
