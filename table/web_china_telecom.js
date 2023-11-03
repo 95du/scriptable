@@ -185,6 +185,12 @@ async function main() {
   const balances = await getCacheString('balance_new.json', 'https://e.189.cn/store/user/balance_new.do?t=189Bill');
   const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
   
+  const [ flow1st, flow2nd, voice1st, voice2nd ] = [ setting.flow, flow, voice, setting.voice ];
+  
+  const StepFin = 100;
+  const barWidth = 15;
+  const barHeigth = 111
+  
   /**
    * Get dayNumber
    * Daily dosage
@@ -203,7 +209,7 @@ async function main() {
     return null;
   };
   
-  // Color definitions
+  //=========> Color <=========//
   const widgetBgColor = Color.dynamic(new Color("#fefefe"), new Color("#111111"));
   const stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
   const barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
@@ -231,12 +237,6 @@ async function main() {
   };
   
   //=========> config <=========//
-  const [ flow1st, flow2nd, voice1st, voice2nd ] = [ setting.flow, flow, voice, setting.voice ];
-  
-  const StepFin = 100;
-  const barWidth = 15;
-  const barHeigth = 111
-  
   const phone = Device.screenSize().height;
   const payment = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex';
   
