@@ -6,6 +6,7 @@
  * 组件名称: 人民币汇率
  * Version 1.0.0
  * 2023-11-04 16:30
+ * https://www.wochala.com/huilv/currency-cny.html
  */
 
 async function main() {
@@ -40,24 +41,8 @@ async function main() {
     fm.writeString(settingPath, JSON.stringify(settings, null, 2));
     console.log(JSON.stringify(
       settings, null, 2)
-    );
-  }
-  
-  /**  
-  * 弹出一个通知
-  * @param {string} title
-  * @param {string} body
-  * @param {string} url
-  * @param {string} sound
-  */
-  const notify = async (title, body, url) => {
-    let n = new Notification();
-    n.title = title
-    n.body = body
-    n.sound = 'alert'
-    if (url) {n.openURL = url}
-    return await n.schedule();
-  }
+    )
+  };
   
   /**
    * 获取背景图片存储目录路径
@@ -66,7 +51,7 @@ async function main() {
   const getBgImagePath = () => {
     const bgPath = fm.joinPath(fm.documentsDirectory(), '95duBackground');
     return fm.joinPath(bgPath, Script.name() + '.jpg');
-  }
+  };
   
   /**
    * 获取图片并使用缓存
@@ -241,12 +226,12 @@ async function main() {
     
     const iconStack = topStack.addStack();
     iconStack.cornerRadius = radius;
-    const topImage = iconStack.addImage(fromImage);  
+    const topLeftImage = iconStack.addImage(fromImage);  
+    topLeftImage.imageSize = new Size(60, 60);
     if (currency === 'SGD' && !Device.isUsingDarkAppearance()) {
       iconStack.borderWidth = 1
       iconStack.borderColor = Color.gray();
     }
-    topImage.imageSize = new Size(60, 60);
     topStack.addSpacer();
     
     const rightStack = topStack.addStack();
