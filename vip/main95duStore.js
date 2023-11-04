@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -369,7 +369,7 @@ async function main() {
       position: relative;
       width: auto;
       margin: ${Device.screenSize().height < 926 ? '62px' : '78px'};
-      top: ${Device.screenSize().height < 926 ? '-121%' : '-111%'}; /* 弹窗位置 */
+      top: ${Device.screenSize().height < 926 ? '-125.5%' : '-115.5%'}; /* 弹窗位置 每加一个组件 + 6 */
     }
     
     .modal-backdrop {
