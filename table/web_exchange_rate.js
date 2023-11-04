@@ -149,7 +149,7 @@ async function main() {
   };
   
   const fetchExchangeRate = async () => {
-    const { result } = await getCacheString('exchangeRate.json', `https://www.wochala.com/api.huilv/convert?from=${setting.currency}&to=cny&amount=1`);
+    const { result } = await getCacheString(`${setting.currency}.json`, `https://www.wochala.com/api.huilv/convert?from=${setting.currency}&to=cny&amount=1`);
     return result;
   };
 
