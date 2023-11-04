@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1376,6 +1376,14 @@ document.getElementById('telegram').addEventListener('click', () => {
         label: '新版组件',
         type: 'group',
         items: [
+          {
+            label: '人民币汇率',
+            desc: '常用国际货币汇率',
+            rightDesc: '1.0.0',
+            type: 'button',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_exchange_rate.js',
+            icon: `${rootUrl}img/icon/exchange_rate.png`
+          },
           {
             label: '开奖结果',
             desc: '体育彩票、福彩彩票',
