@@ -3,9 +3,9 @@
 // icon-color: deep-blue; icon-glyph: sort-alpha-up;
 /**
  * 组件作者: 95度茅台
- * 组件名称: 中国电信余量
- * Version 1.0.2
- * 2023-10-30 16:30
+ * 组件名称: 人民币汇率
+ * Version 1.0.0
+ * 2023-11-04 16:30
  */
 
 async function main() {
