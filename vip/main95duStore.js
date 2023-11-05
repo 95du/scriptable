@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: cog;
-
+main()
 async function main() {
   const uri = Script.name();
   const scriptName = 'Script Store'
@@ -1525,9 +1525,9 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '京东',
             desc: '京豆、农场、签到等',
-            rightDesc: '1.0.5',
+            rightDesc: '1.0.0',
             type: 'button',
-            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/module_jingDong.js',
+            scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_jingDong.js',
             icon: `${rootUrl}img/icon/jd.png`
           },
           {
