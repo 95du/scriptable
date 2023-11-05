@@ -258,7 +258,7 @@ async function main() {
       jda: "-1",
       rnVersion: "3.9"
     }`
-    const response = await makeRequest(url, 'POST', headers, body);
+    const response = await getCacheString('signBeanAct.json', url, 'POST', headers, body);
     if (response.code === '0') {
       const { data } = response;
       const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
@@ -275,7 +275,7 @@ async function main() {
     } else {
       setting.code = 3;
       writeSettings(setting);
-      notify(res.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
+      notify(response.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
     }
   };
   const { continuousDays, tomorrowSendBeans } = await signBeanAct();
@@ -372,8 +372,9 @@ async function main() {
         lightColor: '#000000',
         darkColor: '#FFFFFF'
       }
-    };  
-
+    };    
+    writeSettings(setting);
+    
     // Stack & Text Color
     stackSize = new Size(0, 64);
     stackBackground = Color.dynamic(
@@ -401,6 +402,8 @@ async function main() {
    */
   const createWidget = async () => {
     const widget = new ListWidget();
+    widget.url = setting.schemeUrl;
+    
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
@@ -497,16 +500,13 @@ async function main() {
     randomText2.textOpacity = 0.8;
     contentStack.addSpacer();
     
-    widget.url = setting.schemeUrl
-    writeSettings(setting);
-    
     if (config.runsInApp) {
       await widget.presentSmall();
     } else {
       Script.setWidget(widget);
       Script.complete();
     }
-    return widget;
+    return widget
   };
   
   
