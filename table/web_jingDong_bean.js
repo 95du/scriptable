@@ -408,7 +408,7 @@ async function main() {
     if (fm.fileExists(bgImage)) {
       widget.backgroundImage = await shadowImage(fm.readImage(bgImage))
     } else {
-      widget.backgroundColor = Color.dynamic(new Color('#967969'), new Color('#555555'));
+      widget.backgroundColor = Color.dynamic(new Color('#999999'), new Color('#2B2B2E'));
     };
     
     /* Top Content */
