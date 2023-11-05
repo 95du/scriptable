@@ -292,9 +292,9 @@ async function main() {
       const status = state === '1';
       val = {
         leading: 3,
-        imageSize: 42,
+        imageSize: 38,
         spac: 3,
-        logoImage: 'https://img30.360buyimg.com/jdmonitor/jfs/t1/181893/30/3987/817/609e1793Eb465f6e0/ea370a95758beddf.png',
+        logoImage: 'https://kjimg10.360buyimg.com/jr_image/jfs/t1/199054/27/38361/3140/64ddf97fFb4d2b813/8c93bcb38b2b244c.png',
         text1: status ? `额度 ${Math.round(quotaLeft.replace(',', ''))}` : '额度 0.00',
         text2: status ? `待还 ${amount}` : '0.00',
         lightColor: '#FF0000',
