@@ -27,7 +27,7 @@ async function main() {
    */
   const getBotSettings = (file) => {
     if (fm.fileExists(file)) {
-      return { radius, iconSize, padding } = JSON.parse(fm.readString(file));
+      return { solidColor, radius, iconSize, padding } = JSON.parse(fm.readString(file));
     }
     return null;
   };
