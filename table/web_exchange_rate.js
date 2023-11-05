@@ -27,7 +27,7 @@ async function main() {
    */
   const getBotSettings = (file) => {
     if (fm.fileExists(file)) {
-      return { radius, iconSize } = JSON.parse(fm.readString(file));
+      return { radius, iconSize, padding } = JSON.parse(fm.readString(file));
     }
     return null;
   };
@@ -219,7 +219,7 @@ async function main() {
     widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
     await setBackground(widget);
     
-    widget.setPadding(18, 18, 18, 18)
+    widget.setPadding(padding, padding, padding, padding);
     const topStack = widget.addStack();
     topStack.layoutHorizontally();
     topStack.centerAlignContent();
