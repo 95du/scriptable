@@ -370,7 +370,8 @@ async function main() {
     middleStack.addSpacer();
     
     const moneyBagUrl = [
-      'https://img30.360buyimg.com/jdmonitor/jfs/t1/191158/3/10079/3167/60d4547bEee00ce33/dc8d2287590e39af.png',
+      'https://img30.360buyimg.com/jdmonitor/jfs/t1/191158/3/10079/3167/60d4547bEee00ce33/dc8d2287590e39af.png',  
+      'https://kjimg10.360buyimg.com/jr_image/jfs/t1/205492/13/33247/3505/64ddf97fF4361af37/ffad1b1ba160d127.png',
       'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png'
     ];
     const moneyBag = moneyBagUrl[Math.floor(Math.random() * moneyBagUrl.length)];
@@ -557,10 +558,7 @@ async function main() {
       Cookie: cookie
     }
     const { base } = await req.loadJSON();
-    return {
-      headImageUrl,
-      nickname
-    } = base;
+    return { headImageUrl, nickname } = base;
   }
   
   async function totalAsset() {
