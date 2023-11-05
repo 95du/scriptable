@@ -27,7 +27,7 @@ async function main() {
    */
   const getBotSettings = (file) => {
     if (fm.fileExists(file)) {
-      return { radius, solidColor } = JSON.parse(fm.readString(file));
+      return { radius, iconSize } = JSON.parse(fm.readString(file));
     }
     return null;
   };
@@ -227,7 +227,7 @@ async function main() {
     const iconStack = topStack.addStack();
     iconStack.cornerRadius = radius;
     const topLeftImage = iconStack.addImage(fromImage);  
-    topLeftImage.imageSize = new Size(60, 60);
+    topLeftImage.imageSize = new Size(iconSize, iconSize);
     if (currency === 'SGD' && !Device.isUsingDarkAppearance() && solidColor) {
       iconStack.borderWidth = 1
       iconStack.borderColor = Color.gray();
@@ -280,7 +280,7 @@ async function main() {
     const iconStack2 = bottomStack.addStack();
     iconStack2.cornerRadius = radius;
     const bottomImage = iconStack2.addImage(toImage);
-    bottomImage.imageSize = new Size(60, 60);
+    bottomImage.imageSize = new Size(iconSize, iconSize);
     
     if (!config.runsInWidget) {  
       await widget.presentSmall();
