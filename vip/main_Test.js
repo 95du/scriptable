@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: pink; icon-glyph: cloud-download-alt;
 async function main() {
-  const [url, fm] = ['https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js', FileManager.iCloud()];
+  const [url, fm] = ['https://gitcode.net/4qiao/framework/raw/master/mian/web_module_jingDong.js', FileManager.iCloud()];
   const script = await new Request(url).loadString();
   fm.writeString(fm.documentsDirectory() + '/京东_2.js', script);
   fm.remove(module.filename);
