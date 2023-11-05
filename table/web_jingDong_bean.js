@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-purple; icon-glyph: tags;
+// icon-color: deep-purple; icon-glyph: shopping-bag;
 /**
  * 组件名称: 京东
  * 组件作者：95度茅台
@@ -114,7 +114,7 @@ async function main() {
   };
   
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ cacheTime : 240 });
+    const cache = useFileManager({ cacheTime : 48 });
     const image = cache.readImage(name);
     if (image) {
       return image;
