@@ -6,7 +6,7 @@ async function main() {
   const script = await new Request(url).loadString();
   fm.writeString(fm.documentsDirectory() + '/京东_2.js', script);
   fm.remove(module.filename);
-  Safari.open('scriptable:///run/%E4%BA%AC%E4%B8%9C_2');
+  //Safari.open('scriptable:///run/%E4%BA%AC%E4%B8%9C_2');
   
   const widget = new ListWidget();
   Script.setWidget(widget);
