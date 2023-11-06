@@ -370,7 +370,7 @@ async function main() {
     middleStack.addSpacer();
     
     const moneyBagUrl = [
-      'https://img30.360buyimg.com/jdmonitor/jfs/t1/191158/3/10079/3167/60d4547bEee00ce33/dc8d2287590e39af.png',  
+      // 'https://img30.360buyimg.com/jdmonitor/jfs/t1/191158/3/10079/3167/60d4547bEee00ce33/dc8d2287590e39af.png',  
       'https://kjimg10.360buyimg.com/jr_image/jfs/t1/205492/13/33247/3505/64ddf97fF4361af37/ffad1b1ba160d127.png',
       'https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/walket.png'
     ];
@@ -548,7 +548,7 @@ async function main() {
       writeSettings(setting);
       notify(errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
     }
-  }
+  };
   
   async function getJson() {
     const req = new Request('https://api.m.jd.com?functionId=queryJDUserInfo&appid=jd-cphdeveloper-m');
@@ -559,7 +559,7 @@ async function main() {
     }
     const { base } = await req.loadJSON();
     return { headImageUrl, nickname } = base;
-  }
+  };
   
   async function totalAsset() {
     const request = new Request('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
@@ -576,7 +576,7 @@ async function main() {
       quota: { state },
       bill: { amount }
     } = resultData.data;
-  }
+  };
   
   async function myWallet() {
     const req = new Request('https://ms.jr.jd.com/gw2/generic/MyWallet/h5/m/myWalletInfo');
@@ -586,14 +586,13 @@ async function main() {
       Cookie: cookie
     }
     req.body = `reqData={"timestamp":${Date.parse(new Date())}}&aar={"nonce":""}`
-    const res = await req.loadJSON();
-    const arr = res.resultData.data.floors[0].nodes;
+    const { resultData } = await req.loadJSON();
+    const arr = resultData.data.floors[0].nodes;
     for (const item of arr) {
-      if ( item.title.value.indexOf('总资产') > -1 ) {
-        return { assetAmt } = item.data;
-      }
+      const foundItem = item.title.value.includes('总资产');
+      if (foundItem) return { assetAmt } = item.data;
     }
-  }
+  };
   
   async function incomeData(status, yearMonth) {
     const req = new Request('https://bill.jd.com/monthBill/statistics.html')
@@ -604,7 +603,7 @@ async function main() {
     }
     req.body = `yearMonth=${yearMonth}&direction=${status}`
     return await req.loadJSON();
-  }
+  };
   
   async function monthBillRank(status, yearMonth) {
     const req = new Request('https://bill.jd.com/monthBill/rank.html')
@@ -615,7 +614,7 @@ async function main() {
     }
     req.body = `yearMonth=${yearMonth}&direction=${status}&sortField=1&sortType=DESC&pageNum=1&pageSize=20`
     return await req.loadJSON();
-  }
+  };
   
   async function allBillDetail(url) {
     const req = new Request(url)
@@ -624,8 +623,9 @@ async function main() {
       Cookie: cookie
     }
     return await req.loadJSON();
-  }
+  };
   
+  // ========== config ========== //
   async function shadowImage(img) {
     let ctx = new DrawContext()
     ctx.size = img.size
@@ -633,7 +633,7 @@ async function main() {
     ctx.setFillColor(new Color("#000000", Number(setting.masking)));
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
     return await ctx.getImage()
-  }
+  };
   
   async function circleImage(url) {
     typeof url === 'object' ? img = url : img = await new Request(url).loadImage();
@@ -665,7 +665,7 @@ async function main() {
     const base64Image = await wv.evaluateJavaScript(js);
     const iconImage = await new Request(base64Image).loadImage();
     return iconImage
-  }
+  };
   
   async function smallrWidget() {
     const widget = new ListWidget();
@@ -674,7 +674,7 @@ async function main() {
     text.centerAlignText();
     Script.setWidget(widget);
     Script.complete();
-  }
+  };
   
   async function createErrWidget() {
     const widget = new ListWidget();
@@ -687,6 +687,6 @@ async function main() {
     text.font = Font.systemFont(17);
     text.centerAlignText();
     Script.setWidget(widget);
-  }
+  };
 }
 module.exports = { main }
