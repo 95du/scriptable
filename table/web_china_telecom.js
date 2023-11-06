@@ -40,8 +40,8 @@ async function main() {
     fm.writeString(settingPath, JSON.stringify(settings, null, 2));
     console.log(JSON.stringify(
       settings, null, 2)
-    );
-  }
+    )
+  };
   
   /**  
   * 弹出一个通知
@@ -57,7 +57,7 @@ async function main() {
     n.sound = 'alert'
     if (url) {n.openURL = url}
     return await n.schedule();
-  }
+  };
   
   /**
    * 获取背景图片存储目录路径
@@ -66,7 +66,7 @@ async function main() {
   const getBgImagePath = () => {
     const bgPath = fm.joinPath(fm.documentsDirectory(), '95duBackground');
     return fm.joinPath(bgPath, Script.name() + '.jpg');
-  }
+  };
   
   /**
    * 获取图片并使用缓存
@@ -299,7 +299,7 @@ async function main() {
    * @param { string } string
    * @param { image } image
    */
-  async function createWidget() {
+  const createWidget = async () => {
     const widget = new ListWidget();
     widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
     await setBackground(widget);
@@ -459,7 +459,7 @@ async function main() {
    * Create Progress 
    * 中号组件柱状进度条
    */
-  function creatProgress(barValue1, barValue2) {
+  const creatProgress = (barValue1, barValue2) => {
     barValue1 = Math.round(barValue1);
     barValue2 = Math.round(barValue2);
     const context = new DrawContext();
@@ -586,6 +586,7 @@ async function main() {
     return widget;
   };
   
+  // 图片遮罩
   async function shadowImage(img) {
     let ctx = new DrawContext();
     ctx.size = img.size
