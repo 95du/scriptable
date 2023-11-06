@@ -216,7 +216,7 @@ async function main() {
   };
   
   //=========> Create <=========//
-  async function createWidget() {
+  const createWidget = async () => {
     const widget = new ListWidget();
     await setBackground(widget);
     widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * Number(setting.refresh));
@@ -458,7 +458,7 @@ async function main() {
         draw.setFillColor(new Color("#FAFCFB"));
         draw.fillPath();
         return draw.getImage();
-      }
+      };
       
       prgsStack.addSpacer();
       const isPercent2 = String(Math.floor(totalPower / total * 100));
