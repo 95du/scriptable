@@ -408,7 +408,7 @@ async function main() {
   };
   
   //=========> Create <=========//
-  async function createWidget() {
+  const createWidget = async () => {
     // 调用违章查询函数
     const queryResult = await violationQuery();
     const { success, vioList, detail, vio, photos } = queryResult;
