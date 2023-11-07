@@ -100,9 +100,7 @@ async function main() {
   const getCacheImage = async (name, url) => {
     const cache = useFileManager({ cacheTime : 240 });
     const image = cache.readImage(name);
-    if (image) {
-      return image;
-    }
+    if (image) return image;
     const img = await getImage(url);
     cache.writeImage(name, img);
     return img;
@@ -230,7 +228,7 @@ async function main() {
     topLeftImage.imageSize = new Size(iconSize, iconSize);
     if (currency === 'SGD' || currency === 'CAD' && !Device.isUsingDarkAppearance() && solidColor) {
       iconStack.borderWidth = 0.7
-      iconStack.borderColor = Color.gray();
+      iconStack.borderColor = Color.red();
     }
     topStack.addSpacer();
     
