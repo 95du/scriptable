@@ -14,7 +14,7 @@ async function main() {
   
   const getCachePath = (dirName) => fm.joinPath(mainPath, dirName);
   
-  const [ settingPath, cacheImg, cacheStr, cacheCar] = [
+  const [ settingPath, cacheImg, cacheStr, cacheCar ] = [
     'setting.json',
     'cache_image',
     'cache_string',
@@ -189,9 +189,7 @@ async function main() {
   const getCacheImage = async (name, url) => {
     const cache = useFileManager();
     const image = cache.readImage(name);
-    if ( image ) {
-      return image;
-    }
+    if ( image ) return image;
     const img = await getImage(url);
     cache.writeImage(name, img);
     return img;
@@ -211,7 +209,7 @@ async function main() {
     const response = await requestInfo(api, params);
     const jsonFile = JSON.stringify(response);
     const { success } = JSON.parse(jsonFile);
-    if (success) {
+    if (success) {  
       cache.writeString(jsonName, jsonFile);
     }
     return JSON.parse(jsonFile);
