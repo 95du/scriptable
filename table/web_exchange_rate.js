@@ -228,8 +228,8 @@ async function main() {
     iconStack.cornerRadius = radius;
     const topLeftImage = iconStack.addImage(fromImage);  
     topLeftImage.imageSize = new Size(iconSize, iconSize);
-    if (currency === 'SGD' && !Device.isUsingDarkAppearance() && solidColor) {
-      iconStack.borderWidth = 1
+    if (currency === 'SGD' || currency === 'CAD' && !Device.isUsingDarkAppearance() && solidColor) {
+      iconStack.borderWidth = 0.7
       iconStack.borderColor = Color.gray();
     }
     topStack.addSpacer();
