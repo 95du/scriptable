@@ -115,9 +115,7 @@ async function main() {
   const getCacheImage = async (name, url) => {
     const cache = useFileManager({ cacheTime : 240 });
     const image = cache.readImage(name);
-    if (image) {
-      return image;
-    }
+    if (image) return image;
     const img = await getImage(url);
     cache.writeImage(name, img);
     return img;
