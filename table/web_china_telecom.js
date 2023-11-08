@@ -214,7 +214,7 @@ async function main() {
   );
   const stackBgColor = Color.dynamic(
     new Color("#dfdfdf"), 
-    new Color("#444444")
+    new Color("#333333")
   );
   const barBgColor = Color.dynamic(
     new Color("#dfdfdf"), 
