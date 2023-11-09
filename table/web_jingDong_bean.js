@@ -138,7 +138,7 @@ async function main() {
     const response = await makeRequest(url, method, headers, body);
     const jsonFile = JSON.stringify(response);
     const parsed = JSON.parse(jsonFile);
-    if (parsed.retcode === 0 || parsed.resultCode === 0 || parsed.code == 0 || parsed.list) {
+    if (parsed.retcode === 0 || parsed.resultCode === 0 || parsed.code == 0 || parsed.list|| parsed.data.status === '2') {
       cache.writeString(jsonName, jsonFile);
     }
     return JSON.parse(jsonFile);
