@@ -384,7 +384,6 @@ async function main() {
     
     // Progress bar 1
     const BarContent1 = Content.addStack();
-    BarContent1.layoutVertically();
     const progressBar1st = BarContent1.addImage(creatProgress(flow2nd, flow1st));
     progressBar1st.cornerRadius = 6
     progressBar1st.imageSize = new Size(barWidth, barHeigth);
@@ -392,7 +391,6 @@ async function main() {
    
     // Progress bar 2
     const BarContent2 = Content.addStack();
-    BarContent2.layoutVertically();
     const progressBar2nd = BarContent2.addImage(creatProgress(voice1st, voice2nd));
     progressBar2nd.cornerRadius = 6
     progressBar2nd.imageSize = new Size(barWidth, barHeigth);
@@ -488,7 +486,7 @@ async function main() {
     path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
     context.addPath(path1);
     context.fillPath();
-    context.setFont(Font.boldSystemFont(barValue1 > 99.5 ? 6 : 8));
+    context.setFont(Font.boldSystemFont(barValue1 > 99 ? 6 : 8));
     context.setTextAlignedCenter();
     
     if (barValue1 < 90) {
