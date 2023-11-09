@@ -242,8 +242,8 @@ async function main() {
       [ 20, isOpaque ? new Color("#BE62F375") : new Color("#F7B500") ],
       [ 40, isOpaque ? new Color("#0083FF75") : new Color("#FFA500") ],
       [ 50, isOpaque ? new Color("#FFA50075") : new Color("#BE62F3") ],
-      [ 70, isOpaque ? new Color("#FFA50075") : new Color("#0083FF") ],
-      [ 80, isOpaque ? new Color("#FFA50075") : new Color("#44CB9C") ]
+      [ 65, isOpaque ? new Color("#FFA50075") : new Color("#0083FF") ],
+      [ 75, isOpaque ? new Color("#FFA50075") : new Color("#44CB9C") ]
     ]);
   
     for (let [thresholdBetween, color] of colorMap) {
