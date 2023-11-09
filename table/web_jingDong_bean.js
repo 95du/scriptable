@@ -4,8 +4,8 @@
 /**
  * 组件名称: 京东
  * 组件作者：95度茅台
- * Version 1.0.0
- * 2023-11-06 11:30
+ * Version 1.0.1
+ * 2023-11-09 18:30
  */
 
 
@@ -265,9 +265,6 @@ async function main() {
       if (status === '1') {
         const filePath = fm.joinPath(cacheStr, 'signBeanAct.json');
         if (fm.fileExists(filePath)) fm.remove(filePath);
-        
-        setting.signData = data
-        writeSettings(setting);
         if (dailyAward) {
           notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
         } else {
