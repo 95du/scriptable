@@ -77,7 +77,7 @@ async function main() {
   const useFileManager = ({ cacheTime } = {}) => {
     return {
       readString: (name) => {
-        const filePath = fm.joinPath(cacheStr, name);  
+        const filePath = fm.joinPath(cacheStr, name);
         const fileExists =  fm.fileExists(filePath);
         if (fileExists && hasExpired(filePath) > cacheTime) {
           fm.remove(filePath);
@@ -138,7 +138,7 @@ async function main() {
     const response = await makeRequest(url, method, headers, body);
     const jsonFile = JSON.stringify(response);
     const parsed = JSON.parse(jsonFile);
-    if (parsed.retcode === 0 || parsed.resultCode === 0 || parsed.code == 0 || parsed.list|| parsed.data.status === '2') {
+    if (parsed.retcode === 0 || parsed.resultCode === 0 || parsed.code == 0 || parsed.list) {
       cache.writeString(jsonName, jsonFile);
     }
     return JSON.parse(jsonFile);
@@ -263,6 +263,9 @@ async function main() {
       const { data } = response;
       const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
       if (status === '1') {
+        const filePath = fm.joinPath(cacheStr, 'signBeanAct.json');
+        if (fm.fileExists(filePath)) fm.remove(filePath);
+        
         setting.signData = data
         writeSettings(setting);
         if (dailyAward) {
