@@ -359,7 +359,7 @@ async function main() {
     ddeleteJsonFiles(cacheStr);
   };
   
-  // 新的违章通知
+  // 违章变动通知
   const newViolation = async (surveils, plate, count) => {
     setting.count = count;
     setting.status = true,
@@ -437,10 +437,10 @@ async function main() {
     plateText.textColor = new Color(setting.titleColor);
     topStack.addSpacer();
     
-    const text12123 = topStack.addText('12123');
-    text12123.font = Font.mediumSystemFont(18);
-    text12123.rightAlignText();
-    text12123.textColor = new Color('#0061FF');
+    const topRightText = topStack.addText('12123');
+    topRightText.font = Font.mediumSystemFont(18);
+    topRightText.rightAlignText();
+    topRightText.textColor = new Color('#0061FF');
     
     /**
      * mainStack
@@ -498,10 +498,10 @@ async function main() {
       
     // 
     const updateTime = dateStack.addStack();
-    const textUpdateTime = updateTime.addText(nothing || !success || vio.violationTime === 'undefined' ? referer.match(/validPeriodEnd=(\d{4}-\d{2}-\d{2})&/)[1] : vio.violationTime);
-    textUpdateTime.font = Font.mediumSystemFont(nothing ? 13 : 11.8);
-    textUpdateTime.textColor = textColor;
-    textUpdateTime.textOpacity = 0.7
+    const updateTimeText = updateTime.addText(nothing || !success || vio.violationTime === 'undefined' ? referer.match(/validPeriodEnd=(\d{4}-\d{2}-\d{2})&/)[1] : vio.violationTime);
+    updateTimeText.font = Font.mediumSystemFont(nothing ? 13 : 11.8);
+    updateTimeText.textColor = textColor;
+    updateTimeText.textOpacity = 0.7
     leftStack.addSpacer();
     
     /**
