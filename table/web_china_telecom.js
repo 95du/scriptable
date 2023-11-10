@@ -608,7 +608,7 @@ async function main() {
     } else {
       await createWidget();
     }
-  }
+  };
   await runWidget();
 }
 module.exports = { main }
