@@ -141,6 +141,20 @@ async function main() {
   };
   
   /**
+   * 获取网络图片并使用缓存
+   * @param {string} name url
+   * @returns {Image} - string
+   */
+  const getCacheImage = async (name, url) => {
+    const cache = useFileManager();
+    const image = cache.readImage(name);
+    if ( image ) return image;
+    const img = await getImage(url);
+    cache.writeImage(name, img);
+    return img;
+  };
+  
+  /**
    * 获取车辆图片并使用缓存
    * @param {string} File Extension
    * @returns {image} - Request
@@ -179,20 +193,6 @@ async function main() {
     }
   } catch (e) {
     vehicleImg = fm.readImage(fm.joinPath(cacheCar, 'Maybach-8.png'));
-  };
-  
-  /**
-   * 获取网络图片并使用缓存
-   * @param {string} name url
-   * @returns {Image} - string
-   */
-  const getCacheImage = async (name, url) => {
-    const cache = useFileManager();
-    const image = cache.readImage(name);
-    if ( image ) return image;
-    const img = await getImage(url);
-    cache.writeImage(name, img);
-    return img;
   };
   
   /**
