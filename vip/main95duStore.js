@@ -1539,7 +1539,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '京东小白鹅',
             desc: '白条信息、白条等级',
-            rightDesc: '1.0.0',
+            rightDesc: '1.0.1',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_jingDong_baiTiao.js',
             icon: `${rootUrl}img/icon/jingDong.png`
