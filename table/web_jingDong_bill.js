@@ -85,7 +85,7 @@ async function main() {
           fm.remove(filePath);
           return null;
         }
-        return fm.fileExists(filePath) && useCache ? fm.readString(filePath) : null;
+        return fm.fileExists(filePath) ? fm.readString(filePath) : null;
       },
       writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
       // cache image
@@ -117,21 +117,169 @@ async function main() {
   
   // 获取图片，使用缓存
   const getCacheImage = async (name, url) => {
-    const cache = useFileManager({ cacheTime: 24 });
+    const cache = useFileManager({ cacheTime: 96 });
     const image = cache.readImage(name);
-    if (image) {
-      return image;
-    }
+    if (image) return image;
     const img = await getImage(url);
     cache.writeImage(name, img);
     return img;
   };
   
+  /**
+   * 获取 POST JSON 字符串
+   * @param {string} json
+   * @returns {object} - JSON
+   */
+  const getCacheString = async (jsonName, url, method, headers, body) => {
+    const cache = useFileManager({ cacheTime: setting.cacheTime })
+    const jsonString = cache.readString(jsonName);
+    if (jsonString) {
+      return JSON.parse(jsonString);
+    }
+    const response = await makeRequest(url, method, headers, body);
+    const jsonFile = JSON.stringify(response);
+    const parsed = JSON.parse(jsonFile);
+    if (parsed.retcode === 0 || parsed.resultCode === 0 || parsed) {
+      cache.writeString(jsonName, jsonFile);
+    }
+    return JSON.parse(jsonFile);
+  };
   
-  //=========> START <=========//
+  /**
+   * Makes an HTTP request and returns the response as JSON.
+   *
+   * @param {string} url
+   * @param {string} method
+   * @param {Object} headers
+   * @param {string|null} body
+   * @returns {Promise<any>} - JSON
+   */
+  const makeRequest = async (url, method, headers, body) => {
+    const req = new Request(url);
+    req.method = method;
+    req.headers = headers;
+    if (body) req.body = body;
+    return await req.loadJSON();
+  };
   
-  const sign = await signBeanAct('https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld');
+  // 用户信息
+  const getInfo = async () => {
+    const url = 'https://api.m.jd.com?functionId=queryJDUserInfo&appid=jd-cphdeveloper-m';
+    const headers = {
+      Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+      Cookie: cookie
+    };
+    const { base } = await getCacheString('info.json', url, 'GET', headers);
+    return { 
+      headImageUrl, 
+      nickname
+    } = base;
+  };
   
+  // totalAsset
+  const totalAsset = async () => {
+    const url = 'https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew';
+    const headers = {
+      Referer: "https://mallwallet.jd.com/",
+      Cookie: cookie
+    }
+    const body = `reqData={
+      "clientType": "ios"
+    }`
+    const { resultData } = await getCacheString('totalAsset.json', url, 'POST', headers, body);
+    return {
+      quota: { state },
+      bill: { amount }
+    } = resultData.data;
+  };
+  
+  // myWallet
+  const myWallet = async () => {
+    const url = 'https://ms.jr.jd.com/gw2/generic/MyWallet/h5/m/myWalletInfo';
+    const headers = {
+      Referer: 'https://mallwallet.jd.com/',
+      Cookie: cookie
+    }
+    const body = `reqData={"timestamp":${Date.parse(new Date())}}&aar={"nonce":""}`
+    
+    const { resultData } = await getCacheString('myWallet.json', url, 'POST', headers, body);
+    const arr = resultData.data.floors[0].nodes;
+    for (const item of arr) {
+      const foundItem = item.title.value.includes('总资产');
+      if (foundItem) return { assetAmt } = item.data;
+    }
+  };
+  
+  // incomeData
+  const incomeData = async (status, yearMonth) => {
+    const url = 'https://bill.jd.com/monthBill/statistics.html';
+    const headers = {
+      Cookie: cookie,
+      Referer: 'https://mse.jd.com/'
+    }
+    const body = `yearMonth=${yearMonth}&direction=${status}`
+    const response = await getCacheString(`incomeData_${status}.json`, url, 'POST', headers, body);
+    return response;
+  };
+  
+  // monthBillRank
+  const monthBillRank = async (status, yearMonth) => {
+    const url = 'https://bill.jd.com/monthBill/rank.html';
+    const headers = {
+      Cookie: cookie,
+      Referer: 'https://mse.jd.com/'
+    }
+    const body = `yearMonth=${yearMonth}&direction=${status}&sortField=1&sortType=DESC&pageNum=1&pageSize=20`
+    const response = await getCacheString(`monthBillRank_${status}.json`, url, 'POST', headers, body);
+    return response;
+  };
+  
+  // allDetail
+  const allDetail = async (url) => {
+    const headers = {
+      Cookie: cookie
+    }
+    return await getCacheString('allBillDetail.json', url, 'POST', headers);
+  };
+  
+  // 签到
+  const signBeanAct = async () => {
+    const url = 'https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld';
+    const headers = {
+      Referer: 'https://h5.m.jd.com/',
+      Cookie: cookie
+    }
+    const body = `body={
+      fp: "-1",
+      shshshfp: "-1",
+      shshshfpa: "-1",
+      referUrl: "-1",
+      userAgent: "-1",
+      jda: "-1",
+      rnVersion: "3.9"
+    }`
+    const response = await getCacheString('signBeanAct.json', url, 'POST', headers, body);
+    if (response.code === '0') {
+      const { data } = response;
+      const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
+      if (status === '1') {
+        const filePath = fm.joinPath(cacheStr, 'signBeanAct.json');
+        if (fm.fileExists(filePath)) fm.remove(filePath);
+        if (dailyAward) {
+          notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
+        } else {
+          notify(continuityAward.title, `获得 ${continuityAward.beanAward.beanCount} 京豆，已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
+        }
+      }
+      return data;
+    } else {
+      setting.code = 3;
+      writeSettings(setting);
+      notify(response.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
+    }
+  };
+  
+  const sign = await signBeanAct();
   if (sign !== undefined) {
     const df = new DateFormatter();
     df.dateFormat = 'yyyy-MM';
@@ -161,7 +309,7 @@ async function main() {
       outPercent = '0';
       outPer = '0.00';
     }
-  }
+  };
   
   // inRank & outRank
   const Run = async () => {
@@ -171,10 +319,7 @@ async function main() {
       const inCode = inRank.responseCode === '00000';
       if (inCode) {
         const { showText, amount, date, icon } = inRank.list[0];
-        obj = {
-          icon: icon,
-          det: `${showText.match(/[\w\W]{2}/)[0]}  ${amount}，${date}`
-        }
+        return { icon, det: `${showText.match(/[\w\W]{2}/)[0]}  ${amount}，${date}` }
       }
     } else if (statistics === 1) {
       setting.statistics = 0;
@@ -182,23 +327,20 @@ async function main() {
       const outCode = outRank.responseCode === '00000';
       if (outCode) {
         const { showText, amount, date, icon } = outRank.list[0];
-        obj = {
-          icon: icon,
-          det: `支出  ${amount}，${date}`
-        }
+        return { icon, det: `支出  ${amount}，${date}` }
       }
     } // 月收支排行榜
 
     if (!inCode || !outCode) {
-      const billDetail = await allBillDetail('https://bill.jd.com/bill/getMListData.html');
-      if (billDetail.responseCode === '00000') {
-        const { customCategoryName, payMoney, date, iconUrl } = billDetail.list[0];
-        obj = {
+      const { responseCode, list } = await allDetail('https://bill.jd.com/bill/getMListData.html');
+      if (responseCode === '00000') {
+        const { customCategoryName, payMoney, date, iconUrl } = list[0];
+        return {
           icon: iconUrl,
           det: `${customCategoryName}  ${payMoney}，${date}`
         }
       } else {
-        obj = {
+        return {
           icon: 'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/cf/ac/cc/cfaccca9-b522-3ffd-1780-7414507efcdb/AppIcon-0-1x_U007emarketing-0-4-0-sRGB-0-85-220.png/512x512bb.png',
           det: '没有收入/支付交易记录'
         }
@@ -236,8 +378,11 @@ async function main() {
   };
   
   // 创建组件实例
-  async function createWidget() {
+  const createWidget = async () => {
     const textColor = Color.dynamic(new Color(setting.textLightColor), new Color(setting.textDarkColor));
+    let { icon, det } = await Run();
+    const iconNane = icon.split('/').pop();
+    icon = await getCacheImage(iconNane, icon);
     
     const widget = new ListWidget();
     await setBackground(widget);
@@ -283,7 +428,6 @@ async function main() {
     }
     leftStack.addSpacer(6.5);
     
-    
     // name stack
     const nameStack = leftStack.addStack();
     nameStack.layoutHorizontally();
@@ -298,7 +442,6 @@ async function main() {
     nameText.textColor = textColor;
     nameText.textOpacity = 0.8;
     leftStack.addSpacer(3);
-    
   
     // Baitiao Stack
     const btStack = leftStack.addStack();
@@ -407,18 +550,17 @@ async function main() {
     lowerStack.size = new Size(0, 16)
     lowerStack.layoutHorizontally();
     lowerStack.centerAlignContent();
-    const billImage = await circleImage(obj.icon);
+    const billImage = await circleImage(icon);
     const billIcon = lowerStack.addImage(billImage);
     billIcon.imageSize = new Size(16, 16);
     lowerStack.addSpacer(8);
     
-    const billText = lowerStack.addText(obj.det);
+    const billText = lowerStack.addText(det);
     billText.textColor = Color.red();
     billText.font = Font.boldSystemFont(13);
     billText.textOpacity = 0.8;
     mainStack.addSpacer();
     widget.addSpacer(5);
-    
     
     /** 
     * widget Bottom Content
@@ -492,137 +634,6 @@ async function main() {
       Script.complete();
     }
     return widget;
-  }
-  
-  /**-------------------------**/
-       /** runWidget() **/
-  /**-------------------------**/
-
-  const runWidget = async () => {
-    if (setting.code === 0) {
-      await Promise.all([getJson(), totalAsset(), myWallet(), Run()]);
-    }
-    if (config.widgetFamily === 'medium' || config.runsInApp) {
-      await (setting.code === 0 ? createWidget() : createErrWidget());
-    } else {
-      await smallrWidget();
-    }
-  }
-  await runWidget();
-  
-  /**-------------------------**/
-     /** Request(url) json **/
-  /**-------------------------**/
-  
-  async function signBeanAct(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Referer: 'https://h5.m.jd.com/',
-      Cookie: cookie
-    }
-    req.body = `body={
-      fp: "-1",
-      shshshfp: "-1",
-      shshshfpa: "-1",
-      referUrl: "-1",
-      userAgent: "-1",
-      jda: "-1",
-      rnVersion: "3.9"
-    }`
-    const { errorMessage, code, data } = await req.loadJSON();
-    if (code === '0') {
-      const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
-      if (status === '1') {
-        setting.signData = data
-        writeSettings(setting);
-        if (dailyAward) {
-          notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
-        } else {
-          notify(continuityAward.title, `获得 ${continuityAward.beanAward.beanCount} 京豆，已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
-        }
-      }
-      return data;
-    } else {
-      setting.code = 3;
-      writeSettings(setting);
-      notify(errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
-    }
-  };
-  
-  async function getJson() {
-    const req = new Request('https://api.m.jd.com?functionId=queryJDUserInfo&appid=jd-cphdeveloper-m');
-    req.method = 'GET'
-    req.headers = {
-      Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-      Cookie: cookie
-    }
-    const { base } = await req.loadJSON();
-    return { headImageUrl, nickname } = base;
-  };
-  
-  async function totalAsset() {
-    const request = new Request('https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
-    request.method = 'POST'
-    request.headers = {
-      Referer: "https://mallwallet.jd.com/",
-      Cookie: cookie
-    }
-    request.body = `reqData={
-      "clientType": "ios"
-    }`
-    const { resultData } = await request.loadJSON();
-    return {
-      quota: { state },
-      bill: { amount }
-    } = resultData.data;
-  };
-  
-  async function myWallet() {
-    const req = new Request('https://ms.jr.jd.com/gw2/generic/MyWallet/h5/m/myWalletInfo');
-    req.method = 'POST'
-    req.headers = {
-      Referer: 'https://mallwallet.jd.com/',
-      Cookie: cookie
-    }
-    req.body = `reqData={"timestamp":${Date.parse(new Date())}}&aar={"nonce":""}`
-    const { resultData } = await req.loadJSON();
-    const arr = resultData.data.floors[0].nodes;
-    for (const item of arr) {
-      const foundItem = item.title.value.includes('总资产');
-      if (foundItem) return { assetAmt } = item.data;
-    }
-  };
-  
-  async function incomeData(status, yearMonth) {
-    const req = new Request('https://bill.jd.com/monthBill/statistics.html')
-    req.method = 'POST'
-    req.headers = {
-      Cookie: cookie,
-      Referer: 'https://mse.jd.com/'
-    }
-    req.body = `yearMonth=${yearMonth}&direction=${status}`
-    return await req.loadJSON();
-  };
-  
-  async function monthBillRank(status, yearMonth) {
-    const req = new Request('https://bill.jd.com/monthBill/rank.html')
-    req.method = 'POST'
-    req.headers = {
-      Cookie: cookie,
-      Referer: 'https://mse.jd.com/'
-    }
-    req.body = `yearMonth=${yearMonth}&direction=${status}&sortField=1&sortType=DESC&pageNum=1&pageSize=20`
-    return await req.loadJSON();
-  };
-  
-  async function allBillDetail(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Cookie: cookie
-    }
-    return await req.loadJSON();
   };
   
   // ========== config ========== //
@@ -688,5 +699,21 @@ async function main() {
     text.centerAlignText();
     Script.setWidget(widget);
   };
+  
+  /**-------------------------**/
+       /** runWidget() **/
+  /**-------------------------**/
+
+  const runWidget = async () => {
+    if (setting.code === 0) {
+      await Promise.all([ getInfo(), totalAsset(), myWallet() ]);
+    }
+    if (config.widgetFamily === 'medium' || config.runsInApp) {
+      await (setting.code === 0 ? createWidget() : createErrWidget());
+    } else {
+      await smallrWidget();
+    }
+  };
+  await runWidget();
 }
 module.exports = { main }
