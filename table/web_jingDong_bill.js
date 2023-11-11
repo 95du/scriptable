@@ -235,7 +235,8 @@ async function main() {
   };
   
   // allDetail
-  const allDetail = async (url) => {
+  const allDetail = async () => {
+    const url = 'https://bill.jd.com/bill/getMListData.html';
     const headers = {
       Cookie: cookie
     }
@@ -332,7 +333,7 @@ async function main() {
     } // 月收支排行榜
 
     if (!inCode || !outCode) {
-      const { responseCode, list } = await allDetail('https://bill.jd.com/bill/getMListData.html');
+      const { responseCode, list } = await allDetail();
       if (responseCode === '00000') {
         const { customCategoryName, payMoney, date, iconUrl } = list[0];
         return {
@@ -341,11 +342,21 @@ async function main() {
         }
       } else {
         return {
-          icon: 'https://is2-ssl.mzstatic.com/image/thumb/Purple126/v4/cf/ac/cc/cfaccca9-b522-3ffd-1780-7414507efcdb/AppIcon-0-1x_U007emarketing-0-4-0-sRGB-0-85-220.png/512x512bb.png',
+          icon: 'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png',
           det: '没有收入/支付交易记录'
         }
       }
     } // 全部账单
+  };
+  
+  // 图片遮罩
+  async function shadowImage(img) {
+    let ctx = new DrawContext()
+    ctx.size = img.size
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+    return await ctx.getImage()
   };
   
   // 设置组件背景
@@ -636,16 +647,30 @@ async function main() {
     return widget;
   };
   
-  // ========== config ========== //
-  async function shadowImage(img) {
-    let ctx = new DrawContext()
-    ctx.size = img.size
-    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
-    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
-    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-    return await ctx.getImage()
+  // error widget
+  async function createErrWidget() {
+    const widget = new ListWidget();
+    const image = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/user.png');
+    const widgetImage = widget.addImage(image);
+    widgetImage.imageSize = new Size(50, 50);
+    widgetImage.centerAlignImage();
+    widget.addSpacer(10);
+    const text = widget.addText('用户未登录');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
+  }; 
+  
+  async function smallrWidget() {
+    const widget = new ListWidget();
+    const text = widget.addText('仅支持中尺寸');
+    text.font = Font.systemFont(17);
+    text.centerAlignText();
+    Script.setWidget(widget);
+    Script.complete();
   };
   
+  // Circle image
   async function circleImage(url) {
     typeof url === 'object' ? img = url : img = await new Request(url).loadImage();
     const imgData = Data.fromPNG(img).toBase64String();
@@ -678,32 +703,9 @@ async function main() {
     return iconImage
   };
   
-  async function smallrWidget() {
-    const widget = new ListWidget();
-    const text = widget.addText('仅支持中尺寸');
-    text.font = Font.systemFont(17);
-    text.centerAlignText();
-    Script.setWidget(widget);
-    Script.complete();
-  };
-  
-  async function createErrWidget() {
-    const widget = new ListWidget();
-    const image = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/jingdong/user.png');
-    const widgetImage = widget.addImage(image);
-    widgetImage.imageSize = new Size(50, 50);
-    widgetImage.centerAlignImage();
-    widget.addSpacer(10);
-    const text = widget.addText('用户未登录');
-    text.font = Font.systemFont(17);
-    text.centerAlignText();
-    Script.setWidget(widget);
-  };
-  
   /**-------------------------**/
        /** runWidget() **/
   /**-------------------------**/
-
   const runWidget = async () => {
     if (setting.code === 0) {
       await Promise.all([ getInfo(), totalAsset(), myWallet() ]);
