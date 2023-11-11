@@ -218,9 +218,7 @@ async function main() {
   const getCacheString = async (cssFileName, cssFileUrl) => {
     const cache = useFileManager();
     const cssString = cache.readString(cssFileName);
-    if (cssString) {
-      return cssString;
-    }
+    if (cssString) return cssString;
     const response = await getString(cssFileUrl);
     cache.writeString(cssFileName, response);
     return response;
@@ -1533,7 +1531,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '京东收支账单',
             desc: '每月收支账单、白条',
-            rightDesc: '1.0.0',
+            rightDesc: '1.0.1',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/framework/raw/master/mian/web_module_jingDong_bill.js',
             icon: `${rootUrl}img/icon/jingDong.png`
