@@ -249,7 +249,7 @@ async function main() {
     for (let [thresholdBetween, color] of colorMap) {
       if (value <= thresholdBetween) return color;
     }
-    return isOpaque ? new Color("#FFA50075") : new Color("#3BC952");
+    return isOpaque ? new Color("#FFA50075") : new Color("#00C400");
   };
   
   //=========> config <=========//
