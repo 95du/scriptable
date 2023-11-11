@@ -4,8 +4,8 @@
 /**
  * 组件名称: 京东白条
  * 组件作者：95度茅台
- * 组件版本: Version 1.0.0
- * 更新日期: 2023-10-18 19:30
+ * 组件版本: Version 1.0.1
+ * 更新日期: 2023-11-11 19:30
  */
 
 async function main() {
@@ -52,6 +52,22 @@ async function main() {
     )
   };
   
+  /**  
+   * 弹出一个通知
+   * @param {string} title
+   * @param {string} body
+   * @param {string} url
+   * @param {string} sound
+   */
+  const notify = async (title, body, url) => {
+    let n = new Notification();
+    n.title = title
+    n.body = body
+    n.sound = 'alert'
+    if (url) {n.openURL = url}
+    return await n.schedule();
+  };
+  
   /**
    * 获取图片并使用缓存
    * @param {string} File Extension
@@ -66,7 +82,7 @@ async function main() {
           fm.remove(filePath);
           return null;
         }
-        return fm.fileExists(filePath) && useCache ? fm.readString(filePath) : null;
+        return fm.fileExists(filePath) ? fm.readString(filePath) : null;
       },
       writeString: (name, content) => fm.writeString(fm.joinPath(cacheStr, name), content),
       // cache image
@@ -100,38 +116,126 @@ async function main() {
   const getCacheImage = async (name, url) => {
     const cache = useFileManager({ cacheTime: 24 });
     const image = cache.readImage(name);
-    if (image) {
-      return image;
-    }
+    if (image) return image;
     const img = await getImage(url);
     cache.writeImage(name, img);
     return img;
   };
   
-  /**  
-  * 弹出一个通知
-  * @param {string} title
-  * @param {string} body
-  * @param {string} url
-  * @param {string} sound
-  */
-  const notify = async (title, body, url) => {
-    let n = new Notification();
-    n.title = title
-    n.body = body
-    n.sound = 'alert'
-    if (url) {n.openURL = url}
-    return await n.schedule();
+  /**
+   * 获取 POST JSON 字符串
+   * @param {string} json
+   * @returns {object} - JSON
+   */
+  const getCacheString = async (jsonName, url, method, headers, body) => {
+    const cache = useFileManager({ cacheTime: setting.cacheTime })
+    const jsonString = cache.readString(jsonName);
+    if (jsonString) {
+      return JSON.parse(jsonString);
+    }
+    const response = await makeRequest(url, method, headers, body);
+    const jsonFile = JSON.stringify(response);
+    const parsed = JSON.parse(jsonFile);
+    if (parsed.retcode === 0 || parsed.resultCode === 0 || parsed) {
+      cache.writeString(jsonName, jsonFile);
+    }
+    return JSON.parse(jsonFile);
   };
   
+  /**
+   * Makes an HTTP request and returns the response as JSON.
+   *
+   * @param {string} url
+   * @param {string} method
+   * @param {Object} headers
+   * @param {string|null} body
+   * @returns {Promise<any>} - JSON
+   */
+  const makeRequest = async (url, method, headers, body) => {
+    const req = new Request(url);
+    req.method = method;
+    req.headers = headers;
+    if (body) req.body = body;
+    return await req.loadJSON();
+  };
+  
+  // 
+  const whiteStripe = async () => {
+    const url = 'https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2'
+    const headers = {
+      Cookie: cookie,
+      Referer: 'https://mcr.jd.com/'
+    }
+    const body = `reqData={
+      "environment": "1", 
+      "clientType": "ios", 
+      "clientVersion": "11.6.4"
+    }`
+    
+    const {
+      resultCode,
+      resultData
+    } = await getCacheString('whiteStripe.json', url, 'POST', headers, body);
+    if ( resultCode == 0 ) {
+      return {
+        quota: {
+          quotaLeft,
+          quotaAll
+        },
+        bill: {
+          amount,
+          buttonName
+        },
+        right: {
+          data: {
+            scorePopJumpUrl,
+            title,
+            identityPicture,
+            portrait,
+            percent,
+            progressNextLevelText
+          }
+        }
+      } = resultData.data;
+    } else {
+      console.log(resultData)
+    }
+  };
+  
+  //
+  const LvlProgress = async (jsonName, url) => {
+    const headers = {
+      Cookie: cookie,
+      Referer: 'https://agree.jd.com/'
+    }
+    const body = `reqData={  
+      "appId": "benefitGateway", 
+      "channelId": "1", 
+      "customerId": "1", 
+      "shopId": "1", 
+      "deviceInfo": { }
+    }`
+    const { resultCode, resultData } = await getCacheString(jsonName, url, 'POST', headers, body);
+    if ( resultCode == 0 ) {
+      return {
+        lvlScore,
+        curScore,
+        level,
+        nextLvl
+      } = resultData;
+    } else {
+      setting.code = 3;
+      writeSettings(setting);
+      notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
+    }
+  };
   
   //=========> START <=========//
+  const { alreadyGetBenefitNum } = (await LvlProgress('benefit.json', 'https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit')).extValue;
+
   const getData = async () => {
-    benefit = await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
-    
-    await whiteStripe('https://ms.jr.jd.com/gw/generic/bt/h5/m/btJrFirstScreenV2');
-    
-    await LvlProgress('https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
+    await whiteStripe();
+    const LvlProgressData = await LvlProgress('LvlProgress.json', 'https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
     
     if (level === '1' || level === '2' || level === '3' || level === '4' || level === '5') {
       levelColor = { '1': '#4FC3F7', '2': '#99C0F0', '3': '#FF9999', '4': '#F72E27', '5': '#AB0D0D' }[level];
@@ -140,6 +244,16 @@ async function main() {
       levelColor = Color.dynamic(new Color('#222222'), new Color("#333333"));
       barColor = Color.dynamic(new Color('#222222', 0.5), new Color("#444444"));
     }
+  };
+  
+  // 图片遮罩
+  async function shadowImage(img) {
+    let ctx = new DrawContext()
+    ctx.size = img.size
+    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
+    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
+    return await ctx.getImage()
   };
   
   // 设置组件背景
@@ -251,7 +365,7 @@ async function main() {
     const beneStack = levelStack.addStack();
     beneStack.layoutHorizontally();
     beneStack.centerAlignContent();
-    const benefitText = beneStack.addText(benefit.extValue.alreadyGetBenefitNum);
+    const benefitText = beneStack.addText(alreadyGetBenefitNum);
     benefitText.font = Font.boldSystemFont(15);
     benefitText.textColor = Color.red();
     
@@ -293,7 +407,7 @@ async function main() {
     
     // Switch position
     if (location == 0) {
-      await progressBar();
+      await progressBar(mainStack);
     }
     
     /** 
@@ -365,60 +479,7 @@ async function main() {
     
     // Switch position
     if (location == 1) {
-      await progressBar();
-    }
-    
-    /** 
-    * progressBar Stack
-    * @param {image} image
-    * @param {string} string
-    */
-    async function progressBar() {
-      const prgrWid = Number(setting.progressWidth);
-      const tempBarWidth = curScore == 0 ? prgrWid : curScore <= 100 ? prgrWid - 10 : (curScore > 100 && curScore <= 1000) ? prgrWid - 15 : (curScore > 1000 && curScore <= 10000) ? prgrWid - 25 : prgrWid - 32;
-      const tempBarHeight = 18;
-      
-      const prgsStack = mainStack.addStack();  
-      prgsStack.layoutHorizontally();
-      prgsStack.centerAlignContent();
-      
-      const curScoreText = prgsStack.addText(curScore)
-      curScoreText.font = Font.boldSystemFont(13);
-      prgsStack.addSpacer();
-      
-      const imgProgress = prgsStack.addImage(creatProgress());
-      imgProgress.centerAlignImage();
-      imgProgress.imageSize = new Size(tempBarWidth, tempBarHeight);
-      
-      function creatProgress() {
-        const draw = new DrawContext();
-        draw.opaque = false;
-        draw.respectScreenScale = true;
-        draw.size = new Size(tempBarWidth, tempBarHeight);
-      
-        const barPath = new Path();
-        const barHeight = tempBarHeight - 10;
-        barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
-        draw.addPath(barPath);
-        // Circle Color
-        draw.setFillColor((barColor))
-        draw.fillPath();
-      
-        const currPath = new Path();
-        const isPercent = percent > 1 ? percent / 100 : percent;
-        currPath.addEllipse(new Rect((tempBarWidth - tempBarHeight) * isPercent, 0, tempBarHeight, tempBarHeight));
-        draw.addPath(currPath);
-        // progressColor
-        draw.setFillColor(new Color('#F2F5F7'));
-        draw.fillPath();
-        return draw.getImage();
-      }
-      
-      prgsStack.addSpacer();
-      const isPercent2 = percent < 1 ? percent * 100 : percent;
-      const percentText = prgsStack.addText(`${isPercent2} %`);
-      percentText.font = Font.boldSystemFont(13);  
-      mainStack.addSpacer();
+      await progressBar(mainStack);
     }
     
     // jump App page
@@ -434,101 +495,62 @@ async function main() {
     return widget;
   };
   
+  /** 
+   * progressBar Stack
+   * @param {image} image
+   * @param {string} string
+   */
+  const progressBar = async (mainStack) => {
+    const prgrWid = Number(setting.progressWidth);
+    const tempBarWidth = curScore == 0 ? prgrWid : curScore <= 100 ? prgrWid - 10 : (curScore > 100 && curScore <= 1000) ? prgrWid - 15 : (curScore > 1000 && curScore <= 10000) ? prgrWid - 25 : prgrWid - 32;
+    const tempBarHeight = 18;
+      
+    const prgsStack = mainStack.addStack();  
+    prgsStack.layoutHorizontally();
+    prgsStack.centerAlignContent();
+      
+    const curScoreText = prgsStack.addText(curScore);
+    curScoreText.font = Font.boldSystemFont(13);
+    prgsStack.addSpacer();
+      
+    const imgProgress = prgsStack.addImage(creatProgress());
+    imgProgress.centerAlignImage();
+    imgProgress.imageSize = new Size(tempBarWidth, tempBarHeight);
+      
+    function creatProgress() {
+      const draw = new DrawContext();
+      draw.opaque = false;
+      draw.respectScreenScale = true;
+      draw.size = new Size(tempBarWidth, tempBarHeight);
+      
+      const barPath = new Path();
+      const barHeight = tempBarHeight - 10;
+      barPath.addRoundedRect(new Rect(0, 5, tempBarWidth, barHeight), barHeight / 2, barHeight / 2);
+      draw.addPath(barPath);
+      // Circle Color
+      draw.setFillColor((barColor))
+      draw.fillPath();
+      
+      const currPath = new Path();
+      const isPercent = percent > 1 ? percent / 100 : percent;
+      currPath.addEllipse(new Rect((tempBarWidth - tempBarHeight) * isPercent, 0, tempBarHeight, tempBarHeight));
+      draw.addPath(currPath);
+      // progressColor
+      draw.setFillColor(new Color('#F2F5F7'));
+      draw.fillPath();
+      return draw.getImage();
+    };
+      
+    prgsStack.addSpacer();
+    const isPercent2 = percent < 1 ? percent * 100 : percent;
+    const percentText = prgsStack.addText(`${isPercent2} %`);
+    percentText.font = Font.boldSystemFont(13);  
+    mainStack.addSpacer();
+  };
   
   /**-------------------------**/
      /** Request(url) json **/
   /**-------------------------**/
-  
-  const runWidget = async () => {  
-    if (config.widgetFamily === 'medium' || config.runsInApp) {
-      await (setting.code === 0 ? getData().then(createWidget) : createErrWidget());
-    } else {
-      await smallrWidget();
-    }
-  };
-  await runWidget();
-  
-  /**-------------------------**/
-     /** Request(url) json **/
-  /**-------------------------**/
-  
-  
-  async function whiteStripe(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Cookie: cookie,
-      Referer: 'https://mcr.jd.com/'
-    }
-    req.body = `reqData={
-      "environment": "1", 
-      "clientType": "ios", 
-      "clientVersion": "11.6.4"
-    }`
-    const res = await req.loadJSON();
-    if ( res.resultCode == 0 ) {
-      return {
-        quota: {
-          quotaLeft,
-          quotaAll
-        },
-        bill: {
-          amount,
-          buttonName
-        },
-        right: {
-          data: {
-            scorePopJumpUrl,
-            title,
-            identityPicture,
-            portrait,
-            percent,
-            progressNextLevelText
-          }
-        }
-      } = res.resultData.data;
-    } else {
-      console.log(res)
-    }
-  };
-  
-  async function LvlProgress(url) {
-    const req = new Request(url)
-    req.method = 'POST'
-    req.headers = {
-      Cookie: cookie,
-      Referer: 'https://agree.jd.com/'
-    }
-    req.body = `reqData={  
-      "appId": "benefitGateway", 
-      "channelId": "1", 
-      "customerId": "1", 
-      "shopId": "1", 
-      "deviceInfo": { }
-    }`
-    const res = await req.loadJSON();
-    if ( res.resultCode == 0 ) {
-      return {
-        lvlScore,
-        curScore,
-        level,
-        nextLvl
-      } = res.resultData;
-    } else {
-      setting.code = 3;
-      writeSettings(setting);
-      notify('京东小白鹅', 'Cookie已过期，请重新登录京东账号');
-    }
-  };
-  
-  async function shadowImage(img) {
-    let ctx = new DrawContext()
-    ctx.size = img.size
-    ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
-    ctx.setFillColor(new Color("#000000", Number(setting.masking)));
-    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-    return await ctx.getImage()
-  };
   
   async function circleImage(url) {
     typeof url === 'object' ? img = url : img = await new Request(url).loadImage();
@@ -583,5 +605,14 @@ async function main() {
     text.centerAlignText();
     Script.setWidget(widget);
   };
+  
+  const runWidget = async () => {  
+    if (config.widgetFamily === 'medium' || config.runsInApp) {
+      await (setting.code === 0 ? getData().then(createWidget) : createErrWidget());
+    } else {
+      await smallrWidget();
+    }
+  };
+  await runWidget();
 }
 module.exports = { main }
