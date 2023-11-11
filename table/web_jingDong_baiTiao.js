@@ -136,7 +136,7 @@ async function main() {
     const response = await makeRequest(url, method, headers, body);
     const jsonFile = JSON.stringify(response);
     const parsed = JSON.parse(jsonFile);
-    if (parsed.retcode === 0 || parsed.resultCode === 0 || parsed) {
+    if (parsed.resultCode === 0) {
       cache.writeString(jsonName, jsonFile);
     }
     return JSON.parse(jsonFile);
