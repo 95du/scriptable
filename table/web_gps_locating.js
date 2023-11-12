@@ -505,7 +505,7 @@ async function main() {
    * @returns {Promise<void>}
    */
   const pushMessage = async (mapUrl, longitude, latitude, distance) => {
-    const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=14&size=450*300&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`;
+    const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=14&size=450*300&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
     
     const timeAgo = new Date(Date.now() - pushTime);
     const hours = timeAgo.getUTCHours();
@@ -563,7 +563,7 @@ async function main() {
   // 创建小号组件
   createSmallWidget = async () => {
     const widget = new ListWidget();
-    widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`);
+    widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=13&size=240*240&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`);
     widget.url = mapUrl;
     Script.setWidget(widget);
     Script.complete();
