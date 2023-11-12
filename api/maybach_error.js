@@ -147,18 +147,18 @@ async function main() {
     barStack.centerAlignContent();
     barStack.setPadding(3, 10, 3, 10);
     barStack.cornerRadius = 10;
-    barStack.borderColor = new Color('#AB47BC', 0.7);
+    barStack.borderColor = new Color('#FF0000', 0.7);
     barStack.borderWidth = 2;
     
-    const barIcon = SFSymbol.named('location');
+    const barIcon = SFSymbol.named('location.fill');
     const barIconElement = barStack.addImage(barIcon.image);
     barIconElement.imageSize = new Size(16, 16);
-    barIconElement.tintColor = Color.purple();
+    barIconElement.tintColor = Color.red();
     barStack.addSpacer(4);
     
     const speedText = barStack.addText('已静止');
     speedText.font = Font.mediumSystemFont(14);
-    speedText.textColor = new Color('#AA00FF');
+    speedText.textColor = Color.red()
     leftStack.addSpacer(8);
   
     // Left Stack bar2
