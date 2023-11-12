@@ -39,8 +39,8 @@ async function main() {
   const writeSettings = async (settings) => {
     fm.writeString(settingPath, JSON.stringify(settings, null, 2));
     console.log(JSON.stringify(
-      settings, null, 2)
-    )
+      settings, null, 2
+    ))
   };
   
   /**  
@@ -69,7 +69,7 @@ async function main() {
   };
   
   /**
-   * 获取图片并使用缓存
+   * 获取图片、string并使用缓存
    * @param {string} File Extension
    * @returns {image} - Request
    */
@@ -306,7 +306,7 @@ async function main() {
     const topStack = widget.addStack();
     topStack.layoutHorizontally();
     topStack.centerAlignContent();
-    topStack.size = new Size(0, phone < 926 ? 25 : 30);
+    topStack.size = new Size(0, phone < 926 ? 25 : 28);
     
     const leftStack = topStack.addStack();
     leftStack.addSpacer();
