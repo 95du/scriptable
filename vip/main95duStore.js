@@ -1469,7 +1469,7 @@ document.getElementById('telegram').addEventListener('click', () => {
           {
             label: '负一屏底栏',
             desc: '显示未来两小时天气',
-            rightDesc: '1.2.0',
+            rightDesc: '1.2.1',
             type: 'button',
             scrUrl: 'https://gitcode.net/4qiao/scriptable/raw/master/api/bottomBar.js',
             icon: `${rootUrl}img/icon/bottomBars.png`
