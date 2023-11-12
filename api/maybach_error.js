@@ -1,14 +1,8 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: car;
-/**
- * 组件作者: 95度茅台
- * Honda Civic
- * Version 1.1.0
- * 2022-12-22 22:22
- */
 
-const uri = Script.name();
+async function main() {
 const fm = FileManager.local();
 const mainPath = fm.joinPath(fm.documentsDirectory(), 'mercedes');
 if (!fm.fileExists(mainPath)) fm.createDirectory(mainPath);
@@ -273,3 +267,5 @@ const runWidget = async () => {
   }
 };
 await runWidget();
+}
+module.exports = { main }
