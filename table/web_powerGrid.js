@@ -142,12 +142,6 @@ async function main() {
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
   const currentYear = month === '01' ? year - 1 : year;
-
-  // 请求头参数
-  const headers = {
-    'x-auth-token': token,
-    'Content-Type': 'application/json;charset=utf-8'
-  }
   
   // totalPower & Yesterday
   const Run = async () => {
@@ -495,7 +489,10 @@ async function main() {
   async function makeRequest(url, requestBody) {
     const req = new Request(url);
     req.method = 'POST';
-    req.headers = headers;
+    req.headers = {
+      'x-auth-token': token,
+      'Content-Type': 'application/json;charset=utf-8'
+    }
     req.body = JSON.stringify(requestBody);
     return await req.loadJSON();
   };
