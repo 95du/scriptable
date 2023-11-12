@@ -32,7 +32,6 @@ const getSettings = (file) => {
 }
 const setting = await getSettings(cacheFile);
 
-
 /**
  * 存储当前设置
  * @param { JSON } string
@@ -565,12 +564,37 @@ createSmallWidget = async () => {
     
     const maybachStack = widget.addStack();
     maybachStack.addSpacer();
-    const tipText = maybachStack.addText('未连接数据');  
-    tipText.font = Font.systemFont(18);
+    const tipText = maybachStack.addText('数据未连接');
+    tipText.font = Font.systemFont(17);
     tipText.centerAlignText();
     maybachStack.addSpacer();
   }
   
+  Script.setWidget(widget);
+  Script.complete();
+};
+
+// 数据未连接
+const createError = async () => {
+  const widget = new ListWidget();
+  widget.backgroundColor = Color.white();
+  const gradient = new LinearGradient();
+  gradient.locations = [0, 1];
+  gradient.colors = [
+    new Color("#99CCCC", 0.5),
+    new Color('#00000000')
+  ];
+  widget.backgroundGradient = gradient;  
+    
+  widget.setPadding(10, 20, 30, 10);
+  const mainStack = widget.addStack();
+  mainStack.addSpacer();
+  const cacheMaybach = fm.joinPath(cache, 'Maybach-8.png');
+  const vehicleImg = fm.readImage(cacheMaybach);
+  const widgetImg = mainStack.addImage(vehicleImg);
+  widgetImg.imageSize = new Size(400, 150);
+  mainStack.addSpacer();
+    
   Script.setWidget(widget);
   Script.complete();
 };
@@ -607,7 +631,11 @@ if ( args.plainTexts[0] ) {
 
 const runWidget = async () => {
   if (config.runsInWidget && setting.cookie) {
-    await (config.widgetFamily === 'medium' ? createWidget() : config.widgetFamily === 'small' ? createSmallWidget() : createErrorWidget());
+    try {
+      await (config.widgetFamily === 'medium' ? createWidget() : config.widgetFamily === 'small' ? createSmallWidget() : createErrorWidget());
+    } catch (e) {
+      await createError();
+    }
   } else {
     await Promise.all([loadPicture(), presentMenu()]);
   }
