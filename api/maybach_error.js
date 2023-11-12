@@ -219,7 +219,7 @@ async function main() {
     if ( str <= 35 ) {
       addressText = adrStack.addText(address + ' - 当前位置属乡镇、高速路或无名路段 🚫');
     } else {
-      addressText = adrStack.addText(address + ' 🚫');
+      addressText = adrStack.addText(address);
     }
     
     addressText.font = Font.mediumSystemFont(11.3);
