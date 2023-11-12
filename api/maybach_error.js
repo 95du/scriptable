@@ -5,11 +5,7 @@
 async function main() {
   const fm = FileManager.local();
   const mainPath = fm.joinPath(fm.documentsDirectory(), 'mercedes');
-  if (!fm.fileExists(mainPath)) fm.createDirectory(mainPath);
-  
   const cache = fm.joinPath(mainPath, 'cachePath');
-  if (!fm.fileExists(cache)) fm.createDirectory(cache);
-  
   const cacheFile = fm.joinPath(mainPath, 'setting.json')
   
   /**
@@ -32,29 +28,6 @@ async function main() {
    */
   const getImage = async (url) => {
     return await new Request(url).loadImage();
-  };
-  
-  /**
-   * 获取图片并使用缓存
-   * @param {string} File Extension
-   * @returns {image} - Request
-   */
-  const downloadCarImage = async (item) => {
-    const carImage = await getImage(item);
-    const imgKey = decodeURIComponent(item.substring(item.lastIndexOf("/") + 1));
-    const cachePath = fm.joinPath(cache, imgKey);
-    fm.writeImage(cachePath, carImage, { overwrite: true });
-    imgArr.push(imgKey);
-    writeSettings(setting);
-  };
-  
-  const loadPicture = async () => {
-    if ( !setting.imgArr?.length ) {
-      const maybach = Array.from({ length: 9 }, (_, index) => `https://gitcode.net/4qiao/scriptable/raw/master/img/car/Maybach-${index}.png`);
-      maybach.forEach(async (item) => {
-        await downloadCarImage(item);
-      });
-    }
   };
   
   /**
