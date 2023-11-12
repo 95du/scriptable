@@ -39,7 +39,7 @@ const getBgImagePath = () => {
  * @param { JSON } string
  */
 const setCacheData = (data) => {
-  fm.writeString(cacheFile, JSON.stringify({ ...data, updateTime: timeStamp }));
+  fm.writeString(cacheFile, JSON.stringify({ ...data, updateTime: timeStamp }, null, 2));
   console.log(JSON.stringify(
     data, null, 2
   ))
@@ -104,11 +104,11 @@ const getWeather = async (opts) => {
         lon: coordinates[0]
       }
     });
-    const response = await request.loadJSON();
-    return { title, content } = response.radarData;
+    const { radarData } = await request.loadJSON();  
+    return radarData;
   } catch (e) {
     console.log(e + '⚠️使用缓存');
-    return { title, content } = getCacheData();
+    return getCacheData();
   }
 };
 
