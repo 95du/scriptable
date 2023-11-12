@@ -3,15 +3,15 @@
 // icon-color: deep-green; icon-glyph: comments;
 /**
 * 组件作者：95度茅台
-* Version 1.2.0
-* 2023-04-24 15:30
+* Version 1.2.1
+* 2023-11-12 15:30
 * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
 * ⚠️ 小机型修改第 19 行中的数字 63
 */
 
 const fm = FileManager.local();
 const path = fm.joinPath(fm.documentsDirectory(), "bottomBar");
-fm.createDirectory(path, true);
+if (!fm.fileExists(path)) fm.createDirectory(path);
 const cacheFile = fm.joinPath(path, 'setting.json');
 
 const timeStamp = Date.now();
@@ -35,6 +35,24 @@ const getBgImagePath = () => {
 };
 
 /**
+ * 存储当前设置
+ * @param { JSON } string
+ */
+const setCacheData = (data) => {
+  fm.writeString(cacheFile, JSON.stringify({ ...data, updateTime: timeStamp }));
+  console.log(JSON.stringify(
+    data, null, 2
+  ))
+};
+
+const getCacheData = () => {
+  if (fm.fileExists(cacheFile)) {
+    const data = fm.readString(cacheFile);
+    return JSON.parse(data);
+  }
+};
+
+/**
  * 获取指定位置的天气信息
  * @param {Object} opts
  *  - {Object} location
@@ -42,17 +60,6 @@ const getBgImagePath = () => {
  * @returns {Object} 
  */
 const getLocation = async () => {
-  const getCacheData = () => {
-    if (!fm.fileExists(cacheFile)) return null;
-    return JSON.parse(
-      fm.readString(cacheFile)
-    );
-  };
-
-  const setCacheData = (data) => {
-    fm.writeString(cacheFile, JSON.stringify({ ...data, updateTime: timeStamp }));
-  };
-
   const cacheData = getCacheData();
   if (cacheData) {
     const pushTime = timeStamp - cacheData.updateTime;
@@ -63,7 +70,8 @@ const getLocation = async () => {
     } else {
       try {
         const location = await Location.current();
-        setCacheData(location);
+        const { title, content } = await getWeather({ location });
+        setCacheData({ ...location, title, content });
         return location;
       } catch (error) {
         return cacheData;
@@ -81,55 +89,92 @@ const getLocation = async () => {
  * @param  {Type} paramName
  */
 const getWeather = async (opts) => {
-  const convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${opts.location.longitude},${opts.location.latitude}`);
-  const coordinates = convert.locations.split(",");
-  const request = new Request(opts.url);
-  request.method = 'POST'
-  request.body = JSON.stringify({
-    common: {
-      platform: 'iPhone',
-      language: 'CN'
-    }, 
-    params: {
-      lat: coordinates[1],
-      lon: coordinates[0]
-    }
-  });
-  const response = await request.loadJSON();
-  return { title, content } = response.radarData;
+  try {
+    const convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${opts.location.longitude},${opts.location.latitude}`);
+    const coordinates = convert.locations.split(",");
+    const request = new Request(atob('aHR0cHM6Ly9zc2ZjLmFwaS5tb2ppLmNvbS9zZmMvanNvbi9ub3djYXN0'));
+    request.method = 'POST'
+    request.body = JSON.stringify({
+      common: {
+        platform: 'iPhone',
+        language: 'CN'
+      }, 
+      params: {
+        lat: coordinates[1],
+        lon: coordinates[0]
+      }
+    });
+    const response = await request.loadJSON();
+    return { title, content } = response.radarData;
+  } catch (e) {
+    console.log(e + '⚠️使用缓存');
+    return { title, content } = getCacheData();
+  }
 };
 
 /**
- * 获取图片并使用缓存
+ * 获取图片、string并使用缓存
  * @param {string} File Extension
  * @returns {image} - Request
  */
-const useFileManager = ( options = {} ) => {
+const useFileManager = ({ cacheTime } = {}) => {
   const cache = fm.joinPath(path, 'cache_path');
-  fm.createDirectory(cache, true);
-    
+  if (!fm.fileExists(cache)) fm.createDirectory(cache);
+
   return {
-    readImage: (fileName) => {
-      const imageFile = fm.joinPath(cache, fileName);
-      if (fm.fileExists(imageFile) && options.cacheTime) {
-        const createTime = fm.creationDate(imageFile).getTime();
-        const diff = (Date.now() - createTime) / ( 60 * 60 * 1000 );
-        if (diff >= options.cacheTime) {
-          fm.remove(imageFile);
-          return null;
-        }
+    readString: (name) => {
+      const filePath = fm.joinPath(cache, name);  
+      const fileExists =  fm.fileExists(filePath);
+      if (fileExists && hasExpired(filePath) > cacheTime) {
+        fm.remove(filePath);
+        return null;
       }
-      return fm.readImage(imageFile);
+      return fm.fileExists(filePath) ? fm.readString(filePath) : null;
     },
-    writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
+    writeString: (name, content) => fm.writeString(fm.joinPath(cache, name), content),
+    // cache image
+    readImage: (name) => {
+      const filePath = fm.joinPath(cache, name);
+      const fileExists =  fm.fileExists(filePath);
+      if (fileExists && hasExpired(filePath) > cacheTime) {
+        fm.remove(filePath);
+        return null;
+      }
+      return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
+    },
+    writeImage: (name, image) => fm.writeImage(fm.joinPath(cache, name), image),
+  };
+    
+  function hasExpired(filePath) {
+    const createTime = fm.creationDate(filePath).getTime();
+    return (Date.now() - createTime) / (60 * 60 * 1000)
   }
 };
-  
-const getImage = async (url) => {
-  return await new Request(url).loadImage();
+
+/**
+ * 获取 GET POST JSON 字符串
+ * @param {string} json
+ * @returns {object} - JSON
+ */
+const getJson = async (url) => await new Request(url).loadJSON();
+
+const getCacheString = async (jsonName, jsonUrl) => {
+  const cache = useFileManager({ cacheTime: 6 });
+  const jsonString = cache.readString(jsonName);
+  if (jsonString) {
+    return JSON.parse(jsonString);
+  }
+  const response = await getJson(jsonUrl);
+  const jsonFile = JSON.stringify(response);
+  if ( jsonFile ) {
+    cache.writeString(jsonName, jsonFile);
+  }
+  return JSON.parse(jsonFile);
 };
-  
+
 // 获取图片，使用缓存
+const getImage = async (url) => await new Request(url).loadImage();
+
 const getCacheImage = async (name, url) => {
   const cache = useFileManager({ cacheTime: 240 });
   const image = cache.readImage(name);
@@ -158,7 +203,7 @@ const getPicture = async () => {
  * @returns {Object} string
  */
 const getOneWord = async () => {
-  const { fenxiang_img, note, content } = await getJson('https://open.iciba.com/dsapi');
+  const { fenxiang_img, note, content } = await getCacheString('ciba.json', atob('aHR0cHM6Ly9vcGVuLmljaWJhLmNvbS9kc2FwaQ=='));
   return { 
     note: note.length >= 21 ? note : `${note}\n${content}`,
     imgUrl: fenxiang_img
@@ -166,21 +211,23 @@ const getOneWord = async () => {
 };
 
 /**
- * 创建小组件
+ * 创建组件
  * @param {object} options
  * @param {string} string
  * @param {image} image
  */
 const createWidget = async () => {
-  await getWeather({
-    url: 'https://ssfc.api.moji.com/sfc/json/nowcast',
-    location: await getLocation()
-  });
-  
+  const { title, content } = await getWeather({ location: await getLocation() });
   const { note, imgUrl } = await getOneWord();
   
   const widget = new ListWidget();
-  widget.backgroundImage = fm.readImage(getBgImagePath());
+  const bgImage = await getBgImagePath();
+  if (fm.fileExists(bgImage)) {
+    widget.backgroundImage = fm.readImage(getBgImagePath());
+  } else {
+    widget.backgroundImage = await getCacheImage('default.jpeg', 'https://sweixinfile.hisense.com/media/M00/7D/EB/Ch4FyGVQ2PiAOtEMAAYfX67522s266.png');
+  }
+  
   widget.setPadding(0, 0, 0, 0);
   const eventStack = widget.addStack();
   eventStack.setPadding(15, 15, 15, 17);
@@ -247,12 +294,12 @@ const createWidget = async () => {
   return widget;
 };
 
-async function runScriptable() {
-  Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
-};
-
-async function getJson(url) {
-  return await new Request(url).loadJSON();
+async function createErrorWidget() {
+  const widget = new ListWidget();
+  const text = widget.addText('仅支持中尺寸');
+  text.font = Font.systemFont(17);
+  text.centerAlignText();
+  Script.setWidget(widget);
 };
 
 const downloadModule = async (scriptName, url) => {
@@ -269,6 +316,10 @@ const downloadModule = async (scriptName, url) => {
       return modulePath;
     }
   }
+};
+
+async function runScriptable() {
+  Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
 };
 
 const presentMenu = async() => {
@@ -319,14 +370,6 @@ const presentMenu = async() => {
   if (mainMenu === 4) {
     await createWidget();
   }
-};
-
-async function createErrorWidget() {
-  const widget = new ListWidget();
-  const text = widget.addText('仅支持中尺寸');
-  text.font = Font.systemFont(17);
-  text.centerAlignText();
-  Script.setWidget(widget);
 };
 
 const runWidget = async () => {  
