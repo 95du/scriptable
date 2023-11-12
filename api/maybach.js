@@ -181,7 +181,7 @@ async function getRandomImage() {
  * 获取网络图片并使用缓存
  * @param {Image} url
  */
-const useFileManager = ({ cacheTime } = {}) => {
+const useFileManager = () => {
   return {
     readImage: (fileName) => {
       const imgPath = fm.joinPath(cache, fileName);
@@ -194,9 +194,7 @@ const useFileManager = ({ cacheTime } = {}) => {
 const getCacheImage = async (name, url) => {
   const cache = useFileManager();
   const image = cache.readImage(name);
-  if ( image ) {
-    return image;
-  }
+  if ( image ) return image;
   const img = await getImage(url);
   cache.writeImage(name, img);
   return img;
@@ -223,10 +221,14 @@ const getLastLocation = async () => {
  * @returns {Promise<object>} 包含formatted_address和pois的对象
  */
 const getAddress = async () => {
-  const req = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
-  const poisArr = req.regeocode.pois;
-  const poisData = poisArr.length > 0 ? poisArr : null;
-  return { formatted_address: address, pois = poisData } = req.regeocode;
+  try {
+    const req = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
+    const poisArr = req.regeocode.pois;
+    const poisData = poisArr.length > 0 ? poisArr : null;
+    return { formatted_address: address, pois = poisData } = req.regeocode;  
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**
@@ -234,8 +236,12 @@ const getAddress = async () => {
  * @returns {Promise<number>} number
  */ 
 const getDistance = async () => {
-  const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`).loadJSON();
-  return { distance } = fence.route.paths[0];
+  try {
+    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`).loadJSON();
+    return { distance } = fence.route.paths[0];
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**
@@ -484,8 +490,7 @@ const createWidget = async () => {
    * 推送信息到微信
    */
   const pushMessage = async (mapUrl, longitude, latitude, distance) => {
-    const mapKey = atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL3N0YXRpY21hcD8ma2V5PWEzNWE5NTM4NDMzYTE4MzcxOGNlOTczMzgyMDEyZjU1Jnpvb209MTQmc2l6ZT00NTAqMzAwJm1hcmtlcnM9LTEsaHR0cHM6Ly9pbWFnZS5mb3N1bmhvbGlkYXkuY29tL2NsL2ltYWdlL2NvbW1lbnQvNjE5MDE2YmYyNGUwYmM1NmZmMmE5NjhhX0xvY2F0aW5nXzkucG5n');
-    const mapPicUrl = `${mapKey},0:${longitude},${latitude}`;
+    const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
     
     const timeAgo = new Date(Date.now() - pushTime);
     const hours = timeAgo.getUTCHours();
@@ -544,9 +549,28 @@ const createWidget = async () => {
 // 创建小号组件
 createSmallWidget = async () => {
   const widget = new ListWidget();
-  const { mapUrl } = await getInfo();
-  widget.backgroundImage = await getImage(`https://restapi.amap.com/v3/staticmap?key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://image.fosunholiday.com/cl/image/comment/619016bf24e0bc56ff2a968a_Locating_9.png,0:${longitude},${latitude}`);
-  widget.url = mapUrl;
+  try {
+    const { mapUrl } = await getInfo();
+    const apiUrl = `https://restapi.amap.com/v3/staticmap?key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
+    widget.backgroundImage = await getImage(apiUrl);  
+    widget.url = mapUrl;
+  } catch (e) {
+    const iconStack = widget.addStack();
+    iconStack.addSpacer();
+    const imageElement = iconStack.addImage(SFSymbol.named("wifi.exclamationmark").image);
+    imageElement.tintColor = Color.dynamic(new Color('#000000'), new Color('#FFFFFF'));
+    imageElement.imageSize = new Size(40, 40);
+    iconStack.addSpacer();
+    widget.addSpacer(15);
+    
+    const maybachStack = widget.addStack();
+    maybachStack.addSpacer();
+    const tipText = maybachStack.addText('未连接数据');  
+    tipText.font = Font.systemFont(18);
+    tipText.centerAlignText();
+    maybachStack.addSpacer();
+  }
+  
   Script.setWidget(widget);
   Script.complete();
 };
