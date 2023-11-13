@@ -541,7 +541,7 @@ async function main() {
     balText.textColor = Color.orange();
     balText.font = new Font("Georgia-Bold", 22);
     balText.centerAlignText();
-    widget.addSpacer(3);
+    widget.addSpacer(5);
     
     getwidget(voiceAmount, voiceBalance, `${voiceBalance} 分钟 - ${voice}%`, getColor(voice));
     getwidget(totalFlow, totalBalance, `${flowBalance} GB - ${flow}%`, getColor(flow));
