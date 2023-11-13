@@ -231,14 +231,6 @@ async function main() {
     Script.setWidget(widget);
     Script.complete();
   };
-  
-  /**-------------------------**/
-  
-  const runWidget = async () => {
-    if (config.runsInWidget && config.widgetFamily === 'medium') {
-      await createWidget();
-    }
-  };
-  await runWidget();
+  await createWidget();
 }
 module.exports = { main }
