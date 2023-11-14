@@ -2,8 +2,8 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: pink; icon-glyph: exclamation-circle;
 /**
- * 小组件作者: 95度茅台
- * 小组件名称: 中国电信余量
+ * 组件作者: 95度茅台
+ * 组件名称: 中国电信余量
  * Version 1.2.5 
 修复每日用量错误问题 ( 每月1日自动清零 )
  * 2023-03-01 14:30
