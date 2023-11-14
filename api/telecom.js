@@ -11,14 +11,14 @@
  * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  */
 
-const F_MGR = FileManager.local();
-const folder = F_MGR.joinPath(F_MGR.documentsDirectory(), "telecom");
-F_MGR.createDirectory(folder, true);
+const fm = FileManager.local();
+const folder = fm.joinPath(fm.documentsDirectory(), "telecom");
+fm.createDirectory(folder, true);
 
-const cacheFile = F_MGR.joinPath(folder, 'setting.json');
+const cacheFile = fm.joinPath(folder, 'setting.json');
 
-if (F_MGR.fileExists(cacheFile)) {
-  data = F_MGR.readString(cacheFile);
+if (fm.fileExists(cacheFile)) {
+  data = fm.readString(cacheFile);
   setting = JSON.parse(data);
   cookie = setting.cookie
 } else {
@@ -29,11 +29,10 @@ if (F_MGR.fileExists(cacheFile)) {
     cookie = await webview.evaluateJavaScript('document.cookie');
     console.log(cookie);
   } else { return }
-}
+};
 
-logoColor = Color.dynamic(new Color('#004A8B'), new Color('#1da0f2'));
 widgetBgColor = Color.dynamic(
-new Color("#fefefe"), new Color("#1e1e1e"));
+new Color("#fefefe"), new Color("#111111"));
 stackBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#444444"));
 barBgColor = Color.dynamic(new Color("#dfdfdf"), new Color("#cfcfcf"));
 MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
@@ -53,7 +52,7 @@ const makeRequest = async (url) => {
     Cookie: cookie
   };
   return await request.loadJSON();
-}
+};
 
 // Voice Package
 const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
@@ -67,12 +66,10 @@ if (!package.voiceAmount) {
   voiceAmount = package.voiceAmount;
   voiceBalance = package.voiceBalance;
   voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
-}
+};
 
-
-// Flow Package
-const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
 // Balance
+const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
 const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
 
 let pacArr = [];
@@ -83,7 +80,8 @@ for (let i in arr) {
 }
 
 for (const item of pacArr) {
-  if (item.ratableAmount !== '999999999999' && item.ratableResourcename.indexOf('流量') > -1  && item.ratableResourcename.indexOf('定向') === -1) {
+  const { ratableAmount: amount, ratableResourcename: name } = item;
+  if (name.includes('流量') && !name.includes('定向') && amount < '999999990000') {
     newArr.push(item.ratableAmount);
     balArr.push(item.balanceAmount);
   }
@@ -99,30 +97,29 @@ if (newArr.length > 0) {
 const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
-
 /**
  * Get dayNumber
  * Initial
  * Daily dosage
  */
 const dayNumber = Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-if (!F_MGR.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
+if (!fm.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
   setting = {
-    flow: flow,
-    voice: voice,
-    dayNumber: dayNumber,
-    flowBalance: flowBalance,
-    voiceBalance: voiceBalance,
+    flow,
+    voice,
+    dayNumber,
+    flowBalance,
+    voiceBalance,
     cookie: cookie.match(/(CZSSON=[a-zA-Z\d]+)/)[1]
   }
-  F_MGR.writeString(cacheFile, JSON.stringify(setting));
+  fm.writeString(cacheFile, JSON.stringify(setting));
 }
 
 const Step1st = 25;
 const Step2nd = 85;
 const StepFin = 100;
 const barWidth = 15;
-const barHeigth = 105;
+const barHeigth = 111;
 
 const phone = Device.screenSize().height;
 
@@ -130,9 +127,11 @@ const df = new DateFormatter();
 df.dateFormat = 'ddHHmm'
 const day1st = df.string(new Date());
 
+const getImage = async (url) => await new Request(url).loadImage();
+  
 // Logo image
-const image = await new Request('http://mtw.so/6fyVNi').loadImage();
-
+const image = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
+const image1 = await getImage('https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_1.png');
 
 /**
  * Create Medium Widget
@@ -153,7 +152,7 @@ async function createWidget() {
   const logoImage = 
   leftStack.addImage(image);
   logoImage.imageSize = new Size(phone < 926 ? 90 : 100, phone < 926 ? 25 : 30);
-  logoImage.tintColor = logoColor
+  logoImage.tintColor = new Color('#2B83F1');
   logoImage.centerAlignImage();
   leftStack.addSpacer();
   top.addSpacer(52);
@@ -194,7 +193,7 @@ async function createWidget() {
   flowStack.addSpacer();
   let flowText = flowStack.addText(flowBalance + ' GB');
   flowText.textColor = MainTextColor
-  flowText.font = Font.boldSystemFont(15);
+  flowText.font = Font.boldSystemFont(16);
   flowStack.addSpacer();
   
   const usedFlowStack = Stack1.addStack();
@@ -205,7 +204,7 @@ async function createWidget() {
     usedFlowText = usedFlowStack.addText(`- ${(setting.flowBalance - flowBalance).toFixed(2)}`);
   }
   usedFlowText.textColor  = SubTextColor;
-  usedFlowText.font = Font.systemFont(12);
+  usedFlowText.font = Font.boldSystemFont(13);
   usedFlowStack.addSpacer();
   Stack1.addSpacer(5);
   
@@ -218,7 +217,7 @@ async function createWidget() {
   percentText1.font = Font.boldSystemFont(28);
   percentSymbol1 = Stack1Percent.addText(' %');
   percentSymbol1.textColor = SubTextColor;
-  percentSymbol1.font = Font.systemFont(20);
+  percentSymbol1.font = Font.systemFont(26);
   Stack1Percent.addSpacer();
   Stack1.addSpacer();
   Content.addSpacer();
@@ -257,7 +256,7 @@ async function createWidget() {
   voiceStack.addSpacer();
   let voiceText = voiceStack.addText(voiceBalance + ' Min');
   voiceText.textColor = MainTextColor
-  voiceText.font = Font.boldSystemFont(15);
+  voiceText.font = Font.boldSystemFont(16);
   voiceStack.addSpacer();
   
   const voiceUsedStack = Stack2.addStack();
@@ -268,7 +267,7 @@ async function createWidget() {
     voiceUsedText = voiceUsedStack.addText(`- ${setting.voiceBalance - voiceBalance}`);
   }
   voiceUsedText.textColor  = SubTextColor;
-  voiceUsedText.font = Font.systemFont(12);
+  voiceUsedText.font = Font.boldSystemFont(13);
   voiceUsedStack.addSpacer();
   Stack2.addSpacer(5);
   
@@ -282,7 +281,7 @@ async function createWidget() {
   percentText2.font = Font.boldSystemFont(28);
   percentSymbol2 = Stack2Percent.addText(' %');
   percentSymbol2.textColor = SubTextColor;
-  percentSymbol2.font = Font.systemFont(20);
+  percentSymbol2.font = Font.systemFont(26);
   Stack2Percent.addSpacer();
   Stack2.addSpacer();
   
@@ -292,7 +291,7 @@ async function createWidget() {
     Script.setWidget(widget);
     Script.complete();
   }
-}
+};
   
 // Create Progress BarValue
 function creatProgress(barValue1, barValue2) {
@@ -320,14 +319,6 @@ function creatProgress(barValue1, barValue2) {
   if (barValue2 >= Step1st && barValue2 < Step2nd) {BarColor2 = new Color("#f7b50075")} 
   else if (barValue2 >= Step2nd) {BarColor2 = new Color("#00b34775")}
   
-  // BarValue1
-  context.setFillColor(BarColor1);
-  const path1 = new Path();
-  const path1BarHeigth = (barHeigth * (barValue1 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue1 / StepFin);
-  path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
-  context.addPath(path1);
-  context.fillPath();
-  
   // BarValue2
   context.setFillColor(BarColor2);
   const path2 = new Path();
@@ -335,10 +326,15 @@ function creatProgress(barValue1, barValue2) {
   path2.addRoundedRect(new Rect(0, barHeigth, barWidth, -path2BarHeigth), 2, 2);
   context.addPath(path2);
   context.fillPath();
-  // context Font(size)
-  context.setFont(
-    Font.boldSystemFont(8)
-  );
+  
+  // BarValue1
+  context.setFillColor(BarColor1);
+  const path1 = new Path();
+  const path1BarHeigth = (barHeigth * (barValue1 / StepFin) > barHeigth) ? barHeigth : barHeigth * (barValue1 / StepFin);
+  path1.addRoundedRect(new Rect(0, barHeigth, barWidth, -path1BarHeigth), 2, 2);
+  context.addPath(path1);
+  context.fillPath();
+  context.setFont(Font.boldSystemFont(barValue1 > 99 ? 6 : 8));
   context.setTextAlignedCenter();
   
   if (barValue1 < 90) {
@@ -369,7 +365,7 @@ function creatProgress(barValue1, barValue2) {
     new Rect(0, barHeigth - path1BarHeigth + PosCorr, barWidth, path1BarHeigth - PosCorr)
   );
   return context.getImage();
-}
+};
 
 /**
  * Create Small Widget
@@ -388,12 +384,12 @@ async function createSmallWidget() {
   widget.backgroundGradient = gradient
   
   const width = 130
-  const height = 10
+  const height = 8
+  const radius = height / 2
   
   const logoImage = 
-  widget.addImage(image);
-  logoImage.imageSize = new Size(130, 35);
-  logoImage.tintColor = logoColor
+  widget.addImage(image1);
+  logoImage.imageSize = new Size(130, 40);
   logoImage.centerAlignImage();
   
   const balText = widget.addText('' + balanceAvailable);  
@@ -410,13 +406,13 @@ async function createSmallWidget() {
     titlew.centerAlignText();
     titlew.textColor = textColor
     titlew.font = Font.boldSystemFont(13);
-    widget.addSpacer(3)
+    widget.addSpacer(5);
     
     const imgw = widget.addImage(creatProgress(flowTotal, haveGone));
     imgw.centerAlignImage();
     imgw.cornerRadius = 5.2
     imgw.imageSize = new Size(width, height);
-    widget.addSpacer(5)
+    widget.addSpacer(6);
   }
   
   function creatProgress(flowTotal, havegone) {
@@ -427,7 +423,7 @@ async function createSmallWidget() {
     context.setFillColor(barColor);
     
     const path = new Path();
-    path.addRoundedRect(new Rect(0, 0, width, height), 3, 2);
+    path.addRoundedRect(new Rect(0, 0, width, height), radius, radius);
     context.addPath(path);
     context.fillPath();
     context.setFillColor(
@@ -435,7 +431,7 @@ async function createSmallWidget() {
     );
     
     const path1 = new Path();
-    path1.addRoundedRect(new Rect(0, 0, width * havegone / flowTotal, height), 3, 0)
+    path1.addRoundedRect(new Rect(0, 0, width * havegone / flowTotal, height), radius, radius);
     context.addPath(path1);
     context.fillPath();
     return context.getImage();
@@ -447,7 +443,7 @@ async function createSmallWidget() {
   } else {
     await widget.presentSmall();
   }
-}
+};
 
 // config widget
 const runWidget = async () => {  
