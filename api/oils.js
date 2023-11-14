@@ -124,7 +124,7 @@ async function createWidget(oil) {
   dataStack2.addSpacer();
   
   const barStack1 = dataStack2.addStack();
-  barStack1.setPadding(8, 8, 8, 8);
+  barStack1.setPadding(8, 12, 8, 12);
   barStack1.backgroundColor = new Color('#EEEEEE', 0.1);
   barStack1.cornerRadius = 10
   barStack1.borderColor = new Color('#D50000', 0.8);
