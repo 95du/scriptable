@@ -5,7 +5,7 @@
 async function main() {
   const fm = FileManager.local();
   const mainPath = fm.joinPath(fm.documentsDirectory(), 'mercedes');
-  const cache = fm.joinPath(mainPath, 'cachePath');
+  const cache = fm.joinPath(mainPath, 'cache_path');
   const cacheFile = fm.joinPath(mainPath, 'setting.json')
   
   /**
@@ -17,6 +17,7 @@ async function main() {
     if (fm.fileExists(file)) {
       return { parkingTime, myPlate, address, imgArr } = JSON.parse(fm.readString(file));
     }
+    return {}
   }
   const setting = await getSettings(cacheFile);
   
