@@ -6,7 +6,7 @@
  * 组件名称: 中国电信余量
  * Version 1.2.5 
 修复每日用量错误问题 ( 每月1日自动清零 )
- * 2023-03-01 14:30
+ * 2023-11-14 14:30
  * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
  * 更新组件 https://gitcode.net/4qiao/scriptable/raw/master/api/95duScriptStore.js
  */
@@ -43,7 +43,6 @@ bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#151515'));
 bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
 textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
 barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
-progressColor = Color.dynamic(new Color('#34C759'),new Color('#00b100'));
 
 const makeRequest = async (url) => {
   const request = new Request(url);
@@ -55,18 +54,17 @@ const makeRequest = async (url) => {
 };
 
 // Voice Package
-const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-const { items: arr, total, balance } = package;
-
-if (!package.voiceAmount) {
-  voiceAmount = '1';
-  voiceBalance = '0';
-  voice = '0';
-} else {
-  voiceAmount = package.voiceAmount;
-  voiceBalance = package.voiceBalance;
-  voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
+const fetchVoice = async () => {
+  const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+  const { items, total, balance, voiceAmount, voiceBalance } = package
+  if (!voiceAmount) {
+    return { voiceAmount: '1', voiceBalance: '0', voice: '0' };
+  } else {
+    return { items, total, balance, voiceAmount, voiceBalance, voice: (voiceBalance / voiceAmount * 100).toPrecision(3) };
+  }
 };
+
+const { items, total, balance, voiceAmount, voiceBalance, voice } = await fetchVoice();
 
 // Balance
 const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
@@ -75,25 +73,21 @@ const balanceAvailable = (balances.totalBalanceAvailable / 100).toFixed(2);
 let pacArr = [];
 let newArr = [];
 let balArr = [];
-for (let i in arr) {
-  pacArr.push(...arr[i].items);
+for (let i in items) {
+  pacArr.push(...items[i].items);
 }
 
 for (const item of pacArr) {
-  const { ratableAmount: amount, ratableResourcename: name } = item;
+  const { ratableAmount: amount, ratableResourcename: name, balanceAmount: balAmount} = item;
   if (name.includes('流量') && !name.includes('定向') && amount < '999999990000') {
-    newArr.push(item.ratableAmount);
-    balArr.push(item.balanceAmount);
+    newArr.push(amount);
+    balArr.push(balAmount);
   }
-}
+};
 
-if (newArr.length > 0) {
-  flowTotal = newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
-  bal = balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576
-} else {
-  flowTotal = total / 1048576
-  bal = balance / 1048576
-}
+const flowTotal = newArr.length > 0 ? newArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576 : total / 1048576
+const bal = newArr.length > 0 ? balArr.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue)) / 1048576 : balance / 1048576
+
 const flowBalance = bal.toFixed(2);
 const flow = (bal / flowTotal * 100).toPrecision(3);
 
@@ -113,10 +107,27 @@ if (!fm.fileExists(cacheFile) || dayNumber !== setting.dayNumber) {
     cookie: cookie.match(/(CZSSON=[a-zA-Z\d]+)/)[1]
   }
   fm.writeString(cacheFile, JSON.stringify(setting));
-}
+};
 
-const Step1st = 25;
-const Step2nd = 85;
+// 进度颜色
+const getColor = (value, isOpaque = false) => {
+  const colorMap = new Map([
+    [ 10, isOpaque ? new Color("#F7B50075") : new Color("#FF0000") ],
+    [ 20, isOpaque ? new Color("#BE62F375") : new Color("#F7B500") ],
+    [ 40, isOpaque ? new Color("#0083FF75") : new Color("#FFA500") ],
+    [ 50, isOpaque ? new Color("#FFA50075") : new Color("#BE62F3") ],
+    [ 65, isOpaque ? new Color("#FFA50075") : new Color("#0083FF") ],
+    [ 75, isOpaque ? new Color("#FFA50075") : new Color("#44CB9C") ]
+  ]);
+  
+  for (let [thresholdBetween, color] of colorMap) {
+    if (value <= thresholdBetween) return color;
+  }
+  return isOpaque ? new Color("#FFA50075") : new Color("#00C400");
+};
+
+// ======== config ======== //
+
 const StepFin = 100;
 const barWidth = 15;
 const barHeigth = 111;
@@ -126,10 +137,10 @@ const phone = Device.screenSize().height;
 const df = new DateFormatter();
 df.dateFormat = 'ddHHmm'
 const day1st = df.string(new Date());
-
-const getImage = async (url) => await new Request(url).loadImage();
   
 // Logo image
+const getImage = async (url) => await new Request(url).loadImage();
+
 const image = await getImage('https://gitcode.net/4qiao/scriptable/raw/master/img/icon/TelecomLogo.png');
 const image1 = await getImage('https://gitcode.net/4qiao/framework/raw/master/img/icon/telecom_1.png');
 
@@ -138,7 +149,7 @@ const image1 = await getImage('https://gitcode.net/4qiao/framework/raw/master/im
  * @param { string } string
  * @param { image } image
  */
-async function createWidget() {
+const createWidget = async () => {
   const widget = new ListWidget();
   widget.backgroundColor = widgetBgColor;
   widget.setPadding(15, 15, 15, 15);
@@ -183,7 +194,7 @@ async function createWidget() {
   
   const Stack1Head = Stack1.addStack();
   Stack1Head.addSpacer();
-  let flowTitleText = Stack1Head.addText('剩余流量');
+  const flowTitleText = Stack1Head.addText('剩余流量');
   flowTitleText.textColor = SubTextColor;
   flowTitleText.font = Font.mediumSystemFont(12);
   Stack1Head.addSpacer();
@@ -191,7 +202,7 @@ async function createWidget() {
   
   const flowStack = Stack1.addStack();
   flowStack.addSpacer();
-  let flowText = flowStack.addText(flowBalance + ' GB');
+  const flowText = flowStack.addText(flowBalance + ' GB');
   flowText.textColor = MainTextColor
   flowText.font = Font.boldSystemFont(16);
   flowStack.addSpacer();
@@ -212,7 +223,8 @@ async function createWidget() {
   Stack1Percent.layoutHorizontally();
   Stack1Percent.centerAlignContent();
   Stack1Percent.addSpacer();
-  let percentText1 = Stack1Percent.addText(flow);
+  
+  const percentText1 = Stack1Percent.addText(flow);
   percentText1.textColor = MainTextColor;
   percentText1.font = Font.boldSystemFont(28);
   percentSymbol1 = Stack1Percent.addText(' %');
@@ -226,7 +238,7 @@ async function createWidget() {
   const BarContent1 = Content.addStack();
   BarContent1.layoutVertically();
   const progressBar1st = BarContent1.addImage(creatProgress(flow, setting.flow));
-  progressBar1st.cornerRadius = 5.5
+  progressBar1st.cornerRadius = 6
   progressBar1st.imageSize = new Size(barWidth, barHeigth);
   Content.addSpacer();
  
@@ -234,7 +246,7 @@ async function createWidget() {
   const BarContent2 = Content.addStack();
   BarContent2.layoutVertically();
   const progressBar2nd = BarContent2.addImage(creatProgress(voice, setting.voice));
-  progressBar2nd.cornerRadius = 5.5
+  progressBar2nd.cornerRadius = 6
   progressBar2nd.imageSize = new Size(barWidth, barHeigth);
   Content.addSpacer();
   
@@ -246,7 +258,7 @@ async function createWidget() {
   
   const Stack2Head = Stack2.addStack();
   Stack2Head.addSpacer();
-  let voiceTitleText = Stack2Head.addText('剩余语音');
+  const voiceTitleText = Stack2Head.addText('剩余语音');
   voiceTitleText.textColor = SubTextColor;
   voiceTitleText.font = Font.mediumSystemFont(12);
   Stack2Head.addSpacer();
@@ -254,7 +266,7 @@ async function createWidget() {
    
   const voiceStack = Stack2.addStack();
   voiceStack.addSpacer();
-  let voiceText = voiceStack.addText(voiceBalance + ' Min');
+  const voiceText = voiceStack.addText(voiceBalance + ' Min');
   voiceText.textColor = MainTextColor
   voiceText.font = Font.boldSystemFont(16);
   voiceStack.addSpacer();
@@ -276,7 +288,7 @@ async function createWidget() {
   Stack2Percent.centerAlignContent();
   Stack2Percent.addSpacer();
   
-  let percentText2 = Stack2Percent.addText(voice);
+  const percentText2 = Stack2Percent.addText(voice);
   percentText2.textColor = MainTextColor;
   percentText2.font = Font.boldSystemFont(28);
   percentSymbol2 = Stack2Percent.addText(' %');
@@ -293,10 +305,11 @@ async function createWidget() {
   }
 };
   
-// Create Progress BarValue
-function creatProgress(barValue1, barValue2) {
+// Create Progress
+const creatProgress = (barValue1, barValue2) => {
   barValue1 = Math.round(barValue1);
   barValue2 = Math.round(barValue2);
+  
   const context = new DrawContext();
   context.size = new Size(barWidth, barHeigth);
   context.opaque = false
@@ -308,16 +321,8 @@ function creatProgress(barValue1, barValue2) {
   context.setFillColor(barBgColor);
   context.fillPath();
   
-  // BarValue1 Color
-  if (barValue1 <= Step1st) {BarColor1 = new Color("#bb1e10")}
-  if (barValue2 <= Step1st) {BarColor2 = new Color("#bb1e1075")} 
- 
-  if (barValue1 >= Step1st && barValue1 < Step2nd) {BarColor1 = new Color("#f7b500")}
-  else if (barValue1 >= Step2nd) {BarColor1 = new Color("#00b347")}
- 
-  // BarValue2 Color
-  if (barValue2 >= Step1st && barValue2 < Step2nd) {BarColor2 = new Color("#f7b50075")} 
-  else if (barValue2 >= Step2nd) {BarColor2 = new Color("#00b34775")}
+  const BarColor1 = getColor(barValue1);
+  const BarColor2 = getColor(barValue2, true);
   
   // BarValue2
   context.setFillColor(BarColor2);
@@ -350,7 +355,7 @@ function creatProgress(barValue1, barValue2) {
   }
   
   if (barValue1 <= 10) {
-    PosCorr = -10
+    PosCorr = -15
     context.setTextColor(
       Color.black()
     );
@@ -374,7 +379,7 @@ function creatProgress(barValue1, barValue2) {
  */
 async function createSmallWidget() {
   const widget = new ListWidget();
-  widget.setPadding(0, 0, -6, 0);
+  widget.setPadding(6, 0, 0, 0);
   const gradient = new LinearGradient()
   gradient.locations = [0, 1]
   gradient.colors = [
@@ -383,7 +388,7 @@ async function createSmallWidget() {
   ]
   widget.backgroundGradient = gradient
   
-  const width = 130
+  const width = 128
   const height = 8
   const radius = height / 2
   
@@ -396,26 +401,25 @@ async function createSmallWidget() {
   balText.textColor = Color.orange();
   balText.font = new Font("Georgia-Bold", 22);
   balText.centerAlignText();
-  widget.addSpacer(3)
+  widget.addSpacer(5);
   
-  getwidget(voiceAmount, voiceBalance, `剩余语音 ${voiceBalance} 分钟`);
-  getwidget(flowTotal, bal, `剩余流量 ${flowBalance} GB`);
+  getwidget(voiceAmount, voiceBalance, `${voiceBalance} 分钟 - ${voice}%`, getColor(voice));
+  getwidget(flowTotal, bal, `${flowBalance} GB - ${flow}%`, getColor(flow));
   
-  function getwidget(flowTotal, haveGone, str) {
-    const titlew = widget.addText(str);
-    titlew.centerAlignText();
-    titlew.textColor = textColor
-    titlew.font = Font.boldSystemFont(13);
-    widget.addSpacer(5);
+  function getwidget(flowTotal, haveGone, str, progressColor) {
+    const title = widget.addText(str);
+    title.centerAlignText();
+    title.textColor = textColor;
+    title.font = Font.boldSystemFont(14);
+    widget.addSpacer(3);
     
-    const imgw = widget.addImage(creatProgress(flowTotal, haveGone));
+    const imgw = widget.addImage(creatProgress(flowTotal, haveGone, progressColor));
     imgw.centerAlignImage();
-    imgw.cornerRadius = 5.2
     imgw.imageSize = new Size(width, height);
     widget.addSpacer(6);
   }
   
-  function creatProgress(flowTotal, havegone) {
+  function creatProgress(flowTotal, haveGone, progressColor) {
     const context = new DrawContext();
     context.size = new Size(width, height);
     context.opaque = false
@@ -426,12 +430,10 @@ async function createSmallWidget() {
     path.addRoundedRect(new Rect(0, 0, width, height), radius, radius);
     context.addPath(path);
     context.fillPath();
-    context.setFillColor(
-      progressColor
-    );
+    context.setFillColor(haveGone < 0.3 ? widgetBgColor : progressColor);
     
     const path1 = new Path();
-    path1.addRoundedRect(new Rect(0, 0, width * havegone / flowTotal, height), radius, radius);
+    path1.addRoundedRect(new Rect(0, 0, width * haveGone / flowTotal, height), radius, radius);
     context.addPath(path1);
     context.fillPath();
     return context.getImage();
