@@ -253,7 +253,7 @@ async function main() {
   };
   
   //=========> config <=========//
-  const phone = Device.screenSize().height;
+  const screenSize = Device.screenSize().height;
   const payment = 'alipays://platformapi/startapp?appId=2021001107610820&page=pages%2Ftop-up%2Fhome%2Findex';
   
   const df = new DateFormatter();
@@ -306,7 +306,7 @@ async function main() {
     const topStack = widget.addStack();
     topStack.layoutHorizontally();
     topStack.centerAlignContent();
-    topStack.size = new Size(0, phone < 926 ? 25 : 28);
+    topStack.size = new Size(0, screenSize < 926 ? 25 : 28);
     
     const leftStack = topStack.addStack();
     leftStack.addSpacer();
@@ -321,10 +321,10 @@ async function main() {
     rightStack.addSpacer();
     const balanceText = rightStack.addText(balanceAvailable);
     balanceText.textColor = new Color(balanceColor);
-    balanceText.font = new Font('Georgia-Bold', phone < 926 ? 25 : 28);
+    balanceText.font = new Font('Georgia-Bold', screenSize < 926 ? 25 : 28);
     balanceText.url = payment;
     rightStack.addSpacer();
-    widget.addSpacer(phone < 926 ? 3 : 5);
+    widget.addSpacer(screenSize < 926 ? 3 : 5);
     
     /** 
      * Stacks and Bar
