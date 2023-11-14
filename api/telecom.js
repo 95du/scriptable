@@ -39,8 +39,6 @@ MainTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
 SubTextColor = Color.dynamic(new Color("#666666"), new Color("#aaaaaa"));
 
 // Small Widget Color
-bgColor1 = Color.dynamic(new Color('#EEEEEE'), new Color('#151515'));  
-bgColor2 = Color.dynamic(new Color('#FFFFFF'), new Color('#13233F'));
 textColor = Color.dynamic(new Color('#484848'), new Color('#E0E0E0'));
 barColor = Color.dynamic(new Color('#CFCFCF'), new Color('#7A7A7A'));
 
@@ -133,7 +131,7 @@ const StepFin = 100;
 const barWidth = 15;
 const barHeigth = 111;
 
-const phone = Device.screenSize().height;
+const screenSize = Device.screenSize().height;
 
 const df = new DateFormatter();
 df.dateFormat = 'ddHHmm'
@@ -153,17 +151,18 @@ const image1 = await getImage('https://gitcode.net/4qiao/framework/raw/master/im
 const createWidget = async () => {
   const widget = new ListWidget();
   widget.backgroundColor = widgetBgColor;
+  
   widget.setPadding(15, 15, 15, 15);
   const top = widget.addStack();
   top.layoutHorizontally();
-  top.size = new Size(0, phone < 926 ? 25 : 30);
+  top.size = new Size(0, screenSize < 926 ? 25 : 30);
   
   const leftStack = top.addStack();
   leftStack.centerAlignContent();
   leftStack.addSpacer();
   const logoImage = 
   leftStack.addImage(image);
-  logoImage.imageSize = new Size(phone < 926 ? 90 : 100, phone < 926 ? 25 : 30);
+  logoImage.imageSize = new Size(screenSize < 926 ? 90 : 100, screenSize < 926 ? 25 : 30);
   logoImage.tintColor = new Color('#2B83F1');
   logoImage.centerAlignImage();
   leftStack.addSpacer();
@@ -175,9 +174,9 @@ const createWidget = async () => {
   let balanceText = rightStack.addText(balanceAvailable);
   balanceText.centerAlignText();
   balanceText.textColor = Color.red()
-  balanceText.font = new Font('Georgia-Bold', phone < 926 ? 20 : 25);
+  balanceText.font = new Font('Georgia-Bold', screenSize < 926 ? 20 : 25);
   rightStack.addSpacer();
-  widget.addSpacer(phone < 926 ? 3 : 5);
+  widget.addSpacer(screenSize < 926 ? 3 : 5);
   
   /** 
    * Stacks and Bar
@@ -381,13 +380,7 @@ const creatProgress = (barValue1, barValue2) => {
 async function createSmallWidget() {
   const widget = new ListWidget();
   widget.setPadding(6, 0, 0, 0);
-  const gradient = new LinearGradient()
-  gradient.locations = [0, 1]
-  gradient.colors = [
-    bgColor1,
-    bgColor2
-  ]
-  widget.backgroundGradient = gradient
+  widget.backgroundColor = widgetBgColor;
   
   const width = 128
   const height = 8
