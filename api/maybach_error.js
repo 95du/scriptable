@@ -14,11 +14,9 @@ async function main() {
    * @returns {object} - JSON
    */
   const getSettings = (file) => {
-    let setting = {};
     if (fm.fileExists(file)) {
       return { parkingTime, myPlate, address, imgArr } = JSON.parse(fm.readString(file));
     }
-    return {}
   }
   const setting = await getSettings(cacheFile);
   
@@ -120,7 +118,7 @@ async function main() {
     carIcon1.imageSize = new Size(16, 16);
     benzStack.addSpacer(4);
     
-    const vehicleModelText = benzStack.addText('not network');
+    const vehicleModelText = benzStack.addText('Not Network');
     vehicleModelText.font = Font.mediumSystemFont(14);
     vehicleModelText.textColor = Color.black();
     vehicleModelText.textOpacity = 0.7;
