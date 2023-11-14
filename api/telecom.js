@@ -78,7 +78,7 @@ for (let i in items) {
 }
 
 for (const item of pacArr) {
-  const { ratableAmount: amount, ratableResourcename: name, balanceAmount: balAmount} = item;
+  const { ratableAmount: amount, ratableResourcename: name, balanceAmount: balAmount } = item;
   if (name.includes('流量') && !name.includes('定向') && amount < '999999990000') {
     newArr.push(amount);
     balArr.push(balAmount);
