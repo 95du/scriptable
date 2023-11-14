@@ -478,7 +478,7 @@ async function main() {
     imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
     
     if ( coordinates && aMapkey ) {
-      await getDistance();
+      const { distance } = await getDistance();
       await pushMessage(mapUrl, longitude, latitude, distance);
     };
     
