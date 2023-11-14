@@ -54,17 +54,18 @@ const makeRequest = async (url) => {
 };
 
 // Voice Package
-const fetchVoice = async () => {
-  const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
-  const { items, total, balance, voiceAmount, voiceBalance } = package
-  if (!voiceAmount) {
-    return { voiceAmount: '1', voiceBalance: '0', voice: '0' };
-  } else {
-    return { items, total, balance, voiceAmount, voiceBalance, voice: (voiceBalance / voiceAmount * 100).toPrecision(3) };
-  }
-};
+const package = await makeRequest('https://e.189.cn/store/user/package_detail.do?t=189Bill');
+const { items, total, balance } = package;
 
-const { items, total, balance, voiceAmount, voiceBalance, voice } = await fetchVoice();
+if (!package.voiceAmount) {
+  voiceAmount = '1';
+  voiceBalance = '0';
+  voice = '0';
+} else {
+  voiceAmount = package.voiceAmount;
+  voiceBalance = package.voiceBalance;
+  voice = (voiceBalance / voiceAmount * 100).toPrecision(3);
+};
 
 // Balance
 const balances = await makeRequest('https://e.189.cn/store/user/balance_new.do?t=189Bill');
