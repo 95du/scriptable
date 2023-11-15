@@ -227,8 +227,16 @@ async function main() {
     addressText.centerAlignText();
     rightStack.addSpacer();
     
-    Script.setWidget(widget);
-    Script.complete();
+    const uri = Script.name();
+    imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
+    addressText.url = `https://maps.apple.com/?q=${encodeURIComponent('琼A·849A8')}&ll=${setting.latitude},${setting.longitude}&t=m`;
+    
+    if ( !config.runsInWidget ) {  
+      await widget.presentMedium();
+    } else {
+      Script.setWidget(widget);
+      Script.complete();
+    }
   };
   await createWidget();
 }
