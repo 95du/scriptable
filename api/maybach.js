@@ -13,7 +13,7 @@ const fm = FileManager.local();
 const mainPath = fm.joinPath(fm.documentsDirectory(), 'mercedes');
 if (!fm.fileExists(mainPath)) fm.createDirectory(mainPath);
 
-const cache = fm.joinPath(mainPath, 'cachePath');
+const cache = fm.joinPath(mainPath, 'cache_path');
 if (!fm.fileExists(cache)) fm.createDirectory(cache);
 
 const cacheFile = fm.joinPath(mainPath, 'setting.json')
@@ -177,19 +177,66 @@ async function getRandomImage() {
 };
 
 /**
+ * 获取图片、string并使用缓存
+ * @param {string} File Extension
+ * @returns {image} - Request
+ */
+const useFileManager = ({ cacheTime } = {}) => {
+  return {
+    readString: (name) => {
+      const filePath = fm.joinPath(cache, name);  
+      const fileExists =  fm.fileExists(filePath);
+      if (fileExists && hasExpired(filePath) > cacheTime) {
+        fm.remove(filePath);
+        return null;
+      }
+      return fm.fileExists(filePath) ? fm.readString(filePath) : null;
+    },
+    writeString: (name, content) => fm.writeString(fm.joinPath(cache, name), content),
+    // cache image
+    readImage: (name) => {
+      const filePath = fm.joinPath(cache, name);
+      const fileExists =  fm.fileExists(filePath);
+      if (fileExists && hasExpired(filePath) > cacheTime) {
+        fm.remove(filePath);
+        return null;
+      }
+      return fm.fileExists(filePath) ? fm.readImage(filePath) : null;
+    },
+    writeImage: (name, image) => fm.writeImage(fm.joinPath(cache, name), image),
+  };
+    
+  function hasExpired(filePath) {
+    const createTime = fm.creationDate(filePath).getTime();
+    return (Date.now() - createTime) / (60 * 60 * 1000)
+  }
+};
+
+/**
+ * 获取 GET POST JSON 字符串
+ * @param {string} json
+ * @returns {object} - JSON
+ */
+const getJson = async (url) => await new Request(url).loadJSON();
+
+const getCacheString = async (jsonName, jsonUrl) => {
+  const cache = useFileManager({ cacheTime: 5 });
+  const jsonString = cache.readString(jsonName);
+  if (jsonString) {
+    return JSON.parse(jsonString);
+  }
+  const response = await getJson(jsonUrl);
+  const jsonFile = JSON.stringify(response);
+  if ( jsonFile ) {
+    cache.writeString(jsonName, jsonFile);
+  }
+  return JSON.parse(jsonFile);
+};
+
+/**
  * 获取网络图片并使用缓存
  * @param {Image} url
  */
-const useFileManager = () => {
-  return {
-    readImage: (fileName) => {
-      const imgPath = fm.joinPath(cache, fileName);
-      return fm.fileExists(imgPath) ? fm.readImage(imgPath) : null;
-    },
-    writeImage: (fileName, image) => fm.writeImage(fm.joinPath(cache, fileName), image)
-  }
-};
-  
 const getCacheImage = async (name, url) => {
   const cache = useFileManager();
   const image = cache.readImage(name);
@@ -215,16 +262,31 @@ const getLastLocation = async () => {
   }
 };
 
+// 更新缓存文件
+const handleFile = (fileName) => {
+  const filePath = fm.joinPath(cache, fileName);
+  if (fm.fileExists(filePath) && setting.longitude !== longitude || setting.updateTime !== updateTime) {
+    console.log(fileName)
+    fm.remove(filePath);
+  }
+};
+
 /**
  * @description 获取指定经纬度的地址信息和周边POI点信息
  * @returns {Promise<object>} 包含formatted_address和pois的对象
  */
 const getAddress = async () => {
   try {
-    const req = await new Request(`http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`).loadJSON();
-    const poisArr = req.regeocode.pois;
+    const url = `http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`;
+
+    const fetchData = async () => setting.longitude !== longitude || setting.updateTime !== updateTime
+      ? await getJson(url)
+      : await getCacheString('address.json', url);
+    
+    const response = await fetchData(url);
+    const poisArr = response.regeocode.pois;
     const poisData = poisArr.length > 0 ? poisArr : null;
-    return { formatted_address: address, pois = poisData } = req.regeocode;  
+    return { formatted_address: address, pois = poisData } = response.regeocode;  
   } catch (e) {
     console.log(e);
   }
@@ -236,10 +298,16 @@ const getAddress = async () => {
  */ 
 const getDistance = async () => {
   try {
-    const fence = await new Request(`https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`).loadJSON();
+    const url = `https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`;
+    
+    const fetchData = async (url) => setting.longitude !== longitude || setting.updateTime !== updateTime
+      ? await getJson(url)
+      : await getCacheString('distance.json', url);
+
+    const fence = await fetchData(url);
     return { distance } = fence.route.paths[0];
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -253,9 +321,10 @@ const getDistance = async () => {
 const getInfo = async () => {
   const locationData = await getLastLocation();
   if (locationData) {
+    ['address.json', 'distance.json', 'mapImage.png'].forEach(handleFile);
     await Promise.all([loadPicture(), getAddress()]);
   }
-  
+
   const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent('琼A·849A8')}&ll=${latitude},${longitude}&t=m`;
   
   const [state, status] = speed <= 5
@@ -280,6 +349,7 @@ const getInfo = async () => {
     imgArr,
     updateTime, 
     address,
+    longitude,
     coordinates: `${longitude},${latitude}`,
     run: owner,
     pushTime: Date.now(),
@@ -540,18 +610,22 @@ const createWidget = async () => {
   };
   
   if ( setting.coordinates ) {
-    const distance = await getDistance();
+    const { distance } = await getDistance();
     await pushMessage(mapUrl, longitude, latitude, distance);
   }
 };
 
 // 创建小号组件
-createSmallWidget = async () => {
-  const widget = new ListWidget();
+const createSmallWidget = async (widget) => {
   try {
     const { mapUrl } = await getInfo();
-    const apiUrl = `https://restapi.amap.com/v3/staticmap?key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
-    widget.backgroundImage = await getImage(apiUrl);  
+    const url = `https://restapi.amap.com/v3/staticmap?key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
+    
+    const fetchData = async (url) => setting.longitude == longitude || setting.updateTime !== updateTime
+      ? await getImage(url)
+      : await getCacheImage('mapImage.png', url);
+    
+    widget.backgroundImage = await fetchData(url);
     widget.url = mapUrl;
   } catch (e) {
     const iconStack = widget.addStack();
@@ -570,8 +644,12 @@ createSmallWidget = async () => {
     maybachStack.addSpacer();
   }
   
-  Script.setWidget(widget);
-  Script.complete();
+  if ( !config.runsInWidget ) {  
+    await widget.presentSmall();
+  } else {
+    Script.setWidget(widget);
+    Script.complete();
+  }
 };
 
 // 数据未连接
@@ -591,8 +669,7 @@ const downloadModule = async (scriptName, url) => {
   }
 };
 
-async function createErrorWidget() {
-  const widget = new ListWidget();
+const createErrorWidget = async (widget) => {
   const text = widget.addText('不支持大号组件');
   text.font = Font.systemFont(17);
   text.centerAlignText();
@@ -623,8 +700,9 @@ if ( args.plainTexts[0] ) {
 
 const runWidget = async () => {
   if (config.runsInWidget && setting.cookie) {
+    const widget = new ListWidget();
     try {
-      await (config.widgetFamily === 'medium' ? createWidget() : config.widgetFamily === 'small' ? createSmallWidget() : createErrorWidget());
+      await (config.widgetFamily === 'medium' ? createWidget() : config.widgetFamily === 'small' ? createSmallWidget(widget) : createErrorWidget(widget));
     } catch (e) {
       await importModule(await downloadModule('maybach.js', 'https://gitcode.net/4qiao/scriptable/raw/master/api/maybach_error.js')).main();
     }
