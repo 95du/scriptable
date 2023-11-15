@@ -8,7 +8,6 @@
  * 2022-12-22 22:22
  */
 
-const uri = Script.name();
 const fm = FileManager.local();
 const mainPath = fm.joinPath(fm.documentsDirectory(), Script.name());
 if (!fm.fileExists(mainPath)) fm.createDirectory(mainPath);
@@ -43,7 +42,7 @@ const writeSettings = async (inObject) => {
 };
 
 /**
- * 弹出一个通知  
+ * 弹出通知  
  * @param {string} title
  * @param {string} body
  * @param {string} url
@@ -55,6 +54,8 @@ const notify = async (title, body, url, opts = {}) => {
   return await n.schedule();
 };
 
+const ScriptableRun = () => Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
+
 /**
  * @description 更新 string
  * @returns {Promise<void>}
@@ -64,7 +65,7 @@ const updateString = async () => {
   const iCloudInUse = fm.isFileStoredIniCloud(module.filename);
   if (codeString.includes('95度茅台') && iCloudInUse) {
     fm.writeString(module.filename, codeString);
-    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+    ScriptableRun();
   } else {
     const error = new Alert();
     error.title = '更新失败';
@@ -95,7 +96,7 @@ const presentMenu = async () => {
       break;
     case 1:
       fm.remove(mainPath);
-      Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
+      ScriptableRun();
       break;
     case 2:
       Safari.open('amapuri://WatchFamily/myFamily');
@@ -134,7 +135,7 @@ const inputCookie = async () => {
   }
   
   writeSettings({ cookie: btoa(cookie), imgArr: [] });
-  Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+  ScriptableRun();
 };
 
 /**
@@ -348,7 +349,7 @@ const getInfo = async () => {
   const GMT = formatDate(updateTime, 'yyyy-MM-dd HH:mm');
   const GMT2 = formatDate(updateTime, 'MM-dd HH:mm');
   
-  const runObj = {
+  const json = {
     cookie,
     imgArr,
     updateTime, 
@@ -362,10 +363,10 @@ const getInfo = async () => {
   };
   
   if ( !setting.run ) {
-    writeSettings(runObj);
+    writeSettings(json);
   }
   
-  return { state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
+  return { state, status, mapUrl, parkingTime, GMT, GMT2, json };
 };
 
 // 设置组件背景
@@ -391,7 +392,7 @@ const setBackground = async (widget) => {
 
 //=========> Create <=========//
 const createWidget = async () => {
-  const { state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
+  const { state, status, mapUrl, parkingTime, GMT, GMT2, json } = await getInfo();
   
   /**
    * @param {number} padding
@@ -546,8 +547,8 @@ const createWidget = async () => {
   
   // jump content
   barStack2.url = 'amapuri://WatchFamily/myFamily';
+  imageCar.url = 'scriptable:///run/' + encodeURIComponent(Script.name());
   addressText.url = mapUrl;
-  imageCar.url = 'scriptable:///run/' + encodeURIComponent(uri);
   
   if ( !config.runsInWidget ) {  
     await widget.presentMedium();
@@ -565,26 +566,23 @@ const createWidget = async () => {
     const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
     
     const timeAgo = new Date(Date.now() - pushTime);
-    const hours = timeAgo.getUTCHours();
-    const minutes = timeAgo.getUTCMinutes();
-    const moment = hours * 60 + minutes;
+    const moment = timeAgo.getUTCHours() * 60 + timeAgo.getUTCMinutes();
 
     // driveAway
-    if ( parkingTime >= 10 && distance > 20 && address !== setting.address ) {
+    if ( parkingTime >= 10 && distance > 20 && setting.address !== address && setting.longitude !== longitude) {
       notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
-      await sendWechatMessage(`${status}  更新时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);
-      writeSettings(runObj);
+      await sendWechatMessage(`${status}  更新时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);  
+      writeSettings(json);
     } else if ( speed <= 5 ) {
-      const duration = updateTime === setting.updateTime ? 300 : 10;
-      if (moment >= duration) {
+      if ( moment >= (updateTime === setting.updateTime ? 300 : 10) ) {
         notify(`${status}  ${GMT}`, address, mapUrl);
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
-        writeSettings({ ...runObj, run: speed });
+        writeSettings(json);
       }
     } else {
       notify(`${status}  ${GMT}`, address, mapUrl);
       await sendWechatMessage(`${status}  更新时间 ${GMT}`, mapUrl, mapPicUrl);
-      writeSettings(runObj);
+      writeSettings(json);
     }
   };
   
@@ -599,8 +597,8 @@ const createWidget = async () => {
  * @returns {Promise} Promise
  */
 const sendWechatMessage = async (description, url, picurl) => {
-  const acc = await getJson(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ='))
-  const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
+  const { access_token } = await getJson(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ='))
+  const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}`);
   request.method = 'POST'
   request.body = JSON.stringify({
     touser: 'DianQiao',
@@ -613,7 +611,7 @@ const sendWechatMessage = async (description, url, picurl) => {
         url,
         description
       }]
-    } // pushMessage to wiChat
+    }
   });
   return request.loadJSON();
 };
