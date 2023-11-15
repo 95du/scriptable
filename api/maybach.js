@@ -10,7 +10,7 @@
 
 const uri = Script.name();
 const fm = FileManager.local();
-const mainPath = fm.joinPath(fm.documentsDirectory(), 'mercedes');
+const mainPath = fm.joinPath(fm.documentsDirectory(), Script.name());
 if (!fm.fileExists(mainPath)) fm.createDirectory(mainPath);
 
 const cache = fm.joinPath(mainPath, 'cache_path');
@@ -56,6 +56,24 @@ const notify = async (title, body, url, opts = {}) => {
 };
 
 /**
+ * @description 更新 string
+ * @returns {Promise<void>}
+ */
+const updateString = async () => {
+  const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
+  const iCloudInUse = fm.isFileStoredIniCloud(module.filename);
+  if (codeString.includes('95度茅台') && iCloudInUse) {
+    fm.writeString(module.filename, codeString);
+    Safari.open('scriptable:///run/' + encodeURIComponent(uri));
+  } else {
+    const error = new Alert();
+    error.title = '更新失败';
+    error.addAction('OK');
+    await error.presentAlert();
+  }
+};
+
+/**
  * 弹出菜单供用户选择进行操作
  */
 const presentMenu = async () => {
@@ -63,16 +81,18 @@ const presentMenu = async () => {
   alert.message = '\n显示车辆实时位置、车速、停车时间\n模拟电子围栏、模拟停红绿灯\n设置间隔时间推送车辆状态信息';
   
   const actions = ['更新代码', '重置所有', '家人地图', '输入凭证', '预览组件'];
-
   actions.forEach(( action, index ) => {
     alert[ index === 0 || index === 1 
-    ? 'addDestructiveAction'
-    : 'addAction' ](action);
+      ? 'addDestructiveAction'
+      : 'addAction' ](action);
   });
   alert.addCancelAction('取消');
   
   const response = await alert.presentSheet();
   switch (response) {
+    case 0:
+      await updateString();
+      break;
     case 1:
       fm.remove(mainPath);
       Safari.open('scriptable:///run/' + encodeURIComponent(uri));  
@@ -87,27 +107,10 @@ const presentMenu = async () => {
       if ( !setting.cookie ) return;
       await createWidget();
       break;
-    case 5:
-      return;
-    case 0:
-      const codeString = await new Request('https://gitcode.net/4qiao/scriptable/raw/master/api/maybach.js').loadString();
-      const iCloudInUse = fm.isFileStoredIniCloud(module.filename);
-      if (codeString.includes('95度茅台') && iCloudInUse) {
-        fm.writeString(
-          module.filename, 
-          codeString
-        );
-        Safari.open('scriptable:///run/' + encodeURIComponent(uri));
-      } else {
-        const error = new Alert();
-        error.title = '更新失败';
-        error.addAction('OK');
-        await error.presentAlert();
-      }
-   // Main Menu
   }
 };
 
+// cookie menu
 const inputCookie = async () => {
   await downloadModule('maybach.js', 'https://gitcode.net/4qiao/scriptable/raw/master/api/maybach_error.js')
   const alert = new Alert();
@@ -121,7 +124,7 @@ const inputCookie = async () => {
 
   if ( !cookie ) {
     try {
-      const boxjs_data = await new Request('http://boxjs.com/query/data/amap_cookie').loadJSON();
+      const boxjs_data = await getJson('http://boxjs.com/query/data/amap_cookie');
       cookie = boxjs_data.val;
     } catch(e) {
       notify('获取 boxjs 数据失败 ⚠️', '需打开Quantumult-X获取Cookie');  
@@ -227,7 +230,8 @@ const getCacheString = async (jsonName, jsonUrl) => {
   }
   const response = await getJson(jsonUrl);
   const jsonFile = JSON.stringify(response);
-  if ( jsonFile ) {
+  const { status } = JSON.parse(jsonFile);
+  if (status === '1') {
     cache.writeString(jsonName, jsonFile);
   }
   return JSON.parse(jsonFile);
@@ -350,12 +354,13 @@ const getInfo = async () => {
     updateTime, 
     address,
     longitude,
+    latitude,
     coordinates: `${longitude},${latitude}`,
     run: owner,
     pushTime: Date.now(),
     parkingTime: GMT2,
   };
-  // Initial Save
+  
   if ( !setting.run ) {
     writeSettings(runObj);
   }
@@ -563,7 +568,7 @@ const createWidget = async () => {
     const hours = timeAgo.getUTCHours();
     const minutes = timeAgo.getUTCMinutes();
     const moment = hours * 60 + minutes;
-    
+
     // driveAway
     if ( parkingTime >= 10 && distance > 20 && address !== setting.address ) {
       notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
@@ -619,7 +624,7 @@ const createSmallWidget = async (widget) => {
     const { mapUrl } = await getInfo();
     const url = `https://restapi.amap.com/v3/staticmap?key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
     
-    const fetchData = async (url) => setting.longitude == longitude || setting.updateTime !== updateTime
+    const fetchData = async (url) => setting.longitude !== longitude || setting.updateTime !== updateTime
       ? await getImage(url)
       : await getCacheImage('mapImage.png', url);
     
