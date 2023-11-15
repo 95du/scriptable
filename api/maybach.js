@@ -265,7 +265,7 @@ const getLastLocation = async () => {
 // 更新缓存文件
 const handleFile = (fileName) => {
   const filePath = fm.joinPath(cache, fileName);
-  if (fm.fileExists(filePath) && setting.longitude !== longitude || setting.updateTime !== updateTime) {
+  if (fm.fileExists(filePath) && setting.longitude !== longitude && setting.updateTime !== updateTime) {
     console.log(fileName)
     fm.remove(filePath);
   }
@@ -304,8 +304,8 @@ const getDistance = async () => {
       ? await getJson(url)
       : await getCacheString('distance.json', url);
 
-    const fence = await fetchData(url);
-    return { distance } = fence.route.paths[0];
+    const { route } = await fetchData(url);
+    return route.paths[0];
   } catch (error) {
     console.log(error);
   }
@@ -322,7 +322,7 @@ const getInfo = async () => {
   const locationData = await getLastLocation();
   if (locationData) {
     ['address.json', 'distance.json', 'mapImage.png'].forEach(handleFile);
-    await Promise.all([loadPicture(), getAddress()]);
+    await getAddress();
   }
 
   const mapUrl = `https://maps.apple.com/?q=${encodeURIComponent('琼A·849A8')}&ll=${latitude},${longitude}&t=m`;
@@ -355,6 +355,10 @@ const getInfo = async () => {
     pushTime: Date.now(),
     parkingTime: GMT2,
   };
+  // Initial Save
+  if ( !setting.run ) {
+    writeSettings(runObj);
+  }
   
   return { state, status, mapUrl, parkingTime, GMT, GMT2, runObj };
 };
@@ -383,12 +387,6 @@ const setBackground = async (widget) => {
 //=========> Create <=========//
 const createWidget = async () => {
   const { state, status, mapUrl, parkingTime, GMT, GMT2, runObj } = await getInfo();
-
-  // Initial Save
-  if ( !setting.run ) {
-    writeSettings(runObj);
-    await getRandomImage();
-  }
   
   /**
    * @param {number} padding
@@ -525,7 +523,7 @@ const createWidget = async () => {
     };  
     const str = jmz.GetLength(address);
     if ( str <= 35 ) {
-      addressText = adrStack.addText(`${address} - ${pois[0].address} ${pois[0].distance} 米`)
+      addressText = adrStack.addText(`${address} - ${pois[0].address} ${pois[0].distance} 米`);
     } else if (str < 46) {
       addressText = adrStack.addText(`${address} - ${pois[0].address}`);
     } else {
@@ -556,7 +554,7 @@ const createWidget = async () => {
   /**
    * Electronic Fence
    * 判断run为HONDA触发电子围栏
-   * 推送信息到微信
+   * 弹窗通知并推送信息到微信
    */
   const pushMessage = async (mapUrl, longitude, latitude, distance) => {
     const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=a35a9538433a183718ce973382012f55&zoom=14&size=450*300&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
@@ -585,34 +583,34 @@ const createWidget = async () => {
     }
   };
   
-  /**
-  * 推送消息到微信
-  * @returns {Promise} Promise
-  */
-  const sendWechatMessage = async (description, url, picurl) => {
-    const acc = await new Request(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ=')).loadJSON();
-    const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
-    request.method = 'POST'
-    request.body = JSON.stringify({
-      touser: 'DianQiao',
-      agentid: '1000004',
-      msgtype: 'news',
-      news: {
-        articles: [{
-          title: address,
-          picurl,
-          url,
-          description
-        }]
-      } // pushMessage to wiChat
-    });
-    return request.loadJSON();
-  };
-  
   if ( setting.coordinates ) {
     const { distance } = await getDistance();
     await pushMessage(mapUrl, longitude, latitude, distance);
   }
+};
+
+/**
+ * 推送消息到微信
+ * @returns {Promise} Promise
+ */
+const sendWechatMessage = async (description, url, picurl) => {
+  const acc = await getJson(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ='))
+  const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
+  request.method = 'POST'
+  request.body = JSON.stringify({
+    touser: 'DianQiao',
+    agentid: '1000004',
+    msgtype: 'news',
+    news: {
+      articles: [{
+        title: address,
+        picurl,
+        url,
+        description
+      }]
+    } // pushMessage to wiChat
+  });
+  return request.loadJSON();
 };
 
 // 创建小号组件
