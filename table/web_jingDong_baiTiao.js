@@ -231,6 +231,8 @@ async function main() {
   };
   
   //=========> START <=========//
+  const benefitNum = await LvlProgress('benefit.json', 'https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit');
+  
   const getData = async () => {
     await whiteStripe();
     const LvlProgressData = await LvlProgress('LvlProgress.json', 'https://ms.jr.jd.com/gw/generic/zc/h5/m/queryAccountLvlProgress');
@@ -296,7 +298,7 @@ async function main() {
   
   // 创建组件实例
   async function createWidget() {
-    const { alreadyGetBenefitNum } = (await LvlProgress('benefit.json', 'https://ms.jr.jd.com/gw/generic/zc/h5/m/queryBenefit')).extValue;
+    const { alreadyGetBenefitNum } = benefitNum.extValue;
 
     const widget = new ListWidget();
     await setBackground(widget);
