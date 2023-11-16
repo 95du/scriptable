@@ -113,7 +113,6 @@ const presentMenu = async () => {
 
 // cookie menu
 const inputCookie = async () => {
-  await downloadModule('maybach.js', 'https://gitcode.net/4qiao/scriptable/raw/master/api/maybach_error.js')
   const alert = new Alert();
   alert.message = '输入 Cookie'
   alert.addTextField('高德地图Cookie');
@@ -125,7 +124,7 @@ const inputCookie = async () => {
 
   if ( !cookie ) {
     try {
-      const boxjs_data = await getJson('http://boxjs.com/query/data/amap_cookie');
+      const boxjs_data = await makeRequest('http://boxjs.com/query/data/amap_cookie');
       cookie = boxjs_data.val;
     } catch(e) {
       notify('获取 boxjs 数据失败 ⚠️', '需打开Quantumult-X获取Cookie');  
@@ -162,6 +161,7 @@ const downloadCarImage = async (item) => {
 
 const loadPicture = async () => {
   if ( !setting.imgArr?.length ) {
+    await downloadModule('maybach.js', 'https://gitcode.net/4qiao/scriptable/raw/master/api/maybach_error.js');
     const maybach = Array.from({ length: 9 }, (_, index) => `https://gitcode.net/4qiao/scriptable/raw/master/img/car/Maybach-${index}.png`);
     maybach.forEach(async (item) => {
       await downloadCarImage(item);
@@ -217,19 +217,32 @@ const useFileManager = ({ cacheTime } = {}) => {
 };
 
 /**
- * 获取 GET POST JSON 字符串
- * @param {string} json
+ * 发起请求并获取 JSON 字符串
+ * @param {string} url
+ * @param {string} method
+ * @param {object} headers
+ * @param {object} body
  * @returns {object} - JSON
  */
-const getJson = async (url) => await new Request(url).loadJSON();
+const makeRequest = async (url, method, headers, body) => {
+  const request = new Request(url);
+  request.method = method || 'GET';
+  request.headers = headers || {};
+  if (body) request.body = body;
+  return await request.loadJSON();
+};
 
+/**
+ * 获取缓存的 JSON 字符串
+ * @returns {object} - JSON
+ */
 const getCacheString = async (jsonName, jsonUrl) => {
   const cache = useFileManager({ cacheTime: 5 });
   const jsonString = cache.readString(jsonName);
   if (jsonString) {
     return JSON.parse(jsonString);
   }
-  const response = await getJson(jsonUrl);
+  const response = await makeRequest(jsonUrl);
   const jsonFile = JSON.stringify(response);
   const { status } = JSON.parse(jsonFile);
   if (status === '1') {
@@ -241,6 +254,7 @@ const getCacheString = async (jsonName, jsonUrl) => {
 /**
  * 获取网络图片并使用缓存
  * @param {Image} url
+ * @returns {Image} - image
  */
 const getCacheImage = async (name, url) => {
   const cache = useFileManager();
@@ -258,10 +272,9 @@ const getCacheImage = async (name, url) => {
  * @returns {object} - 地理位置信息的对象，包含地址、停车时间等属性
  */
 const getLastLocation = async () => {
-  const req = new Request('http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4');
-  req.method = 'GET'
-  req.headers = { Cookie: atob(cookie) }
-  const { code, data } = await req.loadJSON();
+  const url = 'http://ts.amap.com/ws/tservice/location/getLast?in=KQg8sUmvHrGwu0pKBNTpm771R2H0JQ%2FOGXKBlkZU2BGhuA1pzHHFrOaNuhDzCrQgzcY558tHvcDx%2BJTJL1YGUgE04I1R4mrv6h77NxyjhA433hFM5OvkS%2FUQSlrnwN5pfgKnFF%2FLKN1lZwOXIIN7CkCmdVD26fh%2Fs1crIx%2BJZUuI6dPYfkutl1Z5zqSzXQqwjFw03j3aRumh7ZaqDYd9fXcT98gi034XCXQJyxrHpE%2BPPlErnfiKxd36lLHKMJ7FtP7WL%2FOHOKE%2F3YNN0V9EEd%2Fj3BSYacBTdShJ4Y0pEtUf2qTpdsIWn%2F7Ls1llHCsoBB24PQ%3D%3D&ent=2&keyt=4';
+  const headers = { Cookie: atob(cookie) };
+  const { code, data } = await makeRequest(url, 'GET', headers);
   if ( code === 1 ) {
     return { speed, owner, heading, channel, longitude, latitude, updateTime } = data;
   }
@@ -270,7 +283,7 @@ const getLastLocation = async () => {
 // 更新缓存文件
 const handleFile = (fileName) => {
   const filePath = fm.joinPath(cache, fileName);
-  if (fm.fileExists(filePath) && setting.longitude !== longitude && setting.updateTime !== updateTime) {
+  if (fm.fileExists(filePath) && setting.updateTime !== updateTime) {
     console.log(fileName)
     fm.remove(filePath);
   }
@@ -284,14 +297,12 @@ const getAddress = async () => {
   try {
     const url = `http://restapi.amap.com/v3/geocode/regeo?key=9d6a1f278fdce6dd8873cd6f65cae2e0&s=rsv3&radius=500&extensions=all&location=${longitude},${latitude}`;
 
-    const fetchData = async () => setting.longitude !== longitude || setting.updateTime !== updateTime
-      ? await getJson(url)
+    const fetchData = async () => setting.updateTime !== updateTime
+      ? await makeRequest(url)
       : await getCacheString('address.json', url);
     
-    const response = await fetchData(url);
-    const poisArr = response.regeocode.pois;
-    const poisData = poisArr.length > 0 ? poisArr : null;
-    return { formatted_address: address, pois = poisData } = response.regeocode;  
+    const { regeocode } = await fetchData(url);
+    return { formatted_address: address, pois } = regeocode;  
   } catch (e) {
     console.log(e);
   }
@@ -305,8 +316,8 @@ const getDistance = async () => {
   try {
     const url = `https://restapi.amap.com/v5/direction/driving?key=a35a9538433a183718ce973382012f55&origin_type=0&strategy=38&origin=${coordinates}&destination=${longitude},${latitude}`;
     
-    const fetchData = async (url) => setting.longitude !== longitude || setting.updateTime !== updateTime
-      ? await getJson(url)
+    const fetchData = async (url) => setting.updateTime !== updateTime
+      ? await makeRequest(url)
       : await getCacheString('distance.json', url);
 
     const { route } = await fetchData(url);
@@ -354,8 +365,6 @@ const getInfo = async () => {
     imgArr,
     updateTime, 
     address,
-    longitude,
-    latitude,
     coordinates: `${longitude},${latitude}`,
     run: owner,
     pushTime: Date.now(),
@@ -427,8 +436,8 @@ const createWidget = async () => {
   benzStack.layoutHorizontally();
   benzStack.centerAlignContent();
   const iconSymbol = SFSymbol.named('car.circle');
-  const carIcon1 = benzStack.addImage(iconSymbol.image);
-  carIcon1.imageSize = new Size(16, 16);
+  const carIcon = benzStack.addImage(iconSymbol.image);
+  carIcon.imageSize = new Size(16, 16);
   benzStack.addSpacer(4);
   
   const vehicleModelText = benzStack.addText(String(heading.toFixed(6)));
@@ -437,13 +446,13 @@ const createWidget = async () => {
   vehicleModelText.textOpacity = 0.7;
   leftStack.addSpacer(3)
   
-  // Update Time
+  // update Time
   const dateStack = leftStack.addStack();
   dateStack.layoutHorizontally();
   dateStack.centerAlignContent();
   const iconSymbol2 = SFSymbol.named('timer');
-  const carIcon2 = dateStack.addImage(iconSymbol2.image)
-  carIcon2.imageSize = new Size(16, 16);
+  const timerIcon = dateStack.addImage(iconSymbol2.image)
+  timerIcon.imageSize = new Size(16, 16);
   dateStack.addSpacer(4);
   
   const updateTimeText = dateStack.addText(GMT2);
@@ -452,7 +461,7 @@ const createWidget = async () => {
   updateTimeText.textOpacity = 0.7;
   leftStack.addSpacer(22);
   
-  // Left Stack bar
+  // Left Stack bar1
   const barStack = leftStack.addStack();
   barStack.layoutHorizontally();
   barStack.centerAlignContent();
@@ -517,27 +526,25 @@ const createWidget = async () => {
   imageCar.imageSize = new Size(225, 100);
   rightStack.addSpacer();
 
-  // show address
+  // address
   const adrStack = rightStack.addStack();
   adrStack.centerAlignContent();
   adrStack.size = new Size(226, 30);
   
   try {
-    const jmz = {};
-    jmz.GetLength = function(str) {
-      return str.replace(/[\u0391-\uFFE5]/g,"@@").length;
-    };  
-    const str = jmz.GetLength(address);
-    if ( str <= 35 ) {
-      addressText = adrStack.addText(`${address} - ${pois[0].address} ${pois[0].distance} 米`);
-    } else if (str < 46) {
-      addressText = adrStack.addText(`${address} - ${pois[0].address}`);
-    } else {
-      addressText = adrStack.addText(address);
-    }
+    const { address: _address, distance } = pois[0];
+    const strLength = address.replace(/[\u0391-\uFFE5]/g,"@@").length;
+
+    addressText = adrStack.addText(
+      strLength <= 35
+        ? `${address} - ${_address} ${Math.round(distance)} 米`  
+        : strLength < 46
+        ? `${address} - ${_address}`
+        : address
+    )
   } catch (e) {
     addressText = adrStack.addText(address + ' - 当前位置属乡镇、高速路或无名路段 🚫');
-  }
+  };
   
   addressText.font = Font.mediumSystemFont(11.3);
   addressText.textColor = Color.black();
@@ -569,7 +576,7 @@ const createWidget = async () => {
     const moment = timeAgo.getUTCHours() * 60 + timeAgo.getUTCMinutes();
 
     // driveAway
-    if ( parkingTime >= 10 && distance > 20 && setting.address !== address && setting.longitude !== longitude) {
+    if ( parkingTime >= 10 && distance > 20 && setting.address !== address && setting.updateTime !== updateTime) {
       notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
       await sendWechatMessage(`${status}  更新时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);  
       writeSettings(json);
@@ -597,10 +604,9 @@ const createWidget = async () => {
  * @returns {Promise} Promise
  */
 const sendWechatMessage = async (description, url, picurl) => {
-  const { access_token } = await getJson(atob('aHR0cHM6Ly9xeWFwaS53ZWl4aW4ucXEuY29tL2NnaS1iaW4vZ2V0dG9rZW4/Y29ycGlkPXd3MWNlNjgxYWVmMjQ0MmRhZCZjb3Jwc2VjcmV0PU95N29wV0xYWmltblNfczc2WWt1SGV4czEyT3JVT3dZRW9NeHdMVGF4WDQ='))
-  const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}`);
-  request.method = 'POST'
-  request.body = JSON.stringify({
+  const { access_token } = await makeRequest('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww1ce681aef2442dad&corpsecret=Oy7opWLXZimnS_s76YkuHexs12OrUOwYEoMxwLTaxX4');
+  const _url = `https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}`;
+  const body = JSON.stringify({
     touser: 'DianQiao',
     agentid: '1000004',
     msgtype: 'news',
@@ -613,7 +619,8 @@ const sendWechatMessage = async (description, url, picurl) => {
       }]
     }
   });
-  return request.loadJSON();
+  const { errmsg } = await makeRequest(_url, 'POST', {}, body);  
+  console.log(errmsg)
 };
 
 // 创建小号组件
@@ -622,7 +629,7 @@ const createSmallWidget = async (widget) => {
     const { mapUrl } = await getInfo();
     const url = `https://restapi.amap.com/v3/staticmap?key=a35a9538433a183718ce973382012f55&zoom=13&size=240*240&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
     
-    const fetchData = async (url) => setting.longitude !== longitude || setting.updateTime !== updateTime
+    const fetchData = async (url) => setting.updateTime !== updateTime
       ? await getImage(url)
       : await getCacheImage('mapImage.png', url);
     
@@ -705,10 +712,13 @@ const runWidget = async () => {
     try {
       await (config.widgetFamily === 'medium' ? createWidget() : config.widgetFamily === 'small' ? createSmallWidget(widget) : createErrorWidget(widget));
     } catch (e) {
-      await importModule(await downloadModule('maybach.js', 'https://gitcode.net/4qiao/scriptable/raw/master/api/maybach_error.js')).main();
+      await importModule(await downloadModule('maybach.js')).main();
     }
   } else {
-    await Promise.all([loadPicture(), presentMenu()]);
+    await Promise.all([
+      loadPicture(), 
+      presentMenu()
+    ]);
   }
 };
 await runWidget();
