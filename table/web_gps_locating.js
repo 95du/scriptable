@@ -170,18 +170,23 @@ async function main() {
    * @param {number} latitude - 纬度
    * @returns {object} - 地理位置信息的对象，包含地址、停车时间等属性
    */
+  const makeRequest = async (url, body) => {
+    const req = new Request(url);
+    req.method = 'POST';
+    req.body = body;
+    return await req.loadJSON();
+  };
+    
   const fetchToken = async () => {
+    const url = 'https://app.tutuiot.com/locator-app/imeiLoginVerification';
     const params = {
       imei,
       password
     };
     const requestBody = Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
     
-    const req = new Request('https://app.tutuiot.com/locator-app/imeiLoginVerification');
-    req.method = 'POST'
-    req.body = requestBody;
     try {
-      const { data } = await req.loadJSON();
+      const { data } = await makeRequest(url, requestBody);
       setting.token = data.token;
       writeSettings(setting);
       notify('登录成功', !aMapkey ? '需填写高德地图key，用于转换坐标。' : data.token);  
@@ -192,6 +197,7 @@ async function main() {
   
   //
   const getTrackSegment = async () => {
+    const url = 'https://app.tutuiot.com/locator-app/es/getTrackSegment';
     const params = {
       imeis: imei,
       page: 1,
@@ -199,12 +205,9 @@ async function main() {
       token
     };
     const requestBody = Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
-  
-    const req = new Request('https://app.tutuiot.com/locator-app/es/getTrackSegment');
-    req.method = 'POST';
-    req.body = requestBody;
+    
     try {
-      const { data } = await req.loadJSON();  
+      const { data } = await makeRequest(url, requestBody);
       if (data.list?.length) {
         return { deviceName, endAddr, updateTime, totalTime, endTime, mileage, highestSpeed, averageSpeed, endLongitude, endLatitude } = data.list[0];
       }
@@ -220,18 +223,16 @@ async function main() {
   
   //
   const getSpeed = async () => {
+    const url = 'https://app.tutuiot.com/locator-app/redis/getGps';
     const params = {
       imei,
       coorType: 'wgs84',
       token
     };
     const requestBody = Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
-    
-    const req = new Request('https://app.tutuiot.com/locator-app/redis/getGps');
-    req.method = 'POST'
-    req.body = requestBody;
+
     try {
-      const { data } = await req.loadJSON();
+      const { data } = await makeRequest(url, requestBody);
       return { speed } = data;
     } catch (e) {
       console.log(e + '226行');
@@ -508,9 +509,7 @@ async function main() {
     const mapPicUrl = `https://restapi.amap.com/v3/staticmap?&key=${aMapkey}&zoom=14&size=450*300&markers=-1,https://gitcode.net/4qiao/scriptable/raw/master/img/car/locating_0.png,0:${longitude},${latitude}`;
     
     const timeAgo = new Date(Date.now() - pushTime);
-    const hours = timeAgo.getUTCHours();
-    const minutes = timeAgo.getUTCMinutes();
-    const moment = hours * 60 + minutes;
+    const moment = timeAgo.getUTCHours() * 60 + timeAgo.getUTCMinutes();
 
     // push data
     const driveAway = updateTime !== setting.updateTime && distance > 20
@@ -519,8 +518,7 @@ async function main() {
       await sendWechatMessage(`${status}  启动时间 ${GMT}\n已离开📍${setting.endAddr}，相距 ${distance} 米`, mapUrl, mapPicUrl);
       writeSettings(runObj);
     } else if ( speed <= 5 ) {
-      const duration = updateTime === setting.updateTime ? interval || 240 : 10;
-      if (moment >= duration) {
+      if (moment >= (updateTime === setting.updateTime ? interval || 240 : 10)) {
         notify(`${status}  ${GMT}`, endAddr, mapUrl);
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         writeSettings({ ...runObj, run: speed });
@@ -538,8 +536,8 @@ async function main() {
   */
   const sendWechatMessage = async (description, url, picurl) => {
     if ( !setting.tokenUrl ) return;
-    const acc = await new Request(tokenUrl).loadJSON();
-    const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${acc.access_token}`);
+    const { access_token } = await new Request(tokenUrl).loadJSON();
+    const request = new Request(`https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}`);
     request.method = 'POST'
     request.body = JSON.stringify({
       touser,
