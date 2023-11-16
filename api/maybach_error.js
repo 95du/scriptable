@@ -4,7 +4,7 @@
 
 async function main() {
   const fm = FileManager.local();
-  const mainPath = fm.joinPath(fm.documentsDirectory(), 'mercedes');
+  const mainPath = fm.joinPath(fm.documentsDirectory(), 'maybach');
   const cache = fm.joinPath(mainPath, 'cache_path');
   const cacheFile = fm.joinPath(mainPath, 'setting.json')
   
