@@ -278,10 +278,10 @@ async function main() {
       notify(response.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
     }
   };
+  const sign = await signBeanAct();
   
   // ========= config ========= //
   const Run = async () => {
-    const { continuousDays, tomorrowSendBeans } = await signBeanAct();
     if (randomIndex === 0) {
       const {
         quota: { state, quotaLeft },
@@ -346,6 +346,7 @@ async function main() {
         darkColor: '#32CD32'
       }
     } else if (randomIndex === 3) {
+      const { continuousDays, tomorrowSendBeans } = sign;
       setting.schemeUrl = 'openApp.jdMobile://virtual?params=%7B%22category%22%3A%22jump%22%2C%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fh5.m.jd.com%2Frn%2F3a5TGXF7Y8xpQ45CjgMzQ3tyqd4K%2Findex.html%3Fhas_native%3D0%2Findex%3Fsource%3Dlingjingdoushouye%22%7D'
       setting.randomIndex = 4
       val = {
