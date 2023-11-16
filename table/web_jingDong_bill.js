@@ -242,6 +242,13 @@ async function main() {
     return await getCacheString('allBillDetail.json', url, 'POST', headers);
   };
   
+  // 处理 cookie 过期及每日签到缓存
+  const handleExpired = () => {
+    const filePath = fm.joinPath(cacheStr, 'signBeanAct.json');
+    if (fm.fileExists(filePath)) {
+      fm.remove(filePath);
+    }
+  }
   // 签到
   const signBeanAct = async () => {
     const url = 'https://api.m.jd.com/client.action?functionId=signBeanAct&appid=ld';
@@ -263,8 +270,7 @@ async function main() {
       const { data } = response;
       const { status, dailyAward, continuousDays, tomorrowSendBeans, totalUserBean, continuityAward } = data;
       if (status === '1') {
-        const filePath = fm.joinPath(cacheStr, 'signBeanAct.json');
-        if (fm.fileExists(filePath)) fm.remove(filePath);
+        handleExpired();
         if (dailyAward) {
           notify(`${dailyAward.title}${dailyAward.subTitle} ${dailyAward.beanAward.beanCount} 京豆`, `已签到 ${continuousDays} 天，明天签到加 ${tomorrowSendBeans} 京豆 ( ${totalUserBean} )`);
         } else {
@@ -275,6 +281,7 @@ async function main() {
     } else {
       setting.code = 3;
       writeSettings(setting);
+      handleExpired();
       notify(response.errorMessage, 'Cookie 过期，请重新登录京东 ‼️');
     }
   };
