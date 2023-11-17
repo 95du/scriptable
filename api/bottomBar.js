@@ -379,7 +379,7 @@ const createWidget = async () => {
   butStack.cornerRadius = 23;
   butStack.size = new Size(0, 80);
   
-  if (_note.length >= 2) {
+  if (_note.length >= 20) {
     const solarTermStack = butStack.addStack();
     solarTermStack.layoutVertically()
     
@@ -447,7 +447,7 @@ async function runScriptable() {
 
 const presentMenu = async() => {
   const alert = new Alert();
-  alert.message = "\n【 iOS 16 负一屏底栏 】\n高仿微信通知信息样式，内容显示未来两小时天气，\n底部显示每日一句中英文";
+  alert.message = "\n【 iOS 16 负一屏底栏 】\n高仿iOS通知信息样式，内容显示未来两小时天气，\n底部每日一句中英文或二十四节气";
   const actions = [
     '95度茅台', '更新代码', '重置所有', '透明背景', '预览组件'
   ];
