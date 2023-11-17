@@ -3,8 +3,8 @@
 // icon-color: deep-green; icon-glyph: comments;
 /**
 * 组件作者：95度茅台
-* Version 1.2.1
-* 2023-11-12 15:30
+* Version 1.3.0
+* 2023-11-17 15:30
 * Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
 * ⚠️ 小机型修改第 19 行中的数字 63
 */
@@ -88,9 +88,9 @@ const getLocation = async () => {
  * 获取天气信息
  * @param  {Type} paramName
  */
-const getWeather = async (opts) => {
+const getWeather = async ({ location } = opts) => {
   try {
-    const convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${opts.location.longitude},${opts.location.latitude}`);
+    const convert = await getJson(atob('aHR0cHM6Ly9yZXN0YXBpLmFtYXAuY29tL3YzL2Fzc2lzdGFudC9jb29yZGluYXRlL2NvbnZlcnQ/Y29vcmRzeXM9Z3BzJm91dHB1dD1qc29uJmtleT1hMzVhOTUzODQzM2ExODM3MThjZTk3MzM4MjAxMmY1NSZsb2NhdGlvbnM9') + `${location.longitude},${location.latitude}`);
     const coordinates = convert.locations.split(",");
     const request = new Request(atob('aHR0cHM6Ly9zc2ZjLmFwaS5tb2ppLmNvbS9zZmMvanNvbi9ub3djYXN0'));
     request.method = 'POST'
@@ -152,14 +152,27 @@ const useFileManager = ({ cacheTime } = {}) => {
 };
 
 /**
- * 获取 GET POST JSON 字符串
- * @param {string} json
+ * 获取 GET POST JSON String 字符串
+ * @param {string} name url
+ * @returns {string} - String
  * @returns {object} - JSON
  */
+const getString = async (url) => await new Request(url).loadString();
+
+const getCacheString = async (strName, strUrl) => {
+  const cache = useFileManager({ cacheTime: 48 });
+  const string = cache.readString(strName);
+  if (string) return string;
+  const response = await getString(strUrl);
+  cache.writeString(strName, response);
+  return response;
+};
+
+// 
 const getJson = async (url) => await new Request(url).loadJSON();
 
-const getCacheString = async (jsonName, jsonUrl) => {
-  const cache = useFileManager({ cacheTime: 6 });
+const getCacheJson = async (jsonName, jsonUrl) => {
+  const cache = useFileManager({ cacheTime: 12 });
   const jsonString = cache.readString(jsonName);
   if (jsonString) {
     return JSON.parse(jsonString);
@@ -188,7 +201,7 @@ const getCacheImage = async (name, url) => {
  * 获取随机图标
  * @returns {string} url
  */
-const getPicture = async () => {
+const getIcon = async () => {
   const images = [
     'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weChat.png',
     'https://gitcode.net/4qiao/scriptable/raw/master/img/icon/weather.png'
@@ -203,11 +216,99 @@ const getPicture = async () => {
  * @returns {Object} string
  */
 const getOneWord = async () => {
-  const { fenxiang_img, note, content } = await getCacheString('ciba.json', atob('aHR0cHM6Ly9vcGVuLmljaWJhLmNvbS9kc2FwaQ=='));
+  const { fenxiang_img, note, content } = await getCacheJson('ciba.json', atob('aHR0cHM6Ly9vcGVuLmljaWJhLmNvbS9kc2FwaQ=='));
   return { 
-    note: note.length >= 21 ? note : `${note}\n${content}`,
+    note: `${note}\n${content}`,
+    _note: note,
     imgUrl: fenxiang_img
   }
+};
+
+/**
+ * 获取接下来的节气信息及距离当前日期的天数
+ * @returns {Promise<Array>} object
+ */
+const getSolarTerm = async () => {
+  const html = await getCacheString('jieqi.html', 'http://jieqi.xuenb.com');
+  const webView = new WebView();
+  await webView.loadHTML(html);
+
+  const solarTermData = await webView.evaluateJavaScript(`
+    (() => {
+      const dnumberElements = Array.from(document.querySelectorAll('.dnumber'));
+      const groups = [];
+
+      for (let i = 0; i < dnumberElements.length; i += 5) {
+        const solarTerm = dnumberElements[i + 1].textContent.trim();
+        const dateStr = dnumberElements[i + 2].textContent.trim();
+        const date = new Date(dateStr);
+
+        if (date >= new Date()) {
+          const daysUntil = Math.floor((date - new Date()) / (1000 * 60 * 60 * 24));
+          const formattedDate = date.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' });
+          const dayOfWeek = date.toLocaleDateString('zh-CN', { weekday: 'short' });
+
+          groups.push({ solarTerm, date: dateStr, daysUntil, dayOfWeek, formattedDate });
+        }
+      }
+      return groups.slice(0, 2);
+    })();
+  `);
+  return solarTermData;
+};
+const result = await getSolarTerm();
+
+/**
+ * Draws a circle on a canvas with an arc and text representing progress.
+ * @param {HTMLCanvasElement} canvas - Canvas element.
+ * @returns {Promise<Image>}
+ */
+const drawArc = async (deg, fillColor, canvas, canvSize, canvWidth) => {
+  const ctr = new Point(canvSize / 2, canvSize / 2);
+
+  canvas.setFillColor(fillColor);
+  canvas.setStrokeColor(
+    Color.dynamic(new Color('#3F8BFF', 0.2), new Color('#FFFFFF', 0.2))
+  );
+  canvas.setLineWidth(canvWidth);
+  
+  const canvRadius = 70
+  const ellipseRect = new Rect(ctr.x - canvRadius, ctr.y - canvRadius, 2 * canvRadius, 2 * canvRadius);
+  canvas.strokeEllipse(ellipseRect);
+
+  for (let t = 0; t < deg; t++) {
+    const x = ctr.x + canvRadius * Math.sin((t * Math.PI) / 180) - canvWidth / 2;
+    const y = ctr.y - canvRadius * Math.cos((t * Math.PI) / 180) - canvWidth / 2;
+    const rect = new Rect(x, y, canvWidth, canvWidth);
+    canvas.fillEllipse(rect);
+  }
+};
+
+const drawCircle = async () => {
+  const canvas = new DrawContext();  
+  canvas.opaque = false;
+  canvas.respectScreenScale = true;
+  
+  const canvSize = 200
+  const canvWidth = 19
+  canvas.size = new Size(canvSize, canvSize);
+
+  const progressColor = Color.dynamic(new Color('#3F8BFF'), new Color('#FFFFFF'))
+  const { daysUntil } = result[0];
+  const progress = daysUntil >= 10 ? 10 : daysUntil;
+
+  drawArc(Math.floor(progress / 10 * 360), progressColor, canvas, canvSize, canvWidth);
+  
+  const canvTextSize = 45
+  const canvTextRect = new Rect(0, 100 - canvTextSize / 2, canvSize, canvTextSize);
+  canvas.setTextAlignedCenter();
+  canvas.setTextColor(progressColor);
+  canvas.setFont(Font.boldSystemFont(canvTextSize));
+  canvas.drawTextInRect(
+    `${Math.floor(daysUntil)}`,   
+    canvTextRect
+  );
+  return canvas.getImage();
 };
 
 /**
@@ -218,33 +319,32 @@ const getOneWord = async () => {
  */
 const createWidget = async () => {
   const { title, content } = await getWeather({ location: await getLocation() });
-  const { note, imgUrl } = await getOneWord();
+  const { note, _note, imgUrl } = await getOneWord();
   
   const widget = new ListWidget();
   const bgImage = await getBgImagePath();
   if (fm.fileExists(bgImage)) {
-    widget.backgroundImage = fm.readImage(getBgImagePath());
+    widget.backgroundImage = fm.readImage(bgImage);
   } else {
     widget.backgroundImage = await getCacheImage('default.jpeg', 'https://sweixinfile.hisense.com/media/M00/7D/EB/Ch4FyGVQ2PiAOtEMAAYfX67522s266.png');
   }
   
   widget.setPadding(0, 0, 0, 0);
-  const eventStack = widget.addStack();
-  eventStack.setPadding(15, 15, 15, 17);
-  eventStack.layoutHorizontally();
-  eventStack.centerAlignContent();
-  eventStack.backgroundColor = stackBackground;
-  eventStack.cornerRadius = 23;
-  eventStack.size = new Size(0, stackSize);
+  const weatherStack = widget.addStack();
+  weatherStack.layoutHorizontally();
+  weatherStack.centerAlignContent();
+  weatherStack.backgroundColor = stackBackground;
+  weatherStack.setPadding(15, 15, 15, 17);
+  weatherStack.cornerRadius = 23;
+  weatherStack.size = new Size(0, stackSize);
   
-  // WeChat icon
-  const imageElement = eventStack.addImage(await getPicture());
+  const imageElement = weatherStack.addImage(await getIcon());
   imageElement.imageSize = new Size(38, 38);
   imageElement.url = 'https://html5.moji.com/tpd/mojiweatheraggr/index.html#/home'
-  eventStack.addSpacer(10);
+  weatherStack.addSpacer(10);
   
   // Two Hours Weather
-  const twoHoursStack = eventStack.addStack();
+  const twoHoursStack = weatherStack.addStack();
   twoHoursStack.layoutVertically();
   twoHoursStack.centerAlignContent();
   
@@ -270,20 +370,43 @@ const createWidget = async () => {
   * @param {object} options
   * @param {string} string
   */
-  const oneStack = widget.addStack();
-  oneStack.layoutHorizontally();
-  oneStack.centerAlignContent();
-  oneStack.addSpacer();
-  oneStack.backgroundColor = stackBackground;
-  oneStack.setPadding(10, 18, 10, 18)
-  oneStack.cornerRadius = 23;
-  oneStack.size = new Size(0, 80);
+  const butStack = widget.addStack();
+  butStack.layoutHorizontally();
+  butStack.centerAlignContent();
+  butStack.addSpacer();
+  butStack.backgroundColor = stackBackground;
+  butStack.setPadding(5, 15, 5, 5);
+  butStack.cornerRadius = 23;
+  butStack.size = new Size(0, 80);
   
-  const textElement = oneStack.addText(note);
-  textElement.font = Font.mediumSystemFont(14);
-  textElement.textOpacity = 0.7;
-  textElement.url = imgUrl;
-  oneStack.addSpacer();
+  if (_note.length >= 2) {
+    const solarTermStack = butStack.addStack();
+    solarTermStack.layoutVertically()
+    
+    for (const item of result) {
+      solarTermStack.addSpacer(2.5);
+      const { solarTerm, dayOfWeek, daysUntil } = item;
+      const [ month, day ] = item.formattedDate.match(/\d+/g);  
+      const date = `${month.padStart(2, '0')}月${day.padStart(2, "0")}日`;
+      const days = daysUntil === 0 ? '今天 ㊗️' : `还有 ${daysUntil} 天`;
+      
+      const textElement = solarTermStack.addText(`${solarTerm} - ${date} ${dayOfWeek}，${days}`);
+      textElement.font = Font.mediumSystemFont(14);
+      textElement.textOpacity = 0.85
+      textElement.url = imgUrl;
+      solarTermStack.addSpacer(2.5);
+    }
+    
+    butStack.addSpacer();
+    const circle = await drawCircle();
+    butStack.addImage(circle);
+  } else {
+    const textElement = butStack.addText(note);
+    textElement.font = Font.mediumSystemFont(14);
+    textElement.textOpacity = 0.8;
+    textElement.url = imgUrl;
+  };
+  butStack.addSpacer();
   
   if (config.runsInApp) {
     await widget.presentMedium();
