@@ -443,56 +443,54 @@ const downloadModule = async (scriptName, url) => {
   }
 };
 
-async function runScriptable() {
+const runScriptable = () => {
   Safari.open('scriptable:///run/' + encodeURIComponent(Script.name()));
 };
 
 const presentMenu = async() => {
   const alert = new Alert();
   alert.message = "\n【 iOS 16 负一屏底栏 】\n高仿iOS通知信息样式，内容显示未来两小时天气，\n底部每日一句中英文或二十四节气";
-  const actions = [
-    '95度茅台', '更新代码', '重置所有', '透明背景', '预览组件'
-  ];
+  const actions = ['95度茅台', '更新代码', '重置所有', '透明背景', '预览组件'];
 
   actions.forEach(( action, index ) => {
     alert[ index === 1 || index === 2 
-    ? 'addDestructiveAction'
-    : 'addAction' ](action);
+      ? 'addDestructiveAction'
+      : 'addAction' ](action);
   });
   alert.addCancelAction('取消');
   
-  const mainMenu = await alert.presentSheet();
-  if (mainMenu === 0) {
+  const menu = await alert.presentSheet();
+  if (menu === 0) {
     await importModule(await downloadModule('store.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW45NWR1U3RvcmUuanM=')).main();
   }
-  if (mainMenu === 1) {
+  if (menu === 1) {
     const reqUpdate = new Request(atob('aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvYXBpL2JvdHRvbUJhci5qcw=='));
-    const codeString = await reqUpdate.loadString();
-    if (codeString.indexOf("95度茅台") == -1) {
+    const code = await reqUpdate.loadString();
+    if (!code.includes('95度茅台')) {
       const finish = new Alert();
       finish.title = "更新失败"
       finish.addAction('OK')
-      await finish.presentAlert();
+      finish.presentAlert();
     } else {
       fm.writeString(  
         module.filename,
         codeString
       );
-      await runScriptable();
+      runScriptable();
     }
   }
-  if (mainMenu === 2) {
-    await fm.remove(path);
+  if (menu === 2) {
     const bgImage = await getBgImagePath();
     if (fm.fileExists(bgImage)) {
       fm.remove(bgImage);
     }
-    await runScriptable();
+    fm.remove(path);
+    runScriptable();
   }
-  if (mainMenu === 3) {
+  if (menu === 3) {
     await importModule(await downloadModule('image.js', 'aHR0cHM6Ly9naXRjb2RlLm5ldC80cWlhby9zY3JpcHRhYmxlL3Jhdy9tYXN0ZXIvdmlwL21haW5UYWJsZUJhY2tncm91bmQuanM=')).main()
   }
-  if (mainMenu === 4) {
+  if (menu === 4) {
     await createWidget();
   }
 };
