@@ -472,9 +472,8 @@ const presentMenu = async() => {
       finish.addAction('OK')
       finish.presentAlert();
     } else {
-      fm.writeString(  
-        module.filename,
-        codeString
+      fm.writeString(
+        module.filename, code
       );
       runScriptable();
     }
