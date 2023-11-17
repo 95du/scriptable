@@ -2,12 +2,13 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-green; icon-glyph: comments;
 /**
-* 组件作者：95度茅台
-* Version 1.3.0
-* 2023-11-17 15:30
-* Telegram 交流群 https://t.me/+CpAbO_q_SGo2ZWE1
-* ⚠️ 小机型修改第 19 行中的数字 63
-*/
+ * 组件作者：95度茅台
+ * Version 1.3.0
+ * 2023-11-17 15:30
+ * Telegram 交流群 https://t.me/+ CpAbO_q_SGo2ZWE1
+ * ⚠️ 小机型修改第 20 行中的数字 63
+ * 修改第 21 行的数字小于 5 可切换为二十四节气，否则脚本将自动切换。
+ */
 
 const fm = FileManager.local();
 const path = fm.joinPath(fm.documentsDirectory(), "bottomBar");
@@ -20,6 +21,7 @@ df.dateFormat = 'HH:mm';
 const GMT = df.string(new Date());
 
 const stackSize = 63 // 容器尺寸
+const length = 20 // 切换底栏内容
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
@@ -379,7 +381,7 @@ const createWidget = async () => {
   butStack.cornerRadius = 23;
   butStack.size = new Size(0, 80);
   
-  if (_note.length >= 20) {
+  if (_note.length >= length) {
     const solarTermStack = butStack.addStack();
     solarTermStack.layoutVertically()
     
