@@ -543,7 +543,7 @@ const createWidget = async () => {
         : address
     )
   } catch (e) {
-    addressText = adrStack.addText(address + ' - 当前位置属乡镇、高速路或无名路段 🚫');
+    addressText = adrStack.addText(address + ' - 位置属乡镇、高速路或无名路段 🚫');
   };
   
   addressText.font = Font.mediumSystemFont(11.3);
@@ -576,12 +576,12 @@ const createWidget = async () => {
     const moment = timeAgo.getUTCHours() * 60 + timeAgo.getUTCMinutes();
 
     // driveAway
-    if ( parkingTime >= 10 && distance > 20 && setting.address !== address && setting.updateTime !== updateTime) {
+    if ( parkingTime >= 10 && distance > 20 && setting.updateTime !== updateTime) {
       notify(`${status} ${GMT}`, `已离开📍${setting.address}，相距 ${distance} 米`, mapUrl);
       await sendWechatMessage(`${status}  更新时间 ${GMT}\n已离开📍${setting.address}，相距 ${distance} 米`, mapUrl, mapPicUrl);  
       writeSettings(json);
     } else if ( speed <= 5 ) {
-      if ( moment >= (updateTime === setting.updateTime ? 300 : 10) ) {
+      if ( moment >= (updateTime === setting.updateTime ? 180 : 10) ) {
         notify(`${status}  ${GMT}`, address, mapUrl);
         await sendWechatMessage(`${status}  停车时间 ${GMT}`, mapUrl, mapPicUrl);
         writeSettings(json);
