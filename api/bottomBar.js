@@ -21,7 +21,7 @@ df.dateFormat = 'HH:mm';
 const GMT = df.string(new Date());
 
 const stackSize = 63 // 容器尺寸
-const length = 20 // 切换底栏内容
+const length = 2 // 切换底栏内容
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
@@ -307,7 +307,7 @@ const drawCircle = async () => {
   canvas.setTextColor(progressColor);
   canvas.setFont(Font.boldSystemFont(canvTextSize));
   canvas.drawTextInRect(
-    `${Math.floor(daysUntil)}`,   
+    daysUntil.toString(),
     canvTextRect
   );
   return canvas.getImage();
