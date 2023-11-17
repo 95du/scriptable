@@ -21,7 +21,7 @@ df.dateFormat = 'HH:mm';
 const GMT = df.string(new Date());
 
 const stackSize = 63 // 容器尺寸
-const length = 2 // 切换底栏内容
+const length = 2
 const stackBackground = Color.dynamic(
   new Color('#EFEBE9', 0.6), 
   new Color('#161D2A', 0.5)
@@ -262,7 +262,7 @@ const result = await getSolarTerm();
 
 /**
  * Draws a circle on a canvas with an arc and text representing progress.
- * @param {HTMLCanvasElement} canvas - Canvas element.
+ * @param {HTMLCanvasElement} canvas
  * @returns {Promise<Image>}
  */
 const drawArc = async (deg, fillColor, canvas, canvSize, canvWidth) => {
@@ -390,7 +390,7 @@ const createWidget = async () => {
       const { solarTerm, dayOfWeek, daysUntil } = item;
       const [ month, day ] = item.formattedDate.match(/\d+/g);  
       const date = `${month.padStart(2, '0')}月${day.padStart(2, "0")}日`;
-      const days = daysUntil === 0 ? '今天 ㊗️' : `还有 ${daysUntil} 天`;
+      const days = daysUntil === 0 ? '明天 ㊗️' : `还有 ${daysUntil} 天`;
       
       const textElement = solarTermStack.addText(`${solarTerm} - ${date} ${dayOfWeek}，${days}`);
       textElement.font = Font.mediumSystemFont(14);
